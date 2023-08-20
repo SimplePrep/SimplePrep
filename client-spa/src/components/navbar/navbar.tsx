@@ -1,5 +1,5 @@
 
-import { Fragment, useState } from 'react';
+import {useState } from 'react';
 import Logo from '../assets/logo2.png';
 import {Link} from 'react-router-dom';
 import {AiOutlineClose, AiOutlineMenu} from 'react-icons/ai'
@@ -40,8 +40,9 @@ const Navbar = () => {
     }
 
     return (
-        <div className='flex h-24 max-w-[1800px] mx-auto justify-between items-center p-4 my-4 sticky'>
-            <img src={Logo} className='md:hidden w-[300px] h-[100px]' alt="Simple Prep Logo" />
+        <div className="shadow-lg sticky top-0 bg-white">
+            <div className='flex h-24 max-w-[1800px] mx-auto justify-between items-center p-4 my-4 sticky'>
+            <a href="#home"><img src={Logo} className='md:hidden w-[300px] h-[100px]' alt="Simple Prep Logo" /></a>
             <div className='w-full hidden md:flex justify-between items-center m-8'>
                 <img className='h-[120px] w-[350px]' src={Logo} alt="Simple Prep Logo" />
                 <div className='flex justify-between'>
@@ -60,7 +61,7 @@ const Navbar = () => {
             <div onClick={handleNav} className='block md:hidden'>
                 {nav ? <AiOutlineClose size = {20}/> : <AiOutlineMenu size={20}/>}
             </div>
-            <div className={ nav ? 'fixed left-0 top-24 w-[60%] h-full border-r border-r-gray-900 ease-in-out duration-500 ' : 'fixed hidden'}>
+            <div className={ nav ? 'fixed left-0 top-24 w-[100%] h-full border-r border-r-gray-900 ease-in-out duration-500 bg-white ' : 'fixed hidden'}>
                 <ul className='flex mt-5 flex-col p-3 gap-4 text-xl'>
                     {NavLinks.map((link)=> (
                         <a className='p-4 border-b border-gray-600' href={link.path}>{link.title}</a>
@@ -71,6 +72,7 @@ const Navbar = () => {
             </div>
             
             
+        </div>
         </div>
     )    
 
