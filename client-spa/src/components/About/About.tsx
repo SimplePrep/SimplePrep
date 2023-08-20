@@ -9,7 +9,7 @@ const About = () => {
             <h1 className='md:text-7xl sm:text-6xl text-4xl font-bold py-6 text-purple-700'>There is a better way to practice</h1>
             <p className='md:text-4xl sm:text-4xl text-3xl font-medium py-5'>Welcome to SimplePrep, a platform where you can:</p>
             <Typed className='md:text-3xl sm:3xl text-2xl font-semibold text-purple-500' strings={["Unleash Your SAT Superpowers", "Elavate Your Score", "Surpass Your Limits!"]} typeSpeed={60} backSpeed={40} loop/>
-            <img src={Banket} alt="" />
+            <img src={Banket} alt="Landing Page Banket" />
         </div>
         
     </div>
