@@ -67,6 +67,7 @@ const Hero = () => {
                 <div className='items-center'>
                     <button className='p-3 bg-[#00df9a] sm:p-1 rounded-lg'><a href='/sign-in' className='p-5 text-2xl font-medium'>Join US</a></button>
                 </div>
+
             </div>  
             <img className='md:w-[500px] mx-auto my-4 lg:w-[500px] lg:h-[500px] w-[300px] h-[300px]' src={pic6} alt="Pic1" />
         </div>
