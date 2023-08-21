@@ -1,5 +1,6 @@
 
-import About from "../components/About/About";
+import About from "../components/About";
+import Hero from "../components/Hero";
 import Navbar from "../components/navbar/navbar";
 
 
@@ -8,6 +9,7 @@ const LandingPage = () => {
         <>
             <Navbar/>
             <About/>
+            <Hero/>
         </>
     )
 }
