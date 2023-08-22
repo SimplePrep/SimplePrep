@@ -1,10 +1,10 @@
 import React from 'react';
-import logo from './logo.svg';
+
 import './App.css';
-import Navbar from './components/navbar/navbar';
-import LandingPage from './pages/LandingPage';
+
 import { Route, Routes } from 'react-router';
 import DashboardPage from './pages/DashboardPage';
+import LandingPage from './pages/LandingPage';
 
 function App() {
   return (
