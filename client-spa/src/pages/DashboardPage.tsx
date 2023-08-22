@@ -1,6 +1,7 @@
 import React from 'react'
-import SideBar from '../components/sidebar/SideBar'
-import Card from '../components/sidebar/Card'
+import SideBar from '../components/Dashboard/sidebar/SideBar'
+import Contents from '../components/Dashboard/Contents'
+import Tutorials from '../components/Dashboard/Tutorials'
 
 const DashboardPage = () => {
   return (
@@ -12,7 +13,7 @@ const DashboardPage = () => {
                         <SideBar/>
                     </div>
                     <div className='flex-grow'>
-                        <Card/>
+                        <Tutorials/>
                     </div>
                 </div>
             </div>
