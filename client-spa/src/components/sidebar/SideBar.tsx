@@ -34,7 +34,7 @@ const SideBar = () => {
             </div>
             <div className='flex flex-row p-3 mx-4  items-center gap-2 hover:bg-slate-200 hover:rounded-lg cursor-pointer'>
                 <BsDiscord size={35} color='green' />
-                <p className='text-xl font-medium text-slate-500'>Our Discord Channel</p>
+                <a href="https://discord.gg/vFfwJpET"><p className='text-xl font-medium text-slate-500'>Our Discord Channel</p></a>
             </div>
             <div className='flex flex-row p-3 mx-4  items-center gap-2 hover:bg-slate-200 hover:rounded-lg cursor-pointer'>
                 <GiProgression size={35} color='green' />
