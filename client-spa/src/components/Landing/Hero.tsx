@@ -1,11 +1,11 @@
 import React from 'react'
-import pic1 from './assets/Exams-amico.png'
-import pic2 from './assets/presentation-amico.png'
-import pic3 from './assets/visual2.jpg'
-import studentStress from './assets/Student-stress.png'
-import pic4 from './assets/Leader-bro.png'
-import pic5 from './assets/Chat bot-bro.png'
-import pic6 from './assets/discussion.png'
+import pic1 from '../assets/Exams-amico.png'
+import pic2 from '../assets/presentation-amico.png'
+import pic3 from '../assets/visual2.jpg'
+import studentStress from '../assets/Student-stress.png'
+import pic4 from '../assets/Leader-bro.png'
+import pic5 from '../assets/Chat bot-bro.png'
+import pic6 from '../assets/discussion.png'
 const Hero = () => {
   return (
     <div className='w-full py-32 px-4 mx-auto'>

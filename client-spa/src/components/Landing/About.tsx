@@ -1,6 +1,6 @@
 import React from 'react';
 import Typed from 'react-typed';
-import Banket from "./assets/visual1.png"
+import Banket from "../assets/visual1.png"
 
 const About = () => {
   return (

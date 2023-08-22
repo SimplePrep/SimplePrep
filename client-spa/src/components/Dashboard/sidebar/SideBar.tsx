@@ -1,5 +1,5 @@
 import React from 'react'
-import Logo from '../assets/logo2.png'
+import Logo from '../../assets/logo2.png'
 import {TbLayoutDashboard} from 'react-icons/tb'
 import {IoNotificationsCircleOutline} from 'react-icons/io5'
 import {MdOutlineAssignment} from 'react-icons/md'

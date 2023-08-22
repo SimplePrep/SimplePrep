@@ -2,7 +2,7 @@ import React from 'react'
 import pic1 from '../assets/exam.jpg'
 import pic2 from '../assets/topic_based_questions.png'
 import pic4 from '../assets/Mathematics-bro.png'
-const Card = () => {
+const Contents = () => {
   return (
     <div className='h-full w-full'>
         <div className='max-w-[1450px] mx-auto'>
@@ -38,4 +38,4 @@ const Card = () => {
   )
 }
 
-export default Card
+export default Contents;
