@@ -3,7 +3,7 @@ import About from "../components/Landing/About";
 import Hero from "../components/Landing/Hero";
 import Notification from "../components/Landing/Newsletter";
 
-import Navbar from "../components/navbar/navbar";
+import Navbar from "../components/Landing/navbar";
 
 
 const LandingPage = () => {

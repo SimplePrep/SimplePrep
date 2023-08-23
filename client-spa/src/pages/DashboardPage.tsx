@@ -2,6 +2,7 @@ import React from 'react'
 import SideBar from '../components/Dashboard/sidebar/SideBar'
 import Contents from '../components/Dashboard/Contents'
 import Tutorials from '../components/Dashboard/Tutorials'
+import Blogs from '../components/Dashboard/Blogs'
 
 const DashboardPage = () => {
   return (
@@ -13,7 +14,7 @@ const DashboardPage = () => {
                         <SideBar/>
                     </div>
                     <div className='flex-grow'>
-                        <Tutorials/>
+                        <Blogs/>
                     </div>
                 </div>
             </div>
