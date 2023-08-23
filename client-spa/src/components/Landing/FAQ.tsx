@@ -85,7 +85,7 @@ const FAQ = () => {
       ]
 
   return (
-    <div className='max-w-[1240px] mx-auto w-full my-24 items-center'>
+    <div className='max-w-[1240px] mx-auto w-full my-24  items-center'>
         <div className='flex flex-col gap-5'>
             <h1 className='text-6xl font-bold lg:4xl md:3xl text-center'>Frequently Asked Questions</h1>
             <p className='text-center font-medium text-2xl'>Have questions? We are here to help.</p>

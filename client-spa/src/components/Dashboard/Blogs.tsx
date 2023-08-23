@@ -8,8 +8,8 @@ const Blogs = () => {
         <div className='max-w-[1240px] mx-auto items-center'>
             <h1 className='p-5 text-center font-bold text-4xl text-[#00df9a]'>Blogs</h1>
             <div className='flex flex-col gap-5'>
-                <div className='my-2 grid md:grid-cols-2 items-center'>
-                    <div className='flex flex-col gap-2'>
+                <div className='my-2 grid md:grid-cols-2 items-center shadow-lg bg-white rounded-md'>
+                    <div className='mx-5 flex flex-col gap-2'>
                         <p>@alijonkarimberdiev</p>
                         <a href="">
                             <h1 className='font-bold text-2xl'>Why Blue Space is Better Than Green Space</h1>
@@ -23,8 +23,8 @@ const Blogs = () => {
                     </div>
                     <a href=""><img className='w-[300px] mx-5 my-3' src={MathPic} alt="" /></a>
                 </div>
-                <div className='my-2 grid md:grid-cols-2 items-center'>
-                    <div className='flex flex-col gap-2'>
+                <div className='my-2 grid md:grid-cols-2 items-center shadow-lg bg-white rounded-md'>
+                    <div className='mx-5 flex flex-col gap-2'>
                         <p>@GregSatell</p>
                         <a href="">
                             <h1 className='font-bold text-2xl'>The 9 Rules Of Innovation</h1>
@@ -38,8 +38,8 @@ const Blogs = () => {
                     </div>
                     <a href=""><img className='w-[300px] mx-5 my-3' src={Example1} alt="" /></a>
                 </div>
-                <div className='my-2 grid md:grid-cols-2 items-center'>
-                    <div className='flex flex-col gap-2'>
+                <div className='my-2 grid md:grid-cols-2 items-center shadow-lg bg-white rounded-md'>
+                    <div className='mx-5 flex flex-col gap-2'>
                         <p>@JeanHsu</p>
                         <a href="">
                             <h1 className='font-bold text-2xl'>Ask vs guess culture</h1>
