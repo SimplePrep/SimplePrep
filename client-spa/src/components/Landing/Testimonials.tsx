@@ -2,10 +2,10 @@ import React from 'react'
 import quote from '../assets/quote.png'
 const Testimonials = () => {
   return (
-    <div className='bg-slate-100 h-[100vh]'>
+    <div className='bg-slate-100'>
         <div className='max-w-[1240px] mx-auto w-full items-center'>
         <h1 className='text-4xl py-40 font-bold text-center'>See Our Excellence Through Their Eyes – Customer Stories in Spotlight</h1>
-        <div className='w-full my-10 grid md:grid-cols-3 gap-5'>
+        <div className='w-full my-10 grid md:grid-cols-3 gap-4 sm:gap-10 pb-40 md:gap-10'>
             <div className='bg-slate-100 rounded-3xl shadow-xl hover:scale-105 duration-300'>
                 <div className='bg-white rounded-t-3xl'>
                     <img className='p-5' src={quote} alt="" />
