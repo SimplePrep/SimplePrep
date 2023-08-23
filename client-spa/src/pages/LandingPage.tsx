@@ -4,6 +4,7 @@ import Hero from "../components/Landing/Hero";
 import Notification from "../components/Landing/Newsletter";
 
 import Navbar from "../components/Landing/navbar";
+import Testimonials from "../components/Landing/Testimonials";
 
 
 const LandingPage = () => {
@@ -13,6 +14,7 @@ const LandingPage = () => {
             <About/>
             <Hero/>
             <Notification/>
+            <Testimonials/>
         </>
     )
 }

@@ -12,7 +12,7 @@ const Blogs = () => {
                     <div className='flex flex-col gap-2'>
                         <p>@alijonkarimberdiev</p>
                         <a href="">
-                            <h1 className='font-bold text-2xl'>Why Blue Spacee is Better Than Green Space</h1>
+                            <h1 className='font-bold text-2xl'>Why Blue Space is Better Than Green Space</h1>
                             <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolorum sequi libero dignissimos rerum natus numquam ad reiciendis quae deserunt excepturi?</p>
                         </a>
                         <div className='flex flex-row gap-2 items-center'>
