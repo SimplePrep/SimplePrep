@@ -4,7 +4,7 @@ import SideBar from '../components/Dashboard/SideBar'
 import Tutorials from '../components/Dashboard/Tutorials'
 import Blogs from '../components/Dashboard/Blogs'
 import Contents from '../components/Dashboard/Contents'
-import { BrowserRouter, Outlet } from 'react-router-dom'
+import { BrowserRouter, Outlet, Route, Routes } from 'react-router-dom'
 
 const DashboardPage = () => {
   return (
@@ -14,10 +14,15 @@ const DashboardPage = () => {
                     <div className='flex flex-row gap-10'>
                         <div className='w-[300px] border-r h-[92.5vh]'>
                             <SideBar/>
-                            <Outlet/>
                         </div>
                         <div className='flex-grow'>
-                            <Contents/>
+                            <Routes>
+                                <Route path = "/*" element={<Outlet/>}>
+                                    <Route path="contents" element = {<Contents/>} />
+                                    <Route path="blogs" element = {<Blogs/>} />
+                                    <Route path = "tutorials" element = {<Tutorials/>}/>
+                                </Route>
+                            </Routes>
                         </div>
                     </div>
                 </div>

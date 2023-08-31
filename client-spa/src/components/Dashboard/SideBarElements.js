@@ -10,22 +10,22 @@ import { VscBook } from "react-icons/vsc";
 export const SideBarLinks = [
     {
         title : "Dashboard",
-        path: '/dashboard',
+        path: 'dashboard',
         icon: <TbLayoutDashboard size={35} color='green' />
     },
     {
         title: "Notificattions",
-        path: '/notifications',
+        path: 'notifications',
         icon: <IoNotificationsCircleOutline size={35} color='green' />
     },
     {
         title: "Contents",
-        path: '/contents',
+        path: 'contents',
         icon: <MdOutlineAssignment size={35} color='green' />
     },
     {
         title: "Tutorials",
-        path: '/tutorials',
+        path: 'tutorials',
         icon: <VscBook size={35} color='green' />
     },
     {
@@ -35,22 +35,22 @@ export const SideBarLinks = [
     },
     {
         title: "Track your progress",
-        path: '/track',
+        path: 'track',
         icon: <GiProgression size={35} color='green' />
     },
     {
         title: "Help",
-        path: '/help',
+        path: 'help',
         icon: <MdOutlineContactSupport size={35} color='green' />
     },
     {
         title: "Settings",
-        path: '/settings',
+        path: 'settings',
         icon: <AiOutlineSetting size={35} color='green' />
     },
     {
         title: "Sign Out",
-        path: '/sign-out',
+        path: 'sign-out',
         icon: <PiSignOutFill size={35} color='green' />
     }
 ]

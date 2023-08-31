@@ -9,7 +9,7 @@ import {GiProgression} from 'react-icons/gi'
 import {MdOutlineContactSupport} from 'react-icons/md'
 import {AiOutlineSetting} from 'react-icons/ai'
 import {PiSignOutFill} from 'react-icons/pi'
-import { Link } from 'react-router-dom'
+import { Link, NavLink } from 'react-router-dom'
 import { SideBarLinks } from './SideBarElements'
 
 
@@ -21,12 +21,12 @@ const SideBar = () => {
             <img className='my-5' src={Logo} alt="" />
             <hr className="h-1 border-0 border-t border-gray-300 my-4"/>
             {SideBarLinks.map((link) => (
-                <Link to={link.path} key={link.title}>
+                <NavLink to={link.path} key={link.title}>
                     <div className='flex flex-row p-3 mx-4 mt-2 items-center gap-3 hover:bg-slate-200 hover:rounded-lg cursor-pointer'>
                         {link.icon}
                         <p className='text-xl font-medium text-slate-500'>{link.title}</p>
                     </div>
-                </Link>
+                </NavLink>
             ))}
         </div>
     </div>
