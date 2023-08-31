@@ -1,13 +1,13 @@
 import React from 'react'
-import pic1 from '../../assets/exam.jpg'
-import pic2 from '../../assets/topic_based_questions.png'
-import pic4 from '../../assets/Mathematics-bro.png'
+import pic1 from '../assets/exam.jpg'
+import pic2 from '../assets/topic_based_questions.png'
+import pic4 from '../assets/Mathematics-bro.png'
 import { Link } from 'react-router-dom'
 
 const ContentUrls = [
     {
         name: 'Authentic Practice Tests',
-        url: '/practice-tests',
+        url: 'practice-tests',
         pic: pic1
     },
     {

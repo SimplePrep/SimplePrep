@@ -1,9 +1,10 @@
 import React from 'react'
-import SideBar from '../components/Dashboard/sidebar/SideBar'
+import SideBar from '../components/Dashboard/SideBar'
 
 import Tutorials from '../components/Dashboard/Tutorials'
 import Blogs from '../components/Dashboard/Blogs'
-import Contents from '../components/Dashboard/Contents/Contents'
+import Contents from '../components/Dashboard/Contents'
+import { Outlet } from 'react-router-dom'
 
 const DashboardPage = () => {
   return (
@@ -13,6 +14,7 @@ const DashboardPage = () => {
                 <div className='flex flex-row gap-10'>
                     <div className='w-[300px] border-r h-[92.5vh]'>
                         <SideBar/>
+                        <Outlet/>
                     </div>
                     <div className='flex-grow'>
                         <Contents/>

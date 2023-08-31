@@ -1,7 +1,7 @@
 
 import {useState } from 'react';
 import Logo from '../assets/logo2.png';
-import {Link} from 'react-router-dom';
+import {Link, Outlet} from 'react-router-dom';
 import {AiOutlineClose, AiOutlineMenu} from 'react-icons/ai'
 const NavLinks = [
     {
@@ -73,6 +73,7 @@ const Navbar = () => {
             
             
         </div>
+        
         </div>
     )    
 
