@@ -53,7 +53,7 @@ const Navbar = () => {
                 <div className='flex items-center gap-4'>
                     
                     <button className='py-3 bg-gray-100 rounded-lg hover:text-white hover:bg-purple-400'><a href='/sign-in' className='p-5 text-2xl font-medium'>Sign In</a></button>
-                    <button className='py-3 bg-[#00df9a] rounded-lg hover:text-white hover:bg-purple-400'><a href='/sign-in' className='p-5 text-2xl font-medium'>Sign Up</a></button>
+                    <button className='py-3 bg-[#00df9a] rounded-lg hover:text-white hover:bg-purple-400'><a href='/sign-up' className='p-5 text-2xl font-medium'>Sign Up</a></button>
                     
                 </div>
             </div>
@@ -67,7 +67,7 @@ const Navbar = () => {
                         <a className='p-4 border-b border-gray-600' href={link.path}>{link.title}</a>
                     ))}
                     <button className='p-4 bg-gray-100 rounded-lg'><a href='/sign-in' className='p-5 text-2xl font-medium'>Sign In</a></button>
-                    <button className='p-4 bg-[#00df9a] rounded-lg'><a href='/sign-in' className='p-5 text-2xl font-medium'>Sign Up</a></button>
+                    <button className='p-4 bg-[#00df9a] rounded-lg'><a href='/sign-up' className='p-5 text-2xl font-medium'>Sign Up</a></button>
                 </ul>
             </div>
             
