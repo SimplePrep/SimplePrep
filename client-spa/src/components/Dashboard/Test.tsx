@@ -69,10 +69,12 @@ const Test = () => {
                     onClick={() => handleAnswerClick(choice)}
                   >
                     <span className={`ml-2 my-2 px-3 py-3 ${selectedAnswer === choice ? 'bg-green-300' : 'bg-slate-300'} items-center rounded-lg`}>
+
                     {choice === 'choice1' && <TbLetterA size={30} />}
                     {choice === 'choice2' && <TbLetterB size={30} />}
                     {choice === 'choice3' && <TbLetterC size={30} />}
                     {choice === 'choice4' && <TbLetterD size={30} />}
+
                     </span>
                     <p className="font-medium text-xl">{answerText}</p>
                   </div>

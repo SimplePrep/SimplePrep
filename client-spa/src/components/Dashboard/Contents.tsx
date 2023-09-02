@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom'
 const ContentUrls = [
     {
         name: 'Authentic Practice Tests',
-        url: 'practice-tests',
+        url: '/practice-tests',
         pic: pic1
     },
     {
