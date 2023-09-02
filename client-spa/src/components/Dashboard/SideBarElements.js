@@ -50,7 +50,7 @@ export const SideBarLinks = [
     },
     {
         title: "Sign Out",
-        path: 'sign-out',
+        path: '/',
         icon: <PiSignOutFill size={35} color='green' />
     }
 ]
