@@ -1,0 +1,23 @@
+version: "3.9"
+
+services:
+  backend:
+    build: 
+      context: ./spa
+      dockerfile: Dockerfile
+      args:
+        - DEV=true
+    image: backend
+    container_name: backend
+    ports:
+      - "8080:8000"
+    volumes:
+      - ./spa:/spa
+    command: >
+      sh -c "python manage.py runserver 0.0.0.0:8000"
+  # frontend:
+  #   build: ./client-spa
+  #   ports:
+  #     - "3000:3000"
+  #   volumes:
+  #     - ./client-spa:/client-spa
