@@ -1,5 +1,5 @@
 from django.contrib import admin # noqa
-from .models import BlogPost
+from . import models
 
-admin.site.register(BlogPost)
-# Register your models here.
+admin.site.register(models.BlogPost)
+admin.site.register(models.Tag)

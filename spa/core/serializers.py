@@ -1,0 +1,35 @@
+"""
+Serializers for BlogPost APIs
+"""
+from rest_framework import serializers
+from core.models import (
+    BlogPost,
+    Tag,
+)
+
+
+class BlogPostSerializer(serializers.ModelSerializer):
+    """Serializer for BlogPost"""
+
+    class Meta:
+        model = BlogPost
+        fields = ['id', 'content', 'pub_date', 'reading_time']
+        read_only_fields = ['id']
+
+
+class BlogPostDetailSerializer(BlogPostSerializer):
+    """Serializer for blogpost detail view."""
+
+    class Meta(BlogPostSerializer.Meta):
+        fields = BlogPostSerializer.Meta.fields + ['description']
+
+
+class TagSerializer(serializers.ModelSerializer):
+    """Serializer for tags."""
+
+    class Meta:
+        model = Tag
+        fields = ['id', 'name']
+        read_only_fields = ['id']
+
+    
