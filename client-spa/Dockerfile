@@ -1,11 +1,10 @@
-FROM node:14.17.3
+FROM node:16-alpine
 
-WORKDIR /client-spa
+WORKDIR /client-spa/
 
-COPY . .
-
+COPY package*.json /client-spa/
 RUN npm install
 
-EXPOSE 3000
+COPY . /client-spa/
 
 CMD ["npm", "start"]
