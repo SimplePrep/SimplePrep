@@ -45,37 +45,6 @@ const Blogs = () => {
                 </div>
                 ))}
                 
-                {/* <div className='my-2 grid md:grid-cols-2 items-center shadow-lg bg-white rounded-md'>
-                    <div className='mx-5 flex flex-col gap-2'>
-                        <p>@GregSatell</p>
-                        <a href="">
-                            <h1 className='font-bold text-2xl'>The 9 Rules Of Innovation</h1>
-                            <p>The truth is that there are many paths to innovation</p>
-                        </a>
-                        <div className='flex flex-row gap-2 items-center'>
-                            <p>Aug 17</p>
-                            <p className='text-gray-800 text-3xl font-bold'>·</p>
-                            <p>8 min read</p>
-                        </div>
-                    </div>
-                    <a href=""><img className='w-[300px] mx-5 my-3' src={Example1} alt="" /></a>
-                </div>
-                <div className='my-2 grid md:grid-cols-2 items-center shadow-lg bg-white rounded-md'>
-                    <div className='mx-5 flex flex-col gap-2'>
-                        <p>@JeanHsu</p>
-                        <a href="">
-                            <h1 className='font-bold text-2xl'>Ask vs guess culture</h1>
-                            <p>When unreasonable requests are followed up with “but you could have just said no!” Exploring the clashes of ask culture and guess</p>
-                        </a>
-                        <div className='flex flex-row gap-2 items-center'>
-                            <p>Aug 28</p>
-                            <p className='text-gray-800 text-3xl font-bold'>·</p>
-                            <p>11 min read</p>
-                        </div>
-                    </div>
-                    <a href=""><img className='w-[300px] mx-5 my-3' src={Example2} alt="" /></a>
-                </div> */}
-                
             </div>
         </div>
     </div>
