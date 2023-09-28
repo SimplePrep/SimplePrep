@@ -13,7 +13,7 @@ class BlogPostSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = BlogPost
-        fields = ['id', 'content', 'pub_date', 'reading_time']
+        fields = ['id', 'title', 'description', 'pub_date', 'reading_time',  'tags']
         read_only_fields = ['id']
 
 
@@ -21,7 +21,7 @@ class BlogPostDetailSerializer(BlogPostSerializer):
     """Serializer for blogpost detail view."""
 
     class Meta(BlogPostSerializer.Meta):
-        fields = BlogPostSerializer.Meta.fields + ['description']
+        fields = BlogPostSerializer.Meta.fields + ['title']
 
 
 class TagSerializer(serializers.ModelSerializer):
