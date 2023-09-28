@@ -2,7 +2,34 @@ import React from 'react'
 import MathPic from '../assets/math.jpg'
 import Example1 from '../assets/example1.jpg'
 import Example2 from '../assets/example2.png'
+<<<<<<< Updated upstream
 const Blogs = () => {
+=======
+
+interface BlogPost {
+    id: number;
+    title: string;
+    reading_time: number;
+    pub_date: string;
+    description:string;
+    tags: string[];
+}
+
+const Blogs = () => {
+
+    const [data, setData] = useState<BlogPost[]>([]);
+
+    useEffect(()=> {
+        fetch('http://127.0.0.1:8080/api/blogpost/blogposts')
+        .then(response => response.json())
+        .then(data => {
+            console.log('Fetched data', data);
+            setData(data)
+            console.log(data)})
+        .catch((error)=> console.error('Error fetching data: ', error))
+    },[])
+
+>>>>>>> Stashed changes
   return (
     <div className='w-full h-full'>
         <div className='max-w-[1240px] mx-auto items-center'>
@@ -16,9 +43,15 @@ const Blogs = () => {
                             <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolorum sequi libero dignissimos rerum natus numquam ad reiciendis quae deserunt excepturi?</p>
                         </a>
                         <div className='flex flex-row gap-2 items-center'>
+<<<<<<< Updated upstream
                             <p>July 23</p>
                             <p className='text-gray-800 text-3xl font-bold'>·</p>
                             <p>5 min read</p>
+=======
+                            <p>{blog.pub_date}</p>
+                            <p className='text-gray-800 text-3xl font-bold'>·</p>
+                            <p>{blog.reading_time} min read</p>
+>>>>>>> Stashed changes
                         </div>
                     </div>
                     <a href=""><img className='w-[300px] mx-5 my-3' src={MathPic} alt="" /></a>

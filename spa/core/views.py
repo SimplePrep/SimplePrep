@@ -13,8 +13,8 @@ class BlogPostViewSet(viewsets.ModelViewSet):
     """View for manage blogpost APIs"""
     serializer_class = serializers.BlogPostDetailSerializer
     queryset = BlogPost.objects.all()
-    authentication_classes = [authentication.TokenAuthentication]
-    permission_classes = [permissions.IsAuthenticated]
+    # authentication_classes = [authentication.TokenAuthentication]
+    # permission_classes = [permissions.IsAuthenticated]
 
 
 
