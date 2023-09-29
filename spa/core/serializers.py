@@ -21,7 +21,7 @@ class BlogPostDetailSerializer(BlogPostSerializer):
     """Serializer for blogpost detail view."""
 
     class Meta(BlogPostSerializer.Meta):
-        fields = BlogPostSerializer.Meta.fields + ['title']
+        fields = BlogPostSerializer.Meta.fields + ['content']
 
 
 class TagSerializer(serializers.ModelSerializer):
