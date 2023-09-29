@@ -11,6 +11,20 @@ interface BlogPost {
     tags: string[];
 }
 
+// Helper function to format pub_date
+const formatPubDate = (pubDate: string) => {
+    const timeStampStr = pubDate;
+    const timestamp = new Date(timeStampStr ?? '');
+  
+    return timestamp.toLocaleString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+    });
+  }
+  
+  
+
 const Blogs = () => {
 
     const [data, setData] = useState<BlogPost[]>([]);
@@ -31,6 +45,7 @@ const Blogs = () => {
             <h1 className='p-10 text-center font-bold text-4xl text-[#00df9a]'>Blogs</h1>
             <div className='flex flex-col gap-5' >
                 {data && data.map((blog) => (
+                    
                 <div key={blog.id} className='my-2 grid md:grid-cols-2 items-center shadow-lg bg-white rounded-md'>
                     <div className='mx-5 flex flex-col gap-2'>
                         <Link to={`/blogs/${blog.id}`}>
@@ -38,7 +53,7 @@ const Blogs = () => {
                             <p>{blog.description}</p>
                         </Link>
                         <div className='flex flex-row gap-2 items-center'>
-                                <p>{blog.pub_date}</p>
+                                <p>{formatPubDate(blog.pub_date)}</p>
                                 <p className='text-gray-800 text-3xl font-bold'>·</p>
                                 <p>{blog.reading_time} min read</p>
                         </div>
