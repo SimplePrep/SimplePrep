@@ -2,7 +2,7 @@ import React from 'react'
 import SideBar from '../components/Dashboard/SideBar'
 
 import Tutorials from '../components/Dashboard/Tutorials'
-import Blogs from '../components/Dashboard/Blogs'
+import Blogs from '../components/Landing/Blogs'
 import Contents from '../components/Dashboard/Contents'
 import { BrowserRouter, Outlet, Route, Routes } from 'react-router-dom'
 import APT from '../components/Dashboard/APT'
@@ -20,7 +20,6 @@ const DashboardPage = () => {
                             <Routes>
                                 <Route path = "/*" element={<Outlet/>}>
                                     <Route path="contents" element = {<Contents/>} />
-                                    <Route path="blogs" element = {<Blogs/>} />
                                     <Route path = "tutorials" element = {<Tutorials/>}/>
                                 </Route>
                             </Routes>

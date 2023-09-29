@@ -21,8 +21,8 @@ const NavLinks = [
         path: '#pricing'
     },
     {
-        title: 'Support',
-        path: '/support'
+        title: 'Blog',
+        path: '/blogs'
     },
     {
         title: 'Demo',
@@ -42,9 +42,9 @@ const Navbar = () => {
     return (
         <div className="shadow-lg sticky top-0 bg-white">
             <div className='flex h-24 max-w-[1800px] mx-auto justify-between items-center p-4 my-4 sticky'>
-            <a href="#home"><img src={Logo} className='md:hidden w-[300px] h-[100px]' alt="Simple Prep Logo" /></a>
+            <a href="/"><img src={Logo} className='md:hidden w-[300px] h-[100px]' alt="Simple Prep Logo" /></a>
             <div className='w-full hidden md:flex justify-between items-center m-8'>
-                <a href="#home"><img className='h-[100px] w-[350px]' src={Logo} alt="Simple Prep Logo" /></a>
+                <a href="/"><img className='h-[100px] w-[350px]' src={Logo} alt="Simple Prep Logo" /></a>
                 <div className='flex justify-between gap-5'>
                     {NavLinks.map((link)=> (
                         <a href={link.path} className='p-3 text-2xl font-medium hover:text-[#00df9a]' key={link.path}>{link.title}</a>

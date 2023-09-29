@@ -7,12 +7,12 @@ import Notification from "../components/Landing/Newsletter";
 import Testimonials from "../components/Landing/Testimonials";
 import FAQ from "../components/Landing/FAQ";
 import Navbar from "../components/Landing/navbar";
+import { Outlet } from "react-router-dom";
 
 
-const LandingPage = () => {
+export const LandingPage = () => {
     return(
         <>
-            <Navbar/>
             <About/>
             <Hero/>
             <Notification/>
@@ -22,4 +22,11 @@ const LandingPage = () => {
     )
 }
 
-export default LandingPage;
+export const Layout = () => {
+    return (
+        <>
+            <Navbar/>
+            <Outlet/>
+        </>
+    )
+}
