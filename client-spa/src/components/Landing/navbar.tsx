@@ -30,7 +30,6 @@ const NavLinks = [
     }
 ];
 
-
 const Navbar = () => {
 
     const [nav, setNav] = useState(false);
