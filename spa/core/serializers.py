@@ -2,10 +2,7 @@
 Serializers for BlogPost APIs
 """
 from rest_framework import serializers
-from core.models import (
-    BlogPost,
-    Tag,
-)
+from core.models import *
 
 
 class BlogPostSerializer(serializers.ModelSerializer):
@@ -31,5 +28,3 @@ class TagSerializer(serializers.ModelSerializer):
         model = Tag
         fields = ['id', 'name']
         read_only_fields = ['id']
-
-    

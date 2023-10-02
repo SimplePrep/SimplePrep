@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'corsheaders',
     #internal apps
     'core',
+    'core2',
     'users',
 ]
 
