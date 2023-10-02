@@ -4,8 +4,7 @@ Views for the Blog Post APIs
 from rest_framework import viewsets, mixins
 from rest_framework import authentication 
 from rest_framework import permissions
-
-from core.models import BlogPost, Tag
+from core.models import *
 from core import serializers
 
 

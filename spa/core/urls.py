@@ -12,8 +12,9 @@ router = DefaultRouter()
 
 router.register('blogposts', views.BlogPostViewSet)
 router.register('tags', views.TagViewSet)
+
 app_name = 'core'
 
 urlpatterns = [
-    path('', include(router.urls))
+    path('', include(router.urls)),
 ]
