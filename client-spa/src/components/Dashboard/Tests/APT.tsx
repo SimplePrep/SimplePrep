@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import pic1 from '../assets/exam.jpg'
-import pic2 from '../assets/topic_based_questions.png'
-import pic4 from '../assets/Mathematics-bro.png'
+import {Link} from 'react-router-dom'
+import pic1 from '../../assets/exam.jpg'
 
 interface Test{
     id:number;
@@ -32,7 +31,9 @@ const APT = () => {
                     <p className='text-center p-4 text-xl font-bold'>Test {test.id}</p>
                     <hr />
                     <img className='w-full' src={pic1} alt="" />
-                    <p className='text-center mx-24 p-3 font-medium rounded-xl bg-green-500'>Get Started</p>
+                    <Link to={`/practice-tests/${test.id}/sections`}>
+                        <button className='text-center mx-24 p-3 font-medium rounded-xl bg-green-500'>Get Started</button>
+                    </Link>
                 </div>
                 ))}
             </div>

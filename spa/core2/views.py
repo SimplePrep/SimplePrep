@@ -54,5 +54,5 @@ class TestSectionQuestions(generics.ListAPIView):
 
     def get_queryset(self):
         testsection_id = self.kwargs['testsection_pk']
-        return Question.objects.filter(testquestion__testsection_id=testsection_id)
-    
+        questions = Question.objects.filter(testquestion__testsection_id=testsection_id)
+        return questions.order_by('id')

@@ -7,10 +7,11 @@ import DashboardPage from './pages/DashboardPage';
 import {LandingPage, Layout} from './pages/LandingPage';
 import SignIn from './pages/SignIn';
 import SignUp from './pages/SignUp';
-import APT from './components/Dashboard/APT';
-import Test from './components/Dashboard/Test';
+import APT from './components/Dashboard/Tests/APT';
 import BlogPostDetails from './components/Landing/features/BlogPostDetails';
 import Blogs from './components/Landing/Blogs';
+import TestSections from './components/Dashboard/Tests/TestSections';
+import TestPageUI from './components/Dashboard/Tests/TestPageUI';
 
 function App() {
   return (
@@ -24,7 +25,9 @@ function App() {
         <Route path = "sign-in" element = {<SignIn/>}/>
         <Route path = "sign-up" element = {<SignUp/>}/>
         <Route path = "practice-tests" element = {<APT/>}/>
-        <Route path = "test" element = {<Test/>}/>
+        <Route path = "practice-tests/:testId/sections" element={<TestSections/>}/>
+        <Route path = "practice-tests/:testId/sections/:sectionId/:sectionName" element={<TestPageUI/>}/>
+        <Route path = "test" element = {<TestPageUI/>}/>
       </Routes>
   );
 }

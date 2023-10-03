@@ -5,7 +5,7 @@ import Tutorials from '../components/Dashboard/Tutorials'
 import Blogs from '../components/Landing/Blogs'
 import Contents from '../components/Dashboard/Contents'
 import { BrowserRouter, Outlet, Route, Routes } from 'react-router-dom'
-import APT from '../components/Dashboard/APT'
+import APT from '../components/Dashboard/Tests/APT'
 
 const DashboardPage = () => {
   return (
