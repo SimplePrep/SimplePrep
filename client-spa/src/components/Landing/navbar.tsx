@@ -41,7 +41,7 @@ const Navbar = () => {
     return (
         <div className="shadow-lg sticky top-0 bg-white">
             <div className='flex h-24 max-w-[1800px] mx-auto justify-between items-center p-4 my-4 sticky'>
-            <a href="/"><img src={Logo} className='md:hidden w-[300px] h-[100px]' alt="Simple Prep Logo" /></a>
+            <Link to="/"><img src={Logo} className='md:hidden w-[300px] h-[100px]' alt="Simple Prep Logo" /></Link>
             <div className='w-full hidden md:flex justify-between items-center m-8'>
                 <a href="/"><img className='h-[100px] w-[350px]' src={Logo} alt="Simple Prep Logo" /></a>
                 <div className='flex justify-between gap-5'>
@@ -63,7 +63,7 @@ const Navbar = () => {
             <div className={ nav ? 'fixed left-0 top-24 w-[100%] h-full border-r border-r-gray-900 ease-in-out duration-500 bg-white ' : 'fixed hidden'}>
                 <ul className='flex mt-5 flex-col p-3 gap-4 text-xl'>
                     {NavLinks.map((link)=> (
-                        <a className='p-4 border-b border-gray-600' href={link.path}>{link.title}</a>
+                        <Link className='p-4 border-b border-gray-600' to={link.path}>{link.title}</Link>
                     ))}
                     <button className='p-4 bg-gray-100 rounded-lg'><a href='/sign-in' className='p-5 text-2xl font-medium'>Sign In</a></button>
                     <button className='p-4 bg-[#00df9a] rounded-lg'><a href='/sign-up' className='p-5 text-2xl font-medium'>Sign Up</a></button>
