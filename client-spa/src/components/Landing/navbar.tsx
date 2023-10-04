@@ -39,7 +39,7 @@ const Navbar = () => {
     }
 
     return (
-        <div className="shadow-lg sticky top-0 bg-white">
+        <div className="shadow-lg sticky top-0 bg-white font-ubuntu">
             <div className='flex h-24 max-w-[1800px] mx-auto justify-between items-center p-4 my-4 sticky'>
             <Link to="/"><img src={Logo} className='md:hidden w-[300px] h-[100px]' alt="Simple Prep Logo" /></Link>
             <div className='w-full hidden md:flex justify-between items-center'>
