@@ -31,6 +31,7 @@ const SignIn = () => {
                 <div className='max-w-lg'>
                     <h1 className='font-bold text-3xl text-black'>Hello, Welcome back</h1>
                     <p className='text-slate-500 mt-5'>Enter your login credentials</p>
+                    <p className='mt-5 text-xl text-slate-500'>Don't you have an account? <a className='text-blue-500 font-bold' href="/sign-up">Sign up</a></p>
                     <div className='flex mt-10 flex-col gap-5'>
                             <h1 className="text-2xl font-bold mb-4">Login</h1>
                             <div className="mb-4 relative">
@@ -66,7 +67,7 @@ const SignIn = () => {
                                 <span className="border-t w-1/2 border-2"></span>
                             </div>
                             <button className="w-full mt-5 border-2 font-medium py-3 rounded-md hover:bg-slate-100 flex items-center justify-center">
-                                <FcGoogle className="mr-2" />
+                                <FcGoogle className="mr-2" size={30}/>
                                 <p className="text-center">Sign in with Google</p>
                             </button>
                         </div>
