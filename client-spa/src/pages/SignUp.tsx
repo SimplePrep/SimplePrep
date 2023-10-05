@@ -30,7 +30,7 @@ const SignUp = () => {
             </div>
             <div className='bg-white  w-[50%] rounded-r-2xl flex flex-col p-24 gap-5'>
                 <div className='max-w-lg'>
-                    <h1 className='font-bold text-3xl text-black'><span className='font-extrabold text-4xl'>Howdy,</span> so excited to see you joining us!</h1>
+                    <h1 className='font-normal text-2xl text-black '><span className='font-bold text-4xl mr-2'>Howdy,</span>Create an account to get started with our platform!</h1>
                     <p className='mt-5 text-xl text-slate-500'>Already a member? <a className='text-blue-500 font-bold' href="/sign-in">Log In</a></p>
                     <div className='flex mt-10 flex-col gap-5'>
                             <h1 className="text-2xl font-bold mb-4">Set up your account</h1>
