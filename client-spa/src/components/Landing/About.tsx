@@ -1,6 +1,9 @@
 import React from 'react';
 import Banket from "../assets/guy-lesson.jpg"
 const About = () => {
+
+
+
   return (
     
     <div className="h-full mt-10 relative isolate px-6 pt-14 lg:px-8">
@@ -47,7 +50,7 @@ const About = () => {
           </div>
         </div>
       </div>
-      <div className=''>
+      <div className='flex' >
         <img src={Banket} className='w-[800px] h-[500px] rounded-3xl' alt="students studying" />
       </div>
     </div>
