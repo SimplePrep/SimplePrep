@@ -1,11 +1,10 @@
 import React, {useState} from 'react'
-import banner from '../components/assets/signInPic1.jpg'
+import banner from '../../components/assets/signInPic1.jpg'
 import {FcGoogle} from 'react-icons/fc'
 import {LiaFastForwardSolid} from 'react-icons/lia'
-const SignUp = () => {
+const SignIn = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [name, setName] = useState('');
 
     const backgroundImageStyle = {
         backgroundImage: `url(${banner})`,
@@ -13,8 +12,8 @@ const SignUp = () => {
 
 
   return (
-    <div className='w-full h-screen  bg-slate-200'>
-        <div className='flex h-full max-w-[1600px] mx-auto flex-row  p-20'>
+    <div className='flex w-full h-screen  bg-slate-200 items-center justify-center'>
+        <div className='flex  max-w-[1600px] mx-auto flex-row  p-28'>
             <div className='w-[50%]  rounded-l-2xl' style={backgroundImageStyle}>
                 <div className= 'p-40 md:p-40 lg:p-40 flex flex-col gap-5 bg-transparent'>
                     <div className='flex flex-row items-center'>
@@ -28,24 +27,13 @@ const SignUp = () => {
                     <h2 className='font-bold text-xl text-white'>But with us, you will learn more.</h2>
                 </div>
             </div>
-            <div className='bg-white  w-[50%] rounded-r-2xl flex flex-col p-24 gap-5'>
+            <div className='bg-white  w-[50%] rounded-r-2xl flex flex-col p-40 gap-5'>
                 <div className='max-w-lg'>
-                    <h1 className='font-normal text-2xl text-black '><span className='font-bold text-4xl mr-2'>Howdy,</span>Create an account to get started with our platform!</h1>
-                    <p className='mt-5 text-xl text-slate-500'>Already a member? <a className='text-blue-500 font-bold' href="/sign-in">Log In</a></p>
+                    <h1 className='font-bold text-3xl text-black'>Hello, Welcome back</h1>
+                    <p className='text-slate-500 mt-5'>Enter your login credentials</p>
+                    <p className='mt-5 text-xl text-slate-500'>Don't you have an account? <a className='text-blue-500 font-bold' href="/sign-up">Sign up</a></p>
                     <div className='flex mt-10 flex-col gap-5'>
-                            <h1 className="text-2xl font-bold mb-4">Set up your account</h1>
-                            <div className="mb-4 relative">
-                                <input
-                                type="email"
-                                placeholder=" "
-                                className="peer w-full p-4 pt-6 font-light bg-white border-2 rounded-md outline-none 
-                                transition disabled:opacity-70 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500 "
-                                value={name}
-                                onChange={(e) => setEmail(e.target.value)}
-                                />
-                                <label className='absolute text-md duration-150 transform -translate-y-3 top-5 z-5 origin-[0] left-4 peer-placeholder-shown:scale-200 peer-placeholder-shown:translate-y-0
-                                peer-focus:scale-75 peer-focus:-translate-y-4'>Name</label>
-                            </div>
+                            <h1 className="text-2xl font-bold mb-4">Login</h1>
                             <div className="mb-4 relative">
                                 <input
                                 type="email"
@@ -71,7 +59,7 @@ const SignUp = () => {
                                 peer-focus:scale-75 peer-focus:-translate-y-4'>Password</label>
                             </div>
 
-                            <button className="w-full bg-blue-500 text-white py-3 rounded-md hover:bg-blue-600">Sign Up</button>
+                            <button className="w-full bg-blue-500 text-white py-3 rounded-md hover:bg-blue-600">Login</button>
 
                             <div className="flex mt-5 justify-center items-center text-gray-600">
                                 <span className="border-t w-1/2 border-2"></span>
@@ -79,8 +67,8 @@ const SignUp = () => {
                                 <span className="border-t w-1/2 border-2"></span>
                             </div>
                             <button className="w-full mt-5 border-2 font-medium py-3 rounded-md hover:bg-slate-100 flex items-center justify-center">
-                                <FcGoogle className="mr-2" />
-                                <p className="text-center">Sign up with Google</p>
+                                <FcGoogle className="mr-2" size={30}/>
+                                <p className="text-center">Sign in with Google</p>
                             </button>
                         </div>
                     </div>
@@ -90,4 +78,4 @@ const SignUp = () => {
   )
 }
 
-export default SignUp;
+export default SignIn
