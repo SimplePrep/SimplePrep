@@ -35,19 +35,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     name = models.CharField(max_length=255)
     is_subscribed= models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
-    is_active = models.BooleanField(default=True)
 
     objects = UserManager()
     
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['name']
-
-    def get_full_name(self):
-        return self.first_name
-
-    def get_short_name(self):
-        return self.first_name
-    
-    def __str__(self):
-        return self.email
     #added
