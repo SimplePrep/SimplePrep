@@ -1,12 +1,8 @@
-import React from 'react'
-import SideBar from '../components/Dashboard/SideBar'
-
+import React from 'react';
+import SideBar from '../components/Dashboard/SideBar';
 import Tutorials from '../components/Dashboard/Tutorials'
-import Blogs from '../components/Landing/Blogs'
 import Contents from '../components/Dashboard/Contents'
-import { BrowserRouter, Outlet, Route, Routes } from 'react-router-dom'
-import APT from '../components/Dashboard/Tests/APT'
-
+import {  Outlet, Route, Routes } from 'react-router-dom'
 const DashboardPage = () => {
   return (
         <div className='w-full h-full bg-green-300'>
@@ -31,4 +27,4 @@ const DashboardPage = () => {
   )
 }
 
-export default DashboardPage
+export default DashboardPage;

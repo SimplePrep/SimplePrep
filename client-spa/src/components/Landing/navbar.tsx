@@ -61,7 +61,7 @@ const Navbar = () => {
                 </div>
                 <div className='flex items-center gap-4'>
                     
-                    <button className='py-4 bg-gray-100 rounded-lg hover:text-white hover:bg-[#00df9a]'><a href='/sign-in' className='p-5 text-2xl font-medium'>Log In →</a></button>
+                    <button className='py-4 bg-gray-100 rounded-lg hover:text-white hover:bg-[#00df9a]'><a href='/login' className='p-5 text-2xl font-medium'>Log In →</a></button>
                     
                 </div>
             </div>
@@ -74,7 +74,7 @@ const Navbar = () => {
                     {NavLinks.map((link)=> (
                         <Link className='p-4 border-b border-gray-600' to={link.path}>{link.title}</Link>
                     ))}
-                    <button className='p-4 bg-gray-100 rounded-lg'><a href='/sign-in' className='p-5 text-2xl font-medium'>Sign In</a></button>
+                    <button className='p-4 bg-gray-100 rounded-lg'><a href='/login' className='p-5 text-2xl font-medium'>Sign In</a></button>
                     <button className='p-4 bg-[#00df9a] rounded-lg'><a href='/sign-up' className='p-5 text-2xl font-medium'>Sign Up</a></button>
                 </ul>
             </div>

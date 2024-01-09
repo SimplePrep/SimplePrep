@@ -3,7 +3,6 @@ import { BsDiscord } from "react-icons/bs";
 import { GiProgression } from "react-icons/gi";
 import { IoNotificationsCircleOutline } from "react-icons/io5";
 import { MdOutlineAssignment, MdOutlineContactSupport } from "react-icons/md";
-import { PiSignOutFill } from "react-icons/pi";
 import { TbLayoutDashboard } from "react-icons/tb";
 import { VscBook } from "react-icons/vsc";
 
@@ -47,10 +46,5 @@ export const SideBarLinks = [
         title: "Settings",
         path: 'settings',
         icon: <AiOutlineSetting size={35} color='green' />
-    },
-    {
-        title: "Sign Out",
-        path: '/',
-        icon: <PiSignOutFill size={35} color='green' />
     }
 ]
