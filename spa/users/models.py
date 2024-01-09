@@ -43,10 +43,10 @@ class User(AbstractBaseUser, PermissionsMixin):
     REQUIRED_FIELDS = ['name']
 
     def get_full_name(self):
-        return self.first_name
+        return self.name
 
     def get_short_name(self):
-        return self.first_name
+        return self.name
     
     def __str__(self):
         return self.email
