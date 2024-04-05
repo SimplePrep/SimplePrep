@@ -46,7 +46,6 @@ INSTALLED_APPS = [
     'djoser',
     #internal apps
     'core',
-    'core2',
     'users',
 ]
 
