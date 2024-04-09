@@ -1,53 +1,27 @@
-from django.contrib import admin # noqa
-from . import models as core_models
-
-admin.site.register(core_models.BlogPost)
-admin.site.register(core_models.Tag)
-
-"""
-Django admin customization
-"""
-
 from django.contrib import admin
-from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
-from django.utils.translation import gettext_lazy as _
-from users import models as users_models
+from .models import TestModel, Question, Comment, TestResult, UserAnswer
 
-class UserAdmin(BaseUserAdmin):
-    """Define the admin pages for users."""
-    list_filter = []
-    ordering = ['id']
-    list_display = ['email', 'first_name', 'last_name', 'is_subscribed']
-    fieldsets = (
-        (None, {'fields': ('email', 'password')}),
-        (
-            _('Permissions'),
-            {
-                'fields': (
-                    'is_subscribed',
-                    'is_staff',
-                    'is_superuser',
-                )
-            }
-        ),
-        (_('Important dates'), {'fields': ('last_login',)})
-    )
-    readonly_fields = ['last_login']
-    add_fieldsets = (
-        (None, {
-            'classes': ('wide',),
-            'fields': (
-                'email',
-                'password1',
-                'password2',
-                'first_name',
-                'last_name',
-                'is_subscribed',
-                'is_staff',
-                'is_superuser',
-            )
-        }),
-    )
+class TestModelAdmin(admin.ModelAdmin):
+    list_display = ('title', 'num_questions', 'created_at', 'updated_at',)
 
+class QuestionAdmin(admin.ModelAdmin):
+    list_display = ('test', 'title', 'created_at', )
+    list_filter = ('test', )
 
-admin.site.register(users_models.User, UserAdmin)
+class CommentAdmin(admin.ModelAdmin):
+    list_display = ('test', 'user', 'text', 'created_at',)
+    list_filter = ('test', 'user',)
+
+class TestResultAdmin(admin.ModelAdmin):
+    list_display = ('test', 'user', 'score', 'created_at', )
+    list_filter = ('test', 'user', )
+
+class UserAnswerAdmin(admin.ModelAdmin):
+    list_display = ('test_result', 'question', 'selected_option', )
+    list_filter = ('test_result', 'question')
+
+admin.site.register(TestModel, TestModelAdmin)
+admin.site.register(Question, QuestionAdmin)
+admin.site.register(Comment, CommentAdmin)
+admin.site.register(TestResult, TestResultAdmin)
+admin.site.register(UserAnswer, UserAnswerAdmin)
