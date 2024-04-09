@@ -1,30 +1,40 @@
-"""
-Serializers for BlogPost APIs
-"""
 from rest_framework import serializers
-from core.models import *
+from .models import TestModel, Question, Comment, TestResult, UserAnswer
+
+class TestModelSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TestModel
+        fields = '__all__'
+
+class QuestionSerializer(serializers.ModelSerializer):
+    graph_img = serializers.ImageField(use_url=True, required=False, allow_null=True)
+    
+    class Meta:
+        model = Question
+        fields = '__all__'
 
 
-class BlogPostSerializer(serializers.ModelSerializer):
-    """Serializer for BlogPost"""
+class CommentSerializer(serializers.ModelSerializer):
+    user_full_name = serializers.ReadOnlyField(source='user.get_full_name')
 
     class Meta:
-        model = BlogPost
-        fields = ['id', 'title', 'description', 'pub_date', 'reading_time',  'tags']
-        read_only_fields = ['id']
-
-
-class BlogPostDetailSerializer(BlogPostSerializer):
-    """Serializer for blogpost detail view."""
-
-    class Meta(BlogPostSerializer.Meta):
-        fields = BlogPostSerializer.Meta.fields + ['content']
-
-
-class TagSerializer(serializers.ModelSerializer):
-    """Serializer for tags."""
+        model = Comment
+        fields = ('id', 'test', 'user_full_name', 'text', 'created_at')
+        read_only_fields = ('created_at',) 
+    
+class TestResultSerializer(serializers.ModelSerializer):
+    test_title = serializers.ReadOnlyField(source='test.title')
+    user_full_name = serializers.ReadOnlyField(source='user.get_full_name')
 
     class Meta:
-        model = Tag
-        fields = ['id', 'name']
-        read_only_fields = ['id']
+        model = TestResult
+        fields = ('id', 'test_title', 'user_full_name', 'score', 'created_at', 'updated_at')
+        read_only_fields = ('created_at', 'updated_at', )
+
+class UserAnswerSerializer(serializers.ModelSerializer):
+    question_text = serializers.ReadOnlyField(source='question.context')
+    
+    class Meta:
+        model = UserAnswer
+        fields = ('id', 'test_result', 'question_text', 'selected_option', )
+        read_only_fields = ('test_result', 'question_text', 'selected_option' ,)
