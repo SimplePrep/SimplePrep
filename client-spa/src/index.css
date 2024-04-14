@@ -18,3 +18,20 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+/* Add this inside your <style> tag or CSS file */
+.grid-background {
+  /* Start with a black background */
+  background-color: #000;
+
+  /* Create a grid pattern using repeating linear gradients */
+  background-image: 
+    linear-gradient(90deg, rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+    linear-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+  
+  /* Set the size of the grid lines and the space between them */
+  background-size: 160px 160px;
+
+  /* Position the grid correctly */
+  background-position: center;
+}

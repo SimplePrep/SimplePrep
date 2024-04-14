@@ -30,9 +30,6 @@ const Hero = () => {
       const bg_green = {
         background: 'rgb(230 245 237/var(--tw-bg-opacity))',
       }
-    const divStyle2 = {
-
-    }
   return (
     <div className='w-full block py-32  mx-auto'>
         <WaveSVG />

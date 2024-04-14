@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react'
-import MathPic from '../assets/math.jpg'
+import MathPic from '../assets/tutorials/math.jpg'
 import { Link } from 'react-router-dom';
 
 interface BlogPost {
