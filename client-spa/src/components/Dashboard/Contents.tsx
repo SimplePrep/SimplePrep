@@ -1,49 +1,87 @@
-import React from 'react'
+import React, { Fragment } from 'react'
 import pic1 from '../assets/exam.jpg'
 import pic2 from '../assets/topic_based_questions.png'
 import pic4 from '../assets/Mathematics-bro.png'
 import { Link } from 'react-router-dom'
-
+import { comingsoon } from '../utils'
 const ContentUrls = [
     {
         name: 'Authentic Practice Tests',
         url: '/practice-tests',
-        pic: pic1
     },
     {
         name: 'Topic Based Questions',
         url: '/topic-questions',
-        pic: pic2
     },
     {
         name: 'English & Writing',
         url: '/english&writing-practice',
-        pic: pic2
     },
     {
         name: 'Math',
         url: '/math-practice',
-        pic: pic4
     }
 ]
 
 const Contents = () => {
+    const practiceTests = Array.from({ length: 12 }, (_, i) => ({
+        id: i + 1,
+        title: `Practice Test ${i + 1}`,
+        description: "Test your skills with this practice test.",
+      }));
+      const borderColorClasses = [
+        'shadow-red-500', 
+        'shadow-green-500', 
+        'shadow-blue-500', 
+        'shadow-yellow-500', 
+        'shadow-pink-500', 
+        'shadow-purple-500', 
+        'shadow-indigo-500', 
+        'shadow-orange-500', 
+        'shadow-teal-500', 
+        'shadow-gray-500',
+        'shadow-cyan-500',
+        'shadow-lime-500',
+      ];
   return (
-    <div className='h-full w-full'>
-        <div className='max-w-[1450px] mx-auto'>
-            <p className='p-5 text-4xl font-bold text-center text-[#00df9a]'>Contents</p>
-            <div className='my-24 grid lg:grid-cols-4 gap-5'>
-                {ContentUrls.map((content) => (
-                    <div className=' bg-white border-dashed border-cyan-100 rounded-2xl items-center shadow-lg hover:scale-105 duration-300'>
-                        <p className='text-center p-4 text-xl font-bold'>{content.name}</p>
-                        <hr />
-                        <img className='w-full' src={content.pic} alt="" />
-                        <Link to={content.url}><p className='text-center mx-24 p-3 font-medium rounded-xl bg-green-500'>Get Started</p></Link>
+    <div className='max-w-[1400px] h-full mx-auto'>
+        <div className='my-20  rounded-2xl'>
+            <p className='p-10 font-medium text-xl text-slate-600'>Freemium English and Writing Practice tests</p>
+            <div className='max-w-[1000px] mx-auto'>
+            <div className="flex justify-center items-center space-x-4">
+                <div className="my-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                    {practiceTests.map((test, index) => {
+                        const borderColorClass = borderColorClasses[index % borderColorClasses.length];
+
+                        return(
+                            <div key={test.id} className={`p-6 bg-black rounded-lg border-2 ${borderColorClass} border-white shadow-lg`}>
+                                <div className="flex justify-between items-center mb-6">
+                                    <div className="text-xl text-purple-500">{test.id}</div>
+                                </div>
+                                <h5 className="text-white text-xl leading-tight font-medium mb-2">{test.title}</h5>
+                                <p className="text-gray-400 text-base mb-4">
+                                    {test.description}
+                                </p>
+                                <button className="mt-auto py-2 px-4 bg-blue-500 text-white text-lg rounded hover:bg-blue-600 transition-colors duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-opacity-50">
+                                    Practice
+                                </button>
+                            </div>
+                         )
+                        })}
                     </div>
-                ))}
+                </div>
+            </div>
+        </div>
+        <div className='rounded-2xl h-full pb-20'>
+            <p className='p-10 font-medium text-xl text-slate-600'>Premium English and Writing Practice tests</p>
+            <div className='max-w-[1000px] mx-auto shadow-xl shadow-teal-300 overflow-visible rounded-3xl'>
+                <video className='pointer-events-none rounded-3xl' autoPlay muted loop playsInline={true} key={comingsoon}>
+                    <source src={comingsoon} type='video/mp4' />
+                </video>
             </div>
         </div>
     </div>
+    
   )
 }
 

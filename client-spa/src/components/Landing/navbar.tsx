@@ -26,7 +26,7 @@ const NavLinks = [
     },
     {
         title: 'Demo',
-        path: '/Demo'
+        path: '/demo'
     }
 ];
 
@@ -40,7 +40,7 @@ const Navbar = () => {
 
     return (
         <div className="shadow-lg sticky top-0 bg-white font-ubuntu overflow-y-scroll z-10">
-            <div className='flex h-20 max-w-[1800px] mx-auto justify-between items-center p-4 my-4 sticky'>
+            <div className='flex h-20 lg:max-w-[1200px] xl:max-w-[1500px] mx-auto  justify-between items-center p-4 my-4 sticky'>
             <Link to="/"><img src={Logo} className='md:hidden w-[300px] h-[100px]' alt="Simple Prep Logo" /></Link>
             <div className='w-full hidden md:flex justify-between items-center'>
                 <a href="/"><img className='h-[100px] w-[350px]' src={Logo} alt="Simple Prep Logo" /></a>
@@ -48,7 +48,7 @@ const Navbar = () => {
                     {NavLinks.map((link)=> (
                         <div className='h-full  group transition '>
                             <div className="relative">
-                                <Link to={link.path} className='p-3 text-2xl font-medium hover:text-[#00df9a] mb--2' key={link.path}>
+                                <Link to={link.path} className='p-3 text-xl font-medium hover:text-[#00df9a] mb--2' key={link.path}>
                                     {link.title} 
                                 </Link>
                                 <span className="block  transform translate-y-7 max-w-0 group-hover:max-w-full transition-all  duration-300 h-1  rounded bg-green-500"></span>
@@ -61,7 +61,7 @@ const Navbar = () => {
                 </div>
                 <div className='flex items-center gap-4'>
                     
-                    <button className='py-4 bg-gray-100 rounded-lg hover:text-white hover:bg-[#00df9a]'><a href='/login' className='p-5 text-2xl font-medium'>Log In →</a></button>
+                    <button className='py-4 bg-gray-100 rounded-lg hover:text-white hover:bg-[#00df9a]'><a href='/login' className='p-5 text-xl font-medium'>Log In →</a></button>
                     
                 </div>
             </div>
@@ -70,7 +70,7 @@ const Navbar = () => {
                 {nav ? <AiOutlineClose size = {25}/> : <AiOutlineMenu size={25}/>}
             </div>
             <div className={ nav ? 'fixed left-0 top-24 w-[100%] h-full border-r border-r-gray-900 ease-in-out duration-500 bg-white ' : 'fixed hidden'}>
-                <ul className='flex mt-5 flex-col p-3 gap-4 text-xl'>
+                <ul className='flex mt-5 flex-col p-3 gap-4 text-md'>
                     {NavLinks.map((link)=> (
                         <Link className='p-4 border-b border-gray-600' to={link.path}>{link.title}</Link>
                     ))}

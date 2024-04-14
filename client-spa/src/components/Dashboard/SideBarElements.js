@@ -10,41 +10,31 @@ export const SideBarLinks = [
     {
         title : "Dashboard",
         path: 'dashboard',
-        icon: <TbLayoutDashboard size={35} color='green' />
-    },
-    {
-        title: "Notificattions",
-        path: 'notifications',
-        icon: <IoNotificationsCircleOutline size={35} color='green' />
-    },
-    {
-        title: "Contents",
-        path: 'contents',
-        icon: <MdOutlineAssignment size={35} color='green' />
+        icon: <TbLayoutDashboard size={25} color='green' />
     },
     {
         title: "Tutorials",
         path: 'tutorials',
-        icon: <VscBook size={35} color='green' />
+        icon: <VscBook size={25} color='green' />
     },
     {
-        title: "Our Discord Channel",
+        title: "Discord",
         path: 'https://discord.gg/7c93kyfC',
-        icon: <BsDiscord size={35} color='green' />
+        icon: <BsDiscord size={25} color='green' />
     },
     {
-        title: "Track your progress",
+        title: "Analytics",
         path: 'track',
-        icon: <GiProgression size={35} color='green' />
+        icon: <GiProgression size={25} color='green' />
     },
     {
-        title: "Help",
+        title: "AI Support",
         path: 'help',
-        icon: <MdOutlineContactSupport size={35} color='green' />
+        icon: <MdOutlineContactSupport size={25} color='green' />
     },
     {
-        title: "Settings",
+        title: "",
         path: 'settings',
-        icon: <AiOutlineSetting size={35} color='green' />
+        icon: <AiOutlineSetting size={25} color='green' />
     }
 ]

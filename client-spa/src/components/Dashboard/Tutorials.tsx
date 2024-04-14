@@ -1,35 +1,80 @@
-import React from 'react'
-import pic1 from '../assets/exam.jpg'
-import pic2 from '../assets/topic_based_questions.png'
-import pic4 from '../assets/Mathematics-bro.png'
-const Tutorials = () => {
-  return (
-    <div className='h-full w-full'>
-        <div className='max-w-[1450px] mx-auto'>
-            <p className='p-5 text-4xl font-bold text-center text-[#00df9a]'>Tutorials</p>
-            <div className='my-24 grid lg:grid-cols-3 gap-5'>
-                <div className=' bg-white border-dashed border-cyan-100 rounded-2xl items-center shadow-lg hover:scale-105 duration-300'>
-                    <p className='text-center p-4 text-xl font-bold'>English Section</p>
-                    <hr />
-                    <img className='w-full' src={pic1} alt="" />
-                    <p className='text-center mx-24 p-3 font-medium rounded-xl bg-green-500'>Get Started</p>
-                </div>
-                <div className=' bg-slate-50 border-dashed border-cyan-100 rounded-2xl items-center shadow-lg hover:scale-105 duration-300'>
-                    <p className='text-center p-4 text-xl font-bold'>Writing Section</p>
-                    <hr />
-                    <img className='w-full' src={pic2} alt="" />
-                    <p className='text-center mx-24 p-3 font-medium rounded-xl bg-green-500'>Get Started</p>
-                </div>
-                <div className=' bg-slate-50 border-dashed border-cyan-100 rounded-2xl items-center shadow-lg hover:scale-105 duration-300'>
-                    <p className='text-center p-4 text-xl font-bold'>Math Section</p>
-                    <hr />
-                    <img className='w-full' src={pic4} alt="" />
-                    <p className='text-center mx-24 p-3 font-medium rounded-xl bg-green-500'>Get Started</p>
-                </div>
+import React from 'react';
+import { Outlet, useResolvedPath} from 'react-router-dom'
+import { NavLink } from 'react-router-dom';
+import read_icon from '../assets/tutorials/front-view-desk-with-stacked-books-copy-space.jpg';
+import write_icon from '../assets/tutorials/write.jpg';
+import math_icon from '../assets/tutorials/math.jpg';
+
+
+const basePath = "/demo/tutorials";
+
+interface TutorialCardProps {
+    title: string;
+    imagePath: string;
+    items: string[];
+    linkPath: string;
+}
+
+const TutorialCard: React.FC<TutorialCardProps> = ({ title, imagePath, items, linkPath }) => {  
+
+    const {pathname} = useResolvedPath(linkPath);
+
+
+    return(
+    <div className='bg-teal-200 rounded'>
+        <div className="m-1 rounded overflow-hidden shadow-lg bg-white">
+            <img className="h-56 object-cover shadow-2xl shadow-teal-100" src={imagePath} alt={`${title} icon`} />
+            <div className="px-6 py-4">
+                <p className="font-bold text-xl mb-2">{title}</p>
+                <ul className='text-gray-700 text-base'>
+                    {items.map((item, index) => <li key={index}>{item}</li>)}
+                </ul>
             </div>
+            <div className='flex justify-center pb-4'>
+                <NavLink to={pathname} className="mx-auto py-2 px-4 bg-blue-500 text-white text-lg rounded hover:bg-blue-600 transition-colors duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-opacity-50">
+                    Start Reading
+                </NavLink>
+            </div>
+        </div>
+    </div>
+)};
+
+
+const Tutorials = () => {
+
+
+    const tutorialData = [
+        {
+            title: "English",
+            imagePath: read_icon,
+            items: ["Command of Evidence", "Central Ideas and Details", "Inferences", "Text Structure and Purpose", "Cross-Text Connections", "Transitions"],
+            linkPath: `${basePath}/english`
+        },
+        {
+            title: "Writing",
+            imagePath: write_icon,
+            items: ["Conventions of English", "Tenses", "Pronouns", "Parallelism", "-", "-"],
+            linkPath: `${basePath}/writing`
+        },
+        {
+            title: "Math",
+            imagePath: math_icon,
+            items: ["Algebra", "Data Analysis", "Geometry and Trigonometry", "Advanced Math", "-", "-"],
+            linkPath: `${basePath}/math`
+        }
+    ]
+
+  return (
+    <div className='h-[92vh] max-w-[1600px] mx-auto p-20'>
+        <h1 className='text-white text-3xl font-roboto font-medium'>Welcome to Tutorials</h1>
+
+        <div className='my-20 flex flex-row items-center justify-evenly'>
+            {tutorialData.map((tutorial, index) => (
+                <TutorialCard key={index} {...tutorial}/>
+            ))}
         </div>
     </div>
   )
 }
 
-export default Tutorials;
+export default Tutorials
