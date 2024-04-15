@@ -4,36 +4,43 @@ import { NavLink } from 'react-router-dom'
 import { SideBarLinks } from './SideBarElements'
 import { logout } from '../actions/auth'
 import {connect} from 'react-redux'
+import { BsMoon } from 'react-icons/bs'
 
 const userFullName = "Alijon Karimberdiev";
 
 interface SideBarProps {
     logout: ()=> void;
     isAuthenticated: boolean;
+    toggleDarkMode: () => void;
+    isDarkMode: boolean;
 }
 
-const SideBar: React.FC<SideBarProps> = ({logout, isAuthenticated}):React.ReactElement => {
+const SideBar: React.FC<SideBarProps> = ({logout, isAuthenticated, toggleDarkMode, isDarkMode}):React.ReactElement => {
     const userInitial = userFullName.charAt(0);
+    const darkModeClass = isDarkMode ? 'dark text-color-dark' : 'light text-color-light';
   return (
-    <div className='shadow-xl sticky top-0 font-roboto  max-w-[1600px] mx-auto z-10 bg-black  shadow-teal-300 rounded-2xl'>
-        <div className='flex gap-5 items-center justify-center'>
-            <img className='my-5 w-[200px]' src={Logo} alt="" />
-            {SideBarLinks.map((link) => (
-                 <NavLink
-                 to={link.path}
-                 key={link.title}
-                 className={({ isActive }) => isActive ? "text-xl font-medium text-white leading-tight bg-teal-500 text-white p-3 mx-4 mt-2 rounded-2xl cursor-pointer" : "text-xl font-medium text-white leading-tight hover:bg-teal-300 hover:text-black hover:rounded-2xl  p-3 mx-4 mt-2 rounded-2xl cursor-pointer"}>
-                  <div className='flex flex-row items-center gap-3'>
-                      {link.icon}
-                      {link.title}
-                  </div>
-              </NavLink>
-            ))}
-            <div className='flex items-center justify-center h-12 w-12 rounded-full bg-slate-300 text-xl font-medium text-gray-700 cursor-pointer'>
-                {userInitial}
+        <div className={`shadow-xl sticky top-0 font-roboto  max-w-[1600px] mx-auto z-10  shadow-teal-300 bg-white rounded-2xl ${darkModeClass}`}>
+            <div className='flex gap-5 items-center justify-center'>
+                <img className='my-5 w-[200px]' src={Logo} alt="" />
+                {SideBarLinks.map((link) => (
+                    <NavLink
+                    to={link.path}
+                    key={link.title}
+                    className={({ isActive }) => isActive ? "text-xl font-medium leading-tight bg-teal-500  p-3 mx-4 mt-2 rounded-2xl cursor-pointer" : "text-xl font-medium  leading-tight hover:bg-teal-300 hover:text-black hover:rounded-2xl  p-3 mx-4 mt-2 rounded-2xl cursor-pointer"}>
+                    <div className='flex flex-row items-center gap-3'>
+                        {link.icon}
+                        {link.title}
+                    </div>
+                </NavLink>
+                ))}
+                <button onClick={toggleDarkMode} className='text-lg p-3 border-2 rounded-2xl hover:bg-[#00df9a] hover:border-blue-500'>
+                    <BsMoon/>
+                </button>
+                <div className='flex items-center justify-center h-12 w-12 rounded-full bg-slate-300 text-xl font-medium text-gray-700 cursor-pointer'>
+                    {userInitial}
+                </div>
             </div>
         </div>
-    </div>
   )
 }
 

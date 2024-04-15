@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { BsFillArrowLeftCircleFill, BsFillArrowRightCircleFill } from 'react-icons/bs';
+import { BsFillArrowLeftCircleFill, BsFillArrowRightCircleFill, BsMoon} from 'react-icons/bs';
 import { LuTimer } from 'react-icons/lu';
 import { AiFillWarning } from 'react-icons/ai';
 import { TbLetterA, TbLetterB, TbLetterC, TbLetterD } from 'react-icons/tb';
+import {PiFlagThin} from 'react-icons/pi';
 import { useParams } from 'react-router-dom';
 
 interface Question{
@@ -16,114 +17,137 @@ interface Question{
 }
 
 const TestPageUI = () => {
-
-  const {testId, sectionId, sectionName} = useParams<{testId: string, sectionId: string, sectionName: string}>();
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
-  const [questions, setQuestions] = useState<Question[]>([]);
-
-
-  useEffect(()=> {
-    fetch(`http://127.0.0.1:8080/api/test/testsections/${sectionId}/questions/`)
-    .then(res => res.json())
-    .then(data => {
-      console.log("Fetching the questions: ", data)
-      setQuestions(data)
-    })
-    .catch((error)=> console.error(`Error fetching testsection questions with id ${sectionId}`, error))
-  }, [])
-
-
-
-  const handleAnswerClick = (choice: string) => {
-    setSelectedAnswer(choice);
+  const [selectedChoice, setSelectedChoice] = React.useState<string | null>(null);
+  const answerChoices = [
+    {
+      label: 'A',
+      content: 'the participants in the experiment that demonstrated the lotion’s efficacy were recruited from a pool of people with more painful injuries than were the participants in the other experiment.'
+    },
+    {
+      label: 'B',
+      content: 'in the experiment that demonstrated the lotion’s efficacy, participants were told that the lotion contained strong painkillers, whereas the participants in the other experiment were given no information about the lotion’s ingredients.'
+    },
+    {
+      label: 'C',
+      content: 'the researchers conducting the experiment that demonstrated the lotion’s efficacy gave study participants a smaller amount of lotion than the researchers in the other experiment did.'
+    },
+    {
+      label: 'D',
+      content: 'participants in the experiment that demonstrated the lotion’s efficacy received more medical assistance in treating their injuries in addition to using the lotion.'
+    }
+  ];
+  const handlePreviousQuestion = () => {
+    console.log("Go to the previous question");
+    // Implement your logic for going to the previous question
   };
 
   const handleNextQuestion = () => {
-    // Move to the next question if not on the last question
-    if (currentQuestionIndex < questions.length - 1) {
-      setCurrentQuestionIndex(currentQuestionIndex + 1);
-      setSelectedAnswer(null); // Reset selected answer for the next question
-    }
+    console.log("Go to the next question");
+    // Implement your logic for going to the next question
   };
-  const handlePreviousQuestion = () => {
-    if (currentQuestionIndex > 0) {
-      setCurrentQuestionIndex(currentQuestionIndex - 1);
-      setSelectedAnswer(null);
-    }
+
+  const [isDarkMode, setIsDarkMode] = useState(false);
+
+  const toggleDarkMode = () => {
+    setIsDarkMode(!isDarkMode)
   };
+
+  const darkModeClass = isDarkMode ? 'dark' : '';
+
+  // const {testId, sectionId, sectionName} = useParams<{testId: string, sectionId: string, sectionName: string}>();
+  // const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  // const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
+  // const [questions, setQuestions] = useState<Question[]>([]);
+
+
+  // useEffect(()=> {
+  //   fetch(`http://127.0.0.1:8080/api/test/testsections/${sectionId}/questions/`)
+  //   .then(res => res.json())
+  //   .then(data => {
+  //     console.log("Fetching the questions: ", data)
+  //     setQuestions(data)
+  //   })
+  //   .catch((error)=> console.error(`Error fetching testsection questions with id ${sectionId}`, error))
+  // }, [])
+
+
+
+  // const handleAnswerClick = (choice: string) => {
+  //   setSelectedAnswer(choice);
+  // };
+
+  // const handleNextQuestion = () => {
+  //   // Move to the next question if not on the last question
+  //   if (currentQuestionIndex < questions.length - 1) {
+  //     setCurrentQuestionIndex(currentQuestionIndex + 1);
+  //     setSelectedAnswer(null); // Reset selected answer for the next question
+  //   }
+  // };
+  // const handlePreviousQuestion = () => {
+  //   if (currentQuestionIndex > 0) {
+  //     setCurrentQuestionIndex(currentQuestionIndex - 1);
+  //     setSelectedAnswer(null);
+  //   }
+  // };
 
   return (
-    <div className="w-full h-screen bg-slate-200 pb-5">
-      <div className="flex h-full max-w-[1600px] mx-auto flex-col p-2 gap-5">
-        {/* Header */}
-        <div className="flex flex-row bg-blue-100 border-slate-200 shadow-lg gap-4 rounded-lg w-full items-center justify-center p-4">
-          <AiFillWarning size={25} />
-          <p className="text-center font-medium text-xl">Important Updates</p>
+    <div className={`w-full h-screen flex flex-col ${darkModeClass}`}>
+      <div className='flex p-5 justify-between items-center'>
+        <div className='mx-5 flex gap-10 items-center'>
+          <p className='text-bold font-ubuntu text-2xl'>English and Writing Module 1</p>
+          <button onClick={toggleDarkMode} className="text-lg p-3 border-2 rounded-2xl hover:bg-[#00df9a] hover:border-blue-500">
+            <BsMoon />
+          </button>
         </div>
-        
-        {/* Timer and Navigation */}
-        <div className="flex mt-5 items-center justify-between">
-          <BsFillArrowLeftCircleFill size={35} className="cursor-pointer" onClick={handlePreviousQuestion} />
-          <div className="items-center flex flex-row gap-2 border rounded-lg py-2 px-5 bg-slate-300">
-            <LuTimer size={35} />
-            <p className="font-medium text-lg">2:12</p>
+        <div className='flex justify-end items-center gap-5'>
+          <p className='font-semibold text-lg'>13:04</p>
+          <button className='py-2 px-6 border-2 rounded-xl hover:bg-[#00df9a] hover:border-blue-500 hover:text-white font-semibold text-lg'>Exit</button>
+        </div>
+      </div>
+      <hr className="border-gray-300 border-[1px]"/>
+      <div className='flex flex-grow'>
+        <div className='w-[50%] border-r-2'>
+          <div className="p-14">
+            <p className='font-medium text-lg'>
+            	Studies have shown that people’s perception of pain can be diminished and their healing processes accelerated if those individuals believe that a medical treatment will be helpful. In an experiment testing the efficacy of an experimental analgesic lotion for treating minor scrapes and burns, researchers found that the lotion did not appear to significantly affect participants’ pain levels or healing times. However, a similar experiment found that the same lotion led to significant reductions in the pain level of study participants and resulted in faster healing. The difference in the outcomes of the two experiments was likely due to the fact that _______
+            </p>
           </div>
-          <BsFillArrowRightCircleFill size={35} className="cursor-pointer" onClick={handleNextQuestion} />
         </div>
-        
-        {/* Question */}
-        {currentQuestionIndex < questions.length && (
-          <div className="w-full h-[60%] mt-5 flex flex-row gap-3">
-            <div className="w-[50%] rounded-tl-2xl bg-slate-100 p-10">
-              <p className="font-bold text-3xl text-purple-500">{sectionName}</p>
-              <hr className="border-2" />
-              <p className="mt-5 font-normal text-xl">{questions[currentQuestionIndex].context}</p>
+        <div className='w-[50%]'>
+          <div className='p-14'>
+            <div className='flex gap-2 items-center'>
+              <p className='font-bold text-lg'>Question 1 of 33</p>
+              <span><PiFlagThin size={30}/></span>
             </div>
-            <div className="w-[50%] rounded-tr-2xl bg-slate-100 p-10 gap-5">
-              <div className="flex flex-row items-center font-normal text-lg gap-5">
-                <p className="px-4 py-2 items-center bg-purple-500 text-white">{currentQuestionIndex + 1}</p>
-                <p className=''>{questions[currentQuestionIndex].query}</p>
-              </div>
-              <hr className="border-2" />
-              <div className="mt-10 flex flex-col gap-5">
-                {Object.entries(questions[currentQuestionIndex].options).map(([choice, answerText]) => (
-                  <div
-                    key={choice}
-                    className={`flex flex-row gap-5 hover:bg-purple-300 ${selectedAnswer === choice ? 'border-purple-500' : 'border-slate-200'} items-center cursor-pointer border-4 rounded-md`}
-                    onClick={() => handleAnswerClick(choice)}
-                  >
-                    <span className={`ml-2 my-2 px-3 py-3 ${selectedAnswer === choice ? 'bg-green-300' : 'bg-slate-300'} items-center rounded-lg`}>
-
-                    {choice === 'A' && <TbLetterA size={25} />}
-                    {choice === 'B' && <TbLetterB size={25} />}
-                    {choice === 'C' && <TbLetterC size={25} />}
-                    {choice === 'D' && <TbLetterD size={25} />}
-
-                    </span>
-                    <p className="font-medium text-xl">{answerText}</p>
-                  </div>
-                ))}
-                <p
-                  className="ml-5 font-medium text-xl cursor-pointer"
-                  onClick={() => setSelectedAnswer(null)}
-                >
-                  Clear
-                </p>
-              </div>
+            <p className='font-medium text-lg mt-3'>Which choice most logically completes the text?</p>
+            <div className='flex flex-col mt-7 gap-2'>
+            {answerChoices.map((choice, index) => (
+              <button
+                key={index}
+                className={`py-2 px-4 border-2 rounded-lg font-semibold text-lg w-full text-left 
+                            ${selectedChoice === choice.label ? 'border-[#00df9a]' : 'hover:border-blue-500'}`}
+                onClick={() => setSelectedChoice(choice.label)}
+              >
+                {`(${choice.label})`} {choice.content}
+              </button>
+            ))}
             </div>
           </div>
-        )}
-
-        {/* Footer */}
-        <div className="flex-grow bg-slate-100 rounded-br-2xl rounded-b-2xl p-5">
-          <div className="flex flex-row items-center justify-between">
-            <p className="text-lg font-bold">Draft Section</p>
-            <button className="px-4 py-2 bg-purple-500 rounded-lg hover:bg-green-300 hover:text-purple-500 text-white">Save the question</button>
-            <button className="text-lg font-bold">Calculator</button>
-          </div>
-          <div className="h-full rounded-lg border-4 p-3"></div>
         </div>
+      </div>
+      <div className="flex justify-between p-5">
+        <button 
+          onClick={handlePreviousQuestion}
+          className="py-2 px-6 border-2 rounded-xl hover:bg-[#00df9a] hover:border-blue-500 hover:text-white font-semibold text-lg"
+        >
+          <BsFillArrowLeftCircleFill className="inline mr-2" /> Previous
+        </button>
+        <button 
+          onClick={handleNextQuestion}
+          className="py-2 px-6 border-2 rounded-xl hover:bg-[#00df9a] hover:border-blue-500 hover:text-white font-semibold text-lg"
+        >
+          Next <BsFillArrowRightCircleFill className="inline ml-2" />
+        </button>
       </div>
     </div>
   );

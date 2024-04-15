@@ -147,8 +147,8 @@ export const sections = [
     const section = sections.find(s => s.id === normalizedSectionId);
     const paragraphs = section?.content.split('\n');
     return (
-        <div className='h-full mt-10'>
-          <div className='flex flex-col gap-6  justify-center items-center'>
+        <div className='h-full mt-10 bg-slate-100 rounded-2xl'>
+          <div className='flex flex-col gap-6  justify-center items-center p-10'>
             <p className='text-center text-3xl font-bold'>{section?.title}</p>
           </div>
           <div className='py-5'>
