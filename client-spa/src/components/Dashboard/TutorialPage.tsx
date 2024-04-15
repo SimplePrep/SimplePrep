@@ -30,7 +30,7 @@ const TutorialPage = () => {
             ))}
           </ul>
         </div>
-        <div className='flex-1 max-w-[1000px] mx-auto bg-slate-300 rounded-2xl'>
+        <div className='flex-1 max-w-[1000px] mx-auto  rounded-2xl'>
             <Outlet />
         </div>
       </div>

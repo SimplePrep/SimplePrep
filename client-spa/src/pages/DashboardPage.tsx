@@ -1,11 +1,19 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Contents from '../components/Dashboard/Contents'
 import {  Outlet, Route, Routes } from 'react-router-dom'
 import NavBarDash from '../components/Dashboard/NavBarDash';
-const DashboardPage = () => {
+
+interface DashboardPageProps {
+  toggleDarkMode: () => void;
+  isDarkMode: boolean;
+}
+
+const DashboardPage:React.FC<DashboardPageProps> = ({toggleDarkMode, isDarkMode}) => {
+  const darkModeClass = isDarkMode ? 'grid-background-dark' : 'grid-background-light';
+
   return (
-        <div className='w-full h-full grid-background'>
-            <NavBarDash/>
+        <div className={`w-full h-full ${darkModeClass}`}>
+            <NavBarDash toggleDarkMode={toggleDarkMode} isDarkMode={isDarkMode}/>
             <Outlet/>
         </div>
   )
