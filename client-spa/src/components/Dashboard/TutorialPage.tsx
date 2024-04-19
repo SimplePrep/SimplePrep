@@ -1,41 +1,74 @@
-import React from 'react';
-import { Link, Outlet, useParams } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Link, Outlet, useParams} from 'react-router-dom';
 import Section, { sections } from './Section';
+import { MdOutlineKeyboardArrowUp,  MdOutlineKeyboardArrowDown } from "react-icons/md";
 
-const TutorialPage = () => {
-  const { tutorialId, sectionId } = useParams();
+// Assuming `sections` might now include a `subSections` array similar to `subNav` in your sidebar example
+
+interface TutorialPageProps {
+  isDarkMode: boolean;
+}
+
+const TutorialPage:React.FC<TutorialPageProps> = ({isDarkMode}) => {
+  const { tutorialId } = useParams<{ tutorialId: string }>();
+  const [activeSection, setActiveSection] = useState<string | null>(null);
+  const [activeSubSection, setActiveSubSection] = useState<string | null>(null);
+
+  const Mode = isDarkMode ? 'bg-[#121212] text-white' : 'bg-white text-gray-800';
+  const linkHoverClass = isDarkMode ? 'hover:text-gray-100 hover:bg-[#353535]' : 'hover:bg-slate-200';
+  const activeSubSectionClass = isDarkMode ? 'bg-[#353535]' : 'bg-slate-300';
+
+  const toggleSection = (id: string) => {
+    setActiveSection(activeSection === id ? null : id);
+  };
 
   return (
-    <div className='w-full py-10 gap-10'>
-      <div className='flex justify-between w-full '>
-        <div className='w-96 overflow-y-auto py-4 h-[60vh] sticky top-36 bg-white rounded-2xl shadow-lg'>
-          <p className='mx-10 text-4xl font-bold font-serif p-5'>English</p>
+    <div className={`w-full py-10 gap-10`}>
+      <div className='flex justify-between'>
+        <div className={`w-96  h-screen py-4 sticky top-28 rounded-2xl shadow-lg ${Mode}`}>
+          <p className='mx-10 text-4xl font-bold font-sans p-5'>English</p>
           <hr className='border-gray-300' />
-          <ul className='space-y-5 mt-4'>
-            {sections.map(({ id, title, completed }, index) => (
-              <li
-                key={index}
-                className={`flex items-center space-x-2 hover:bg-gray-100 rounded-md transition duration-150 ease-in-out ${
-                  index < sections.length - 1 ? 'border-b border-gray-300' : ''
-                }`}
-              >
-                <span className="text-gray-500 mx-5">{index + 1}.</span>
+          <ul className='space-y-2 mt-4'>
+            {sections.map(({ id, title, subSections }) => (
+              <li key={id} className='flex flex-col'>
                 <Link
                   to={`/demo/tutorials/${tutorialId}/${id.replaceAll(' ', '-')}`}
-                  className="py-2 text-gray-800 hover:text-blue-600 flex-1 text-xl font-semibold font-serif"
+                  className={`py-4 text-xl font-medium mx-5 flex items-center  rounded-md  ${linkHoverClass}`}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    toggleSection(id);
+                  }}
                 >
                   {title}
+                  {activeSection === id ? (
+                    <MdOutlineKeyboardArrowUp className="ml-auto" />
+                  ) : (
+                    <MdOutlineKeyboardArrowDown className="ml-auto" />
+                  )}
                 </Link>
+                {activeSection === id && subSections && subSections.map((sub) => (
+                  <Link
+                    to={`/demo/tutorials/${tutorialId}/${id}/${sub.id.replaceAll(' ', '-')}`}
+                    key={sub.id}
+                    onClick={()=> setActiveSubSection(sub.id)}
+                    className={`pl-12 pr-3 py-4 flex items-center ${
+                      activeSubSection === sub.id ?  activeSubSectionClass: linkHoverClass
+                    } font-medium rounded-md transition-colors duration-150`}
+                  >
+                    {sub.title}
+                  </Link>
+                ))}
               </li>
             ))}
           </ul>
         </div>
-        <div className='flex-1 max-w-[1000px] mx-auto  rounded-2xl'>
-            <Outlet />
+        <div className="flex-1 max-w-5xl mx-auto rounded-2xl">
+          <Outlet />
         </div>
       </div>
     </div>
   );
 };
+
 
 export default TutorialPage;

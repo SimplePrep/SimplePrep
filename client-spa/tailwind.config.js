@@ -7,6 +7,8 @@ module.exports = {
     extend: {
       fontFamily:{
         'ubuntu': ['Ubuntu', 'sans-serif'],
+        'montserrat': ["Montserrat", 'sans-serif'],
+        'opensans': ["Open Sans", 'sans-serif'],
         'roboto': ['Roboto', 'sans-serif'],
       }
     },

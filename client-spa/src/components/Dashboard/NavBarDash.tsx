@@ -19,7 +19,7 @@ const SideBar: React.FC<SideBarProps> = ({logout, isAuthenticated, toggleDarkMod
     const userInitial = userFullName.charAt(0);
     const darkModeClass = isDarkMode ? 'dark text-color-dark' : 'light text-color-light';
   return (
-        <div className={`shadow-xl sticky top-0 font-roboto  max-w-[1600px] mx-auto z-10  shadow-teal-300 bg-white rounded-2xl ${darkModeClass}`}>
+        <div className={`shadow-xl sticky top-0  max-w-[1600px] mx-auto z-10  shadow-teal-300 bg-white rounded-2xl ${darkModeClass}`}>
             <div className='flex gap-5 items-center justify-center'>
                 <img className='my-5 w-[200px]' src={Logo} alt="" />
                 {SideBarLinks.map((link) => (
