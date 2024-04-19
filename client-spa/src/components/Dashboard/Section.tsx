@@ -1,17 +1,20 @@
 import { useParams } from "react-router-dom";
-import React from "react";
+import React, {useState} from "react";
+import { AiOutlineClose } from 'react-icons/ai'; 
+import { BsFillArrowLeftCircleFill, BsFillArrowRightCircleFill, BsMoon} from 'react-icons/bs';
+import MiniTestModal from "./Tests/MiniTestModal";
+interface ParagraphProps {
+  text: string | null;
+  isHighlighted?: boolean; // New prop to indicate highlighting
+}
 
-interface ParagraphProps { 
-    text: string | null;
-  }
-  
-  const Paragraph: React.FC<ParagraphProps> = ({text}) => {
-    return (
-      <p className="text-xl  leading-relaxed max-w-prose mx-auto text-indent"style={{ marginBottom: '30px' }}>
-        {text}
-      </p>
-    )
-  }
+const Paragraph: React.FC<ParagraphProps> = ({ text, isHighlighted = false }) => {
+  return (
+    <p className={`text-xl leading-relaxed max-w-prose mx-auto text-indent ${isHighlighted ? "bg-slate-200 rounded-xl p-4 text-black " : ""}`} style={{ marginBottom: '30px' }}>
+      {text}
+    </p>
+  );
+};
   
 interface SubSection {
   id: string;
@@ -41,9 +44,7 @@ export const sections: SectionData[] = [
 
           Solving reading comprehension questions, especially those that focus on understanding the main idea, determining the author's purpose, or interpreting specific details, requires careful reading and analytical thinking. Here are some general tips and strategies, followed by detailed explanations for a sample question.
           
-          ### General Tips and Tricks:
-          
-          1. **Read the Question First:** This helps you know what to look for when you read the passage. 
+          important General Tips and Tricks 1. **Read the Question First:** This helps you know what to look for when you read the passage. 
           
           2. **Skim the Passage:** Get a general sense of the passage's content and structure before diving into the details. Identify the main idea, author’s tone, and the purpose of the passage.
           
@@ -62,12 +63,11 @@ export const sections: SectionData[] = [
           ### Sample Question with Detailed Explanation:
           
           **Passage:**
-          "In the Shadow of the Eclipse," a novel set during the tumultuous period of a solar eclipse that alters the course of a kingdom, follows the journey of a young seer named Eliana. "As the eclipse cast its shadow over the land, Eliana's visions grew clearer, revealing paths woven with destiny and peril. 'An eclipse is not merely an alignment of celestial bodies,' she mused, gazing into the darkened sky, 'it is a confluence of past, present, and future, a moment when fate can be shifted.' Her role in the kingdom's future was to decipher these omens, guiding those who hold power towards light or darkness."
+          **"In the Shadow of the Eclipse," a novel set during the tumultuous period of a solar eclipse that alters the course of a kingdom, follows the journey of a young seer named Eliana. "As the eclipse cast its shadow over the land, Eliana's visions grew clearer, revealing paths woven with destiny and peril. 'An eclipse is not merely an alignment of celestial bodies,' she mused, gazing into the darkened sky, 'it is a confluence of past, present, and future, a moment when fate can be shifted.' Her role in the kingdom's future was to decipher these omens, guiding those who hold power towards light or darkness."
           
-          **Question:**
-          What is Eliana's perspective on the eclipse?
-          
-          A) It is a natural phenomenon that interests her scientifically.
+          important **Question:** What is Eliana's perspective on the eclipse?
+
+          A) It is a natural phenomenon that interests her scientifically 
           B) It is a harbinger of chaos and destruction for the kingdom.
           C) It is a pivotal event that holds the power to alter destinies.
           D) It is a curse that has been brought upon the land by enemies.
@@ -424,6 +424,11 @@ export const sections: SectionData[] = [
   }
 
   const Section: React.FC<SectionProps> = (props) => {
+
+    const [showMiniTest, setShowMiniTest] = useState(false);
+    const question = "What is 2 + 2?";
+    const options = ["3", "4", "5", "42"];
+
     const { sectionId: urlSectionId, subsectionId } = useParams<{ sectionId?: string; subsectionId?: string }>();
     const sectionId = props.sectionId || urlSectionId;
     const normalizedSectionId = sectionId?.replaceAll('-', ' ');
@@ -443,13 +448,24 @@ export const sections: SectionData[] = [
           <p className='text-center text-3xl font-bold'>{titleToRender}</p>
         </div>
         <div className='py-5'>
-          {contentToRender?.split('\n').map((paragraph, index) => (
-            <Paragraph key={index} text={paragraph} />
-          ))}
+          {contentToRender?.split('\n').map((paragraph, index) => {
+            // Determine if the paragraph should be highlighted
+            // For example, highlight if the paragraph contains the word "important"
+            const isHighlighted = paragraph.includes("**");
+            return <Paragraph key={index} text={paragraph} isHighlighted={isHighlighted} />;
+          })}
         </div>
+        <button 
+        onClick={() => setShowMiniTest(true)}
+        className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700"
+      >
+        Take a quick quiz
+      </button>
+
+      {showMiniTest && <MiniTestModal onClose={() => setShowMiniTest(false)} />}
+          
       </div>
     );
   };
   
   export default Section;
-
