@@ -37,15 +37,10 @@ const App = () => {
                 <Route index element={<Contents/>}/>
                 <Route path="dashboard" element={<Contents/>}/>
                 <Route path="tutorials" element={<Tutorials/>}/>
-                <Route path="tutorials/:tutorialId" element={<TutorialPage />}>
-                <Route index element={<Navigate to={`${sections[0].id.replaceAll(' ', '-')}`} replace />} />
-                  {sections.map(({ id }) => (
-                    <Route
-                      key={id}
-                      path={id.replaceAll(' ', '-')}
-                      element={<Section sectionId={id} />}
-                    />
-                  ))}
+                <Route path="tutorials/:tutorialId" element={<TutorialPage  isDarkMode={isDarkMode}/>}>
+                  <Route index element={<Navigate to={`command-of-evidence`} replace />} />
+                  <Route path=":sectionId" element={<Section isDarkMode={isDarkMode}/>}/>
+                  <Route path=":sectionId/:subsectionId" element={<Section isDarkMode={isDarkMode}/>}/>
                 </Route>
               </Route>
             {/* Authentication Routes */}

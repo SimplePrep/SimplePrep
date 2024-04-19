@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     #internal apps
     "user",
     "core",
+    "core2",
 ]
 
 MIDDLEWARE = [

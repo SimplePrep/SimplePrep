@@ -9,7 +9,7 @@ class TestModel(models.Model):
 
     title = models.CharField(max_length=255, blank=False, null=False)
     description = models.TextField(blank=True, null=True)
-    num_questions = models.IntegerField(default=33)
+    num_questions = models.IntegerField(default=27)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now = True)
 

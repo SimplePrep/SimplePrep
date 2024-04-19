@@ -12,9 +12,11 @@ const DashboardPage:React.FC<DashboardPageProps> = ({toggleDarkMode, isDarkMode}
   const darkModeClass = isDarkMode ? 'grid-background-dark' : 'grid-background-light';
 
   return (
-        <div className={`w-full h-full ${darkModeClass}`}>
+        <div className={`w-full h-full ${darkModeClass} font-montserrat`}>
             <NavBarDash toggleDarkMode={toggleDarkMode} isDarkMode={isDarkMode}/>
-            <Outlet/>
+            <div>
+              <Outlet/>
+            </div>
         </div>
   )
 }
