@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Link, Outlet, useParams} from 'react-router-dom';
+import React, { useState, useEffect} from 'react';
+import { Link, Outlet, useParams, useLocation} from 'react-router-dom';
 import Section, { sections } from './Section';
 import { MdOutlineKeyboardArrowUp,  MdOutlineKeyboardArrowDown } from "react-icons/md";
 
@@ -22,6 +22,10 @@ const TutorialPage:React.FC<TutorialPageProps> = ({isDarkMode}) => {
     setActiveSection(activeSection === id ? null : id);
   };
 
+  const location = useLocation();
+  const currentUrl = location.pathname;
+
+
   return (
     <div className={`w-full py-10 gap-10`}>
       <div className='flex justify-between'>
@@ -33,7 +37,7 @@ const TutorialPage:React.FC<TutorialPageProps> = ({isDarkMode}) => {
               <li key={id} className='flex flex-col'>
                 <Link
                   to={`/demo/tutorials/${tutorialId}/${id.replaceAll(' ', '-')}`}
-                  className={`py-4 text-xl font-medium mx-5 flex items-center  rounded-md  ${linkHoverClass}`}
+                  className={`py-4 text-xl font-medium mx-5 flex items-center rounded-md ${activeSection === id ? 'text-blue-600' : ''} ${linkHoverClass}`}
                   onClick={(e) => {
                     e.preventDefault();
                     toggleSection(id);
@@ -46,18 +50,20 @@ const TutorialPage:React.FC<TutorialPageProps> = ({isDarkMode}) => {
                     <MdOutlineKeyboardArrowDown className="ml-auto" />
                   )}
                 </Link>
-                {activeSection === id && subSections && subSections.map((sub) => (
-                  <Link
-                    to={`/demo/tutorials/${tutorialId}/${id}/${sub.id.replaceAll(' ', '-')}`}
-                    key={sub.id}
-                    onClick={()=> setActiveSubSection(sub.id)}
-                    className={`pl-12 pr-3 py-4 flex items-center ${
-                      activeSubSection === sub.id ?  activeSubSectionClass: linkHoverClass
-                    } font-medium rounded-md transition-colors duration-150`}
-                  >
-                    {sub.title}
-                  </Link>
-                ))}
+                {activeSection === id && subSections &&
+                  subSections.map((sub) => (
+                    <Link
+                      to={`/demo/tutorials/${tutorialId}/${id}/${sub.id.replaceAll(' ', '-')}`}
+                      key={sub.id}
+                      className={`pl-12 pr-3 py-4 flex items-center ${
+                        sub.id.replaceAll(' ', '-') === currentUrl.split('/').pop()
+                          ? activeSubSectionClass
+                          : linkHoverClass
+                      } font-medium rounded-md transition-colors duration-150`}
+                    >
+                      {sub.title}
+                    </Link>
+                  ))}
               </li>
             ))}
           </ul>

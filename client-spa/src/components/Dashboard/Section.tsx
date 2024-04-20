@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import React, {useState} from "react";
 import { AiOutlineClose } from 'react-icons/ai'; 
 import { BsFillArrowLeftCircleFill, BsFillArrowRightCircleFill, BsMoon} from 'react-icons/bs';
@@ -426,22 +426,56 @@ export const sections: SectionData[] = [
   const Section: React.FC<SectionProps> = (props) => {
 
     const [showMiniTest, setShowMiniTest] = useState(false);
-    const question = "What is 2 + 2?";
-    const options = ["3", "4", "5", "42"];
 
-    const { sectionId: urlSectionId, subsectionId } = useParams<{ sectionId?: string; subsectionId?: string }>();
-    const sectionId = props.sectionId || urlSectionId;
+    const { tutorialId, sectionId, subsectionId } = useParams();
+    const navigate = useNavigate();
     const normalizedSectionId = sectionId?.replaceAll('-', ' ');
     const section = sections.find(s => s.id === normalizedSectionId);
-  
-    // Find the subsection if a subsectionId is provided
+    
+    const currentSectionIndex = sections.findIndex(section => section.id === sectionId);
+    const currentSubsectionIndex = subsectionId ? sections[currentSectionIndex]?.subSections?.findIndex(sub => sub.id === subsectionId) : -1;
+
+    const navigateToSection = (index:number) => {
+      const targetSection = sections[index];
+      const targetPath = `/demo/tutorials/${tutorialId}/${targetSection.id}`;
+      navigate(targetPath);
+      window.scrollTo(0, 0);
+    }
+
+    const navigateToSubSection = (sectionIndex:number, subIndex:number) => {
+      const targetSubsection = sections[sectionIndex]?.subSections?.[subIndex];
+      if (targetSubsection) {
+        const targetPath = `/demo/tutorials/${tutorialId}/${sections[sectionIndex].id}/${targetSubsection.id}`;
+        navigate(targetPath);
+        window.scrollTo(0, 0);
+      }
+    }
+
+    const handlePreviousClick = () => {
+      if (currentSubsectionIndex! > 0) {
+          navigateToSubSection(currentSectionIndex, currentSubsectionIndex! - 1);
+      } else if (currentSectionIndex > 0) {
+          navigateToSection(currentSectionIndex - 1);
+      }
+    };
+
+    const handleNextClick = () => {
+      const subsectionCount = sections[currentSectionIndex]?.subSections?.length ?? 0;
+      if (currentSubsectionIndex! >= 0 && currentSubsectionIndex! < subsectionCount - 1) {
+          navigateToSubSection(currentSectionIndex, currentSubsectionIndex! + 1);
+      } else if (currentSectionIndex < sections.length - 1) {
+          navigateToSection(currentSectionIndex + 1);
+      }
+  };
+
+
     const modeClass = props.isDarkMode ? 'bg-[#121212] text-white' : 'bg-white text-gray-800';
-    const textColorClass = props.isDarkMode ? 'text-white' : ''
     const subsection = subsectionId ? section?.subSections?.find(sub => sub.id.replaceAll(' ', '-') === subsectionId) : undefined;
   
     const contentToRender = subsection?.content;
     const titleToRender = subsection ? subsection.title : section?.title;
   
+
     return (
       <div className={`h-full  rounded-2xl ${modeClass}`}>
         <div className='flex flex-col gap-6 justify-center items-center p-10'>
@@ -449,18 +483,30 @@ export const sections: SectionData[] = [
         </div>
         <div className='py-5'>
           {contentToRender?.split('\n').map((paragraph, index) => {
-            // Determine if the paragraph should be highlighted
-            // For example, highlight if the paragraph contains the word "important"
             const isHighlighted = paragraph.includes("**");
             return <Paragraph key={index} text={paragraph} isHighlighted={isHighlighted} />;
           })}
         </div>
+        <div className='p-5 flex justify-between items-center'>  
         <button 
-        onClick={() => setShowMiniTest(true)}
-        className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700"
-      >
-        Take a quick quiz
-      </button>
+          onClick={handlePreviousClick}
+          className="py-2 px-6 border-2 rounded-xl hover:bg-[#00df9a] hover:border-blue-500 hover:text-white font-semibold text-lg"
+        >
+          <BsFillArrowLeftCircleFill className="inline mr-2" /> Previous
+        </button>
+          <button 
+          onClick={() => setShowMiniTest(true)}
+          className="py-2 px-6 border-2 rounded-xl hover:bg-[#00df9a] hover:border-blue-500 hover:text-white font-semibold text-lg"
+        >
+          Take a quick quiz
+        </button>
+        <button 
+          onClick={handleNextClick}
+          className="py-2 px-6 border-2 rounded-xl hover:bg-[#00df9a] hover:border-blue-500 hover:text-white font-semibold text-lg"
+        >
+          Next <BsFillArrowRightCircleFill className="inline ml-2" />
+        </button>
+        </div>
 
       {showMiniTest && <MiniTestModal onClose={() => setShowMiniTest(false)} />}
           

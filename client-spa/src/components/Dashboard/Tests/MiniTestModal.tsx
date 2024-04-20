@@ -42,7 +42,7 @@ interface MiniTestProps {
   
     return (
       <div className='fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50'>
-        <div className={`relative top-20 max-w-[1400px] mx-auto p-5 border  shadow-lg rounded-md ${darkModeClass}`}>
+        <div className={`relative top-20 max-w-[1400px] mx-auto p-5 border  shadow-lg rounded-2xl ${darkModeClass}`}>
           <div className='flex p-5 justify-between items-center'>
             <div className='mx-5 flex gap-10 items-center'>
               <p className='text-bold font-ubuntu text-2xl'>Quiz</p>
