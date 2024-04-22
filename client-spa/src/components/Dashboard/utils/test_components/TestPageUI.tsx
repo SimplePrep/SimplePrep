@@ -1,8 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { BsFillArrowLeftCircleFill, BsFillArrowRightCircleFill, BsMoon} from 'react-icons/bs';
-import { LuTimer } from 'react-icons/lu';
-import { AiFillWarning } from 'react-icons/ai';
-import { TbLetterA, TbLetterB, TbLetterC, TbLetterD } from 'react-icons/tb';
 import {PiFlagThin} from 'react-icons/pi';
 import { useParams } from 'react-router-dom';
 

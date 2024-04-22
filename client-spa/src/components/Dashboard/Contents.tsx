@@ -1,27 +1,6 @@
-import React, { Fragment } from 'react'
-import pic1 from '../assets/exam.jpg'
-import pic2 from '../assets/topic_based_questions.png'
-import pic4 from '../assets/Mathematics-bro.png'
-import { Link } from 'react-router-dom'
+import React from 'react'
 import { comingsoon } from '../utils'
-const ContentUrls = [
-    {
-        name: 'Authentic Practice Tests',
-        url: '/practice-tests',
-    },
-    {
-        name: 'Topic Based Questions',
-        url: '/topic-questions',
-    },
-    {
-        name: 'English & Writing',
-        url: '/english&writing-practice',
-    },
-    {
-        name: 'Math',
-        url: '/math-practice',
-    }
-]
+
 
 const Contents = () => {
     const practiceTests = Array.from({ length: 12 }, (_, i) => ({
