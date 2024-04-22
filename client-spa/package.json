@@ -16,9 +16,17 @@
     "@types/react": "^18.2.20",
     "@types/react-dom": "^18.2.7",
     "axios": "^1.6.5",
+    "chart.js": "^4.4.2",
+    "chartjs-plugin-datalabels": "^2.2.0",
     "dotenv": "^16.4.5",
+    "draft-js": "^0.11.7",
+    "draft-js-export-html": "^1.4.1",
+    "draft-js-import-html": "^1.4.1",
+    "draftjs-to-html": "^0.9.1",
     "react": "^18.2.0",
+    "react-chartjs-2": "^5.2.0",
     "react-dom": "^18.2.0",
+    "react-draft-wysiwyg": "^1.15.0",
     "react-icons": "^4.10.1",
     "react-redux": "^9.0.4",
     "react-router-dom": "^6.21.1",
@@ -52,6 +60,8 @@
     ]
   },
   "devDependencies": {
+    "@types/draftjs-to-html": "^0.8.4",
+    "@types/react-draft-wysiwyg": "^1.13.8",
     "@typescript-eslint/parser": "^6.21.0",
     "react-scripts": "^5.0.1",
     "tailwindcss": "^3.3.3"

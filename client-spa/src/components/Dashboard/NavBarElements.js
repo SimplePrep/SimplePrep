@@ -24,7 +24,7 @@ export const SideBarLinks = [
     },
     {
         title: "Analytics",
-        path: 'track',
+        path: 'analytics',
         icon: <GiProgression size={25} color='green' />
     },
     {

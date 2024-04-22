@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import { BsFillArrowLeftCircleFill, BsFillArrowRightCircleFill, BsMoon} from 'react-icons/bs';
 
 interface MiniTestProps {
@@ -7,6 +7,8 @@ interface MiniTestProps {
   
   const MiniTestModal: React.FC<MiniTestProps> = ({ onClose }) => {
     const [selectedChoice, setSelectedChoice] = useState<string | null>(null);
+    const [fadeIn, setFadeIn] = useState(false);
+
     const answerChoices = [
       {
         label: 'A',
@@ -27,21 +29,28 @@ interface MiniTestProps {
     ];
     const handlePreviousQuestion = () => {
     console.log("Go to the previous question");
-    // Implement your logic for going to the previous question
   };
 
   const handleNextQuestion = () => {
     console.log("Go to the next question");
-    // Implement your logic for going to the next question
   };
+
+  useEffect(() => {
+    const timer = setTimeout(()=> {
+        setFadeIn(true);
+    }, 150);
+    return () => clearTimeout(timer);
+  })
+
     const [isDarkMode, setIsDarkMode] = useState(false);
     const darkModeClass = isDarkMode ? 'dark' : 'bg-white text-black';
+    const animationClass = fadeIn ? 'animate-fadeIn' : 'opacity-0'
   const toggleDarkMode = () => {
     setIsDarkMode(!isDarkMode)
   };
   
     return (
-      <div className='fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50'>
+      <div className={`fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50 ${animationClass}`}>
         <div className={`relative top-20 max-w-[1400px] mx-auto p-5 border  shadow-lg rounded-2xl ${darkModeClass}`}>
           <div className='flex p-5 justify-between items-center'>
             <div className='mx-5 flex gap-10 items-center'>

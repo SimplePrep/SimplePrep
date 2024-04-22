@@ -1,7 +1,7 @@
 import React from 'react'
 import Logo from '../assets/logo2.png'
 import { NavLink } from 'react-router-dom'
-import { SideBarLinks } from './SideBarElements'
+import { SideBarLinks } from './NavBarElements'
 import { logout } from '../actions/auth'
 import {connect} from 'react-redux'
 import { BsMoon } from 'react-icons/bs'

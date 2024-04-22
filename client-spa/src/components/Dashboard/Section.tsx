@@ -2,7 +2,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import React, {useState} from "react";
 import { AiOutlineClose } from 'react-icons/ai'; 
 import { BsFillArrowLeftCircleFill, BsFillArrowRightCircleFill, BsMoon} from 'react-icons/bs';
-import MiniTestModal from "./Tests/MiniTestModal";
+import MiniTestModal from "./utils/test_components/MiniTestModal";
 interface ParagraphProps {
   text: string | null;
   isHighlighted?: boolean; // New prop to indicate highlighting
