@@ -1,13 +1,37 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { comingsoon } from '../utils'
+import axiosInstance from '../utils/axiosInterceptor';
+
+interface Test {
+    id: number;
+    title: string;
+}
 
 
-const Contents = () => {
-    const practiceTests = Array.from({ length: 12 }, (_, i) => ({
-        id: i + 1,
-        title: `Practice Test ${i + 1}`,
-        description: "Test your skills with this practice test.",
-      }));
+const Contents:React.FC = () => {
+
+    const [tests, setTests] = useState<Test[]>([]);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [error, setError] = useState<string | null>('');
+
+    useEffect(() => {
+        const fetchTests = async () => {
+            setIsLoading(true);
+            setError(null);
+
+            try {
+                const response = await axiosInstance.get<Test[]>('/core/tests/');
+                setTests(response.data);
+            } catch (err:any) {
+                setError(err.message);
+            } finally {
+                setIsLoading(false);
+            }
+        }
+        fetchTests();
+    }, []);
+
+    
       const borderColorClasses = [
         'shadow-red-500', 
         'shadow-green-500', 
@@ -29,7 +53,7 @@ const Contents = () => {
             <div className='max-w-[1000px] mx-auto'>
             <div className="flex justify-center items-center space-x-4">
                 <div className="my-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-                    {practiceTests.map((test, index) => {
+                    {tests.map((test, index) => {
                         const borderColorClass = borderColorClasses[index % borderColorClasses.length];
 
                         return(
@@ -39,7 +63,7 @@ const Contents = () => {
                                 </div>
                                 <h5 className="text-white text-xl leading-tight font-medium mb-2">{test.title}</h5>
                                 <p className="text-gray-400 text-base mb-4">
-                                    {test.description}
+                                Test your skills with this practice test.
                                 </p>
                                 <button className="mt-auto py-2 px-4 bg-blue-500 text-white text-lg rounded hover:bg-blue-600 transition-colors duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-opacity-50">
                                     Practice

@@ -1,22 +1,22 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import Logo from '../assets/logo2.png'
 import { NavLink } from 'react-router-dom'
 import { SideBarLinks } from './NavBarElements'
 import { logout } from '../actions/auth'
 import {connect} from 'react-redux'
 import { BsMoon } from 'react-icons/bs'
+import AuthContext from '../utils/AuthContext'
 
 const userFullName = "Alijon Karimberdiev";
 
 interface SideBarProps {
-    logout: ()=> void;
-    isAuthenticated: boolean;
     toggleDarkMode: () => void;
     isDarkMode: boolean;
 }
 
-const SideBar: React.FC<SideBarProps> = ({logout, isAuthenticated, toggleDarkMode, isDarkMode}):React.ReactElement => {
-    const userInitial = userFullName.charAt(0);
+const SideBar: React.FC<SideBarProps> = ({ toggleDarkMode, isDarkMode}):React.ReactElement => {
+    const {SignOut, user} = useContext(AuthContext);
+    const userInitial = user?.displayName?.charAt(0) || 'A';
     const darkModeClass = isDarkMode ? 'dark text-color-dark' : 'light text-color-light';
   return (
         <div className={`shadow-xl sticky top-0  max-w-[1600px] mx-auto z-10  shadow-teal-300 bg-white rounded-2xl ${darkModeClass}`}>
@@ -36,6 +36,9 @@ const SideBar: React.FC<SideBarProps> = ({logout, isAuthenticated, toggleDarkMod
                 <button onClick={toggleDarkMode} className='text-lg p-3 border-2 rounded-2xl hover:bg-[#00df9a] hover:border-blue-500'>
                     <BsMoon/>
                 </button>
+                <button onClick={() => SignOut()} className='text-lg p-3 border-2 rounded-2xl hover:bg-[#00df9a] hover:border-blue-500'>
+                    Logout
+                </button>
                 <div className='flex items-center justify-center h-12 w-12 rounded-full bg-slate-300 text-xl font-medium text-gray-700 cursor-pointer'>
                     {userInitial}
                 </div>
@@ -44,14 +47,6 @@ const SideBar: React.FC<SideBarProps> = ({logout, isAuthenticated, toggleDarkMod
   )
 }
 
-interface AuthState {
-    isAuthenticated: boolean;
-}
-interface RootState {
-    auth: AuthState;
-}
-const mapStateToProps = (state: RootState) => ({
-    isAuthenticated: state.auth.isAuthenticated
-})
 
-export default connect(mapStateToProps, {logout})(SideBar)
+
+export default SideBar;

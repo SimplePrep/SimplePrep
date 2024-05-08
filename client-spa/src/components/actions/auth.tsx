@@ -1,4 +1,4 @@
-import axios from 'axios'
+import axios, {AxiosError} from 'axios'
 import {
     LOGIN_SUCCESS,
     LOGIN_FAIL,
@@ -15,7 +15,7 @@ import {
     SIGNUP_FAIL,
     ACTIVATION_SUCCESS,
     ACTIVATION_FAIL
-} from '../actions/types';
+} from './types';
 
 export const checkAuthenticated = () => async (dispatch:any) => {
     if (localStorage.getItem('access')){
@@ -60,41 +60,53 @@ export const login = (email: string, password: string) => async (dispatch:any) =
     try {
         const res = await axios.post(`${process.env.REACT_APP_API_URL}/auth/jwt/create/`, body, config)
 
+        if (res.data.access) {
+            localStorage.setItem('token', res.data.access);
+        }
+        
         console.log('Login success!!')
         dispatch ({
             type: LOGIN_SUCCESS,
             payload: res.data
         })
     } catch (err){
-
-        console.log('Login failed')
-        dispatch({
-            type: LOGIN_FAIL
-        })
+        if (axios.isAxiosError(err)) {
+            console.log('Login failed');
+            dispatch({
+              type: LOGIN_FAIL,
+              payload: err.response ? err.response.data.detail : 'Login Failed. Either password or email is incorrect'
+            });
+          } else {
+            console.log('An unexpected error occurred:', err);
+          }
     }
 };
-export const signup = (name: string, email: string, password: string, re_password: string) => async (dispatch:any) => {
+export const signup = (first_name: string, last_name:string, email: string, password: string, re_password: string) => async (dispatch:any) => {
     const config = {
         headers: {
             'Content-Type': 'application/json'
         }
     };
-    const body = JSON.stringify({name, email, password, re_password});
+    const body = JSON.stringify({first_name, last_name, email, password, re_password});
 
     try {
         const res = await axios.post(`${process.env.REACT_APP_API_URL}/auth/users/`, body, config)
 
-        console.log('Login success!!')
+        
         dispatch ({
             type: SIGNUP_SUCCESS,
             payload: res.data
         })
     } catch (err){
-
-        console.log('Login failed')
-        dispatch({
-            type: SIGNUP_FAIL
-        })
+        if (axios.isAxiosError(err)) {
+            console.log('Sign Up failed');
+            dispatch({
+              type: SIGNUP_FAIL,
+              payload: err.response ? err.response.data.email[0] : 'Sign up failed. This email already exists!'
+            });
+          } else {
+            console.log('An unexpected error occurred:', err);
+          }
     }
 };
 

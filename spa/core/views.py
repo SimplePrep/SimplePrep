@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.shortcuts import get_object_or_404
 from .serializers import (
+    TestSerializer,
     TestModelSerializer,
     QuestionSerializer,
     CommentSerializer,
@@ -14,13 +15,38 @@ from .models import (
     Question, 
     Comment, 
     TestResult, 
-    UserAnswer)
+    UserAnswer,
+    Test)
 
 class ManageTestView(APIView):
     def get(self, request, format=None):
         try:
-            tests = TestModel.objects.all()
-            serializer = TestModelSerializer(tests, many=True)
+            tests = Test.objects.all()
+            serializer = TestSerializer(tests, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Exception as e: 
+            return Response(
+                {'error': f'Something went wrong while retrieving tests -> {Exception}'},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+    def post(self, request, format=None):
+        try:
+            serializer = TestSerializer(data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            return Response(
+                {'error': f'Something went wrong while retrieving tests -> {Exception}'},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+class ManageTestModuleView(APIView):
+    def get(self, request, test_id, format=None):
+        try:
+            test_modules = TestModel.objects.filter(test_id=test_id)
+            serializer = TestModelSerializer(test_modules, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
         except Exception as e: 
             return Response(
@@ -28,9 +54,11 @@ class ManageTestView(APIView):
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
     
-    def post(self, request, format=None):
+    def post(self, request, test_id, format=None):
         try:
-            serializer = TestModelSerializer(data=request.data)
+            data = request.data 
+            data['test'] = test_id
+            serializer = TestModelSerializer(data=data)
             if serializer.is_valid():
                 serializer.save()
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -42,9 +70,9 @@ class ManageTestView(APIView):
             )
 
 class QuestionListCreateView(APIView):
-    def get(self, request, test_id, format=None):
+    def get(self, request, test_module_id, format=None):
         try:
-            questions = Question.objects.filter(test_id=test_id)
+            questions = Question.objects.filter(test_id=test_module_id).order_by('id')
             serializer = QuestionSerializer(questions, many=True)
             return Response(serializer.data)
         except Exception as e: 
@@ -53,11 +81,11 @@ class QuestionListCreateView(APIView):
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
     
-    def post(self, request, test_id, format=None):
+    def post(self, request, test_module_id, format=None):
         try:
             serializer = QuestionSerializer(data=request.data)
             if serializer.is_valid():
-                serializer.save(test_id=test_id)
+                serializer.save(test_module_id=test_module_id)
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e: 

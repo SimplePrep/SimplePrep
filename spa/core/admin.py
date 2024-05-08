@@ -1,5 +1,8 @@
 from django.contrib import admin
-from .models import TestModel, Question, Comment, TestResult, UserAnswer
+from .models import Test, TestModel, Question, Comment, TestResult, UserAnswer
+
+class TestAdmin(admin.ModelAdmin):
+    list_display = ('id', 'title', 'created_at', 'updated_at')
 
 class TestModelAdmin(admin.ModelAdmin):
     list_display = ('title', 'num_questions', 'created_at', 'updated_at',)
@@ -20,6 +23,7 @@ class UserAnswerAdmin(admin.ModelAdmin):
     list_display = ('test_result', 'question', 'selected_option', )
     list_filter = ('test_result', 'question')
 
+admin.site.register(Test, TestAdmin)
 admin.site.register(TestModel, TestModelAdmin)
 admin.site.register(Question, QuestionAdmin)
 admin.site.register(Comment, CommentAdmin)

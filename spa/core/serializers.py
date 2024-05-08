@@ -1,5 +1,11 @@
 from rest_framework import serializers
-from .models import TestModel, Question, Comment, TestResult, UserAnswer
+from .models import Test, TestModel, Question, Comment, TestResult, UserAnswer
+
+class TestSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Test
+        fields = '__all__'
+
 
 class TestModelSerializer(serializers.ModelSerializer):
     class Meta:

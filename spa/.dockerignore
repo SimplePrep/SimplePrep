@@ -11,6 +11,7 @@ spa/*/__pycache__/
 spa/*/*/__pycache__/
 spa/*/*/*/__pycache__/
 
+spa/firebase-admin-sdk.json
 .env/
 .venv/
 venv/

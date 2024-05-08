@@ -14,13 +14,14 @@ import {
     SIGNUP_FAIL,
     ACTIVATION_SUCCESS,
     ACTIVATION_FAIL,
-} from '../actions/types';
+} from '../../components/actions/types'
 
 const initialState = {
     access: localStorage.getItem('access'),
     refresh: localStorage.getItem('refresh'),
     isAuthenticated: null,
     user: null,
+    error: null,
 }
 
 export default function(state = initialState, action:any) {
@@ -30,12 +31,14 @@ export default function(state = initialState, action:any) {
         case AUTHENTICATED_SUCCESS:
             return {
                 ...state,
-                isAuthenticated: true
+                isAuthenticated: true,
+                error: null
             }
         case AUTHENTICATED_FAIL:
             return {
                 ...state,
-                isAuthenticated: false
+                isAuthenticated: false,
+                error: action.payload
             }
         case LOGIN_SUCCESS: 
             localStorage.setItem('access', payload.access);
@@ -43,18 +46,21 @@ export default function(state = initialState, action:any) {
                 ...state,
                 isAuthenticated: true,
                 access: payload.access,
-                refresh: payload.refresh
+                refresh: payload.refresh,
+                error: null,
             }
             
         case USER_LOADED_SUCCESS:
             return {
                 ...state,
-                user:payload
+                user:payload,
+                error: null,
             }
         case USER_LOADED_FAIL:
             return {
                 ...state,
-                user: null
+                user: null,
+                error: action.payload,
             }
         case LOGIN_FAIL: 
         case SIGNUP_FAIL:
@@ -67,11 +73,13 @@ export default function(state = initialState, action:any) {
                 refresh: null,
                 isAuthenticated: false,
                 user: null,
+                error: action.payload,
             }
         case SIGNUP_SUCCESS:
             return {
                 ...state,
-                isAuthenticated: false
+                isAuthenticated: false,
+                error: null,
             }
         
 

@@ -1,46 +1,51 @@
-import React, {useEffect, useState} from 'react'
+import React, {useContext, useEffect, useState} from 'react'
 import banner from '../../components/assets/signInPic1.jpg'
-import {FcGoogle} from 'react-icons/fc'
 import {LiaFastForwardSolid} from 'react-icons/lia'
-import { Link,  useNavigate} from 'react-router-dom'
+import { useNavigate} from 'react-router-dom'
 import {connect} from 'react-redux'
-import { reset_password } from '../../components/actions/auth'
+import { reset_password} from '../../components/actions/auth'
+import FloatingLabelInput from './FloatingLabelInput'
+import Loader from './Modal'
+import AuthContext from '../../components/utils/AuthContext'
 
-interface ResetPasswordProps {
-    reset_password: (email: string)=> void;
-    
-}
-
-const ResetPassword: React.FC<ResetPasswordProps> = ({reset_password}): React.ReactElement =>  {
+const ResetPassword = (): React.ReactElement =>  {
+    const {SendResetPasswordEmail, error}  = useContext(AuthContext);
     const [email, setEmail] = useState('');
     const [requestSent, setRequestSent] = useState(false);
+    const [showModal, setShowModal] = useState(false);
+
     const backgroundImageStyle = {
         backgroundImage: `url(${banner})`,
     };
     const navigate = useNavigate();
 
-    const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        reset_password(email);
-        setRequestSent(true);
+        await SendResetPasswordEmail(email);
+        if (!error) {
+            setShowModal(true);
+            setTimeout(() => {
+                setShowModal(false);
+                navigate('/');
+            }, 5000); 
+        }
     };
     
     
     useEffect(()=> {
-        if (requestSent){
-            console.log('success')
-        } else {
-            console.log('Login Failed')
-        }
-    }, [requestSent])
+        if (error) {
+            console.error('Reset password error:', error);
+        } 
+    }, [error])
     
 
 
   return (
     <div className='flex w-full h-screen bg-slate-200 items-center justify-center'>
-        <div className='flex lg:max-h-[80%] h-full  max-w-[1600px] mx-auto flex-row  p-10'>
+        {showModal && <Loader message="If your email is registered with us, you will receive a password reset link to your email shortly." />}
+        <div className='flex h-full  max-w-[1400px] mx-auto flex-row  p-10'>
             <div className='w-[50%]  rounded-l-2xl' style={backgroundImageStyle}>
-                <div className= 'p-40 md:p-40 lg:p-40 flex flex-col gap-5 bg-transparent'>
+                <div className= 'px-20 py-40 flex flex-col gap-5 bg-transparent'>
                     <div className='flex flex-row items-center'>
                         <LiaFastForwardSolid size={60} color='white'/>
                         <h1 className='font-bold text-5xl text-white'>Digital</h1>
@@ -55,22 +60,17 @@ const ResetPassword: React.FC<ResetPasswordProps> = ({reset_password}): React.Re
             <div className='bg-white  w-[50%] rounded-r-2xl flex flex-col p-40 gap-5'>
                 <div className='max-w-lg'>
                     <h1 className='font-bold text-3xl text-black'>Hello, Welcome back</h1>
-                    <p className='mt-5 text-xl text-slate-500'>Don't you have an account?<a className='text-blue-500 font-bold' href="/sign-up">Sign up</a></p>
+                    <p className='mt-5 text-xl text-slate-500'>Don't you have an account? <a className='text-blue-500 font-bold' href="/signup">Sign up</a></p>
                     <form onSubmit={e=> onSubmit(e)}>
                         <div className='flex mt-10 flex-col gap-5'>
-                            <h1 className="text-2xl font-bold mb-4">Request Password Reset</h1>
-                                <div className="mb-4 relative">
-                                    <input
-                                    type="email"
-                                    placeholder=" "
-                                    className="peer w-full p-4 pt-6 font-light bg-white border-2 rounded-md outline-none 
-                                    transition disabled:opacity-70 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500 "
-                                    value={email}
-                                    onChange={(e) => setEmail(e.target.value)}
-                                    />
-                                    <label className='absolute text-md duration-150 transform -translate-y-3 top-5 z-5 origin-[0] left-4 peer-placeholder-shown:scale-200 peer-placeholder-shown:translate-y-0
-                                    peer-focus:scale-75 peer-focus:-translate-y-4'>Email</label>
-                                </div>
+                            <h1 className="text-2xl font-bold">Request Password Reset</h1>
+                            <p className='text-slate-600'>If your email is registered with us, you will receive a password reset link to your email.</p>
+                                <FloatingLabelInput id="email" label='Email' type='email' value={email} setValue={setEmail} />
+                            {error && (
+                                <p className="mt-2 text-red-500">
+                                    {error}
+                                </p>
+                            )}
                             <button type='submit' className="w-full bg-blue-500 text-white py-3 rounded-md hover:bg-blue-600">Reset Password</button>
                         </div>
                     </form>
@@ -81,5 +81,4 @@ const ResetPassword: React.FC<ResetPasswordProps> = ({reset_password}): React.Re
   )
 }
 
-
-export default connect(null,{reset_password})(ResetPassword);
+export default ResetPassword;

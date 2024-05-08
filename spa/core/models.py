@@ -1,12 +1,24 @@
 from django.db import models
 from django.contrib.auth import get_user_model
 User = get_user_model()
+
+class Test(models.Model):
+    """
+        Model fort Test
+    """
+    title = models.CharField(max_length=255)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self) -> str:
+        return self.title
+
 class TestModel(models.Model):
     
     """
-        Model for Tests
+        Model for Test Modules
     """
-
+    test = models.ForeignKey(Test, on_delete = models.CASCADE, related_name = 'testmodel' , null=True)
     title = models.CharField(max_length=255, blank=False, null=False)
     description = models.TextField(blank=True, null=True)
     num_questions = models.IntegerField(default=27)
@@ -22,6 +34,8 @@ class Question(models.Model):
         Model for Questions
     """
     test = models.ForeignKey(TestModel, on_delete=models.CASCADE, related_name='questions')
+    model = models.CharField(max_length=255)
+    section = models.CharField(max_length=255)
     title = models.CharField(max_length=255)
     context = models.TextField(blank=False, null=False)
     query = models.TextField(blank=False, null=False)

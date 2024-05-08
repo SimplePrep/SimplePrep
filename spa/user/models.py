@@ -13,9 +13,9 @@ class UserAccountManager(BaseUserManager):
         user.set_password(password)
         user.save(using=self._db)
 
-        #assign the user to the User group
-        user_group = Group.objects.get(name="User")
-        user.groups.add(user_group)
+        # #assign the user to the User group
+        # user_group = Group.objects.get(name="User")
+        # user.groups.add(user_group)
         return user
     
 
@@ -35,7 +35,7 @@ class User(AbstractBaseUser, PermissionsMixin):
             FREEMIUM = 'free'
             PREMIUM = 'premium'
 
-
+    firebase_uid = models.CharField(max_length=128, unique=True, null=True)
     email = models.EmailField(unique=True, max_length=255)
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)

@@ -1,56 +1,76 @@
-import React, {useEffect, useState} from 'react'
-import banner from '../../components/assets/signInPic1.jpg'
-import {FcGoogle} from 'react-icons/fc'
-import {LiaFastForwardSolid} from 'react-icons/lia'
-import { useNavigate} from 'react-router-dom'
-import {connect} from 'react-redux'
-import {signup} from '../../components/actions/auth';
+import React, {useEffect, useState,  useContext} from 'react';
+import banner from '../../components/assets/signInPic1.jpg';
+import {FcGoogle} from 'react-icons/fc';
+import {LiaFastForwardSolid} from 'react-icons/lia';
+import { useNavigate} from 'react-router-dom';
+import FloatingLabelInput from './FloatingLabelInput';
+import Modal from './Modal';
+import  AuthContext  from '../../components/utils/AuthContext';
 
-interface SignUpProps {
-    signup: (name: string, email: string, password: string, re_password: string)=> void;
-    isAuthenticated: boolean;
-}
-
-const SignUp: React.FC<SignUpProps> = ({signup, isAuthenticated}): React.ReactElement =>  {
+const SignUp = ():  React.ReactElement =>  {
+    const {SignUp, GoogleSignIn, error} = useContext(AuthContext);
     const [accountCreated, setAccountCreated] = useState(false);
-    const [name, setName] = useState('');
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [re_password, setRe_password] = useState('');
+    const [rePassword, setRePassword] = useState('');
+    const [showModal, setShowModal] = useState(false);
+    const [pageError, setPageError] = useState('');
+    const [modalMessage, setModalMessage] = useState('');
+
 
     const backgroundImageStyle = {
         backgroundImage: `url(${banner})`,
     };
     const navigate = useNavigate();
 
-    const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        if (password == re_password){
-            signup(name, email, password, re_password);
-            setAccountCreated(true);
+    const handleGoogleSignIn = async () => {
+        try {
+            await GoogleSignIn();
+            setModalMessage('Account created successfully! Redirecting you to Demo page.');
+            setShowModal(true);
+            setTimeout(() => {
+                setShowModal(false);
+                navigate('/demo');
+            }, 5000);
+        } catch (err) {
+            console.error('Error during Google Sign-In:', err);
         }
     };
     
-    
-    useEffect(()=> {
-        if (isAuthenticated) {
-            navigate('/')
-        }
-        if (accountCreated){
-            navigate('/');
-            console.log('success')
-        } else {
-            console.log('Login Failed')
-        }
-    }, [accountCreated])
-    
 
+    const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        if (password !== rePassword) {
+            setPageError('Passwords do not match.');
+            return;
+        }
+        await SignUp({firstName, lastName, email, password});
+        if(!error) {
+            setAccountCreated(true);
+            setModalMessage("Account created successfully! Check your email to follow the link to activate your account. Redirecting you to home page.")
+            setShowModal(true);
+            setTimeout(() => {
+                setShowModal(false);
+                navigate('/');
+            }, 10000);
+        }
+    };
+    useEffect(() => {
+        if (error) {
+            setPageError(error);
+            setAccountCreated(false);
+        }
+    }, [error])
+    
 
   return (
     <div className='flex w-full h-screen  bg-slate-200 items-center justify-center'>
-        <div className='flex   max-w-[1500px] mx-auto flex-row '>
+        {showModal && <Modal message={modalMessage} />}
+        <div className='flex  max-w-[1450px] mx-auto flex-row'>
             <div className='w-[50%]  rounded-l-2xl' style={backgroundImageStyle}>
-                <div className= 'p-20 md:p-40 lg:p-40 flex flex-col gap-5 bg-transparent'>
+                <div className= 'px-20 py-40  flex flex-col gap-5 bg-transparent'>
                     <div className='flex flex-row items-center'>
                         <LiaFastForwardSolid size={60} color='white'/>
                         <h1 className='font-bold text-5xl text-white'>Digital</h1>
@@ -62,61 +82,29 @@ const SignUp: React.FC<SignUpProps> = ({signup, isAuthenticated}): React.ReactEl
                     <h2 className='font-bold text-xl text-white'>But with us, you will learn more.</h2>
                 </div>
             </div>
-            <div className='bg-white  w-[50%] rounded-r-2xl flex flex-col p-24 gap-5'>
+            <div className='bg-white  w-[50%] rounded-r-2xl flex flex-col p-20'>
                 <div className='max-w-lg'>
                 <h1 className='font-normal text-2xl text-black '>Create your account!</h1>
-                    <p className='mt-5 text-xl text-slate-500'>Already have an account? <a className='text-blue-500 font-bold' href="/sign-in">Sign in</a></p>
+                    <p className='mt-5 text-xl text-slate-500'>Already have an account? <a className='text-blue-500 font-bold' href="/login">Login</a></p>
                     <form onSubmit={e=> onSubmit(e)}>
-                        <div className='flex mt-10 flex-col gap-5'>
+                        <div className='flex mt-5 flex-col gap-5'>
                             <h1 className="text-2xl font-bold mb-4">Sign Up</h1>
-                                <div className="mb-4 relative">
-                                    <input
-                                    type="text"
-                                    placeholder=""
-                                    className="peer w-full p-4 pt-6 font-light bg-white border-2 rounded-md outline-none 
-                                    transition disabled:opacity-70 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500 "
-                                    value={name}
-                                    onChange={(e) => setName(e.target.value)}
-                                    />
-                                    <label className='absolute text-md duration-150 transform -translate-y-3 top-5 z-5 origin-[0] left-4 peer-placeholder-shown:scale-200 peer-placeholder-shown:translate-y-0
-                                    peer-focus:scale-75 peer-focus:-translate-y-4'>Name*</label>
-                                </div>
-                                <div className="mb-4 relative">
-                                    <input
-                                    type="email"
-                                    placeholder=""
-                                    className="peer w-full p-4 pt-6 font-light bg-white border-2 rounded-md outline-none 
-                                    transition disabled:opacity-70 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500 "
-                                    value={email}
-                                    onChange={(e) => setEmail(e.target.value)}
-                                    />
-                                    <label className='absolute text-md duration-150 transform -translate-y-3 top-5 z-5 origin-[0] left-4 peer-placeholder-shown:scale-200 peer-placeholder-shown:translate-y-0
-                                    peer-focus:scale-75 peer-focus:-translate-y-4'>Email*</label>
-                                </div>
-                                <div className="mb-4 relative">
-                                <input
-                                    type="password"
-                                    placeholder=" "
-                                    className="peer w-full p-4 pt-6 font-light bg-white border-2 rounded-md outline-none transition 
-                                    disabled:opacity-70 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                    value={password}
-                                    onChange={(e) => setPassword(e.target.value)}
-                                    />
-                                    <label className='absolute text-md duration-150 transform -translate-y-3 top-5 z-5 origin-[0] left-4 peer-placeholder-shown:scale-200 peer-placeholder-shown:translate-y-0
-                                    peer-focus:scale-75 peer-focus:-translate-y-4'>Password*</label>
-                                </div>
-                                <div className="mb-4 relative">
-                                <input
-                                    type="password"
-                                    placeholder=" "
-                                    className="peer w-full p-4 pt-6 font-light bg-white border-2 rounded-md outline-none transition 
-                                    disabled:opacity-70 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                    value={re_password}
-                                    onChange={(e) => setRe_password(e.target.value)}
-                                    />
-                                    <label className='absolute text-md duration-150 transform -translate-y-3 top-5 z-5 origin-[0] left-4 peer-placeholder-shown:scale-200 peer-placeholder-shown:translate-y-0
-                                    peer-focus:scale-75 peer-focus:-translate-y-4'>Confirm Password*</label>
-                                </div>
+                            <div className='flex flex-row gap-10'>
+                                <FloatingLabelInput id="firstName" label='First Name' type='firstName' value={firstName} setValue={setFirstName} />
+                                <FloatingLabelInput id="lastName" label='Last Name' type='lastName' value={lastName} setValue={setLastName} />
+                            </div>
+                            <FloatingLabelInput id="email" label='Email' type='email' value={email} setValue={setEmail} />
+                            <FloatingLabelInput id="password" label="Password" type='password' value={password} setValue={(value) => { setPassword(value); setPageError(''); }}/>
+                            <FloatingLabelInput id="re_password" label="Confirm Password" type='password' value={rePassword} setValue={(value) => { setRePassword(value); setPageError(''); }}/>
+                            <div className="relative h-10">
+                                    <p
+                                        className={`text-red-500 absolute inset-0 ${
+                                        pageError ? 'visible' : 'invisible'
+                                        }`}
+                                    >
+                                        {pageError || 'Placeholder'}
+                                    </p>
+                            </div>                           
                             <button type='submit' className="w-full bg-blue-500 text-white py-3 rounded-md hover:bg-blue-600">Register</button>
                         </div>
                     </form>
@@ -125,9 +113,9 @@ const SignUp: React.FC<SignUpProps> = ({signup, isAuthenticated}): React.ReactEl
                         <span className="px-2 text-slate-500">or</span>
                         <span className="border-t w-1/2 border-2"></span>
                     </div>
-                    <button className="w-full mt-5 border-2 font-medium py-3 rounded-md hover:bg-slate-100 flex items-center justify-center">
+                    <button onClick={handleGoogleSignIn} className="w-full mt-5 border-2 font-medium py-3 rounded-md hover:bg-slate-100 flex items-center justify-center">
                         <FcGoogle className="mr-2" size={30}/>
-                        <p className="text-center">Sign Up with Google</p>
+                        <p className="text-center">Continue with Google</p>
                     </button>
                 </div>
             </div>
@@ -136,14 +124,4 @@ const SignUp: React.FC<SignUpProps> = ({signup, isAuthenticated}): React.ReactEl
   )
 }
 
-interface AuthState {
-    isAuthenticated: boolean;
-}
-interface RootState {
-    auth: AuthState;
-}
-const mapStateToProps = (state: RootState) => ({
-    isAuthenticated: state.auth.isAuthenticated
-})
-
-export default connect(mapStateToProps,{signup})(SignUp);
+export default SignUp;
