@@ -1,13 +1,14 @@
 
-import {configureStore} from '@reduxjs/toolkit'
-import * as thunk from 'redux-thunk';
-import rootReducer from './reducers/rootReducer';
+// import {configureStore} from '@reduxjs/toolkit'
+// import * as thunk from 'redux-thunk';
+// import rootReducer from './reducers/rootReducer';
 
-const initialState = {};
+// const initialState = {};
 
-const store = configureStore({
-    reducer: rootReducer,
-    preloadedState: initialState,
-});
+// const store = configureStore({
+//     reducer: rootReducer,
+//     preloadedState: initialState,
+// });
 
-export default store;
+// export default store;
+export {}

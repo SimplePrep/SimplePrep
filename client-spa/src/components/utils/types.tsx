@@ -14,3 +14,10 @@ export interface IAuth {
   checkAuthenticated: () => Promise<void>;
   loadUser: () => Promise<void>;
 }
+
+export interface UserDetails {
+  email: string;
+  first_name: string;
+  last_name: string;
+  firebase_uid: string;
+}

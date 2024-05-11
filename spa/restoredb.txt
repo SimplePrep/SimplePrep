@@ -1,6 +1,6 @@
 Instructions on how to restore backup 
 
-docker cp /path/to/backup.sql your-project_db_1:/tmp/backup.sql
+docker cp backup.sql simpleprep-db-1:/tmp/backup.sql
 
 docker exec -it simpleprep-db-1 bash
 
@@ -13,5 +13,7 @@ select pg_terminate_backend(63);
 drop database devdb;
 
 CREATE DATABASE devdb;
+
+\q
 
 psql -U devuser -h db -d devdb < /tmp/backup.sql

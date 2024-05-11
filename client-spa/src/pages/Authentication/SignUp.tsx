@@ -25,6 +25,7 @@ const SignUp = ():  React.ReactElement =>  {
     };
     const navigate = useNavigate();
 
+
     const handleGoogleSignIn = async () => {
         try {
             await GoogleSignIn();
@@ -46,28 +47,45 @@ const SignUp = ():  React.ReactElement =>  {
             setPageError('Passwords do not match.');
             return;
         }
-        await SignUp({firstName, lastName, email, password});
-        if(!error) {
+        setPageError('');
+        setAccountCreated(false);
+        setShowModal(false);
+        
+        try {
+            await SignUp({firstName, lastName, email, password});
             setAccountCreated(true);
-            setModalMessage("Account created successfully! Check your email to follow the link to activate your account. Redirecting you to home page.")
-            setShowModal(true);
-            setTimeout(() => {
-                setShowModal(false);
-                navigate('/');
-            }, 10000);
+        }  catch (err: unknown) {
+            if (err instanceof Error) {
+                setPageError(err.message);
+            } else {
+                setPageError('An unexpected error occurred during sign up.');
+            }
         }
+        
     };
+    useEffect(() => {
+        if (accountCreated && !error) {
+            setModalMessage("Account created successfully! Check your email to follow the link to activate your account. Redirecting you to home page.");
+        setShowModal(true);
+        setTimeout(() => {
+            setShowModal(false);
+            navigate('/');
+        }, 7000);
+        }
+    }, [accountCreated, navigate])
+    
     useEffect(() => {
         if (error) {
             setPageError(error);
             setAccountCreated(false);
+            setShowModal(false);
         }
     }, [error])
     
 
   return (
     <div className='flex w-full h-screen  bg-slate-200 items-center justify-center'>
-        {showModal && <Modal message={modalMessage} />}
+        {accountCreated && showModal && <Modal message={modalMessage} />}
         <div className='flex  max-w-[1450px] mx-auto flex-row'>
             <div className='w-[50%]  rounded-l-2xl' style={backgroundImageStyle}>
                 <div className= 'px-20 py-40  flex flex-col gap-5 bg-transparent'>
