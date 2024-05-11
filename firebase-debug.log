@@ -1,0 +1,25 @@
+[debug] [2024-05-11T00:08:25.613Z] ----------------------------------------------------------------------
+[debug] [2024-05-11T00:08:25.614Z] Command:       /usr/local/bin/node /Users/alijonkarimberdiev/.npm-global/bin/firebase init
+[debug] [2024-05-11T00:08:25.614Z] CLI Version:   13.8.1
+[debug] [2024-05-11T00:08:25.615Z] Platform:      darwin
+[debug] [2024-05-11T00:08:25.615Z] Node Version:  v18.16.0
+[debug] [2024-05-11T00:08:25.619Z] Time:          Fri May 10 2024 20:08:25 GMT-0400 (Eastern Daylight Time)
+[debug] [2024-05-11T00:08:25.619Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2024-05-11T00:08:25.667Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2024-05-11T00:08:25.667Z] > authorizing via signed-in user (alijonkarimberdiev23@gmail.com)
+[info] 
+     ######## #### ########  ######## ########     ###     ######  ########
+     ##        ##  ##     ## ##       ##     ##  ##   ##  ##       ##
+     ######    ##  ########  ######   ########  #########  ######  ######
+     ##        ##  ##    ##  ##       ##     ## ##     ##       ## ##
+     ##       #### ##     ## ######## ########  ##     ##  ######  ########
+
+You're about to initialize a Firebase project in this directory:
+
+  /Users/alijonkarimberdiev/Documents/GitHub/SimplePrep
+
+Before we get started, keep in mind:
+
+  * You are initializing within an existing Firebase project directory
+
