@@ -9,7 +9,6 @@ import BlogPostDetails from './components/Landing/features/BlogPostDetails';
 import Blogs from './components/Landing/Blogs';
 import TestPageUI from './components/Dashboard/utils/test_components/TestPageUI';
 import ResetPassword from './pages/Authentication/ResetPassword';
-import Activate from './pages/Authentication/Activate';
 import Contents from './components/Dashboard/Contents';
 import Tutorials from './components/Dashboard/Tutorials';
 import TutorialPage from './components/Dashboard/TutorialPage';
@@ -17,7 +16,6 @@ import Section, { sections } from './components/Dashboard/Section';
 import { Navigate , BrowserRouter as Router} from 'react-router-dom';
 import Analytics from './components/Dashboard/Analytics';
 import AuthProvider from './components/utils/AuthProvider';
-import store from './components/store';
 import { Provider } from 'react-redux';
 
 
@@ -28,7 +26,6 @@ const App = () => {
 
   return (
         <AuthProvider>
-          <Provider store={store}>
           <Routes>
               <Route path="/" element={<Layout/>}>
                 <Route index element={<LandingPage/>}/>
@@ -50,12 +47,10 @@ const App = () => {
               <Route path="/login" element={<Login/>}/>
               <Route path="/signup" element={<SignUp/>}/>
               <Route path="/reset-password" element={<ResetPassword/>}/>
-              <Route path="/activate/:uid/:token" element={<Activate/>} />
 
               <Route path="practice-tests/:testId/sections/:sectionId/:sectionName" element={<TestPageUI/>}/>
               <Route path="test" element={<TestPageUI/>}/>
           </Routes>
-          </Provider>
         </AuthProvider>
     
   );

@@ -1,15 +1,20 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { GoogleAuthProvider, User, sendPasswordResetEmail, onAuthStateChanged, signInWithPopup } from 'firebase/auth';
-import { auth } from './firebaseConfig';
+import { auth, db } from './firebaseConfig';
 import { LoginFormValues, UserFormValues } from './AuthServices';
 import { SignUp as signUpService, SignIn as signInService, SignOut as signOutService } from './AuthServices';
 import AuthContext from './AuthContext';
 import { sendEmailVerification } from 'firebase/auth';
 import {FirebaseError} from 'firebase/app';
+import axios from 'axios';
+import {doc, setDoc, updateDoc} from 'firebase/firestore';
+
+
 interface AuthProviderProps {
   children: React.ReactNode;
 }
+
 
 const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
@@ -18,9 +23,10 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user && user.emailVerified) {
         setCurrentUser(user);
+
       } else {
         setCurrentUser(null);
       }
@@ -28,6 +34,7 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     });
     return unsubscribe;
   }, []);
+
 
   const checkAuthenticated = async () => {
     try {
@@ -60,12 +67,23 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       }
       const { user } = userCredential;
 
-
+      const userData = {
+        firebase_uid: user.uid,
+        firstName: creds.firstName,
+        lastName: creds.lastName,
+        email: user.email,
+        createdAt: new Date().toISOString(),
+        emailVerified: false
+      };
       try {
-        await sendEmailVerification(user, { url: 'http://localhost:3000' });
-      } catch (verifError) {
-          throw verifError;  
+        await setDoc(doc(db, "users", user.uid), userData);
+      } catch(error) {
+        console.log('Error in Firestore')
+        throw Error('Firestore Error Happened');
       }
+        
+      await sendEmailVerification(user, { url: 'http://localhost:3000' });
+      
 
     } catch (error) {
       if (error instanceof FirebaseError) {
@@ -74,7 +92,6 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             setError('This email is already in use.');
             break;
           case 'auth/too-many-requests':
-            // Intentionally ignore this error
             break;
           default:
             setError('Failed to sign up. Please try again.');
