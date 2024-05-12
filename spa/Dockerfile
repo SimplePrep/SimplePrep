@@ -3,6 +3,9 @@ LABEL maintainer="alijon30"
 
 ENV PYTHONUNBUFFERED 1
 
+# Create a non-root user first to ensure the user exists before using it
+RUN adduser --disabled-password --no-create-home django-user
+
 # Copy the requirements files
 COPY ./requirements.txt /tmp/requirements.txt
 COPY ./requirements.dev.txt /tmp/requirements.dev.txt
@@ -23,13 +26,18 @@ RUN python -m venv /py && \
     if [ "$DEV" = "true" ]; then \
         /py/bin/pip install -r /tmp/requirements.dev.txt; \
     fi && \
-    rm -rf /tmp && \
     apk del .tmp-build-deps
 
-# Add a non-root user for running the application
-RUN adduser --disabled-password --no-create-home django-user
+# Prepare volume directory
+RUN mkdir -p /vol/web/media && \
+    mkdir -p /vol/web/static && \
+    chown -R django-user:django-user /vol && \
+    chmod -R 755 /vol
 
-# Switch to non-root user
+# Set permissions for scripts (assuming scripts are being copied or exist)
+# RUN chmod -R +x /scripts
+
+# Switch to non-root user for better security
 USER django-user
 
 # Expose port 8000 and define the default command
