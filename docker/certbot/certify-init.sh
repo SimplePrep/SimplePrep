@@ -10,7 +10,7 @@ echo "EMAIL is set to: $EMAIL"
 
 until nc -z proxy 80; do 
     echo "Waiting for proxy..."
-    sleep 5
+    sleep 5s & wait ${!}
 done 
 
 echo "Proxy is available. Proceeding with getting the certificate."
