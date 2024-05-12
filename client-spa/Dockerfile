@@ -1,14 +1,17 @@
-FROM node:20-slim
+FROM node:18-alpine
 
 WORKDIR /client-spa/
 
-RUN apt-get update && apt-get install -y \
-    make g++ \
-    && rm -rf /var/lib/apt/lists/*  # Clean up to reduce image size
+# Install Python and build tools
+RUN apk add --no-cache python3 py3-pip make g++ \
+    && ln -sf python3 /usr/bin/python
+
+# Set environment variable for Python
+ENV PYTHON=/usr/bin/python
 
 COPY package*.json /client-spa/
 
-RUN node --max-old-space-size=4096 /usr/local/bin/npm install --legacy-peer-deps
+RUN npm install
 
 COPY . /client-spa/
 
