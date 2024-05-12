@@ -9,4 +9,4 @@ django-cors-headers
 whitenoise
 drf-yasg
 python-dotenv==1.0.1
-uWSGI
+uwsgi
