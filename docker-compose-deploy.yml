@@ -6,8 +6,6 @@ services:
       context: ./client-spa 
       dockerfile: Dockerfile
     restart: always
-    volumes:
-      - ./client-spa:/client-spa 
     depends_on:
       - backend
 

@@ -2,7 +2,7 @@ FROM python:3.10-alpine3.16
 LABEL maintainer="alijon30"
 
 ENV PYTHONUNBUFFERED 1
-
+ENV PATH="/py/bin:$PATH"
 # Create a non-root user first to ensure the user exists before using it
 RUN adduser --disabled-password --no-create-home django-user
 
@@ -12,6 +12,8 @@ COPY ./requirements.dev.txt /tmp/requirements.dev.txt
 
 # Set the working directory
 WORKDIR /spa
+
+COPY . /spa
 
 # Install dependencies
 RUN python -m venv /py && \
