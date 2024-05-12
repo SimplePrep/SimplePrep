@@ -11,7 +11,7 @@ ENV PYTHON=/usr/bin/python
 
 COPY package*.json /client-spa/
 
-RUN npm install
+RUN npm install --verbose
 
 COPY . /client-spa/
 
