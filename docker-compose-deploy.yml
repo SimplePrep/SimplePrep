@@ -41,7 +41,7 @@ services:
       context: ./docker/proxy
     restart: always
     depends_on:
-      - app
+      - backend
     ports:
       - 80:80
       - 443:443
