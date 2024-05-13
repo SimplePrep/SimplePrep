@@ -6,8 +6,6 @@ services:
       context: ./spa
       dockerfile: Dockerfile
     restart: always
-    volumes:
-      - static-data:/vol/web
     environment:
       - DB_HOST=db
       - DB_NAME=${DB_NAME}
@@ -32,8 +30,7 @@ services:
       
   proxy:
     build:
-      context: ../
-      dockerfile: docker/proxy/Dockerfile
+      context: ./docker/proxy
     restart: always
     depends_on:
       - backend

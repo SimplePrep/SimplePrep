@@ -1,4 +1,4 @@
-FROM python:3.9-alpine3.18
+FROM python:3.10-alpine3.16
 LABEL maintainer="alijon30"
 
 ENV PYTHONUNBUFFERED 1
