@@ -35,9 +35,12 @@ server {
         uwsgi_pass ${APP_HOST}:${APP_PORT};
         client_max_body_size 10M;
     }
-    location / {
-        root /usr/share/nginx/html;  # Assuming this is where your React build's index.html is located
+    location = / {
+        root /usr/share/nginx/html;  
         index index.html;
+    }
+
+    location / {
         try_files $uri $uri/ /index.html;
     }
     location = /favicon.ico {
