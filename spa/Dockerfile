@@ -8,8 +8,6 @@ COPY ./requirements.txt /tmp/requirements.txt
 COPY ./requirements.dev.txt /tmp/requirements.dev.txt
 # Copy the Django project code to the /spa directory in the container
 
-# Expose port 8000 for the Django application
-EXPOSE 8000
 
 ARG DEV=false
 # Create a Python virtual environment in /py and install dependencies
