@@ -15,7 +15,7 @@ RUN python -m venv /py && \
     /py/bin/pip install --upgrade pip && \
     apk add --update --no-cache postgresql-client libffi-dev && \
     apk add --update --no-cache --virtual .tmp-build-deps \
-        build-base postgresql-dev musl-dev && \
+        build-base postgresql-dev musl-dev  zlib zlib-dev linux-headers && \
     /py/bin/pip install django-cors-headers cffi Pillow && \
     /py/bin/pip install -r /tmp/requirements.txt && \
     if [ "$DEV" = "true" ]; then \
@@ -25,7 +25,8 @@ RUN python -m venv /py && \
     apk del .tmp-build-deps
 
 # Add the virtual environment's bin directory to the PATH
-ENV PATH="/py/bin:$PATH"
+ENV PATH="/scripts:/py/bin:$PATH"
+COPY ./scripts /scripts
 COPY ./spa /spa
 WORKDIR /spa
 
@@ -36,7 +37,8 @@ RUN mkdir -p /vol/web/media && \
     mkdir -p /vol/web/static && \
     adduser --disabled-password --no-create-home django-user && \
     chown -R django-user:django-user /vol && \
-    chmod -R 755 /vol
+    chmod -R 755 /vol && \
+    chmod -R +x /scripts
 
 
 # Switch to non-root user for better security
@@ -44,4 +46,4 @@ USER django-user
 
 # Expose port 8000 and define the default command
 EXPOSE 8000
-CMD ["uwsgi", "--socket", ":9000", "--workers", "4", "--master", "--enable-threads", "--module", "spa.wsgi"]
+CMD ["run.sh"]
