@@ -2,11 +2,8 @@ Django
 djangorestframework>=3.13.1, !=3.14.0
 psycopg2>=2.8.6,<2.9
 drf-spectacular>=0.15.1,<0.16
-python-decouple
-pyrebase4
 firebase-admin
 django-cors-headers
-whitenoise
-drf-yasg
 python-dotenv==1.0.1
 uwsgi
+djangorestframework-simplejwt

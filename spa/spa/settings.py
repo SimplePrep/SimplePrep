@@ -14,7 +14,6 @@ from pathlib import Path
 from django.core.exceptions import ImproperlyConfigured
 from datetime import timedelta
 from dotenv import load_dotenv
-from decouple import config as env_config
 import firebase_admin
 from firebase_admin import credentials, auth
 load_dotenv()
@@ -147,7 +146,12 @@ REST_FRAMEWORK = {
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = "static/"
+STATIC_URL = '/static/static/'
+MEDIA_URL = '/static/media/'
+
+MEDIA_ROOT = '/vol/web/media'
+STATIC_ROOT = '/vol/web/static'
+
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'build/static')
 ]
