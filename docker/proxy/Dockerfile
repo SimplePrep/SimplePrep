@@ -1,6 +1,7 @@
+# Build stage for SPA
 FROM node:13.12.0-alpine as build
 
-WORKDIR /SimplePrep/client-spa
+WORKDIR /client-spa
 COPY ./client-spa/package.json ./
 COPY ./client-spa/package-lock.json ./
 RUN npm ci --silent
@@ -13,19 +14,22 @@ RUN npm run build \
         exit 1; \
     fi
 
-
+# Setup Nginx to serve the SPA
 FROM nginx:1.23.0-alpine
 LABEL maintainer="trysimpleprep.com"
 
+# Copy Nginx configuration files
 COPY docker/proxy/nginx/* /etc/nginx/
+# Copy run script
 COPY docker/proxy/run.sh /run.sh
-COPY --from=build /SimplePrep/client-spa/build /usr/share/nginx/html
-# ENV APP_HOST=backend
-# ENV APP_PORT=9000
+# Copy built SPA files from build stage to Nginx public folder
+COPY --from=build /client-spa/build /usr/share/nginx/html
 
+# Install necessary packages
 RUN apk add --no-cache openssl bash
 RUN chmod +x /run.sh 
 
+# Define volumes for static content
 VOLUME /vol/static
 VOLUME /vol/www
 

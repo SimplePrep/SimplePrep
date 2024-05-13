@@ -32,7 +32,7 @@ services:
       
   proxy:
     build:
-      context: ../
+      context: .
       dockerfile: docker/proxy/Dockerfile
     restart: always
     depends_on:
