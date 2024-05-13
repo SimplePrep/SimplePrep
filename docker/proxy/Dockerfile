@@ -8,8 +8,6 @@ COPY docker/proxy/nginx/* /etc/nginx/
 # Copy run script
 COPY docker/proxy/run.sh /run.sh
 # Copy built SPA files from build stage to Nginx public folder
-COPY --from=build /client-spa/build /usr/share/nginx/html
-
 # Install necessary packages
 RUN apk add --no-cache openssl bash
 RUN chmod +x /run.sh 
