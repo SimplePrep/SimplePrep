@@ -30,12 +30,12 @@ server {
 
     location /api {
         include /etc/nginx/uwsgi_params;
-        uwsgi_pass backend:8000;  # This should be the only pass directive if using uWSGI
+        uwsgi_pass ${APP_HOST}:${APP_PORT};  # This should be the only pass directive if using uWSGI
         client_max_body_size 10M;
     }
     location / {
-        # If you're serving React build static files directly from Nginx
-        root 
+        index index.html;
+        root /home/ec2-user/SimplePrep/client-spa;
         try_files $uri $uri/ /index.html;
     }
 }
