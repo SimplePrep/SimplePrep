@@ -36,9 +36,7 @@ server {
         client_max_body_size 10M;
     }
     location = / {
-        root /home/ec2-user/SimplePrep/build;  
-        index index.html;
-        try_files $uri $uri/ /index.html;
+        alias /home/ec2-user/SimplePrep/build/index.html;
     }
     location = /favicon.ico {
         access_log off;
