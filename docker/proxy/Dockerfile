@@ -1,10 +1,10 @@
 # Build stage for SPA
-FROM node:13.12.0-alpine as build
+FROM node:18-alpine as build
 
 WORKDIR /client-spa
 COPY ./client-spa/package.json ./
 COPY ./client-spa/package-lock.json ./
-RUN npm ci --silent
+RUN npm ci 
 COPY ./client-spa/ ./
 RUN npm run build \
 && if [ $? -eq 0 ]; then \
