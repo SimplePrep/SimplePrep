@@ -31,7 +31,7 @@ ENV PATH="/py/bin:$PATH"
 COPY ./spa /spa
 WORKDIR /spa
 
-COPY ./spa/scripts/run.sh /spa/scripts/run.sh
+COPY /scripts/run.sh /spa/scripts/run.sh
 RUN chmod +x /spa/scripts/run.sh
 # Prepare volume directory
 RUN mkdir -p /vol/web/media && \
