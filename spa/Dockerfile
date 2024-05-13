@@ -31,13 +31,15 @@ ENV PATH="/py/bin:$PATH"
 COPY ./spa /spa
 WORKDIR /spa
 
-
+COPY ./spa/scripts/run.sh /spa/scripts/run.sh
+RUN chmod +x /spa/scripts/run.sh
 # Prepare volume directory
 RUN mkdir -p /vol/web/media && \
     mkdir -p /vol/web/static && \
     adduser --disabled-password --no-create-home django-user && \
     chown -R django-user:django-user /vol && \
     chmod -R 755 /vol
+
 
 # Switch to non-root user for better security
 USER django-user
