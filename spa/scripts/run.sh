@@ -3,7 +3,7 @@
 set -e
 
 # Navigate to the root directory where manage.py is located
-cd /spa
+cd ../../spa
 
 python manage.py collectstatic --noinput
 python manage.py migrate
