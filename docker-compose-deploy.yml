@@ -16,6 +16,7 @@ services:
     restart: always
     volumes:
       - static-data:/vol/web
+    command: ["/bin/sh", "/spa/scripts/run.sh"]
     environment:
       - DB_HOST=db
       - DB_NAME=${DB_NAME}
