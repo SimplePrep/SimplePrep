@@ -38,6 +38,10 @@ server {
     location / {
         root /usr/share/nginx/html;  # Assuming this is where your React build's index.html is located
         index index.html;
-        try_files $uri $uri/ /index.html =404;
+        try_files $uri $uri/ /index.html;
+    }
+    location = /favicon.ico {
+        access_log off;
+        log_not_found off;
     }
 }
