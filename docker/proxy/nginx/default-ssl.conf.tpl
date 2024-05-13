@@ -25,7 +25,7 @@ server {
     add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
 
     location /static {
-        alias /usr/share/nginx/html/static;
+        alias /home/ec2-user/SimplePrep/build; 
         expires 1y;
         add_header Cache-Control "public";
     }
@@ -36,15 +36,13 @@ server {
         client_max_body_size 10M;
     }
     location = / {
-        root /usr/share/nginx/html;  
+        root /home/ec2-user/SimplePrep/build;  
         index index.html;
-    }
-
-    location / {
         try_files $uri $uri/ /index.html;
     }
     location = /favicon.ico {
         access_log off;
         log_not_found off;
+        alias /home/ec2-user/SimplePrep/build/favicon.ico;
     }
 }
