@@ -1,0 +1,30 @@
+{
+  "files": {
+    "main.css": "/static/css/main.4cf6e363.css",
+    "main.js": "/static/js/main.f2af9d26.js",
+    "static/media/comingsoon.mp4": "/static/media/comingsoon.8276acb258d5665c0faf.mp4",
+    "static/media/math.jpg": "/static/media/math.9d4991de5d99d66e8194.jpg",
+    "static/media/student_discussion.jpg": "/static/media/student_discussion.4efb18690031590a1f3a.jpg",
+    "static/media/guy-lesson.jpg": "/static/media/guy-lesson.a1075f9255a43827546c.jpg",
+    "static/media/cheerful-sassy-redhead-female-student-college-girl-glasses-sitting-crossed-legs-with-laptop-wo.jpg": "/static/media/cheerful-sassy-redhead-female-student-college-girl-glasses-sitting-crossed-legs-with-laptop-wo.f003cfbf53a1db05b7a6.jpg",
+    "static/media/write.jpg": "/static/media/write.8840c6c95f995a4504f4.jpg",
+    "static/media/blogicon.png": "/static/media/blogicon.c9b5796ff6eecdc41156.png",
+    "static/media/front-view-desk-with-stacked-books-copy-space.jpg": "/static/media/front-view-desk-with-stacked-books-copy-space.46420d6f86dbf9923473.jpg",
+    "static/media/blogbackground.png": "/static/media/blogbackground.f620b429e6e8ec44d058.png",
+    "static/media/laptopImg.png": "/static/media/laptopImg.5d77c774e7ef10263717.png",
+    "static/media/contents.png": "/static/media/contents.ae94e841728e58816a24.png",
+    "static/media/example2.png": "/static/media/example2.e19e47fbdedbd2c7b3cc.png",
+    "static/media/visual2.jpg": "/static/media/visual2.593fe7daf7b242aee972.jpg",
+    "static/media/signInPic1.jpg": "/static/media/signInPic1.3535c9c6ddae80452976.jpg",
+    "static/media/chatbotImg.png": "/static/media/chatbotImg.f3b749310ebc01a4deae.png",
+    "static/media/logo2.png": "/static/media/logo2.f43604917a18e34718ca.png",
+    "index.html": "/index.html",
+    "static/media/waveSvg.svg": "/static/media/waveSvg.aaaef3fd81842d555ec8db22a8e62892.svg",
+    "main.4cf6e363.css.map": "/static/css/main.4cf6e363.css.map",
+    "main.f2af9d26.js.map": "/static/js/main.f2af9d26.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.4cf6e363.css",
+    "static/js/main.f2af9d26.js"
+  ]
+}

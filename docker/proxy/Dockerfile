@@ -1,23 +1,8 @@
-# Build stage for SPA
-FROM node:18-alpine as build
-
-WORKDIR /client-spa
-COPY ./client-spa/package.json ./
-COPY ./client-spa/package-lock.json ./
-RUN npm ci 
-COPY ./client-spa/ ./
-RUN npm run build \
-&& if [ $? -eq 0 ]; then \
-        echo "Build successful"; \
-    else \
-        echo "Build failed"; \
-        exit 1; \
-    fi
-
 # Setup Nginx to serve the SPA
 FROM nginx:1.23.0-alpine
 LABEL maintainer="trysimpleprep.com"
 
+COPY build /usr/share/nginx/html
 # Copy Nginx configuration files
 COPY docker/proxy/nginx/* /etc/nginx/
 # Copy run script
