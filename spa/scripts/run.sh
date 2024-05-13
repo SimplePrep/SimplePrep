@@ -11,6 +11,9 @@ cd /spa
 
 echo "Current working directory after cd: $(pwd)"
 echo "Listing contents of /spa:"
+ls -l /spa
+
+echo "Listing contents of /spa/spa:"
 ls -l /spa/spa
 
 echo "Running collectstatic..."
