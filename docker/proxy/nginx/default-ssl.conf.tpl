@@ -3,7 +3,7 @@ server {
     server_name ${DOMAIN} www.${DOMAIN};
 
     location /.well-known/acme-challenge/ {
-        root /vol/www/certbot;
+        root /vol/www/;
     }
 
     location / {
@@ -24,24 +24,11 @@ server {
     client_max_body_size 20M;
 
     location / {
-        root /usr/share/nginx/html;
-        index index.html index.htm;
-        try_files $uri $uri/ /index.html;
+        uwsgi_pass ${APP_HOST}:${APP_PORT};
+        include /etc/nginx/uwsgi_params;   
     }
 
-    location /api {
-        try_files $uri @proxy_api;
+    location /static {
+        alias /vol/static;
     }
-    location /admin {
-        try_files $uri @proxy_api;
-    }
-
-    location @proxy_api {
-        proxy_set_header X-Forwarded-Proto https;
-        proxy_set_header X-Url-Scheme $scheme;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header Host $http_host;
-        proxy_redirect off;
-        proxy_pass   http://backend:8000;
-}
 }
