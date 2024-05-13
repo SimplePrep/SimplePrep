@@ -3,7 +3,7 @@ server {
     server_name ${DOMAIN} www.${DOMAIN};
 
     location /.well-known/acme-challenge/ {
-        root /vol/www/;
+        root /vol/www/certbot;
     }
 
     location / {
@@ -17,14 +17,11 @@ server {
 
     ssl_certificate     /etc/letsencrypt/live/${DOMAIN}/fullchain.pem;
     ssl_certificate_key /etc/letsencrypt/live/${DOMAIN}/privkey.pem;
-
     include     /etc/nginx/options-ssl-nginx.conf;
-
     ssl_dhparam /vol/proxy/ssl-dhparams.pem;
 
     add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
-
-    client_max_body_size 10M;
+    client_max_body_size 20M;
 
     location / {
         root /usr/share/nginx/html;
@@ -46,4 +43,5 @@ server {
         proxy_set_header Host $http_host;
         proxy_redirect off;
         proxy_pass   http://backend:8000;
+}
 }
