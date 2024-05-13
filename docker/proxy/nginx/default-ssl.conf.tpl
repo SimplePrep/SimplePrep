@@ -29,21 +29,10 @@ server {
     }
 
     location /api {
-        proxy_set_header X-Forwarded-Proto https;
-        proxy_set_header X-Url-Scheme $scheme;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header Host $http_host;
-        proxy_redirect off;
-        proxy_pass http://backend:8000;
+        try_files $uri @proxy_api;
     }
-
     location /admin {
-        proxy_set_header X-Forwarded-Proto https;
-        proxy_set_header X-Url-Scheme $scheme;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header Host $http_host;
-        proxy_redirect off;
-        proxy_pass http://backend:8000;
+        try_files $uri @proxy_api;
     }
 
     location @proxy_api {
@@ -52,6 +41,6 @@ server {
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header Host $http_host;
         proxy_redirect off;
-        proxy_pass http://backend:8000;
+        proxy_pass   http://backend:8000;
     }
 }
