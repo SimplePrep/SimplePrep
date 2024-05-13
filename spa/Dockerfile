@@ -31,14 +31,14 @@ COPY ./scripts spa/scripts
 
 WORKDIR /spa
 
-RUN chmod +x /spa/scripts/run.sh
 # Prepare volume directory
 RUN mkdir -p /vol/web/media && \
     mkdir -p /vol/web/static && \
     adduser --disabled-password --no-create-home django-user && \
     chown -R django-user:django-user /vol && \
-    chmod -R 755 /vol && \
-    chmod -R +x /scripts
+    chmod -R 755 /vol && 
+
+RUN chmod +x /spa/scripts/run.sh && ls -l /spa/scripts
 
 
 # Switch to non-root user for better security
