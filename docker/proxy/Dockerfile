@@ -5,7 +5,13 @@ COPY ./client-spa/package.json ./
 COPY ./client-spa/package-lock.json ./
 RUN npm ci --silent
 COPY ./client-spa/ ./
-RUN npm run build
+RUN npm run build \
+&& if [ $? -eq 0 ]; then \
+        echo "Build successful"; \
+    else \
+        echo "Build failed"; \
+        exit 1; \
+    fi
 
 
 FROM nginx:1.23.0-alpine
