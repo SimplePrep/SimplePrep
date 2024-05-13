@@ -19,6 +19,7 @@ server {
     ssl_certificate_key /etc/letsencrypt/live/${DOMAIN}/privkey.pem;
     include     /etc/nginx/options-ssl-nginx.conf;
     ssl_dhparam /vol/proxy/ssl-dhparams.pem;
+
     add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
     client_max_body_size 20M;
 
@@ -42,5 +43,5 @@ server {
         proxy_set_header Host $http_host;
         proxy_redirect off;
         proxy_pass   http://backend:8000;
-    }
+}
 }
