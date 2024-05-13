@@ -24,23 +24,26 @@ server {
 
     add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
 
-    location /static {
-        alias /home/ec2-user/SimplePrep/build; 
-        expires 1y;
-        add_header Cache-Control "public";
+    client_max_body_size 10M;
+
+    location / {
+        root /usr/share/nginx/html;
+        index index.html index.htm;
+        try_files $uri $uri/ /index.html;
     }
 
     location /api {
-        include /etc/nginx/uwsgi_params;
-        uwsgi_pass ${APP_HOST}:${APP_PORT};
-        client_max_body_size 10M;
+        try_files $uri @proxy_api;
     }
-    location = / {
-        alias /home/ec2-user/SimplePrep/build/index.html;
+    location /admin {
+        try_files $uri @proxy_api;
     }
-    location = /favicon.ico {
-        access_log off;
-        log_not_found off;
-        alias /home/ec2-user/SimplePrep/build/favicon.ico;
-    }
+
+    location @proxy_api {
+        proxy_set_header X-Forwarded-Proto https;
+        proxy_set_header X-Url-Scheme $scheme;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header Host $http_host;
+        proxy_redirect off;
+        proxy_pass   http://backend:8000;
 }
