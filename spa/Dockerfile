@@ -26,9 +26,10 @@ RUN python -m venv /py && \
 
 # Add the virtual environment's bin directory to the PATH
 ENV PATH="/scripts:/py/bin:$PATH"
-COPY ./spa /spa
+COPY ./spa /spa/spa
 COPY ./scripts spa/scripts
-
+COPY ./manage.py /spa/manage.py
+COPY ./firebase-admin-sdk.json /spa/firebase-admin-sdk.json
 WORKDIR /spa
 
 # Prepare volume directory
@@ -36,9 +37,8 @@ RUN mkdir -p /vol/web/media && \
     mkdir -p /vol/web/static && \
     adduser --disabled-password --no-create-home django-user && \
     chown -R django-user:django-user /vol && \
-    chmod -R 755 /vol && 
-
-RUN chmod +x /spa/scripts/run.sh && ls -l /spa/scripts
+    chmod -R 755 /vol && \
+    chmod +x /spa/scripts/run.sh && ls -l /spa/scripts
 
 
 # Switch to non-root user for better security
@@ -46,4 +46,4 @@ USER django-user
 
 # Expose port 8000 and define the default command
 EXPOSE 8000
-CMD ["/spa/scripts/run.sh"]
+CMD ["uwsgi", "--socket", ":9000", "--workers", "4", "--master", "--enable-threads", "--module", "spa.wsgi"]
