@@ -29,13 +29,13 @@ server {
     }
 
     location /api {
-        uwsgi_pass           backend:8000;  # Adjust as necessary for your Django uWSGI
-        include              /etc/nginx/uwsgi_params;
+        include /etc/nginx/uwsgi_params;
+        uwsgi_pass backend:8000;  # This should be the only pass directive if using uWSGI
         client_max_body_size 10M;
     }
     location / {
         # If you're serving React build static files directly from Nginx
-        root /vol/web/frontend;  # Adjust path where React build files are stored
-        try_files $uri /index.html;
+        root 
+        try_files $uri $uri/ /index.html;
     }
 }
