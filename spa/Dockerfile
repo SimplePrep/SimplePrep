@@ -26,11 +26,11 @@ RUN python -m venv /py && \
 
 # Add the virtual environment's bin directory to the PATH
 ENV PATH="/scripts:/py/bin:$PATH"
-COPY ./scripts /scripts
 COPY ./spa /spa
+COPY ./scripts spa/scripts
+
 WORKDIR /spa
 
-COPY /scripts/run.sh /spa/scripts/run.sh
 RUN chmod +x /spa/scripts/run.sh
 # Prepare volume directory
 RUN mkdir -p /vol/web/media && \
@@ -46,4 +46,4 @@ USER django-user
 
 # Expose port 8000 and define the default command
 EXPOSE 8000
-CMD ["run.sh"]
+CMD ["/spa/scripts/run.sh"]
