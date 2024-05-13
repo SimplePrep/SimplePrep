@@ -1,9 +1,9 @@
 FROM nginx:1.23.0-alpine
 LABEL maintainer="trysimpleprep.com"
 
-COPY ./nginx/* /etc/nginx/
-COPY ./run.sh /run.sh
-COPY ../build /usr/share/nginx/html
+COPY docker/proxy/nginx/* /etc/nginx/
+COPY docker/proxy/run.sh /run.sh
+COPY build /usr/share/nginx/html 
 ENV APP_HOST=backend
 ENV APP_PORT=9000
 
