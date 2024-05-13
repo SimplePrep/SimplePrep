@@ -26,6 +26,8 @@ server {
 
     location /static {
         alias /usr/share/nginx/html/static;
+        expires 1y;
+        add_header Cache-Control "public";
     }
 
     location /api {
@@ -36,6 +38,6 @@ server {
     location / {
         root /usr/share/nginx/html;  # Assuming this is where your React build's index.html is located
         index index.html;
-        try_files $uri $uri/ /index.html;
+        try_files $uri $uri/ /index.html =404;
     }
 }
