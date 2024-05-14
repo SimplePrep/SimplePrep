@@ -6,13 +6,8 @@ services:
       context: ./spa
       dockerfile: Dockerfile
     restart: always
-    environment:
-      - DB_HOST=db
-      - DB_NAME=${DB_NAME}
-      - DB_USER=${DB_USER}
-      - DB_PASS=${DB_PASS}
-      - DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}
-      - DJANGO_ALLOWED_HOSTS=${DJANGO_ALLOWED_HOSTS}
+    env_file:
+      - .env
     depends_on:
       - db
     expose:
@@ -23,10 +18,8 @@ services:
     restart: always
     volumes:
       - postgres-data:/var/lib/postgresql/data 
-    environment:
-      - POSTGRES_DB=${DB_NAME}
-      - POSTGRES_USER=${DB_USER}
-      - POSTGRES_PASSWORD=${DB_PASS}
+    env_file:
+      - .env
       
   proxy:
     build:
@@ -48,9 +41,8 @@ services:
     build:
       context: ./docker/certbot
     command: echo "Skipping..."
-    environment:
-      - EMAIL=${ACME_DEFAULT_EMAIL}
-      - DOMAIN=${DOMAIN}
+    env_file:
+      - .env
     volumes:
       - certbot-web:/vol/www
       - certbot-certs:/etc/letsencrypt/
