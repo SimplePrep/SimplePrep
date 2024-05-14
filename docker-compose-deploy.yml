@@ -12,6 +12,9 @@ services:
       - db
     expose:
       - 8000
+    volumes:
+      - static-data:/vol/web/static
+      - media-data:/vol/web/media
   
   db:
     image: postgres:13-alpine 
@@ -55,3 +58,4 @@ volumes:
   certbot-certs:
   postgres-data:
   static-data:
+  media-data:
