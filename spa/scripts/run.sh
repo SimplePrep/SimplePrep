@@ -8,4 +8,4 @@ cd /spa
 python manage.py collectstatic --noinput
 python manage.py migrate
 
-uwsgi --socket :9000 --workers 4 --master --enable-threads --module spa.wsgi:application
+uwsgi --socket :8000 --workers 4 --master --enable-threads --module spa.wsgi:application
