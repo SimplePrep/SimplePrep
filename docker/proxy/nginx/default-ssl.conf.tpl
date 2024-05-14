@@ -25,7 +25,7 @@ server {
 
     location / {
         uwsgi_pass backend:8000;
-        include /etc/nginx/uwsgi_params;   
+        include /etc/nginx/uwsgi_params;
     }
 
     location /static {

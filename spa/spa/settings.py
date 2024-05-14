@@ -17,8 +17,9 @@ from dotenv import load_dotenv
 import firebase_admin
 from firebase_admin import credentials, auth
 load_dotenv()
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
@@ -155,7 +156,7 @@ MEDIA_ROOT = '/vol/web/media'
 STATIC_ROOT = '/vol/web/static'
 
 STATICFILES_DIRS = [
-    #os.path.join(BASE_DIR, 'build/static')
+    os.path.join(BASE_DIR, 'spa/static')
 ]
 
 
