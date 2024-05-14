@@ -2,11 +2,16 @@ server {
     listen 80;
     server_name ${DOMAIN} www.${DOMAIN};
 
-    location /.well-known/acme-challenge/ {
-        root /vol/www/;
+    location / {
+        root /vol/www/build;
+        try_files $uri $uri/ /index.html;
     }
 
-    location / {
-        return 301 https://$host$request_uri;
+    location /static {
+        alias /vol/web/static/;
+    }
+
+    location /media {
+        alias /vol/web/media/;
     }
 }
