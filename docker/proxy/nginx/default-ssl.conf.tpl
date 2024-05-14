@@ -31,13 +31,11 @@ server {
 
     # Backend
     location /api/ {
-        proxy_set_header X-Forwarded-Proto https;
-        proxy_set_header X-Url-Scheme $scheme;
+        proxy_pass http://backend:8000;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header Host $http_host;
-        proxy_redirect off;
-        proxy_pass   http://backend:8000;
-
+        proxy_set_header X-Forwarded-Proto $scheme;
     }
 
     location /static {
