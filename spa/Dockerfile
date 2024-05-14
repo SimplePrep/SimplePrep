@@ -36,12 +36,9 @@ RUN chmod +x /spa/scripts/run.sh
 # Prepare volume directory
 RUN mkdir -p /vol/web/media && \
     mkdir -p /vol/web/static && \
-    mkdir -p /spa/static && \
     adduser --disabled-password --no-create-home django-user && \
     chown -R django-user:django-user /vol && \
-    chmod -R 755 /vol && \
-    chown -R django-user:django-user /spa/static && \
-    chmod -R 755 /spa/static
+    chmod -R 755 /vol
 
 # Switch to non-root user for better security
 USER django-user
