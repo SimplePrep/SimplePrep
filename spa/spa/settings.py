@@ -155,7 +155,7 @@ MEDIA_ROOT = '/vol/web/media'
 STATIC_ROOT = '/vol/web/static'
 
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'build/static')
+    #os.path.join(BASE_DIR, 'build/static')
 ]
 
 
