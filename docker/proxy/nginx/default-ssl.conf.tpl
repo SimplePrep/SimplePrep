@@ -29,10 +29,10 @@ server {
     }
 
     location /static {
-        alias /vol/web/static;
+        alias /vol/web/static/;
     }
 
     location /media {
-        alias /vol/web/media;
+        alias /vol/web/media/;
     }
 }
