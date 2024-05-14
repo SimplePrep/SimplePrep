@@ -28,11 +28,11 @@ server {
         include /etc/nginx/uwsgi_params;   
     }
 
-    location /static/static {
+    location /static {
         alias /vol/web/static;
     }
 
-    location /static/media {
+    location /media {
         alias /vol/web/media;
     }
 }
