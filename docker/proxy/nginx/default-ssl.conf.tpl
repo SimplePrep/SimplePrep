@@ -23,9 +23,19 @@ server {
     add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
     client_max_body_size 20M;
 
+    # Frontend
     location / {
-        uwsgi_pass backend:8000;
-        include /etc/nginx/uwsgi_params;
+        root /vol/www/build;
+        try_files $uri $uri/ /index.html;
+    }
+
+    # Backend
+    location /api/ {
+        proxy_pass http://backend:8000/;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
     }
 
     location /static {
