@@ -49,6 +49,7 @@ services:
     volumes:
       - certbot-web:/vol/www
       - certbot-certs:/etc/letsencrypt/
+      - static-data:/vol/static  # Ensure this matches the volume in the Dockerfile
     depends_on:
       - proxy
 
