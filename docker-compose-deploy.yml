@@ -38,7 +38,7 @@ services:
       - proxy-dhparams:/vol/proxy
       - certbot-certs:/etc/letsencrypt
       - ./build:/vol/www/build
-      #- static-data:/vol/web/static  # Ensure this matches the volume in the Dockerfile
+      - static-data:/vol/web/static  # Ensure this matches the volume in the Dockerfile
     environment:
       - DOMAIN=${DOMAIN}
   
