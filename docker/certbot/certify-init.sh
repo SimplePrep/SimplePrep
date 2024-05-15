@@ -6,7 +6,7 @@ set -e
 
 echo "Starting the certificate acquisition process..."
 echo "DOMAIN is set to: $DOMAIN"
-echo "EMAIL is set to: $EMAIL"
+echo "EMAIL is set to: $ACME_DEFAULT_EMAIL"
 
 until nc -z proxy 80; do 
     echo "Waiting for proxy..."
@@ -19,7 +19,7 @@ certbot certonly \
     --webroot \
     --webroot-path "/vol/www/" \
     -d "$DOMAIN" \
-    --email $EMAIL \
+    --email $ACME_DEFAULT_EMAIL \
     --rsa-key-size 4096 \
     --agree-tos \
     --noninteractive
