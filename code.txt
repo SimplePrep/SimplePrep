@@ -27,4 +27,4 @@ git clone git@github.com:Artint-AI-C/SimplePrep.git
 
 docker-compose -f docker-compose-deploy.yml run --rm certbot /opt/certify-init.sh
 
-docker-compose -f docker-compose-deploy.yml down
+docker-compose -f docker-compose-deploy.yml down #just a comment
