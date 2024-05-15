@@ -17,7 +17,7 @@
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "noEmit": true,
+    "noEmit": true, //change it to false to create deployment build, for development keep it true
     "jsx": "react-jsx"
   },
   "include": [
