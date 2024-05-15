@@ -38,6 +38,7 @@ services:
       - proxy-dhparams:/vol/proxy
       - certbot-certs:/etc/letsencrypt
       - static-data:/vol/web/static  # Ensure this matches the volume in the Dockerfile
+      - frontend-data:/vol/web/frontend #to handle frontend build
     environment:
       - DOMAIN=${DOMAIN}
   
@@ -60,3 +61,4 @@ volumes:
   postgres-data:
   static-data:
   media-data:
+  frontend-data:

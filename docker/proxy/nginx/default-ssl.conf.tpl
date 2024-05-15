@@ -24,15 +24,7 @@ server {
     client_max_body_size 20M;
 
     location / {
-        uwsgi_pass backend:8000;
-        include /etc/nginx/uwsgi_params;
-    }
-
-    location /static {
-        alias /vol/web/static/;
-    }
-
-    location /media {
-        alias /vol/web/media/;
+        uwsgi_pass /vol/web/frontend;
+        try_files $uri /index.html;
     }
 }
