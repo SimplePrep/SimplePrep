@@ -25,6 +25,7 @@ server {
 
     location / {
         root /vol/web/frontend;
+        index index.html index.htm;
         try_files $uri $uri/ /index.html;
     }
 

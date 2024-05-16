@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/static/css/main.4cf6e363.css",
-    "main.js": "/static/js/main.f2af9d26.js",
+    "main.css": "/static/css/main.2b250b7a.css",
+    "main.js": "/static/js/main.d3e53037.js",
     "static/media/comingsoon.mp4": "/static/media/comingsoon.8276acb258d5665c0faf.mp4",
     "static/media/math.jpg": "/static/media/math.9d4991de5d99d66e8194.jpg",
     "static/media/student_discussion.jpg": "/static/media/student_discussion.4efb18690031590a1f3a.jpg",
@@ -20,11 +20,11 @@
     "static/media/logo2.png": "/static/media/logo2.f43604917a18e34718ca.png",
     "index.html": "/index.html",
     "static/media/waveSvg.svg": "/static/media/waveSvg.aaaef3fd81842d555ec8db22a8e62892.svg",
-    "main.4cf6e363.css.map": "/static/css/main.4cf6e363.css.map",
-    "main.f2af9d26.js.map": "/static/js/main.f2af9d26.js.map"
+    "main.2b250b7a.css.map": "/static/css/main.2b250b7a.css.map",
+    "main.d3e53037.js.map": "/static/js/main.d3e53037.js.map"
   },
   "entrypoints": [
-    "static/css/main.4cf6e363.css",
-    "static/js/main.f2af9d26.js"
+    "static/css/main.2b250b7a.css",
+    "static/js/main.d3e53037.js"
   ]
 }
