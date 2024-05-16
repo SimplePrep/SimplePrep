@@ -2,6 +2,10 @@ server {
     listen 80;
     server_name ${DOMAIN} www.${DOMAIN};
 
+    location /test {
+        return 200 "Domain is ${DOMAIN}";
+    }
+
     location /.well-known/acme-challenge/ {
         root /vol/www/;
     }
@@ -24,7 +28,7 @@ server {
     client_max_body_size 20M;
 
     location / {
-        uwsgi_pass /vol/web/frontend;
-        try_files $uri /index.html;
+        root /vol/web/frontend;
+        try_files $uri $uri/ /index.html;
     }
 }
