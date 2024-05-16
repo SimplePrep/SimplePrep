@@ -2,10 +2,6 @@ server {
     listen 80;
     server_name ${DOMAIN} www.${DOMAIN};
 
-    location /test {
-        return 200 "Domain is ${DOMAIN}";
-    }
-
     location /.well-known/acme-challenge/ {
         root /vol/www/;
     }
@@ -16,12 +12,12 @@ server {
 }
 
 server {
-    listen      443 ssl;
+    listen 443 ssl;
     server_name ${DOMAIN} www.${DOMAIN};
 
-    ssl_certificate     /etc/letsencrypt/live/${DOMAIN}/fullchain.pem;
+    ssl_certificate /etc/letsencrypt/live/${DOMAIN}/fullchain.pem;
     ssl_certificate_key /etc/letsencrypt/live/${DOMAIN}/privkey.pem;
-    include     /etc/nginx/options-ssl-nginx.conf;
+    include /etc/nginx/options-ssl-nginx.conf;
     ssl_dhparam /vol/proxy/ssl-dhparams.pem;
 
     add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
@@ -30,5 +26,13 @@ server {
     location / {
         root /vol/web/frontend;
         try_files $uri $uri/ /index.html;
+    }
+
+    location /static/ {
+        alias /vol/web/frontend/static/;
+    }
+
+    location /media/ {
+        alias /vol/web/media/;
     }
 }
