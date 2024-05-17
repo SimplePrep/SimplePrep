@@ -1,6 +1,6 @@
 #!/bin/sh
 
-until cd /app/backend/spa
+until cd /app/backend
 do
     echo "Waiting for server volume..."
 done
