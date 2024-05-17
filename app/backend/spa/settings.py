@@ -58,6 +58,7 @@ INSTALLED_APPS = [
     'django_otp.plugins.otp_static',
     'django_otp.plugins.otp_totp',
     'two_factor',
+    'phonenumber_field',
     #internal apps
     "user",
     "core",
