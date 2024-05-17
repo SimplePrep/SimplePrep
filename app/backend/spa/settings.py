@@ -28,7 +28,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'changeme')
 
 
-cred = credentials.Certificate(os.path.join(BASE_DIR, '/spa/firebase-admin-sdk.json'))
+cred = credentials.Certificate(os.path.join(BASE_DIR, 'firebase-admin-sdk.json'))
 firebase_admin.initialize_app(cred)
 
 
