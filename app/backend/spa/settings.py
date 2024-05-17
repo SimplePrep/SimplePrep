@@ -54,6 +54,11 @@ INSTALLED_APPS = [
     "rest_framework.authtoken",
     "drf_spectacular",
     "corsheaders",
+    'django_otp',
+    'django_otp.plugins.otp_static',
+    'django_otp.plugins.otp_totp',
+    'two_factor',
+    'two_factor.plugins.phonenumber',  # For using phone numbers (if needed)
     #internal apps
     "user",
     "core",
@@ -69,6 +74,8 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    'django_otp.middleware.OTPMiddleware',
+    'spa.middleware.Admin2FAMiddleware'
 ]
 
 ROOT_URLCONF = "spa.urls"
@@ -145,6 +152,11 @@ REST_FRAMEWORK = {
         'spa.auth.FirebaseAuthentication'
      ]
 }
+# URL to redirect to when login is required
+LOGIN_URL = 'two_factor:login'
+
+# URL to redirect to after a successful login
+LOGIN_REDIRECT_URL = '/admin/'
 
 EMAIL_BACKEND = os.environ.get('EMAIL_BACKEND')
 EMAIL_HOST = os.environ.get('EMAIL_HOST')

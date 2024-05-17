@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
     nginx: 
-        restart: unless-stopped
+        restart: always
         build:
             context: .
             dockerfile: ./docker/nginx/Dockerfile
@@ -28,7 +28,7 @@ services:
           - .env
         entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"  
     backend:
-        restart: unless-stopped
+        restart: always
         build:
             context: .
             dockerfile: ./docker/backend/Dockerfile
