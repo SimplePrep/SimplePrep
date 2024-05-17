@@ -4,8 +4,8 @@ WORKDIR /app
 ENV PYTHONUNBUFFERED 1
 
 
-COPY .backend/requirements.txt /tmp/requirements.txt
-COPY .backend/requirements.dev.txt /tmp/requirements.dev.txt
+COPY ./backend/requirements.txt /tmp/requirements.txt
+COPY ./backend/requirements.dev.txt /tmp/requirements.dev.txt
 
 # Create a Python virtual environment in /py and install dependencies
 RUN python -m venv /py && \
