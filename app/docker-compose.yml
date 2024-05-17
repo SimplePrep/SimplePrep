@@ -38,7 +38,17 @@ services:
         expose:
             - 8000
         env_file:
-          - .env   
+          - .env 
+        depends_on:
+          - db 
+    db:
+        image: postgres:13-alpine 
+        restart: always
+        volumes:
+          - postgres-data:/var/lib/postgresql/data 
+        env_file:
+          - .env
 
 volumes:
     static_volume: {}
+    postgres_data: {}
