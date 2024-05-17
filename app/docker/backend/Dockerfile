@@ -28,3 +28,5 @@ ENV PYTHONPATH="/backend:$PYTHONPATH"
 
 ADD ./backend /app/backend
 ADD ./docker /app/docker
+
+RUN /py/bin/python /app/backend/manage.py collectstatic --noinput
