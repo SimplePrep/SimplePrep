@@ -1,6 +1,6 @@
 from django.db import models
-from django.contrib.auth.models import BaseUserManager, AbstractBaseUser, PermissionsMixin, Group
-
+from django.contrib.auth.models import BaseUserManager, AbstractBaseUser, PermissionsMixin
+from django_otp.plugins.otp_totp.models import TOTPDevice
 
 class UserAccountManager(BaseUserManager):
     def create_user(self, email, first_name, last_name, password=None, **extra_fields):
@@ -14,7 +14,6 @@ class UserAccountManager(BaseUserManager):
 
         return user
     
-
     def create_superuser(self, email, first_name, last_name, password=None, **extra_fields):
         user = self.create_user(email, first_name, last_name, password, **extra_fields)
         user.is_staff = True
@@ -22,7 +21,6 @@ class UserAccountManager(BaseUserManager):
         user.save(using=self._db)
 
         return user
-
 
 class User(AbstractBaseUser, PermissionsMixin):
     """Model for users"""
@@ -52,3 +50,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     def set_password(self, raw_password):
         if not self.firebase_uid:
             super().set_password(raw_password)
+    
+    def is_verified(self):
+        return TOTPDevice.objects.filter(user=self, confirmed=True).exists()

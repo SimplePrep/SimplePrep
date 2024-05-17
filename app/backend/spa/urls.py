@@ -18,12 +18,14 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf.urls.static import static
 from django.conf import settings
+
 urlpatterns = [
     # path('auth/', include('djoser.urls')),
     # path('auth/', include('djoser.urls.jwt')),
     # path('api/token/', TokenObtainPairView.as_view()),
     # path('api/token/refresh/', TokenRefreshView.as_view()),
     # path('api/token/verify/', TokenVerifyView.as_view()),
+    path('', include('two_factor.urls', 'two_factor')),
     path("my-django-admin/", admin.site.urls),
     path("auth/user/", include('user.urls')),
     path("api/core/", include('core.urls')),
