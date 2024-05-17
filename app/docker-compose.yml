@@ -34,7 +34,7 @@ services:
             dockerfile: ./docker/backend/Dockerfile
         entrypoint: /app/docker/backend/wsgi-entrypoint.sh
         volumes:
-            - static_volume:/app/backend/spa/django_static
+            - static_volume:/app/backend/django_static
         expose:
             - 8000
         env_file:
