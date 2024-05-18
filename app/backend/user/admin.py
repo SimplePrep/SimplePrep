@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.contrib.auth import get_user_model
 from django.contrib import messages
 from rest_framework_simplejwt.token_blacklist.models import OutstandingToken
-
+from spa.admin import admin_site
 User = get_user_model()
 class UserAdmin(admin.ModelAdmin):
 
@@ -32,4 +32,4 @@ class UserAdmin(admin.ModelAdmin):
             self.exclude = None
         return super().get_form(request, obj, **kwargs)
         
-admin.site.register(User, UserAdmin)
+admin_site.register(User, UserAdmin)
