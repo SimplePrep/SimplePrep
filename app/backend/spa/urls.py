@@ -18,10 +18,7 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf.urls.static import static
 from django.conf import settings
-import two_factor
-from two_factor.admin import AdminSiteOTPRequired
 
-admin.site.__class__ = AdminSiteOTPRequired
 
 urlpatterns = [
     # path('auth/', include('djoser.urls')),
@@ -29,8 +26,8 @@ urlpatterns = [
     # path('api/token/', TokenObtainPairView.as_view()),
     # path('api/token/refresh/', TokenRefreshView.as_view()),
     # path('api/token/verify/', TokenVerifyView.as_view()),
+    path("my-django-admin/", include('django_otp.urls')),
     path("my-django-admin/", admin.site.urls),
-    path("my-django-admin/two_factor/", include('two_factor.urls', 'two_factor')),
     path("auth/user/", include('user.urls')),
     path("api/core/", include('core.urls')),
     path("api/core2/", include('core2.urls')),
