@@ -3,7 +3,6 @@ from django_otp.plugins.otp_totp.models import TOTPDevice
 from django_otp.plugins.otp_totp.admin import TOTPDeviceAdmin
 
 
-User = get_user_model()
 class OTPAdmin(OTPAdminSite):
     pass 
 
