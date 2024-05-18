@@ -33,9 +33,9 @@ firebase_admin.initialize_app(cred)
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = bool(int(os.environ.get('DJANGO_DEBUG', 0)))
+DEBUG = bool(int(os.environ.get('DJANGO_DEBUG', 1)))
 
-ALLOWED_HOSTS = [] if DEBUG else os.environ.get("DJANGO_ALLOWED_HOSTS", "").split(',')
+ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS", "").split(',')
 CSRF_TRUSTED_ORIGINS = [f'https://{host}' for host in ALLOWED_HOSTS]
 CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SECURE = True
@@ -73,7 +73,6 @@ MIDDLEWARE = [
     'django_otp.middleware.OTPMiddleware',
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    'spa.middleware.Admin2FAMiddleware'
 ]
 
 ROOT_URLCONF = "spa.urls"
@@ -150,11 +149,11 @@ REST_FRAMEWORK = {
         'spa.auth.FirebaseAuthentication'
      ]
 }
-# URL to redirect to when login is required
-LOGIN_URL = 'two_factor:login'
+# # URL to redirect to when login is required
+# LOGIN_URL = 'two_factor:login'
 
-# URL to redirect to after a successful login
-LOGIN_REDIRECT_URL = '/my-django-admin/'
+# # URL to redirect to after a successful login
+# LOGIN_REDIRECT_URL = '/my-django-admin/'
 
 EMAIL_BACKEND = os.environ.get('EMAIL_BACKEND')
 EMAIL_HOST = os.environ.get('EMAIL_HOST')
