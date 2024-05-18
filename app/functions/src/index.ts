@@ -47,7 +47,7 @@ export const registerUserInBackendAndCleanup = functions.firestore
         console.log("2Sending data to backend:", body);
 
         const response = await axios.post(
-          "https://httpbin.org/anything",
+          "https://beta-simpleprep.com/auth/user/signup",
           body,
           config
         );
