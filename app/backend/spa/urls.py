@@ -25,7 +25,7 @@ urlpatterns = [
     # path('api/token/', TokenObtainPairView.as_view()),
     # path('api/token/refresh/', TokenRefreshView.as_view()),
     # path('api/token/verify/', TokenVerifyView.as_view()),
-    path('', include('spa.two_factor_urls', namespace='two_factor')),
+    path('two_factor/', include('spa.two_factor_urls', namespace='two_factor')),
     path("my-django-admin/", admin.site.urls),
     path("auth/user/", include('user.urls')),
     path("api/core/", include('core.urls')),
