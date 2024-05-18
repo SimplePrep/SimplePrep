@@ -66,23 +66,8 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         throw new Error("Failed to create user credentials.");
       }
       const { user } = userCredential;
-
-      const userData = {
-        firebase_uid: user.uid,
-        firstName: creds.firstName,
-        lastName: creds.lastName,
-        email: user.email,
-        createdAt: new Date().toISOString(),
-        emailVerified: false
-      };
-      try {
-        await setDoc(doc(db, "users", user.uid), userData);
-      } catch(error) {
-        console.log('Error in Firestore')
-        throw Error('Firestore Error Happened');
-      }
         
-      await sendEmailVerification(user, { url: 'http://localhost:3000' });
+      await sendEmailVerification(user, { url: 'https://beta-simpleprep.com'});
       
 
     } catch (error) {
