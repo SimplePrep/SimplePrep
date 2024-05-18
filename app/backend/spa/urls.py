@@ -23,12 +23,12 @@ from django_otp.admin import OTPAdminSite
 from django_otp.plugins.otp_totp.models import TOTPDevice
 from django_otp.plugins.otp_totp.admin import TOTPDeviceAdmin
 
-# class OTPAdmin(OTPAdminSite):
-#     pass 
+class OTPAdmin(OTPAdminSite):
+    pass 
 
-# admin_site = OTPAdmin(name='OTPAdmin')
-# admin_site.register(User)
-# admin_site.register(TOTPDevice, TOTPDeviceAdmin)
+admin_site = OTPAdmin(name='OTPAdmin')
+admin_site.register(User)
+admin_site.register(TOTPDevice, TOTPDeviceAdmin)
 
 
 urlpatterns = [
@@ -37,7 +37,7 @@ urlpatterns = [
     # path('api/token/', TokenObtainPairView.as_view()),
     # path('api/token/refresh/', TokenRefreshView.as_view()),
     # path('api/token/verify/', TokenVerifyView.as_view()),
-    path("admin/", admin.site.urls),
+    path("admin/", admin_site.urls),
     path("auth/user/", include('user.urls')),
     path("api/core/", include('core.urls')),
     path("api/core2/", include('core2.urls')),
