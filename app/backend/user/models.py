@@ -5,13 +5,12 @@ from django_otp.plugins.otp_totp.models import TOTPDevice
 class UserAccountManager(BaseUserManager):
     def create_user(self, email, first_name, last_name, password=None, **extra_fields):
         if not email:
-            raise ValueError('User must have email address')
-        user = self.normalize_email(email)
+            raise ValueError('User must have an email address')
+        email = self.normalize_email(email)
         user = self.model(email=email, first_name=first_name, last_name=last_name, **extra_fields)
         if password and not extra_fields.get('firebase_uid'):
             user.set_password(password)
         user.save(using=self._db)
-
         return user
     
     def create_superuser(self, email, first_name, last_name, password=None, **extra_fields):
@@ -19,15 +18,12 @@ class UserAccountManager(BaseUserManager):
         user.is_staff = True
         user.is_superuser = True
         user.save(using=self._db)
-
         return user
 
 class User(AbstractBaseUser, PermissionsMixin):
-    """Model for users"""
-    
     class SubscriptionType(models.TextChoices):
-            FREEMIUM = 'free'
-            PREMIUM = 'premium'
+        FREEMIUM = 'free'
+        PREMIUM = 'premium'
 
     firebase_uid = models.CharField(max_length=128, unique=True, null=True)
     email = models.EmailField(unique=True, max_length=255)
@@ -38,6 +34,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_staff = models.BooleanField(default=False)
 
     objects = UserAccountManager()
+
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['first_name', 'last_name']
 

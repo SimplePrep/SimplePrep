@@ -35,8 +35,7 @@ export const SignUp = async ({ email, password }: UserFormValues) => {
     const user = userCredential.user;
     if (user) {
       await sendEmailVerification(user, {
-          // Optionally, specify the URL where users will be redirected after clicking the email link
-          url: "http://localhost:3000",
+          url: "https://beta-simpleprep.com",
       });
       return userCredential;
   }
