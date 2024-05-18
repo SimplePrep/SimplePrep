@@ -108,6 +108,7 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           case 'auth/too-many-requests':
             break;
           default:
+            console.log(error)
             setError('Failed to sign up. Please try again.');
             break;
         }
