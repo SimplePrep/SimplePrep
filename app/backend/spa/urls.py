@@ -20,8 +20,8 @@ from django.conf.urls.static import static
 from django.conf import settings
 from django.contrib.auth.models import User 
 from django_otp.admin import OTPAdminSite
-from django_opt.plugins.otp_totp.models import TOTPDevice
-from django_opt.plugins.otp_totp.admin import TOTPDeviceAdmin
+from django_otp.plugins.otp_totp.models import TOTPDevice
+from django_otp.plugins.otp_totp.admin import TOTPDeviceAdmin
 
 class OTPAdmin(OTPAdminSite):
     pass 
