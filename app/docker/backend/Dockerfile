@@ -15,7 +15,7 @@ RUN python -m venv /py && \
     apk add --update --no-cache --virtual .tmp-build-deps \
         build-base postgresql-dev musl-dev linux-headers && \
     /py/bin/pip install django-cors-headers cffi Pillow && \
-    /py/bin/pip install django-otp-plugins && \
+    /py/bin/pip install django-otp qrcode && \
     /py/bin/pip install -r /tmp/requirements.txt && \
     if [ "$DEV" = "true" ]; then \
         /py/bin/pip install -r /tmp/requirements.dev.txt; \

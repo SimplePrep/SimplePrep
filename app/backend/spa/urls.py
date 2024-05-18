@@ -18,6 +18,17 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf.urls.static import static
 from django.conf import settings
+from django.contrib.auth.models import User 
+from django_otp.admin import OTPAdminSite
+from djnago_opt.plugins.otp_totp.models import TOTPDevice
+from djnago_opt.plugins.otp_totp.admin import TOTPDeviceAdmin
+
+class OTPAdmin(OTPAdminSite):
+    pass 
+
+admin_site = OTPAdmin(name='OTPAdmin')
+admin_site.register(User)
+admin_site.register(TOTPDevice, TOTPDeviceAdmin)
 
 
 urlpatterns = [
@@ -26,8 +37,7 @@ urlpatterns = [
     # path('api/token/', TokenObtainPairView.as_view()),
     # path('api/token/refresh/', TokenRefreshView.as_view()),
     # path('api/token/verify/', TokenVerifyView.as_view()),
-    path("my-django-admin/", include('django_otp.urls')),
-    path("my-django-admin/", admin.site.urls),
+    path("my-django-admin/", admin_site.urls),
     path("auth/user/", include('user.urls')),
     path("api/core/", include('core.urls')),
     path("api/core2/", include('core2.urls')),
