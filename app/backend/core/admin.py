@@ -1,4 +1,5 @@
 from django.contrib import admin
+from spa.admin import admin_site
 from .models import Test, TestModel, Question, Comment, TestResult, UserAnswer
 
 class TestAdmin(admin.ModelAdmin):
@@ -23,9 +24,9 @@ class UserAnswerAdmin(admin.ModelAdmin):
     list_display = ('test_result', 'question', 'selected_option', )
     list_filter = ('test_result', 'question')
 
-admin.site.register(Test, TestAdmin)
-admin.site.register(TestModel, TestModelAdmin)
-admin.site.register(Question, QuestionAdmin)
-admin.site.register(Comment, CommentAdmin)
-admin.site.register(TestResult, TestResultAdmin)
-admin.site.register(UserAnswer, UserAnswerAdmin)
+admin_site.register(Test, TestAdmin)
+admin_site.register(TestModel, TestModelAdmin)
+admin_site.register(Question, QuestionAdmin)
+admin_site.register(Comment, CommentAdmin)
+admin_site.register(TestResult, TestResultAdmin)
+admin_site.register(UserAnswer, UserAnswerAdmin)
