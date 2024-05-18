@@ -1,14 +1,12 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { GoogleAuthProvider, User, sendPasswordResetEmail, onAuthStateChanged, signInWithPopup } from 'firebase/auth';
+import { GoogleAuthProvider, User, sendPasswordResetEmail, onAuthStateChanged, signInWithPopup, sendEmailVerification, getIdToken} from 'firebase/auth';
 import { auth, db } from './firebaseConfig';
 import { LoginFormValues, UserFormValues } from './AuthServices';
 import { SignUp as signUpService, SignIn as signInService, SignOut as signOutService } from './AuthServices';
 import AuthContext from './AuthContext';
-import { sendEmailVerification } from 'firebase/auth';
 import {FirebaseError} from 'firebase/app';
 import axios from 'axios';
-import {doc, setDoc, updateDoc} from 'firebase/firestore';
 
 
 interface AuthProviderProps {
@@ -24,9 +22,11 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      if (user && user.emailVerified) {
+      if (user) {
+        if (user.emailVerified) {
+          await registerUserInBackend(user);
+        }
         setCurrentUser(user);
-
       } else {
         setCurrentUser(null);
       }
@@ -34,6 +34,35 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     });
     return unsubscribe;
   }, []);
+
+  const registerUserInBackend = async (user: User) => {
+    try {
+      const token = await getIdToken(user);
+      const userData = {
+        email: user.email,
+        first_name: user.displayName?.split(" ")[0],
+        last_name: user.displayName?.split(" ")[1] || "",
+        firebase_uid: user.uid,
+        subscription_type: "free",
+      };
+
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
+      };
+
+      const response = await axios.post(
+        "https://beta-simpleprep.com/auth/user/signup",
+        userData,
+        config
+      );
+      console.log("Backend registration successful:", response.data);
+    } catch (error) {
+      console.error("Backend registration failed:", error);
+    }
+  };
 
 
   const checkAuthenticated = async () => {
