@@ -1,5 +1,5 @@
 from django.contrib import admin
-from spa.admin import admin_site
+from backend.spa.admin import admin_site
 from .models import Test, TestModel, Question, Comment, TestResult, UserAnswer
 
 class TestAdmin(admin.ModelAdmin):
