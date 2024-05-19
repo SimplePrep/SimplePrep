@@ -40,6 +40,7 @@ export const SignUp = async ({ firstName, lastName, email, password }: UserFormV
 
           // Store user data in the backend
           const userData = {
+              firebase_uid: user.uid,
               email: user.email,
               first_name: firstName,
               last_name: lastName,
