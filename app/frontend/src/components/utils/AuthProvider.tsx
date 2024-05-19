@@ -95,7 +95,6 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         }
         const { user } = userCredential;
         await registerUserInBackend(user, creds.firstName, creds.lastName);
-        setError('Verification email sent. Please verify your email before logging in.');
     } catch (error) {
         if (error instanceof FirebaseError) {
             switch (error.code) {
