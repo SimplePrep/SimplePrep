@@ -7,6 +7,7 @@ class UserAccountManager(BaseUserManager):
         if not email:
             raise ValueError('User must have an email address')
         email = self.normalize_email(email)
+        extra_fields.setdefault('subscription_type', User.SubscriptionType.FREEMIUM)
         user = self.model(email=email, first_name=first_name, last_name=last_name, **extra_fields)
         if password and not extra_fields.get('firebase_uid'):
             user.set_password(password)
@@ -57,4 +58,4 @@ class TempUser(models.Model):
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
-    
+
