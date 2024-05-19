@@ -59,13 +59,16 @@ class SignupView(APIView):
     def post(self, request):
         auth_header = request.headers.get('Authorization')
         if not auth_header:
+            logger.error("Authorization header missing")
             return Response({'error': "Authorization header missing"}, status=status.HTTP_401_UNAUTHORIZED)
 
         try:
             token = auth_header.split(' ')[1]
             decoded_token = firebase_auth.verify_id_token(token)
             firebase_uid = decoded_token['uid']
+            logger.info(f"Token successfully verified for UID: {firebase_uid}")
         except Exception as e:
+            logger.error(f"Token verification failed: {e}")
             return Response({'error': "Token verification failed", 'details': str(e)}, status=status.HTTP_401_UNAUTHORIZED)
 
         data = request.data.copy()
@@ -78,5 +81,9 @@ class SignupView(APIView):
         serializer = UserSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
+            logger.info(f"User data stored successfully for UID: {firebase_uid}")
             return Response({'success': "User data stored successfully"}, status=status.HTTP_201_CREATED)
+        
+        # Log the errors from the serializer
+        logger.error(f"Serializer errors: {serializer.errors}")
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
