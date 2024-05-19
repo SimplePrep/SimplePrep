@@ -74,6 +74,12 @@ class SignupView(APIView):
         data = request.data.copy()
         data['firebase_uid'] = firebase_uid
 
+        # Check if a user with the same email already exists
+        email = data.get('email')
+        if User.objects.filter(email=email).exists():
+            logger.error(f"User with email {email} already exists")
+            return Response({'error': "A user with that email already exists."}, status=status.HTTP_400_BAD_REQUEST)
+
         # Set default subscription type if not provided
         if 'subscription_type' not in data:
             data['subscription_type'] = User.SubscriptionType.FREEMIUM
