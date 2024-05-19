@@ -12,42 +12,6 @@ User = get_user_model()
 # Configure logging
 logger = logging.getLogger(__name__)
 
-class VerifyUserEmailView(APIView):
-    permission_classes = (AllowAny,)
-
-    def post(self, request):
-        firebase_uid = request.data.get('firebase_uid')
-        if not firebase_uid:
-            logger.error("firebase_uid is required")
-            return Response({'error': "firebase_uid is required"}, status=status.HTTP_400_BAD_REQUEST)
-
-        try:
-            decoded_token = firebase_auth.verify_id_token(firebase_uid)
-            logger.info("Token successfully verified")
-        except Exception as e:
-            logger.error(f"Token verification failed: {e}")
-            return Response({'error': "Token verification failed", 'details': str(e)}, status=status.HTTP_401_UNAUTHORIZED)
-
-        try:
-            temp_user = TempUser.objects.get(firebase_uid=firebase_uid)
-            logger.info(f"Temporary user found: {temp_user.email}")
-            user = User.objects.create_user(
-                email=temp_user.email,
-                first_name=temp_user.first_name,
-                last_name=temp_user.last_name,
-                firebase_uid=firebase_uid,
-                subscription_type=User.SubscriptionType.FREEMIUM,  # Set default subscription type
-            )
-            temp_user.delete()  # Remove the temporary user data
-            logger.info(f"Temporary user deleted: {temp_user.email}")
-            return Response({'success': "User email verified and account created"}, status=status.HTTP_200_OK)
-        except TempUser.DoesNotExist:
-            logger.error("Temporary user not found")
-            return Response({'error': "Temporary user not found"}, status=status.HTTP_404_NOT_FOUND)
-        except Exception as e:
-            logger.error(f"Error creating user: {e}")
-            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
-
 
 class RetrieveUserView(APIView):
     permission_classes = (IsAuthenticated,)
@@ -106,8 +70,8 @@ class SignupView(APIView):
 
         data = request.data.copy()
         data['firebase_uid'] = firebase_uid
-        serializer = TempUserSerializer(data=data)
+        serializer = UserSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
-            return Response({'success': "Temporary user data stored successfully"}, status=status.HTTP_201_CREATED)
+            return Response({'success': "User data stored successfully"}, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
