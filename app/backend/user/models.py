@@ -50,3 +50,11 @@ class User(AbstractBaseUser, PermissionsMixin):
     
     def is_verified(self):
         return TOTPDevice.objects.filter(user=self, confirmed=True).exists()
+
+class TempUser(models.Model):
+    firebase_uid = models.CharField(max_length=128, unique=True)
+    email = models.EmailField(unique=True)
+    first_name = models.CharField(max_length=255)
+    last_name = models.CharField(max_length=255)
+    created_at = models.DateTimeField(auto_now_add=True)
+    

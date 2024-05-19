@@ -29,7 +29,7 @@ export const SignIn = async ({ email, password }: LoginFormValues) => {
 };
 
 //Sign up functionality
-export const SignUp = async ({ email, password }: UserFormValues) => {
+export const SignUp = async ({firstName, lastName,  email, password }: UserFormValues) => {
   try {
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
     const user = userCredential.user;
@@ -40,7 +40,7 @@ export const SignUp = async ({ email, password }: UserFormValues) => {
       return userCredential;
   }
 } catch (error) {
-    throw error;  // Rethrow the error to be handled where the function is called
+    throw error;
 }
 };
 

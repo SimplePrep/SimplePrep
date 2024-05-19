@@ -23,8 +23,12 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
-        if (user.emailVerified) {
-          await registerUserInBackend(user);
+        if (user.emailVerified && !user.metadata.lastSignInTime) { // Check if the email was verified and if it's the first time signing in
+          try {
+            await axios.post('https://beta-simpleprep.com/auth/user/verify-user-email', { uid: user.uid });
+          } catch (error) {
+            console.error('Failed to verify user email:', error);
+          }
         }
         setCurrentUser(user);
       } else {
@@ -34,36 +38,27 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     });
     return unsubscribe;
   }, []);
+  
 
-  const registerUserInBackend = async (user: User) => {
+  const registerUserInBackend = async (user: User, firstName?: string, lastName?: string) => {
     try {
-      const token = await getIdToken(user);
-      const userData = {
-        email: user.email,
-        first_name: user.displayName?.split(" ")[0],
-        last_name: user.displayName?.split(" ")[1] || "",
+      const token = await user.getIdToken();
+      await axios.post('https://beta-simpleprep.com/auth/user/store-temp-user', {
         firebase_uid: user.uid,
-        subscription_type: "free",
-      };
-
-      const config = {
+        email: user.email,
+        first_name: firstName,
+        last_name: lastName,
+      }, {
         headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`
-        },
-      };
-
-      const response = await axios.post(
-        "https://beta-simpleprep.com/auth/user/signup",
-        userData,
-        config
-      );
-      console.log("Backend registration successful:", response.data);
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      console.log('User data sent to backend');
     } catch (error) {
-      console.error("Backend registration failed:", error);
+      console.error('Error storing user data:', error);
     }
   };
-
 
   const checkAuthenticated = async () => {
     try {
@@ -97,8 +92,7 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       const { user } = userCredential;
         
       await sendEmailVerification(user, { url: 'https://beta-simpleprep.com'});
-      
-
+      await registerUserInBackend(user, creds.firstName, creds.lastName);
     } catch (error) {
       if (error instanceof FirebaseError) {
         switch (error.code) {
