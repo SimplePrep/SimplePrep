@@ -1,6 +1,6 @@
 import { createUserWithEmailAndPassword, sendEmailVerification, signInWithEmailAndPassword, signOut, setPersistence, browserLocalPersistence } from 'firebase/auth';
 import { auth } from './firebaseConfig';
-
+import axios from 'axios';
 setPersistence(auth,  browserLocalPersistence);
 export interface LoginFormValues {
     email: string;
@@ -35,9 +35,22 @@ export const SignUp = async ({firstName, lastName,  email, password }: UserFormV
     const user = userCredential.user;
     if (user) {
       await sendEmailVerification(user, {
-          url: "https://beta-simpleprep.com",
+          url: "https://beta-simpleprep.com/verify-email",
       });
-      return userCredential;
+      const token = await user.getIdToken();
+            await axios.post('https://beta-simpleprep.com/auth/user/store-temp-user', {
+                firebase_uid: user.uid,
+                email: user.email,
+                first_name: firstName,
+                last_name: lastName,
+            }, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
+            return userCredential;
   }
 } catch (error) {
     throw error;

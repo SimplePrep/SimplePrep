@@ -17,6 +17,7 @@ import { Navigate , BrowserRouter as Router} from 'react-router-dom';
 import Analytics from './components/Dashboard/Analytics';
 import AuthProvider from './components/utils/AuthProvider';
 import { Provider } from 'react-redux';
+import EmailVerification from './components/utils/EmailVerification';
 
 
 const App = () => {
@@ -50,6 +51,7 @@ const App = () => {
 
               <Route path="practice-tests/:testId/sections/:sectionId/:sectionName" element={<TestPageUI/>}/>
               <Route path="test" element={<TestPageUI/>}/>
+              <Route path="/verify-email" element={<EmailVerification/>}/>
           </Routes>
         </AuthProvider>
     

@@ -79,30 +79,32 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     setLoading(true);
     setError('');
     try {
-        const userCredential = await signUpService(creds);
-        if (!userCredential) {
-            throw new Error("Failed to create user credentials.");
-        }
-        const { user } = userCredential;
-        await registerTempUserInBackend(user, creds.firstName, creds.lastName);
+      const userCredential = await signUpService(creds);
+      if (!userCredential) {
+        throw new Error("Failed to create user credentials.");
+      }
+      const { user } = userCredential;
+      await sendEmailVerification(user, { url: 'https://beta-simpleprep.com/verify-email' });
+      await registerTempUserInBackend(user, creds.firstName, creds.lastName);
+      setError('Verification email sent. Please verify your email before logging in.');
     } catch (error) {
-        if (error instanceof FirebaseError) {
-            switch (error.code) {
-                case 'auth/email-already-in-use':
-                    setError('This email is already in use.');
-                    break;
-                case 'auth/too-many-requests':
-                    break;
-                default:
-                    console.log(error)
-                    setError('Failed to sign up. Please try again.');
-                    break;
-            }
-        } else {
-            setError('An unexpected error occurred during sign up.');
+      if (error instanceof FirebaseError) {
+        switch (error.code) {
+          case 'auth/email-already-in-use':
+            setError('This email is already in use.');
+            break;
+          case 'auth/too-many-requests':
+            break;
+          default:
+            console.log(error);
+            setError('Failed to sign up. Please try again.');
+            break;
         }
+      } else {
+        setError('An unexpected error occurred during sign up.');
+      }
     } finally {
-        setLoading(false);
+      setLoading(false);
     }
 };
 
