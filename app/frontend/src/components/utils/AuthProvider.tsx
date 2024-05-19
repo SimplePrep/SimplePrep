@@ -22,22 +22,27 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        if (user.emailVerified && !user.metadata.lastSignInTime) { // Check if the email was verified and if it's the first time signing in
-          try {
-            await axios.post('https://beta-simpleprep.com/auth/user/verify-user-email', { uid: user.uid });
-          } catch (error) {
-            console.error('Failed to verify user email:', error);
-          }
+        if (user) {
+            if (user.emailVerified) {
+                try {
+                    const token = await user.getIdToken();
+                    await axios.post('https://beta-simpleprep.com/auth/user/verify-user-email', { uid: user.uid }, {
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    });
+                } catch (error) {
+                    console.error('Failed to verify user email:', error);
+                }
+            }
+            setCurrentUser(user);
+        } else {
+            setCurrentUser(null);
         }
-        setCurrentUser(user);
-      } else {
-        setCurrentUser(null);
-      }
-      setLoading(false);
+        setLoading(false);
     });
     return unsubscribe;
-  }, []);
+}, []);
   
 
   const registerUserInBackend = async (user: User, firstName?: string, lastName?: string) => {
@@ -84,36 +89,33 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     setLoading(true);
     setError('');
     try {
-      const userCredential = await signUpService(creds);
-
-      if (!userCredential) {
-        throw new Error("Failed to create user credentials.");
-      }
-      const { user } = userCredential;
-        
-      await sendEmailVerification(user, { url: 'https://beta-simpleprep.com'});
-      await registerUserInBackend(user, creds.firstName, creds.lastName);
-    } catch (error) {
-      if (error instanceof FirebaseError) {
-        switch (error.code) {
-          case 'auth/email-already-in-use':
-            setError('This email is already in use.');
-            break;
-          case 'auth/too-many-requests':
-            break;
-          default:
-            console.log(error)
-            setError('Failed to sign up. Please try again.');
-            break;
+        const userCredential = await signUpService(creds);
+        if (!userCredential) {
+            throw new Error("Failed to create user credentials.");
         }
-      } else {
-        setError('An unexpected error occurred during sign up.'); 
-      }
+        const { user } = userCredential;
+        await registerUserInBackend(user, creds.firstName, creds.lastName);
+        setError('Verification email sent. Please verify your email before logging in.');
+    } catch (error) {
+        if (error instanceof FirebaseError) {
+            switch (error.code) {
+                case 'auth/email-already-in-use':
+                    setError('This email is already in use.');
+                    break;
+                case 'auth/too-many-requests':
+                    break;
+                default:
+                    console.log(error)
+                    setError('Failed to sign up. Please try again.');
+                    break;
+            }
+        } else {
+            setError('An unexpected error occurred during sign up.');
+        }
+    } finally {
+        setLoading(false);
     }
-    finally {
-      setLoading(false);
-  }
-  };
+};
 
   const SignIn = async (creds: LoginFormValues, onSuccess: () => void) => {
     setError('');
