@@ -38,13 +38,13 @@ export const SignUp = async ({ firstName, lastName, email, password }: UserFormV
         if (user) {
             console.log('sending email')
             await sendEmailVerification(user, {
-                url: "https://beta-simpleprep.com/verify-email",
+                url: "https://beta-simpleprep.com",
             });
             console.log('email sent')
 
             // Store temporary user data in the backend
             const token = await user.getIdToken();
-            await axios.post('https://beta-simpleprep.com/auth/user/store-temp-user', {
+            await axios.post('https://beta-simpleprep.com/auth/user/signup', {
                 firebase_uid: user.uid,
                 email: user.email,
                 first_name: firstName,

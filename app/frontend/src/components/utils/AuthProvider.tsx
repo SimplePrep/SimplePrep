@@ -59,9 +59,7 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     setError('');
     try {
       const userCredential = await signUpService(creds);
-      if (userCredential) {
-        setError('Verification email sent. Please verify your email before logging in.');
-      }
+      
     } catch (error) {
       if (error instanceof FirebaseError) {
         switch (error.code) {
