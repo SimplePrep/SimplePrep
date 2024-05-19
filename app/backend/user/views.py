@@ -53,7 +53,7 @@ class LoginView(APIView):
             return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 class SignUpView(APIView):
-    permission_classes = (permissions.AllowAny,)
+    permission_classes = (AllowAny,)
 
     def post(self, request):
         auth_header = request.headers.get('Authorization')
