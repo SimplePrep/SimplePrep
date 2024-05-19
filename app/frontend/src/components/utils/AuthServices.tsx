@@ -1,22 +1,24 @@
 import { createUserWithEmailAndPassword, sendEmailVerification, signInWithEmailAndPassword, signOut, setPersistence, browserLocalPersistence } from 'firebase/auth';
 import { auth } from './firebaseConfig';
 import axios from 'axios';
-setPersistence(auth,  browserLocalPersistence);
+
+setPersistence(auth, browserLocalPersistence);
+
 export interface LoginFormValues {
     email: string;
     password: string;
-  }
-  
-export  interface UserFormValues {
+}
+
+export interface UserFormValues {
     firstName: string;
     lastName: string;
     email: string;
     password: string;
-  }
+}
 
-//Sign in functionality
+// Sign-in functionality
 export const SignIn = async ({ email, password }: LoginFormValues) => {
- try {
+    try {
         const userCredential = await signInWithEmailAndPassword(auth, email, password);
         const user = userCredential.user;
         if (user && !user.emailVerified) {
@@ -24,20 +26,22 @@ export const SignIn = async ({ email, password }: LoginFormValues) => {
         }
         return userCredential;
     } catch (error) {
-        throw error;  
+        throw error;
     }
 };
 
-//Sign up functionality
-export const SignUp = async ({firstName, lastName,  email, password }: UserFormValues) => {
-  try {
-    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-    const user = userCredential.user;
-    if (user) {
-      await sendEmailVerification(user, {
-          url: "https://beta-simpleprep.com/verify-email",
-      });
-      const token = await user.getIdToken();
+// Sign-up functionality
+export const SignUp = async ({ firstName, lastName, email, password }: UserFormValues) => {
+    try {
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
+        if (user) {
+            await sendEmailVerification(user, {
+                url: "https://beta-simpleprep.com/verify-email",
+            });
+
+            // Store temporary user data in the backend
+            const token = await user.getIdToken();
             await axios.post('https://beta-simpleprep.com/auth/user/store-temp-user', {
                 firebase_uid: user.uid,
                 email: user.email,
@@ -51,13 +55,13 @@ export const SignUp = async ({firstName, lastName,  email, password }: UserFormV
             });
 
             return userCredential;
-  }
-} catch (error) {
-    throw error;
-}
+        }
+    } catch (error) {
+        throw error;
+    }
 };
 
-//Sign out functionality
-export const  SignOut  =  async () => {
- await  signOut(auth);
+// Sign-out functionality
+export const SignOut = async () => {
+    await signOut(auth);
 };

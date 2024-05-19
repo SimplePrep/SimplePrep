@@ -34,27 +34,6 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     return unsubscribe;
 }, []);
   
-
-  const registerTempUserInBackend = async (user: User, firstName?: string, lastName?: string) => {
-    try {
-      const token = await user.getIdToken();
-      await axios.post('https://beta-simpleprep.com/auth/user/store-temp-user', {
-        firebase_uid: user.uid,
-        email: user.email,
-        first_name: firstName,
-        last_name: lastName,
-      }, {
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        }
-      });
-      console.log('User data sent to backend');
-    } catch (error) {
-      console.error('Error storing user data:', error);
-    }
-  };
-
   const checkAuthenticated = async () => {
     try {
       const user = auth.currentUser;
@@ -80,13 +59,9 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     setError('');
     try {
       const userCredential = await signUpService(creds);
-      if (!userCredential) {
-        throw new Error("Failed to create user credentials.");
+      if (userCredential) {
+        setError('Verification email sent. Please verify your email before logging in.');
       }
-      const { user } = userCredential;
-      await sendEmailVerification(user, { url: 'https://beta-simpleprep.com/verify-email' });
-      await registerTempUserInBackend(user, creds.firstName, creds.lastName);
-      setError('Verification email sent. Please verify your email before logging in.');
     } catch (error) {
       if (error instanceof FirebaseError) {
         switch (error.code) {
@@ -106,7 +81,7 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     } finally {
       setLoading(false);
     }
-};
+  };
 
   const SignIn = async (creds: LoginFormValues, onSuccess: () => void) => {
     setError('');

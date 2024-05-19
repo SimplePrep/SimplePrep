@@ -19,7 +19,9 @@ from django.urls import path, include
 from django.conf.urls.static import static
 from django.conf import settings
 from .admin import admin_site
+from django.contrib.auth import get_user_model
 
+User = get_user_model()
 
 urlpatterns = [
     # path('auth/', include('djoser.urls')),
