@@ -70,6 +70,11 @@ class SignupView(APIView):
 
         data = request.data.copy()
         data['firebase_uid'] = firebase_uid
+
+        # Set default subscription type if not provided
+        if 'subscription_type' not in data:
+            data['subscription_type'] = User.SubscriptionType.FREEMIUM
+
         serializer = UserSerializer(data=data)
         if serializer.is_valid():
             serializer.save()

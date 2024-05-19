@@ -8,9 +8,10 @@ User = get_user_model()
 class UserSerializer(serializers.ModelSerializer):
     subscription_type = serializers.ChoiceField(choices=User.SubscriptionType.choices, default=User.SubscriptionType.FREEMIUM)
     firebase_uid = serializers.CharField(required=True)
+    
     class Meta:
         model = User
-        fields = ( 'id', 'email', 'first_name', 'last_name', 'subscription_type', 'firebase_uid')
+        fields = ('id', 'email', 'first_name', 'last_name', 'subscription_type', 'firebase_uid')
         read_only_fields = ('id', 'firebase_uid')
 
     def validate_email(self, value):
@@ -18,12 +19,7 @@ class UserSerializer(serializers.ModelSerializer):
         if User.objects.filter(email=value).exists():
             raise serializers.ValidationError('A user with that email already exists.')
         return value
-    
-    def validate_firebase_uid(self, value):
-        if not value:
-            raise serializers.ValidationError("Firebase UID is required.")
-        return value
-    
+
     def create(self, validated_data):
         return User.objects.create_user(**validated_data)
         
