@@ -32,42 +32,31 @@ export const SignIn = async ({ email, password }: LoginFormValues) => {
 
 // Sign-up functionality
 export const SignUp = async ({ firstName, lastName, email, password }: UserFormValues) => {
-    try {
-        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-        const user = userCredential.user;
-        if (user) {
-            console.log('sending email')
-            await sendEmailVerification(user, {
-                url: "https://beta-simpleprep.com",
-            });
-            console.log('email sent')
+  try {
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+      if (user) {
+          await sendEmailVerification(user, { url: "https://beta-simpleprep.com", });
 
-            // Store temporary user data in the backend
-            const token = await user.getIdToken();
-            const userData = {
+          // Store user data in the backend
+          const userData = {
               email: user.email,
               first_name: firstName,
               last_name: lastName,
-              firebase_uid: user.uid,
               subscription_type: "free",
-            }
-            const body = JSON.stringify(userData);
-            const config = {
+          };
+          const body = JSON.stringify(userData);
+          const config = {
               headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            }}
-
-            const response = await axios.post('https://beta-simpleprep.com/auth/user/signup', 
-              body, 
-              config
-            );
-
-            return userCredential;
-        }
-    } catch (error) {
-        throw error;
-    }
+                  'Content-Type': 'application/json',
+              }
+          };
+          const response = await axios.post('https://beta-simpleprep.com/auth/user/signup', body, config);
+          return userCredential;
+      }
+  } catch (error) {
+      throw error;
+  }
 };
 
 // Sign-out functionality
