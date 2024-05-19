@@ -89,7 +89,7 @@ class LoginView(APIView):
             return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-class StoreTempUserView(APIView):
+class SignupView(APIView):
     permission_classes = (AllowAny,)
 
     def post(self, request):
