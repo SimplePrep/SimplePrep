@@ -24,18 +24,8 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
         if (user) {
             if (user.emailVerified) {
-                try {
-                    const token = await user.getIdToken();
-                    await axios.post('https://beta-simpleprep.com/auth/user/verify-user-email', { uid: user.uid }, {
-                        headers: {
-                            'Authorization': `Bearer ${token}`
-                        }
-                    });
-                } catch (error) {
-                    console.error('Failed to verify user email:', error);
-                }
+              setCurrentUser(user);
             }
-            setCurrentUser(user);
         } else {
             setCurrentUser(null);
         }
@@ -45,7 +35,7 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 }, []);
   
 
-  const registerUserInBackend = async (user: User, firstName?: string, lastName?: string) => {
+  const registerTempUserInBackend = async (user: User, firstName?: string, lastName?: string) => {
     try {
       const token = await user.getIdToken();
       await axios.post('https://beta-simpleprep.com/auth/user/store-temp-user', {
@@ -94,7 +84,7 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             throw new Error("Failed to create user credentials.");
         }
         const { user } = userCredential;
-        await registerUserInBackend(user, creds.firstName, creds.lastName);
+        await registerTempUserInBackend(user, creds.firstName, creds.lastName);
     } catch (error) {
         if (error instanceof FirebaseError) {
             switch (error.code) {
