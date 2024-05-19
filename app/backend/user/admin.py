@@ -3,6 +3,7 @@ from django.contrib.auth import get_user_model
 from django.contrib import messages
 from rest_framework_simplejwt.token_blacklist.models import OutstandingToken
 from spa.admin import admin_site
+from .models import TempUser
 User = get_user_model()
 class UserAdmin(admin.ModelAdmin):
 
@@ -39,4 +40,4 @@ class TempUserAdmin(admin.ModelAdmin):
     ordering = ('-created_at',)
         
 admin_site.register(User, UserAdmin)
-admin_site.register(TempUserAdmin)
+admin_site.register(TempUser, TempUserAdmin)
