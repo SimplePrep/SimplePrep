@@ -65,6 +65,7 @@ class SignUpView(APIView):
                 return Response({'error': "Email already exists"}, status=status.HTTP_400_BAD_REQUEST)
             try:
                 user = User.objects.create_user(
+                    firebase_uid = data['firebase_uid'],
                     email=email,
                     first_name=data['first_name'],
                     last_name=data['last_name'],
