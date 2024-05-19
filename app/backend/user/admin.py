@@ -31,5 +31,12 @@ class UserAdmin(admin.ModelAdmin):
         else:
             self.exclude = None
         return super().get_form(request, obj, **kwargs)
+
+class TempUserAdmin(admin.ModelAdmin):
+    list_display = ('email', 'first_name', 'last_name', 'firebase_uid', 'created_at')
+    search_fields = ('email', 'first_name', 'last_name', 'firebase_uid')
+    list_filter = ('created_at',)
+    ordering = ('-created_at',)
         
 admin_site.register(User, UserAdmin)
+admin_site.register(TempUserAdmin)
