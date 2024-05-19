@@ -13,7 +13,7 @@ const EmailVerification: React.FC = () => {
     const verifyEmail = async () => {
       const queryParams = new URLSearchParams(location.search);
       const uid = queryParams.get('uid');
-      
+      console.log('user info transfer started')
       if (uid) {
         const user = auth.currentUser;
         if (user) {

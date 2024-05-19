@@ -36,9 +36,11 @@ export const SignUp = async ({ firstName, lastName, email, password }: UserFormV
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
         const user = userCredential.user;
         if (user) {
+            console.log('sending email')
             await sendEmailVerification(user, {
                 url: "https://beta-simpleprep.com/verify-email",
             });
+            console.log('email sent')
 
             // Store temporary user data in the backend
             const token = await user.getIdToken();
