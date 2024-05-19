@@ -44,17 +44,24 @@ export const SignUp = async ({ firstName, lastName, email, password }: UserFormV
 
             // Store temporary user data in the backend
             const token = await user.getIdToken();
-            await axios.post('https://beta-simpleprep.com/auth/user/signup', {
-                firebase_uid: user.uid,
-                email: user.email,
-                first_name: firstName,
-                last_name: lastName,
-            }, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                }
-            });
+            const userData = {
+              email: user.email,
+              first_name: firstName,
+              last_name: lastName,
+              firebase_uid: user.uid,
+              subscription_type: "free",
+            }
+            const body = JSON.stringify(userData);
+            const config = {
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }}
+
+            const response = await axios.post('https://beta-simpleprep.com/auth/user/signup', 
+              body, 
+              config
+            );
 
             return userCredential;
         }

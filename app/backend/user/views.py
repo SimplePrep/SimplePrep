@@ -52,8 +52,7 @@ class LoginView(APIView):
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-
-class SignupView(APIView):
+class SignUpView(APIView):
     permission_classes = (AllowAny,)
 
     def post(self, request):
@@ -71,25 +70,27 @@ class SignupView(APIView):
             logger.error(f"Token verification failed: {e}")
             return Response({'error': "Token verification failed", 'details': str(e)}, status=status.HTTP_401_UNAUTHORIZED)
 
-        data = request.data.copy()
-        data['firebase_uid'] = firebase_uid
-
-        # Check if a user with the same email already exists
-        email = data.get('email')
-        if User.objects.filter(email=email).exists():
-            logger.error(f"User with email {email} already exists")
-            return Response({'error': "A user with that email already exists."}, status=status.HTTP_400_BAD_REQUEST)
-
-        # Set default subscription type if not provided
-        if 'subscription_type' not in data:
-            data['subscription_type'] = User.SubscriptionType.FREEMIUM
-
-        serializer = UserSerializer(data=data)
+        serializer = UserSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save()
-            logger.info(f"User data stored successfully for UID: {firebase_uid}")
-            return Response({'success': "User data stored successfully"}, status=status.HTTP_201_CREATED)
-        
-        # Log the errors from the serializer
+            data = serializer.validated_data
+            email = data['email'].lower()
+
+            if User.objects.filter(email=email).exists():
+                return Response({'error': "Email already exists"}, status=status.HTTP_400_BAD_REQUEST)
+
+            try:
+                user = User.objects.create_user(
+                    email=email,
+                    first_name=data['first_name'],
+                    last_name=data['last_name'],
+                    subscription_type=data.get('subscription_type', User.SubscriptionType.FREEMIUM),
+                    firebase_uid=firebase_uid,
+                )
+                logger.info(f"User account created successfully for email: {email}")
+                return Response({'success': "User account created successfully"}, status=status.HTTP_201_CREATED)
+            except Exception as e:
+                logger.error(f"Error creating user: {e}")
+                return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
         logger.error(f"Serializer errors: {serializer.errors}")
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
