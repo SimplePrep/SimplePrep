@@ -120,39 +120,68 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
 };
   
-  const GoogleSignIn = async () => {
-    setLoading(true);
-    setError('');
-    const provider = new GoogleAuthProvider();
+const GoogleSignIn = async () => {
+  setLoading(true);
+  setError('');
+  const provider = new GoogleAuthProvider();
 
-    try {
-      const result = await signInWithPopup(auth, provider);
-      const user = result.user;
-      if (user && user.emailVerified) {
+  try {
+    const result = await signInWithPopup(auth, provider);
+    const user = result.user;
+    if (user) {
+      const { displayName, email, uid } = user;
+      const [firstName, lastName] = displayName ? displayName.split(' ') : ['Default', 'User'];
+
+      // Check if user exists in the backend
+      const response = await axios.post('https://beta-simpleprep.com/auth/user/check-user', {
+        firebase_uid: uid,
+        email: email,
+      });
+
+      if (response.data.exists) {
+        // Update user info if needed
+        await axios.put('https://beta-simpleprep.com/auth/user/update-user', {
+          firebase_uid: uid,
+          email: email,
+          first_name: firstName || 'Default',
+          last_name: lastName || 'User',
+        });
+      } else {
+        // Create a new user
+        await axios.post('https://beta-simpleprep.com/auth/user/signup', {
+          firebase_uid: uid,
+          email: email,
+          first_name: firstName || 'Default',
+          last_name: lastName || 'User',
+        });
+      }
+
+      if (user.emailVerified) {
         setCurrentUser(user);
       } else {
-        setError('Please verify your email before logging in.')
+        setError('Please verify your email before logging in.');
       }
-    } catch(error) {
-      if (error instanceof FirebaseError){
-        switch (error.code) {
-          case 'auth/popup-closed-by-user':
-            setError('The sign-in popup was closed before completing the sign in.');
-            break;
-          case 'auth/cancelled-popup-request':
-            setError('Too many popups were opened simultaneously.');
-            break;
-          default:
-            setError('Failed to sign in with Google.');
-            break;
-        }
-      } else {
-        setError('An unexpected error occurred during Google sign in.')
-      }
-    } finally {
-      setLoading(false);
     }
+  } catch (error) {
+    if (error instanceof FirebaseError) {
+      switch (error.code) {
+        case 'auth/popup-closed-by-user':
+          setError('The sign-in popup was closed before completing the sign in.');
+          break;
+        case 'auth/cancelled-popup-request':
+          setError('Too many popups were opened simultaneously.');
+          break;
+        default:
+          setError('Failed to sign in with Google.');
+          break;
+      }
+    } else {
+      setError('An unexpected error occurred during Google sign in.');
+    }
+  } finally {
+    setLoading(false);
   }
+};
 
   const SignOut = async () => {
     setLoading(true);

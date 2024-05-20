@@ -5,7 +5,8 @@ from rest_framework import status
 from django.contrib.auth import get_user_model
 from firebase_admin import auth as firebase_auth
 from .serializers import UserSerializer, TempUserSerializer
-from .models import  User
+from firebase_admin import auth
+from .models import TempUser, User
 import logging
 User = get_user_model()
 # Configure logging
@@ -77,3 +78,38 @@ class SignUpView(APIView):
                 return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
         logger.error(f"Serializer errors: {serializer.errors}")
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class CheckUserView(APIView):
+    permission_classes = (AllowAny,)
+
+    def post(self, request):
+        email = request.data.get('email')
+        firebase_uid = request.data.get('firebase_uid')
+        if not email or not firebase_uid:
+            return Response({'error': 'Email and Firebase UID are required'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        user_exists = User.objects.filter(email=email, firebase_uid=firebase_uid).exists()
+        return Response({'exists': user_exists}, status=status.HTTP_200_OK)
+    
+class UpdateUserView(APIView):
+    permission_classes = (AllowAny,)
+
+    def put(self, request):
+        email = request.data.get('email')
+        firebase_uid = request.data.get('firebase_uid')
+        first_name = request.data.get('first_name')
+        last_name = request.data.get('last_name')
+        subscription_type= request.data.get('subscription_type', User.SubscriptionType.FREEMIUM)
+
+        if not email or not firebase_uid:
+            return Response({'error': 'Email and Firebase UID are required'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        try:
+            user = User.objects.get(email=email, firebase_uid=firebase_uid)
+            user.first_name = first_name
+            user.last_name = last_name
+            user.save()
+            return Response({'success': "User information updated successfully"}, status=status.HTTP_200_OK)
+        except User.DoesNotExist:
+            return Response({'error': "User not found"}, status=status.HTTP_404_NOT_FOUND)
+
