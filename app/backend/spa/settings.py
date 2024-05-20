@@ -146,7 +146,7 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.IsAuthenticated',
     ],
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        "spa.middleware.FirebaseAuthenticationMiddleware",
+        "spa.middleware.FirebaseAuthentication",
      ]
 }
 # # URL to redirect to when login is required
