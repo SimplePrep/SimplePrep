@@ -73,6 +73,7 @@ MIDDLEWARE = [
     'django_otp.middleware.OTPMiddleware',
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "spa.middleware.FirebaseAuthenticationMiddleware",
 ]
 
 ROOT_URLCONF = "spa.urls"

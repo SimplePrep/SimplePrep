@@ -1,5 +1,4 @@
 from rest_framework.views import APIView
-from .models import TestModel
 from rest_framework.response import Response
 from rest_framework import status
 from django.shortcuts import get_object_or_404
@@ -17,8 +16,12 @@ from .models import (
     TestResult, 
     UserAnswer,
     Test)
+from .permissions import IsAuthenticatedWithFirebase
+
 
 class ManageTestView(APIView):
+    permission_classes = [IsAuthenticatedWithFirebase]
+
     def get(self, request, format=None):
         try:
             tests = Test.objects.all()
@@ -43,6 +46,8 @@ class ManageTestView(APIView):
             )
 
 class ManageTestModuleView(APIView):
+    permission_classes = [IsAuthenticatedWithFirebase]
+
     def get(self, request, test_id, format=None):
         try:
             test_modules = TestModel.objects.filter(test_id=test_id)
@@ -70,6 +75,8 @@ class ManageTestModuleView(APIView):
             )
 
 class QuestionListCreateView(APIView):
+    permission_classes = [IsAuthenticatedWithFirebase]
+
     def get(self, request, test_module_id, format=None):
         try:
             questions = Question.objects.filter(test_id=test_module_id).order_by('id')
@@ -95,6 +102,8 @@ class QuestionListCreateView(APIView):
             )
         
 class CommentListCreateView(APIView):
+    permission_classes = [IsAuthenticatedWithFirebase]
+
     def get(self, request, test_id, format=None):
         comments = Comment.objects.filter(test_id=test_id)
         serializer = CommentSerializer(comments, many=True)
@@ -108,6 +117,8 @@ class CommentListCreateView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 class TestResultCreateView(APIView):
+    permission_classes = [IsAuthenticatedWithFirebase]
+
     def get(self, request, user_id, format=None):
         if request.user.id == int(user_id):
             test_results = TestResult.objects.filter(user_id=user_id)
@@ -139,6 +150,8 @@ class TestResultCreateView(APIView):
 
 
 class UserAnswerView(APIView):
+    permission_classes = [IsAuthenticatedWithFirebase]
+    
     def get(self, request, test_result_id, format=None):
         test_result = get_object_or_404(TestResult, pk=test_result_id)
         if request.user != test_result.user:
