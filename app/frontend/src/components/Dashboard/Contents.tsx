@@ -25,7 +25,7 @@ const Contents:React.FC = () => {
             }
         }
         fetchTests();
-    });
+    }, []);
 
     
       const borderColorClasses = [
