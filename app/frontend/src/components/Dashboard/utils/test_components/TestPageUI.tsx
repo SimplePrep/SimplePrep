@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { BsFillArrowLeftCircleFill, BsFillArrowRightCircleFill, BsMoon} from 'react-icons/bs';
 import {PiFlagThin} from 'react-icons/pi';
 import { useParams } from 'react-router-dom';
-import { getQuestionsByModuleId } from '../../../utils/axios/axiosServices';
+import { getModules, getQuestionsByModuleId } from '../../../utils/axios/axiosServices';
 
 interface Question {
   id: number;
@@ -21,6 +21,15 @@ interface Question {
   dislikes: number;
   created_at: string;
 }
+interface Module {
+  id: number;
+  test: number;
+  title: string;
+  description: string;
+  num_questions: number;
+  created_at: string;
+  updated_at: string;
+}
 
 const TestPageUI = () => {
   const { testId, moduleId } = useParams<{ testId: string; moduleId: string }>();
@@ -28,6 +37,7 @@ const TestPageUI = () => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedChoice, setSelectedChoice] = useState<string | null>(null);
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const [currentModule, setCurrentModule] = useState<Module | null>(null);
   
   useEffect(() => {
     const fetchQuestions = async () => {
@@ -38,9 +48,19 @@ const TestPageUI = () => {
         console.error('Error fetching questions:', error);
       }
     };
+    const fetchModule = async () => {
+      try {
+        const modules = await getModules(Number(testId));
+        const module = modules.find((mod) => mod.id === Number(moduleId));
+        setCurrentModule(module || null);
+      } catch (error) {
+        console.error('Error fetching module:', error);
+      }
+    };
 
     fetchQuestions();
-  }, [moduleId]);
+    fetchModule();
+  }, [moduleId, testId]);
 
   const toggleDarkMode = () => {
     setIsDarkMode(!isDarkMode)
@@ -80,7 +100,7 @@ const TestPageUI = () => {
     <div className={`w-full h-screen flex flex-col ${darkModeClass}`}>
       <div className='flex p-5 justify-between items-center'>
         <div className='mx-5 flex gap-10 items-center'>
-          <p className='text-bold font-ubuntu text-2xl'>{`Test ${testId} Module ${moduleTitle}`}</p>
+          <p className='text-bold font-ubuntu text-2xl'>${currentModule?.title}</p>
           <button onClick={toggleDarkMode} className="text-lg p-3 border-2 rounded-2xl hover:bg-[#00df9a] hover:border-blue-500">
             <BsMoon />
           </button>
