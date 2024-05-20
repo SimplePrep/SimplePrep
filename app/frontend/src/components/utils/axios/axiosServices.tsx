@@ -4,6 +4,7 @@ import axiosInstance from './axiosInterceptor';
 export const getTests = async () => {
   try {
     const response = await axiosInstance.get('api/core/tests');
+    console.log('Received data: ', response.data)
     return response.data;
   } catch (error) {
     console.error('Error fetching tests:', error);

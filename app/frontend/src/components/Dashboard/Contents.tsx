@@ -24,6 +24,7 @@ const Contents:React.FC = () => {
                 console.error('Error fetching tests: ', error);
             }
         }
+        fetchTests();
     });
 
     
