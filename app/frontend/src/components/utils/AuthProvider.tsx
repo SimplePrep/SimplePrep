@@ -1,10 +1,9 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, createContext, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { GoogleAuthProvider, User, sendPasswordResetEmail, onAuthStateChanged, signInWithPopup, sendEmailVerification, getIdToken} from 'firebase/auth';
 import { auth, db } from './firebaseConfig';
 import { LoginFormValues, UserFormValues } from './AuthServices';
 import { SignUp as signUpService, SignIn as signInService, SignOut as signOutService } from './AuthServices';
-import AuthContext from './AuthContext';
 import {FirebaseError} from 'firebase/app';
 import axios from 'axios';
 
@@ -12,36 +11,59 @@ import axios from 'axios';
 interface AuthProviderProps {
   children: React.ReactNode;
 }
+interface IAuth {
+  user: User | null;
+  loading: boolean;
+  isAuthenticated: boolean;
+  error: string | null;
+  SignIn: (creds: LoginFormValues, onSuccess: () => void) => Promise<void>;
+  SignUp: (creds: UserFormValues) => Promise<void>;
+  SignOut: () => Promise<void>;
+  GoogleSignIn: () => Promise<void>;
+  SendResetPasswordEmail: (email: string) => Promise<void>;
+  checkAuthenticated: () => Promise<void>;
+  loadUser: () => Promise<void>;
+}
 
-export const useAuth = () => React.useContext(AuthContext);
+const defaultAuth: IAuth = {
+  user: null,
+  loading: true,
+  isAuthenticated: false,
+  error: null,
+  SignIn: async () => {},
+  SignUp: async () => {},
+  SignOut: async () => {},
+  GoogleSignIn: async () => {},
+  SendResetPasswordEmail: async () => {},
+  checkAuthenticated: async () => {},
+  loadUser: async () => {},
+};
+
+const AuthContext = createContext<IAuth>(defaultAuth);
+
+export const useAuth = () => useContext(AuthContext);
 
 const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
-  const [currentUser, setCurrentUser] = useState<User | null>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
-        if (user) {
-            if (user.emailVerified) {
-              setCurrentUser(user);
-            }
-        } else {
-            setCurrentUser(null);
-        }
-        setLoading(false);
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setUser(user || null);
+      setLoading(false);
     });
     return unsubscribe;
-}, []);
+  }, []);
   
   const checkAuthenticated = async () => {
     try {
       const user = auth.currentUser;
       if (user && user.emailVerified) {
-        setCurrentUser(user);
+        setUser(user);
       } else {
-        setCurrentUser(null);
+        setUser(null);
       }
     } catch (error) {
       setError('Failed to authenticate.');
@@ -50,7 +72,7 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   };
 
   const loadUser = async () => {
-    if (currentUser) {
+    if (user) {
     }
   };
 
@@ -92,7 +114,7 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         throw new Error('Please verify your email address before logging in.'); // Throwing to catch block
       }
       if (user) {
-        setCurrentUser(user);
+        setUser(user);
         onSuccess();
       }
     } catch (error: unknown) {
@@ -157,7 +179,7 @@ const GoogleSignIn = async () => {
       }
 
       if (user.emailVerified) {
-        setCurrentUser(user);
+        setUser(user);
       } else {
         setError('Please verify your email before logging in.');
       }
@@ -187,7 +209,7 @@ const GoogleSignIn = async () => {
     setLoading(true);
     try {
       await signOutService();
-      setCurrentUser(null);
+      setUser(null);
       navigate('/')
     } catch (error) {
       setError('Failed to sign out.');
@@ -213,10 +235,10 @@ const GoogleSignIn = async () => {
       }
   };
 
-  const isAuthenticated = !!currentUser && currentUser.emailVerified;
+  const isAuthenticated = !!user && user.emailVerified;
 
   const authValues = useMemo(() => ({
-    user: currentUser,
+    user,
     loading,
     isAuthenticated,
     SignIn,
@@ -227,7 +249,7 @@ const GoogleSignIn = async () => {
     checkAuthenticated,
     loadUser,
     error
-  }), [currentUser, loading, error]);
+  }), [user, loading, error]);
 
   return (
     <AuthContext.Provider value={authValues}>
