@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { comingsoon } from '../utils'
-import axiosInstance from '../utils/axiosInterceptor';
+import axiosInstance from '../utils/axios/axiosInterceptor';
+import { getTests } from '../utils/axios/axiosServices';
 
 interface Test {
     id: number;
@@ -15,21 +16,15 @@ const Contents:React.FC = () => {
     const [error, setError] = useState<string | null>('');
 
     useEffect(() => {
-        const fetchTests = async () => {
-            setIsLoading(true);
-            setError(null);
-
+        const fetchTests =async () => {
             try {
-                const response = await axiosInstance.get<Test[]>('/core/tests/');
-                setTests(response.data);
-            } catch (err:any) {
-                setError(err.message);
-            } finally {
-                setIsLoading(false);
+                const testList = await getTests();
+                setTests(testList);
+            } catch (error) {
+                console.error('Error fetching tests: ', error);
             }
         }
-        fetchTests();
-    }, []);
+    });
 
     
       const borderColorClasses = [
