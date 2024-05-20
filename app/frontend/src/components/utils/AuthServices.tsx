@@ -36,26 +36,20 @@ export const SignUp = async ({ firstName, lastName, email, password }: UserFormV
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
       if (user) {
-          console.log('sending email');
           await sendEmailVerification(user, { url: "https://beta-simpleprep.com", });
-          console.log('email sent');
-
-          // Get the Firebase ID token
-          const token = await user.getIdToken();
 
           // Store user data in the backend
           const userData = {
+              firebase_uid: user.uid,
               email: user.email,
               first_name: firstName,
               last_name: lastName,
-              firebase_uid: user.uid,
               subscription_type: "free",
           };
           const body = JSON.stringify(userData);
           const config = {
               headers: {
                   'Content-Type': 'application/json',
-                  'Authorization': `Bearer ${token}`,
               }
           };
           const response = await axios.post('https://beta-simpleprep.com/auth/user/signup', body, config);
