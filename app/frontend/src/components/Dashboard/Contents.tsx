@@ -92,13 +92,13 @@ const Contents:React.FC = () => {
                                 Test your skills with this practice test.
                                 </p>
                                 <div className='flex flex-row gap-5 justify-between items-center'>
-                                    {testModules.map((module) => (
+                                    {testModules.map((module, moduleIndex) => (
                                         <button
                                             key={module.id}
                                             onClick={() => handleModuleClick(test.id, module.id)}
                                             className='mt-auto py-2 px-4 bg-blue-500 text-white text-lg rounded hover:bg-blue-600 transition-colors duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-opacity-50'
                                         >
-                                            {module.title}
+                                            {`Module ${moduleIndex + 1}`}
                                         </button>
                                     ))}
                                 </div>
