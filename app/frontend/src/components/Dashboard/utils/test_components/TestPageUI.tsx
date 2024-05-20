@@ -74,11 +74,13 @@ const TestPageUI = () => {
     { label: 'D', content: currentQuestion.option_D },
   ];
 
+  const moduleTitle = moduleId === '1' ? 'Module 1' : moduleId === '2' ? 'Module 2' : `Module ${moduleId}`;
+
   return (
     <div className={`w-full h-screen flex flex-col ${darkModeClass}`}>
       <div className='flex p-5 justify-between items-center'>
         <div className='mx-5 flex gap-10 items-center'>
-          <p className='text-bold font-ubuntu text-2xl'>{`Test ${testId} Module ${moduleId}`}</p>
+          <p className='text-bold font-ubuntu text-2xl'>{`Test ${testId} Module ${moduleTitle}`}</p>
           <button onClick={toggleDarkMode} className="text-lg p-3 border-2 rounded-2xl hover:bg-[#00df9a] hover:border-blue-500">
             <BsMoon />
           </button>
