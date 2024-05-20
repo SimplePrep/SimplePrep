@@ -81,7 +81,7 @@ const Contents:React.FC = () => {
                 <div className="my-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                     {tests.map((test, index) => {
                         const borderColorClass = borderColorClasses[index % borderColorClasses.length];
-
+                        const testModules = modules[test.id] || [];
                         return(
                             <div key={test.id} className={`p-6 bg-black rounded-lg border-2 ${borderColorClass} border-white shadow-lg`}>
                                 <div className="flex justify-between items-center mb-6">
@@ -92,18 +92,15 @@ const Contents:React.FC = () => {
                                 Test your skills with this practice test.
                                 </p>
                                 <div className='flex flex-row gap-5 justify-between items-center'>
-                                    <button
-                                        onClick={() => handleModuleClick(test.id, 1)}
-                                        className='mt-auto py-2 px-4 bg-blue-500 text-white text-lg rounded hover:bg-blue-600 transition-colors duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-opacity-50'
-                                    >
-                                        Module 1
-                                    </button>
-                                    <button
-                                        onClick={() => handleModuleClick(test.id, 2)}
-                                        className='mt-auto py-2 px-4 bg-blue-500 text-white text-lg rounded hover:bg-blue-600 transition-colors duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-opacity-50'
-                                    >
-                                        Module 2
-                                    </button>
+                                    {testModules.map((module) => (
+                                        <button
+                                            key={module.id}
+                                            onClick={() => handleModuleClick(test.id, module.id)}
+                                            className='mt-auto py-2 px-4 bg-blue-500 text-white text-lg rounded hover:bg-blue-600 transition-colors duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-opacity-50'
+                                        >
+                                            {module.title}
+                                        </button>
+                                    ))}
                                 </div>
                             </div>
                          )
