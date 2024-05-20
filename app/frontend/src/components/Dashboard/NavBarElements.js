@@ -28,11 +28,6 @@ export const SideBarLinks = [
         icon: <GiProgression size={25} color='green' />
     },
     {
-        title: "AI Support",
-        path: 'help',
-        icon: <MdOutlineContactSupport size={25} color='green' />
-    },
-    {
         title: "",
         path: 'settings',
         icon: <AiOutlineSetting size={25} color='green' />

@@ -61,9 +61,14 @@ const Contents:React.FC = () => {
                                 <p className="text-gray-400 text-base mb-4">
                                 Test your skills with this practice test.
                                 </p>
-                                <button className="mt-auto py-2 px-4 bg-blue-500 text-white text-lg rounded hover:bg-blue-600 transition-colors duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-opacity-50">
-                                    Practice
-                                </button>
+                                <div className='flex flex-row gap-5 justify-between items-center'>
+                                    <button className="mt-auto py-2 px-4 bg-blue-500 text-white text-lg rounded hover:bg-blue-600 transition-colors duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-opacity-50">
+                                        Module 1
+                                    </button>
+                                    <button className="mt-auto py-2 px-4 bg-blue-500 text-white text-lg rounded hover:bg-blue-600 transition-colors duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-opacity-50">
+                                        Module 2
+                                    </button>
+                                </div>
                             </div>
                          )
                         })}

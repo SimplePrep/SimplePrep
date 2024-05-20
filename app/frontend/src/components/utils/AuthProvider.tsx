@@ -50,7 +50,6 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const loadUser = async () => {
     if (currentUser) {
-      console.log("Load detailed user data here if needed");
     }
   };
 
