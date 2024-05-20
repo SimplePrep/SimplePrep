@@ -12,6 +12,26 @@ export const getTests = async () => {
   }
 };
 
+interface Module {
+    id: number;
+    test: number;
+    title: string;
+    description: string;
+    num_questions: number;
+    created_at: string;
+    updated_at: string;
+}
+
+export const getModules = async (testId: number): Promise<Module[]>  => {
+    try{
+        const response = await axiosInstance.get(`api/core/test-modules/${testId}`);
+        return response.data
+    } catch (error) {
+        console.error('Error fetching test modules: ', error);
+        throw error;
+    }
+};
+
 interface Question {
     id: number;
     test: number;

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { comingsoon } from '../utils'
 import axiosInstance from '../utils/axios/axiosInterceptor';
-import { getTests } from '../utils/axios/axiosServices';
+import { getModules, getTests } from '../utils/axios/axiosServices';
 import { useNavigate } from 'react-router-dom';
 
 interface Test {
@@ -9,23 +9,47 @@ interface Test {
     title: string;
 }
 
+interface Module {
+    id: number;
+    test: number;
+    title: string;
+    description: string;
+    num_questions: number;
+    created_at: string;
+    updated_at: string;
+}
+
 
 const Contents:React.FC = () => {
 
     const [tests, setTests] = useState<Test[]>([]);
+    const [modules, setModules] = useState<{ [key: number]: Module[] }>({});
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>('');
     const navigate = useNavigate();
+
     useEffect(() => {
-        const fetchTests =async () => {
+        const fetchTestsAndModules = async () => {
+            setIsLoading(true);
             try {
                 const testList = await getTests();
                 setTests(testList);
+
+                const modulesData: { [key: number]: Module[] } = {};
+                for (const test of testList) {
+                    const testModules = await getModules(test.id);
+                    modulesData[test.id] = testModules;
+                }
+                setModules(modulesData);
             } catch (error) {
-                console.error('Error fetching tests: ', error);
+                console.error('Error fetching tests or modules: ', error);
+                setError('Failed to load tests or modules.');
+            } finally {
+                setIsLoading(false);
             }
-        }
-        fetchTests();
+        };
+
+        fetchTestsAndModules();
     }, []);
 
     
