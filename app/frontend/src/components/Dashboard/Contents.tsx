@@ -50,7 +50,7 @@ const Contents:React.FC = () => {
         };
 
         fetchTestsAndModules();
-    }, [tests]);
+    }, []);
 
     
       const borderColorClasses = [
