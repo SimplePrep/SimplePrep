@@ -1,5 +1,6 @@
 import axiosInstance from './axiosInterceptor';
 
+
 // Example function to get tests
 export const getTests = async () => {
   try {
@@ -10,3 +11,32 @@ export const getTests = async () => {
     throw error;
   }
 };
+
+interface Question {
+    id: number;
+    test: number;
+    model: string;
+    section: string;
+    title: string;
+    context: string;
+    query: string;
+    graph_img?: string;
+    option_A: string;
+    option_B: string;
+    option_C: string;
+    option_D: string;
+    correct_answer: string;
+    likes: number;
+    dislikes: number;
+    created_at: string;
+  }
+  
+  export const getQuestionsByModuleId = async (testModuleId: number): Promise<Question[]> => {
+    try {
+      const response = await axiosInstance.get(`api/core/questions/${testModuleId}/`);
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching questions:', error);
+      throw error;
+    }
+  };

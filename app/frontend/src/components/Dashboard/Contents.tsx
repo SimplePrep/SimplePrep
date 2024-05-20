@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { comingsoon } from '../utils'
 import axiosInstance from '../utils/axios/axiosInterceptor';
 import { getTests } from '../utils/axios/axiosServices';
+import { useNavigate } from 'react-router-dom';
 
 interface Test {
     id: number;
@@ -14,7 +15,7 @@ const Contents:React.FC = () => {
     const [tests, setTests] = useState<Test[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>('');
-
+    const navigate = useNavigate();
     useEffect(() => {
         const fetchTests =async () => {
             try {
@@ -42,6 +43,11 @@ const Contents:React.FC = () => {
         'shadow-cyan-500',
         'shadow-lime-500',
       ];
+
+      const handleModuleClick = (testId: number, moduleId: number) => {
+        navigate(`/test/${testId}/module/${moduleId}`);
+      };
+
   return (
     <div className='max-w-[1400px] h-full mx-auto'>
         <div className='my-20  rounded-2xl'>
@@ -62,10 +68,16 @@ const Contents:React.FC = () => {
                                 Test your skills with this practice test.
                                 </p>
                                 <div className='flex flex-row gap-5 justify-between items-center'>
-                                    <button className="mt-auto py-2 px-4 bg-blue-500 text-white text-lg rounded hover:bg-blue-600 transition-colors duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-opacity-50">
+                                    <button
+                                        onClick={() => handleModuleClick(test.id, 1)}
+                                        className='mt-auto py-2 px-4 bg-blue-500 text-white text-lg rounded hover:bg-blue-600 transition-colors duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-opacity-50'
+                                    >
                                         Module 1
                                     </button>
-                                    <button className="mt-auto py-2 px-4 bg-blue-500 text-white text-lg rounded hover:bg-blue-600 transition-colors duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-opacity-50">
+                                    <button
+                                        onClick={() => handleModuleClick(test.id, 2)}
+                                        className='mt-auto py-2 px-4 bg-blue-500 text-white text-lg rounded hover:bg-blue-600 transition-colors duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-opacity-50'
+                                    >
                                         Module 2
                                     </button>
                                 </div>

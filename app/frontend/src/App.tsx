@@ -49,7 +49,7 @@ const App = () => {
               <Route path="/reset-password" element={<ResetPassword/>}/>
 
               <Route path="practice-tests/:testId/sections/:sectionId/:sectionName" element={<TestPageUI/>}/>
-              <Route path="test" element={<TestPageUI/>}/>
+              <Route path="/test/:testId/module/:moduleId" element={<TestPageUI/>}/>
           </Routes>
         </AuthProvider>
     

@@ -2,48 +2,45 @@ import React, { useEffect, useState } from 'react';
 import { BsFillArrowLeftCircleFill, BsFillArrowRightCircleFill, BsMoon} from 'react-icons/bs';
 import {PiFlagThin} from 'react-icons/pi';
 import { useParams } from 'react-router-dom';
+import { getQuestionsByModuleId } from '../../../utils/axios/axiosServices';
 
-interface Question{
+interface Question {
   id: number;
-  name: string;
+  model: string;
+  section: string;
+  title: string;
   context: string;
   query: string;
-  options: {
-    [key: string]: string
-  }
+  graph_img?: string;
+  option_A: string;
+  option_B: string;
+  option_C: string;
+  option_D: string;
+  correct_answer: string;
+  likes: number;
+  dislikes: number;
+  created_at: string;
 }
 
 const TestPageUI = () => {
-  const [selectedChoice, setSelectedChoice] = React.useState<string | null>(null);
-  const answerChoices = [
-    {
-      label: 'A',
-      content: 'the participants in the experiment that demonstrated the lotion’s efficacy were recruited from a pool of people with more painful injuries than were the participants in the other experiment.'
-    },
-    {
-      label: 'B',
-      content: 'in the experiment that demonstrated the lotion’s efficacy, participants were told that the lotion contained strong painkillers, whereas the participants in the other experiment were given no information about the lotion’s ingredients.'
-    },
-    {
-      label: 'C',
-      content: 'the researchers conducting the experiment that demonstrated the lotion’s efficacy gave study participants a smaller amount of lotion than the researchers in the other experiment did.'
-    },
-    {
-      label: 'D',
-      content: 'participants in the experiment that demonstrated the lotion’s efficacy received more medical assistance in treating their injuries in addition to using the lotion.'
-    }
-  ];
-  const handlePreviousQuestion = () => {
-    console.log("Go to the previous question");
-    // Implement your logic for going to the previous question
-  };
-
-  const handleNextQuestion = () => {
-    console.log("Go to the next question");
-    // Implement your logic for going to the next question
-  };
-
+  const { testId, moduleId } = useParams<{ testId: string; moduleId: string }>();
+  const [questions, setQuestions] = useState<Question[]>([]);
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [selectedChoice, setSelectedChoice] = useState<string | null>(null);
   const [isDarkMode, setIsDarkMode] = useState(false);
+  
+  useEffect(() => {
+    const fetchQuestions = async () => {
+      try {
+        const fetchedQuestions = await getQuestionsByModuleId(Number(moduleId));
+        setQuestions(fetchedQuestions);
+      } catch (error) {
+        console.error('Error fetching questions:', error);
+      }
+    };
+
+    fetchQuestions();
+  }, [moduleId]);
 
   const toggleDarkMode = () => {
     setIsDarkMode(!isDarkMode)
@@ -51,47 +48,37 @@ const TestPageUI = () => {
 
   const darkModeClass = isDarkMode ? 'dark' : '';
 
-  // const {testId, sectionId, sectionName} = useParams<{testId: string, sectionId: string, sectionName: string}>();
-  // const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  // const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
-  // const [questions, setQuestions] = useState<Question[]>([]);
+  const handlePreviousQuestion = () => {
+    if (currentQuestionIndex > 0) {
+      setCurrentQuestionIndex(currentQuestionIndex - 1);
+      setSelectedChoice(null);
+    }
+  };
 
+  const handleNextQuestion = () => {
+    if (currentQuestionIndex < questions.length - 1) {
+      setCurrentQuestionIndex(currentQuestionIndex + 1);
+      setSelectedChoice(null);
+    }
+  };
 
-  // useEffect(()=> {
-  //   fetch(`http://127.0.0.1:8080/api/test/testsections/${sectionId}/questions/`)
-  //   .then(res => res.json())
-  //   .then(data => {
-  //     console.log("Fetching the questions: ", data)
-  //     setQuestions(data)
-  //   })
-  //   .catch((error)=> console.error(`Error fetching testsection questions with id ${sectionId}`, error))
-  // }, [])
+  if (!questions.length) {
+    return <div>Loading questions...</div>;
+  }
 
-
-
-  // const handleAnswerClick = (choice: string) => {
-  //   setSelectedAnswer(choice);
-  // };
-
-  // const handleNextQuestion = () => {
-  //   // Move to the next question if not on the last question
-  //   if (currentQuestionIndex < questions.length - 1) {
-  //     setCurrentQuestionIndex(currentQuestionIndex + 1);
-  //     setSelectedAnswer(null); // Reset selected answer for the next question
-  //   }
-  // };
-  // const handlePreviousQuestion = () => {
-  //   if (currentQuestionIndex > 0) {
-  //     setCurrentQuestionIndex(currentQuestionIndex - 1);
-  //     setSelectedAnswer(null);
-  //   }
-  // };
+  const currentQuestion = questions[currentQuestionIndex];
+  const answerChoices = [
+    { label: 'A', content: currentQuestion.option_A },
+    { label: 'B', content: currentQuestion.option_B },
+    { label: 'C', content: currentQuestion.option_C },
+    { label: 'D', content: currentQuestion.option_D },
+  ];
 
   return (
     <div className={`w-full h-screen flex flex-col ${darkModeClass}`}>
       <div className='flex p-5 justify-between items-center'>
         <div className='mx-5 flex gap-10 items-center'>
-          <p className='text-bold font-ubuntu text-2xl'>English and Writing Module 1</p>
+          <p className='text-bold font-ubuntu text-2xl'>{`Test ${testId} Module ${moduleId}`}</p>
           <button onClick={toggleDarkMode} className="text-lg p-3 border-2 rounded-2xl hover:bg-[#00df9a] hover:border-blue-500">
             <BsMoon />
           </button>
@@ -106,17 +93,17 @@ const TestPageUI = () => {
         <div className='w-[50%] border-r-2'>
           <div className="p-14">
             <p className='font-medium text-lg'>
-            	Studies have shown that people’s perception of pain can be diminished and their healing processes accelerated if those individuals believe that a medical treatment will be helpful. In an experiment testing the efficacy of an experimental analgesic lotion for treating minor scrapes and burns, researchers found that the lotion did not appear to significantly affect participants’ pain levels or healing times. However, a similar experiment found that the same lotion led to significant reductions in the pain level of study participants and resulted in faster healing. The difference in the outcomes of the two experiments was likely due to the fact that _______
+              {currentQuestion.context}
             </p>
           </div>
         </div>
         <div className='w-[50%]'>
           <div className='p-14'>
             <div className='flex gap-2 items-center'>
-              <p className='font-bold text-lg'>Question 1 of 33</p>
+              <p className='font-bold text-lg'>{`Question ${currentQuestionIndex + 1} of ${questions.length}`}</p>
               <span><PiFlagThin size={30}/></span>
             </div>
-            <p className='font-medium text-lg mt-3'>Which choice most logically completes the text?</p>
+            <p className='font-medium text-lg mt-3'>{currentQuestion.query}</p>
             <div className='flex flex-col mt-7 gap-2'>
             {answerChoices.map((choice, index) => (
               <button
