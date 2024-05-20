@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { BsFillArrowLeftCircleFill, BsFillArrowRightCircleFill, BsMoon} from 'react-icons/bs';
 import {PiFlagThin} from 'react-icons/pi';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { getModules, getQuestionsByModuleId } from '../../../utils/axios/axiosServices';
+import { useAuth } from '../../../utils/useAuth';
 
 interface Question {
   id: number;
@@ -32,12 +33,15 @@ interface Module {
 }
 
 const TestPageUI = () => {
+  const {user} = useAuth();
   const { testId, moduleId } = useParams<{ testId: string; moduleId: string }>();
   const [questions, setQuestions] = useState<Question[]>([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedChoice, setSelectedChoice] = useState<string | null>(null);
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [currentModule, setCurrentModule] = useState<Module | null>(null);
+  const navigate = useNavigate();
+
   
   useEffect(() => {
     const fetchQuestions = async () => {
@@ -61,6 +65,12 @@ const TestPageUI = () => {
     fetchQuestions();
     fetchModule();
   }, [moduleId, testId]);
+
+  useEffect(() => {
+    if (!user) {
+      navigate('/login');
+    }
+  }, [user, navigate]);
 
   const toggleDarkMode = () => {
     setIsDarkMode(!isDarkMode)
@@ -94,13 +104,12 @@ const TestPageUI = () => {
     { label: 'D', content: currentQuestion.option_D },
   ];
 
-  const moduleTitle = moduleId === '1' ? 'Module 1' : moduleId === '2' ? 'Module 2' : `Module ${moduleId}`;
 
   return (
     <div className={`w-full h-screen flex flex-col ${darkModeClass}`}>
       <div className='flex p-5 justify-between items-center'>
         <div className='mx-5 flex gap-10 items-center'>
-          <p className='text-bold font-ubuntu text-2xl'>${currentModule?.title}</p>
+          <p className='text-bold font-ubuntu text-2xl'>{currentModule?.title}</p>
           <button onClick={toggleDarkMode} className="text-lg p-3 border-2 rounded-2xl hover:bg-[#00df9a] hover:border-blue-500">
             <BsMoon />
           </button>
