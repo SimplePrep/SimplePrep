@@ -3,7 +3,8 @@ import { BsFillArrowLeftCircleFill, BsFillArrowRightCircleFill, BsMoon} from 're
 import {PiFlagThin} from 'react-icons/pi';
 import { useNavigate, useParams } from 'react-router-dom';
 import { getModules, getQuestionsByModuleId } from '../../../utils/axios/axiosServices';
-import { useAuth } from '../../../utils/useAuth';
+import { useAuth } from '../../../utils/AuthProvider';
+
 
 interface Question {
   id: number;
