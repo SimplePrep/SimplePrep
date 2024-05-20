@@ -73,7 +73,6 @@ MIDDLEWARE = [
     'django_otp.middleware.OTPMiddleware',
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "spa.middleware.FirebaseAuthenticationMiddleware",
 ]
 
 ROOT_URLCONF = "spa.urls"
@@ -147,7 +146,7 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.IsAuthenticated',
     ],
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'spa.auth.FirebaseAuthentication'
+        "spa.middleware.FirebaseAuthenticationMiddleware",
      ]
 }
 # # URL to redirect to when login is required
