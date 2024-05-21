@@ -23,11 +23,9 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
-        if (user) {
-            if (user.emailVerified) {
-              setCurrentUser(user);
-            }
-        } else {
+        if (user && user.emailVerified) {
+          setCurrentUser(user);
+        }  else {
             setCurrentUser(null);
         }
         setLoading(false);
