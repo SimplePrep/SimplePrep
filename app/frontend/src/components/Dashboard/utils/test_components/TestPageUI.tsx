@@ -68,18 +68,16 @@ const TestPageUI = () => {
   }, [moduleId, testId]);
 
   useEffect(() => {
-    // Check if the user is authenticated
     const checkAuth = async () => {
       if (user && user.emailVerified) {
-        // User is authenticated, do nothing
+        // User is authenticated and email is verified
       } else {
-        // User is not authenticated, navigate to the login page
         navigate('/login');
       }
     };
-  
+
     checkAuth();
-  }, [navigate]);
+  }, [navigate, user]);
 
   const toggleDarkMode = () => {
     setIsDarkMode(!isDarkMode)
