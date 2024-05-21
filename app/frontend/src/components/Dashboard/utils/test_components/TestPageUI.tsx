@@ -121,26 +121,22 @@ const TestPageUI = () => {
 
   const submitAnswers = async () => {
     try {
-      const fullTestData = {
-        userId: user?.uid,
-        moduleId: Number(moduleId),
-        testId: Number(testId),
-        questions: questions.map((question) => ({
-          id: question.id,
-          context: question.context,
-          query: question.query,
-          options: {
-            A: question.option_A,
-            B: question.option_B,
-            C: question.option_C,
-            D: question.option_D,
-          },
-        })),
-        answers: userAnswers,
-      };
+      // Submit test result
+      const testResultResponse = await axios.post(`https://beta-simpleprep.com/api/core/${user?.uid}/test_modules/`, {
+        test_id: Number(testId),
+        score: 0
+      });
+      const testResultId = testResultResponse.data.id;
 
-      await axios.post('https://beta-simpleprep.com/api/core/submit-answers', fullTestData);
-      navigate('/test-completion'); // Redirect to a completion page
+      // Submit user answers
+      const userAnswersData = userAnswers.map((answer) => ({
+        question: answer.questionId,
+        selected_option: answer.selectedChoice,
+      }));
+
+      await axios.post(`https://beta-simpleprep.com/api/core/${user?.uid}/test_module/${moduleId}/user_answers/`, userAnswersData);
+
+      navigate('/dashboard'); // Redirect to a completion page
     } catch (error) {
       console.error('Error submitting answers:', error);
     }

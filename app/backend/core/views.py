@@ -17,7 +17,9 @@ from .models import (
     UserAnswer,
     Test)
 from .permissions import IsAuthenticatedWithFirebase
+from django.contrib.auth import get_user_model
 
+User = get_user_model()
 
 class ManageTestView(APIView):
     permission_classes = [IsAuthenticatedWithFirebase]
@@ -116,62 +118,69 @@ class CommentListCreateView(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
-class TestResultCreateView(APIView):
+class UserTestModulesView(APIView):
     permission_classes = [IsAuthenticatedWithFirebase]
 
-    def get(self, request, user_id, format=None):
-        if request.user.id == int(user_id):
-            test_results = TestResult.objects.filter(user_id=user_id)
-            serializer = TestResultSerializer(test_results, many=True)
-            return Response(serializer.data)
-        else:
-            return Response(
-                {'error': 'You are not authorized to view these test results'},
-                status=status.HTTP_403_FORBIDDEN)
-    
-    def post(self, request, user_id, test_id ,format=None):
+    def get(self, request, user_uid, format=None):
+        user = get_object_or_404(User, uid=user_uid)
+        if request.user != user:
+            return Response({"error": "You are not authorized to view these test results."}, status=status.HTTP_403_FORBIDDEN)
         
-        if request.user.id != int(user_id):
+        test_results = TestResult.objects.filter(user=user)
+        serializer = TestResultSerializer(test_results, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
+    def post(self, request, user_uid, format=None):
+        user = get_object_or_404(User, uid=user_uid)
+        if request.user != user:
             return Response({"error": "You are not authorized to perform this action."}, status=status.HTTP_403_FORBIDDEN)
 
-        user = get_object_or_404(request.user.__class__, id=user_id)
+        test_id = request.data.get('test_id')
         test = get_object_or_404(TestModel, id=test_id)
 
         serializer = TestResultSerializer(data=request.data, context={'request': request})
-
         if serializer.is_valid():
             test_result, created = TestResult.objects.update_or_create(
                 user=user,
-                test=test,
+                test_model=test,
                 defaults={'score': serializer.validated_data.get('score')}
-        )
+            )
             return Response(serializer.data, status=status.HTTP_201_CREATED if created else status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
 
-
-class UserAnswerView(APIView):
+class UserTestModuleAnswersView(APIView):
     permission_classes = [IsAuthenticatedWithFirebase]
-    
-    def get(self, request, test_result_id, format=None):
-        test_result = get_object_or_404(TestResult, pk=test_result_id)
-        if request.user != test_result.user:
-            return Response(
-                {'error': 'You are not authorized to view these answers'},
-                status=status.HTTP_403_FORBIDDEN
-            )
-        answers = UserAnswer.objects.filter(test_result_id=test_result_id)
+
+    def get(self, request, user_uid, test_module_id, format=None):
+        user = get_object_or_404(User, uid=user_uid)
+        if request.user != user:
+            return Response({"error": "You are not authorized to view these answers."}, status=status.HTTP_403_FORBIDDEN)
+        
+        test_result = get_object_or_404(TestResult, user=user, test_model_id=test_module_id)
+        answers = UserAnswer.objects.filter(test_result=test_result)
         serializer = UserAnswerSerializer(answers, many=True)
-        return Response(serializer.data)
+        return Response(serializer.data, status=status.HTTP_200_OK)
     
-    def post(self, request, test_result_id, format=None):
-        test_result = get_object_or_404(TestResult, pk=test_result_id)
-        if request.user != test_result.user:
-            return Response(
-                {'error': "You are not authorized to answer these questions"},
-                status=status.HTTP_403_FORBIDDEN
-            )
-        serializer = UserAnswerSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save(test_result_id=test_result_id)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    def post(self, request, user_uid, test_module_id, format=None):
+        user = get_object_or_404(User, uid=user_uid)
+        if request.user != user:
+            return Response({"error": "You are not authorized to perform this action."}, status=status.HTTP_403_FORBIDDEN)
+        
+        test_result = get_object_or_404(TestResult, user=user, test_model_id=test_module_id)
+
+        user_answers = request.data  # Assuming data is a list of answers
+        if not isinstance(user_answers, list):
+            return Response({'error': 'Invalid data format, expected a list of answers'}, status=status.HTTP_400_BAD_REQUEST)
+
+        responses = []
+        for answer_data in user_answers:
+            answer_data['test_result'] = test_result.id
+            serializer = UserAnswerSerializer(data=answer_data)
+            if serializer.is_valid():
+                serializer.save()
+                responses.append(serializer.data)
+            else:
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        return Response(responses, status=status.HTTP_201_CREATED)
