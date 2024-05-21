@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { useAuth } from '../AuthProvider';
+import { getAuth, getIdToken } from 'firebase/auth';
 
 const axiosInstance = axios.create({
   baseURL: 'https://beta-simpleprep.com', // Replace with your backend base URL
@@ -10,12 +10,15 @@ const axiosInstance = axios.create({
 
 axiosInstance.interceptors.request.use(
   async (config) => {
-    const auth = useAuth();
+    const auth = getAuth();
+    const user = auth.currentUser;
 
-    if (auth.user) {
-      const token = await auth.user.getIdToken();
-      config.headers.Authorization = `Bearer ${token}`;
+    if (user) {
+      const token = await getIdToken(user);
       console.log(token)
+      if (token) {
+        config.headers['Authorization'] = `Bearer ${token}`;
+      }
     }
 
     return config;
