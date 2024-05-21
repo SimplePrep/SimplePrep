@@ -94,14 +94,14 @@ const TestPageUI = () => {
   const handlePreviousQuestion = () => {
     if (currentQuestionIndex > 0) {
       setCurrentQuestionIndex(currentQuestionIndex - 1);
-      setSelectedChoice(null);
+      setSelectedChoice(userAnswers.find(answer => answer.questionId === questions[currentQuestionIndex - 1].id)?.selectedChoice || null);
     }
   };
 
   const handleNextQuestion = () => {
     if (currentQuestionIndex < questions.length - 1) {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
-      setSelectedChoice(null);
+      setSelectedChoice(userAnswers.find(answer => answer.questionId === questions[currentQuestionIndex + 1].id)?.selectedChoice || null);
     }
   };
 
