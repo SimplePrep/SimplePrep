@@ -1,51 +1,32 @@
-import React, { useState, useEffect, useMemo, createContext } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { GoogleAuthProvider, User, sendPasswordResetEmail, onAuthStateChanged, signInWithPopup, sendEmailVerification, getIdToken} from 'firebase/auth';
 import { auth, db } from './firebaseConfig';
 import { LoginFormValues, UserFormValues } from './AuthServices';
 import { SignUp as signUpService, SignIn as signInService, SignOut as signOutService } from './AuthServices';
+import AuthContext from './AuthContext';
 import {FirebaseError} from 'firebase/app';
 import axios from 'axios';
-import { IAuth } from './types';
-const defaultAuth: IAuth = {
-  user: null,
-  loading: false,
-  isAuthenticated: false,
-  error: "", 
-  SignIn: async (creds: LoginFormValues, onSuccess: () => void) => {},
-  SignUp: async (creds: UserFormValues) => {},
-  SignOut: async () => {},
-  GoogleSignIn: async () => {},
-  SendResetPasswordEmail: async () => {},
-  checkAuthenticated: async () => {},
-  loadUser: async () => {},
-};
 
-const AuthContext = createContext<IAuth>(defaultAuth);
-
-export const useAuth = () => React.useContext(AuthContext);
 
 interface AuthProviderProps {
   children: React.ReactNode;
 }
 
+export const useAuth = () => React.useContext(AuthContext);
 
 const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const [token, setToken] = useState<string | null>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
         if (user && user.emailVerified) {
-          const idToken = await user.getIdToken();
           setCurrentUser(user);
-          setToken(idToken);
         }  else {
             setCurrentUser(null);
-            setToken(null);
         }
         setLoading(false);
     });
@@ -110,8 +91,6 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       }
       if (user) {
         setCurrentUser(user);
-        const idToken = await user.getIdToken();
-        setToken(idToken); 
         onSuccess();
       }
     } catch (error: unknown) {
@@ -176,9 +155,7 @@ const GoogleSignIn = async () => {
       }
 
       if (user.emailVerified) {
-        const idToken = await user.getIdToken();
         setCurrentUser(user);
-        setToken(idToken); 
       } else {
         setError('Please verify your email before logging in.');
       }
@@ -209,7 +186,6 @@ const GoogleSignIn = async () => {
     try {
       await signOutService();
       setCurrentUser(null);
-      setToken(null);
       navigate('/')
     } catch (error) {
       setError('Failed to sign out.');
@@ -235,7 +211,7 @@ const GoogleSignIn = async () => {
       }
   };
 
-  const isAuthenticated = !!currentUser && currentUser.emailVerified && !!token;
+  const isAuthenticated = !!currentUser && currentUser.emailVerified;
 
   const authValues = useMemo(() => ({
     user: currentUser,
