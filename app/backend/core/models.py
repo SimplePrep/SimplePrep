@@ -79,13 +79,9 @@ class UserAnswer(models.Model):
     test_result = models.ForeignKey(TestResult, on_delete=models.CASCADE, related_name='user_answers')
     question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name='user_answers')
     selected_option = models.CharField(max_length=1, choices=[('A', 'Option A'), ('B', 'Option B'), ('C', 'Option C'), ('D', 'Option D')])
-    
 
     class Meta:
         unique_together = ('test_result', 'question')
 
     def __str__(self):
-        return f"{self.test_result.test.title} - {self.question.query} - Selected Option: {self.selected_option}"
-    
-        
-    
+        return f"{self.test_result.test_model.title} - {self.question.query} - Selected Option: {self.selected_option}"
