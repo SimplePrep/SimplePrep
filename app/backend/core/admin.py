@@ -18,7 +18,7 @@ class CommentAdmin(admin.ModelAdmin):
 
 class TestResultAdmin(admin.ModelAdmin):
     list_display = ('test_model_title', 'user', 'score', 'created_at', 'updated_at')
-    list_filter = ('test_model__title', 'user')
+    list_filter = ('test_model_title', 'user')
 
     def test_model_title(self, obj):
         return obj.test_model.title
