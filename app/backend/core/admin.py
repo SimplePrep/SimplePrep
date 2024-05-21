@@ -17,14 +17,10 @@ class CommentAdmin(admin.ModelAdmin):
     list_filter = ('test', 'user',)
 
 class TestResultAdmin(admin.ModelAdmin):
-    list_display = ('test_model_title', 'user', 'score', 'created_at', 'updated_at')
-    list_filter = ('test_model_title', 'user')
+    list_display = ('test_model.title', 'user', 'score', 'created_at', 'updated_at')
+    list_filter = ('test_model.title', 'user')
 
-    def test_model_title(self, obj):
-        return obj.test_model.title
-    test_model_title.admin_order_field = 'test_model__title'  # Allows column order sorting
-    test_model_title.short_description = 'Test Title'  # Renames column head
-
+ 
 class UserAnswerAdmin(admin.ModelAdmin):
     list_display = ('test_result', 'question', 'selected_option', )
     list_filter = ('test_result', 'question')
