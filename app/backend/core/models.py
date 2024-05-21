@@ -66,7 +66,7 @@ class TestResult(models.Model):
     """
         Model for retrieving results for previous test attempts
     """
-    test = models.ForeignKey(TestModel, on_delete=models.CASCADE, related_name='test_results')
+    test_model = models.ForeignKey(TestModel, on_delete=models.CASCADE, related_name='test_results')
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name ='test_results')
     score = models.IntegerField(default=0, help_text="User's score for this test attempt.")
     created_at = models.DateTimeField(auto_now_add=True)
