@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { BsFillArrowLeftCircleFill, BsFillArrowRightCircleFill, BsMoon } from 'react-icons/bs';
 import { PiFlagThin } from 'react-icons/pi';
 import { useNavigate, useParams } from 'react-router-dom';
-import { getModules, getQuestionsByModuleId } from '../../../utils/axios/axiosServices';
+import { getModules, getQuestionsByModuleId, submitAnswers, submitTestResult, submitUserAnswers } from '../../../utils/axios/axiosServices';
 import { useAuth } from '../../../utils/AuthProvider';
 import axios from 'axios';
 
@@ -119,28 +119,10 @@ const TestPageUI = () => {
     setUserAnswers(updatedAnswers);
   };
 
-  const submitAnswers = async () => {
-    try {
-      // Submit test result
-      const testResultResponse = await axios.post(`https://beta-simpleprep.com/api/core/${user?.uid}/test_modules/`, {
-        test_id: Number(testId),
-        score: 0
-      });
-      const testResultId = testResultResponse.data.id;
-
-      // Submit user answers
-      const userAnswersData = userAnswers.map((answer) => ({
-        question: answer.questionId,
-        selected_option: answer.selectedChoice,
-      }));
-
-      await axios.post(`https://beta-simpleprep.com/api/core/${user?.uid}/test_module/${moduleId}/user_answers/`, userAnswersData);
-
-      navigate('/dashboard'); // Redirect to a completion page
-    } catch (error) {
-      console.error('Error submitting answers:', error);
-    }
-  };
+  const handleSubmit = async () => {
+    const validUserAnswers = userAnswers.filter(answer => answer.selectedChoice !== null) as { questionId: number; selectedChoice: string }[];
+    await submitAnswers(user!.uid, Number(testId), Number(moduleId), validUserAnswers, navigate);
+  }
 
   if (!questions.length) {
     return <div>Loading questions...</div>;
@@ -215,7 +197,7 @@ const TestPageUI = () => {
           </button>
         ) : (
           <button
-            onClick={submitAnswers}
+            onClick={handleSubmit}
             className="py-2 px-6 border-2 rounded-xl hover:bg-[#00df9a] hover:border-blue-500 hover:text-white font-semibold text-lg"
           >
             Submit

@@ -60,3 +60,45 @@ interface Question {
       throw error;
     }
   };
+
+  
+  export const submitTestResult = async (userId: string, testId: number) => {
+    try {
+      const response = await axiosInstance.post(`api/core/${userId}/test_modules/`, {
+        test_id: testId,
+        score: 0
+      });
+      return response.data.id;
+    } catch (error) {
+      console.error('Error submitting test result:', error);
+      throw error;
+    }
+  };
+
+  export const submitUserAnswers = async (userId: string, moduleId: number, userAnswers: { questionId: number; selectedChoice: string; }[]) => {
+    try {
+      const userAnswersData = userAnswers.map(answer => ({
+        question: answer.questionId,
+        selected_option: answer.selectedChoice,
+      }));
+      await axiosInstance.post(`api/core/${userId}/test_module/${moduleId}/user_answers/`, userAnswersData);
+    } catch (error) {
+      console.error('Error submitting user answers:', error);
+      throw error;
+    }
+  };
+  
+  export const submitAnswers = async (userId: string, testId: number, moduleId: number, userAnswers: { questionId: number; selectedChoice: string; }[], navigate: (path: string) => void) => {
+    try {
+      // Submit test result
+      const testResultId = await submitTestResult(userId, testId);
+  
+      // Submit user answers
+      await submitUserAnswers(userId, moduleId, userAnswers);
+  
+      // Redirect to a completion page
+      navigate('/dashboard');
+    } catch (error) {
+      console.error('Error submitting answers:', error);
+    }
+  };
