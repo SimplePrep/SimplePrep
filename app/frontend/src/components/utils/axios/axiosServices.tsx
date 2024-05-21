@@ -24,7 +24,7 @@ interface Module {
 
 export const getModules = async (testId: number): Promise<Module[]>  => {
     try{
-        const response = await axiosInstance.get(`api/core/tests/${testId}/modules`);
+        const response = await axiosInstance.get(`api/core/test-modules/${testId}`);
         return response.data
     } catch (error) {
         console.error('Error fetching test modules: ', error);

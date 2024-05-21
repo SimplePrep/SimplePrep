@@ -140,7 +140,7 @@ const TestPageUI = () => {
       };
 
       await axios.post('https://beta-simpleprep.com/api/core/submit-answers', fullTestData);
-      navigate('/dashboard'); // Redirect to a completion page
+      navigate('/test-completion'); // Redirect to a completion page
     } catch (error) {
       console.error('Error submitting answers:', error);
     }
@@ -188,7 +188,7 @@ const TestPageUI = () => {
               <span><PiFlagThin size={30} /></span>
             </div>
             <p className='font-medium text-lg mt-3'>{currentQuestion.query}</p>
-            <div className='flex flex-col mt-7 gap-5'>
+            <div className='flex flex-col mt-7 gap-2'>
               {answerChoices.map((choice, index) => (
                 <button
                   key={index}
