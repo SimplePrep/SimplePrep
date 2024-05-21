@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { BsFillArrowLeftCircleFill, BsFillArrowRightCircleFill, BsMoon} from 'react-icons/bs';
-import {PiFlagThin} from 'react-icons/pi';
+import { BsFillArrowLeftCircleFill, BsFillArrowRightCircleFill, BsMoon } from 'react-icons/bs';
+import { PiFlagThin } from 'react-icons/pi';
 import { useNavigate, useParams } from 'react-router-dom';
 import { getModules, getQuestionsByModuleId } from '../../../utils/axios/axiosServices';
 import { useAuth } from '../../../utils/AuthProvider';
-
+import axios from 'axios';
 
 interface Question {
   id: number;
@@ -23,6 +23,7 @@ interface Question {
   dislikes: number;
   created_at: string;
 }
+
 interface Module {
   id: number;
   test: number;
@@ -33,17 +34,22 @@ interface Module {
   updated_at: string;
 }
 
+interface UserAnswer {
+  questionId: number;
+  selectedChoice: string | null;
+}
+
 const TestPageUI = () => {
-  const {user} = useAuth();
+  const { user } = useAuth();
   const { testId, moduleId } = useParams<{ testId: string; moduleId: string }>();
   const [questions, setQuestions] = useState<Question[]>([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedChoice, setSelectedChoice] = useState<string | null>(null);
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [currentModule, setCurrentModule] = useState<Module | null>(null);
+  const [userAnswers, setUserAnswers] = useState<UserAnswer[]>([]);
   const navigate = useNavigate();
 
-  
   useEffect(() => {
     const fetchQuestions = async () => {
       try {
@@ -80,7 +86,7 @@ const TestPageUI = () => {
   }, [navigate, user]);
 
   const toggleDarkMode = () => {
-    setIsDarkMode(!isDarkMode)
+    setIsDarkMode(!isDarkMode);
   };
 
   const darkModeClass = isDarkMode ? 'dark' : '';
@@ -99,6 +105,47 @@ const TestPageUI = () => {
     }
   };
 
+  const handleAnswerSelection = (choice: string) => {
+    setSelectedChoice(choice);
+    const updatedAnswers = [...userAnswers];
+    const answerIndex = updatedAnswers.findIndex((answer) => answer.questionId === questions[currentQuestionIndex].id);
+
+    if (answerIndex > -1) {
+      updatedAnswers[answerIndex].selectedChoice = choice;
+    } else {
+      updatedAnswers.push({ questionId: questions[currentQuestionIndex].id, selectedChoice: choice });
+    }
+
+    setUserAnswers(updatedAnswers);
+  };
+
+  const submitAnswers = async () => {
+    try {
+      const fullTestData = {
+        userId: user?.uid,
+        moduleId: Number(moduleId),
+        testId: Number(testId),
+        questions: questions.map((question) => ({
+          id: question.id,
+          context: question.context,
+          query: question.query,
+          options: {
+            A: question.option_A,
+            B: question.option_B,
+            C: question.option_C,
+            D: question.option_D,
+          },
+        })),
+        answers: userAnswers,
+      };
+
+      await axios.post('https://beta-simpleprep.com/api/core/submit-answers', fullTestData);
+      navigate('/test-completion'); // Redirect to a completion page
+    } catch (error) {
+      console.error('Error submitting answers:', error);
+    }
+  };
+
   if (!questions.length) {
     return <div>Loading questions...</div>;
   }
@@ -110,7 +157,6 @@ const TestPageUI = () => {
     { label: 'C', content: currentQuestion.option_C },
     { label: 'D', content: currentQuestion.option_D },
   ];
-
 
   return (
     <div className={`w-full h-screen flex flex-col ${darkModeClass}`}>
@@ -126,7 +172,7 @@ const TestPageUI = () => {
           <button className='py-2 px-6 border-2 rounded-xl hover:bg-[#00df9a] hover:border-blue-500 hover:text-white font-semibold text-lg'>Exit</button>
         </div>
       </div>
-      <hr className="border-gray-300 border-[1px]"/>
+      <hr className="border-gray-300 border-[1px]" />
       <div className='flex flex-grow'>
         <div className='w-[50%] border-r-2'>
           <div className="p-14">
@@ -139,41 +185,49 @@ const TestPageUI = () => {
           <div className='p-14'>
             <div className='flex gap-2 items-center'>
               <p className='font-bold text-lg'>{`Question ${currentQuestionIndex + 1} of ${questions.length}`}</p>
-              <span><PiFlagThin size={30}/></span>
+              <span><PiFlagThin size={30} /></span>
             </div>
             <p className='font-medium text-lg mt-3'>{currentQuestion.query}</p>
             <div className='flex flex-col mt-7 gap-2'>
-            {answerChoices.map((choice, index) => (
-              <button
-                key={index}
-                className={`py-2 px-4 border-2 rounded-lg font-semibold text-lg w-full text-left 
+              {answerChoices.map((choice, index) => (
+                <button
+                  key={index}
+                  className={`py-2 px-4 border-2 rounded-lg font-semibold text-lg w-full text-left 
                             ${selectedChoice === choice.label ? 'border-[#00df9a]' : 'hover:border-blue-500'}`}
-                onClick={() => setSelectedChoice(choice.label)}
-              >
-                {`(${choice.label})`} {choice.content}
-              </button>
-            ))}
+                  onClick={() => handleAnswerSelection(choice.label)}
+                >
+                  {`(${choice.label})`} {choice.content}
+                </button>
+              ))}
             </div>
           </div>
         </div>
       </div>
       <div className="flex justify-between p-5">
-        <button 
+        <button
           onClick={handlePreviousQuestion}
           className="py-2 px-6 border-2 rounded-xl hover:bg-[#00df9a] hover:border-blue-500 hover:text-white font-semibold text-lg"
         >
           <BsFillArrowLeftCircleFill className="inline mr-2" /> Previous
         </button>
-        <button 
-          onClick={handleNextQuestion}
-          className="py-2 px-6 border-2 rounded-xl hover:bg-[#00df9a] hover:border-blue-500 hover:text-white font-semibold text-lg"
-        >
-          Next <BsFillArrowRightCircleFill className="inline ml-2" />
-        </button>
+        {currentQuestionIndex < questions.length - 1 ? (
+          <button
+            onClick={handleNextQuestion}
+            className="py-2 px-6 border-2 rounded-xl hover:bg-[#00df9a] hover:border-blue-500 hover:text-white font-semibold text-lg"
+          >
+            Next <BsFillArrowRightCircleFill className="inline ml-2" />
+          </button>
+        ) : (
+          <button
+            onClick={submitAnswers}
+            className="py-2 px-6 border-2 rounded-xl hover:bg-[#00df9a] hover:border-blue-500 hover:text-white font-semibold text-lg"
+          >
+            Submit
+          </button>
+        )}
       </div>
     </div>
   );
 };
 
 export default TestPageUI;
-
