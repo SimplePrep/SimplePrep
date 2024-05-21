@@ -19,14 +19,18 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [token, setToken] = useState<string | null>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
         if (user && user.emailVerified) {
+          const idToken = await user.getIdToken();
           setCurrentUser(user);
+          setToken(idToken);
         }  else {
             setCurrentUser(null);
+            setToken(null);
         }
         setLoading(false);
     });
@@ -37,9 +41,12 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     try {
       const user = auth.currentUser;
       if (user && user.emailVerified) {
+        const idToken = await user.getIdToken();
         setCurrentUser(user);
+        setToken(idToken);
       } else {
         setCurrentUser(null);
+        setToken(null);
       }
     } catch (error) {
       setError('Failed to authenticate.');
@@ -90,7 +97,9 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         throw new Error('Please verify your email address before logging in.'); // Throwing to catch block
       }
       if (user) {
+        const idToken = await user.getIdToken();
         setCurrentUser(user);
+        setToken(idToken);
         onSuccess();
       }
     } catch (error: unknown) {
@@ -155,7 +164,9 @@ const GoogleSignIn = async () => {
       }
 
       if (user.emailVerified) {
+        const idToken = await user.getIdToken();
         setCurrentUser(user);
+        setToken(idToken);
       } else {
         setError('Please verify your email before logging in.');
       }
@@ -186,6 +197,7 @@ const GoogleSignIn = async () => {
     try {
       await signOutService();
       setCurrentUser(null);
+      setToken(null);
       navigate('/')
     } catch (error) {
       setError('Failed to sign out.');
