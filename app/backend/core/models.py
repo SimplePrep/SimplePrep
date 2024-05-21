@@ -53,6 +53,7 @@ class Comment(models.Model):
     """
         Model for Comments
     """
+    User = get_user_model()
     test = models.ForeignKey(TestModel, on_delete=models.CASCADE, related_name = 'comments')
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name = 'comments')
     text = models.TextField(blank=False, null=False)
@@ -65,14 +66,14 @@ class TestResult(models.Model):
     """
         Model for retrieving results for previous test attempts
     """
-    test_model = models.ForeignKey(TestModel, on_delete=models.CASCADE, related_name='test_results')
+    test = models.ForeignKey(TestModel, on_delete=models.CASCADE, related_name='test_results')
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name ='test_results')
     score = models.IntegerField(default=0, help_text="User's score for this test attempt.")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now = True)
 
     def __str__(self):
-        return f"{self.test_model.title} - {self.user.username}"
+        return f"{self.test.title} - {self.user.name}"
 
 class UserAnswer(models.Model):
     test_result = models.ForeignKey(TestResult, on_delete=models.CASCADE, related_name='user_answers')

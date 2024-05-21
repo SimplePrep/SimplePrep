@@ -121,21 +121,16 @@ class TestResultCreateView(APIView):
 
     def get(self, request, user_id, format=None):
         if request.user.id == int(user_id):
-            try:
-                test_results = TestResult.objects.filter(user_id=user_id)
-                serializer = TestResultSerializer(test_results, many=True)
-                return Response(serializer.data, status=status.HTTP_200_OK)
-            except Exception as e:
-                return Response(
-                    {'error': f"Something went wrong while fetching test results -> {str(e)}"},
-                    status=status.HTTP_500_INTERNAL_SERVER_ERROR
-                )
+            test_results = TestResult.objects.filter(user_id=user_id)
+            serializer = TestResultSerializer(test_results, many=True)
+            return Response(serializer.data)
         else:
             return Response(
                 {'error': 'You are not authorized to view these test results'},
                 status=status.HTTP_403_FORBIDDEN)
-
-    def post(self, request, user_id, test_id, format=None):
+    
+    def post(self, request, user_id, test_id ,format=None):
+        
         if request.user.id != int(user_id):
             return Response({"error": "You are not authorized to perform this action."}, status=status.HTTP_403_FORBIDDEN)
 
@@ -147,12 +142,11 @@ class TestResultCreateView(APIView):
         if serializer.is_valid():
             test_result, created = TestResult.objects.update_or_create(
                 user=user,
-                test_model=test,
+                test=test,
                 defaults={'score': serializer.validated_data.get('score')}
-            )
+        )
             return Response(serializer.data, status=status.HTTP_201_CREATED if created else status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
 
 
 class UserAnswerView(APIView):
@@ -165,15 +159,9 @@ class UserAnswerView(APIView):
                 {'error': 'You are not authorized to view these answers'},
                 status=status.HTTP_403_FORBIDDEN
             )
-        try:
-            answers = UserAnswer.objects.filter(test_result_id=test_result_id)
-            serializer = UserAnswerSerializer(answers, many=True)
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        except Exception as e:
-            return Response(
-                {'error': f"Something went wrong while fetching user answers -> {str(e)}"},
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR
-            )
+        answers = UserAnswer.objects.filter(test_result_id=test_result_id)
+        serializer = UserAnswerSerializer(answers, many=True)
+        return Response(serializer.data)
     
     def post(self, request, test_result_id, format=None):
         test_result = get_object_or_404(TestResult, pk=test_result_id)
@@ -182,19 +170,8 @@ class UserAnswerView(APIView):
                 {'error': "You are not authorized to answer these questions"},
                 status=status.HTTP_403_FORBIDDEN
             )
-
-        data = request.data
-        if not isinstance(data, list):
-            return Response({'error': 'Invalid data format, expected a list'}, status=status.HTTP_400_BAD_REQUEST)
-
-        responses = []
-        for answer_data in data:
-            answer_data['test_result'] = test_result_id
-            serializer = UserAnswerSerializer(data=answer_data)
-            if serializer.is_valid():
-                serializer.save()
-                responses.append(serializer.data)
-            else:
-                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        
-        return Response(responses, status=status.HTTP_201_CREATED)
+        serializer = UserAnswerSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(test_result_id=test_result_id)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

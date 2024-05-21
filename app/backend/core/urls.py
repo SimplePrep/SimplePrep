@@ -10,9 +10,9 @@ from .views import (
 
 urlpatterns = [
     path('tests/', ManageTestView.as_view(), name='manage-tests'),
-    path('tests/<int:test_id>/modules/', ManageTestModuleView.as_view(), name='manage-test-modules'),
-    path('modules/<int:test_module_id>/questions/', QuestionListCreateView.as_view(), name='question-list-create'),
-    path('modules/<int:test_module_id>/comments/', CommentListCreateView.as_view(), name='comment-list-create'),
-    path('users/<int:user_id>/test-results/', TestResultCreateView.as_view(), name='test-result-list-create'),
-    path('test-results/<int:test_result_id>/user-answers/', UserAnswerView.as_view(), name='user-answer-list-create'),
+    path('test-modules/<int:test_id>/', ManageTestModuleView.as_view(), name='manage-test-modules'),
+    path('questions/<int:test_module_id>/', QuestionListCreateView.as_view(), name='question-list-create'),
+    path('comments/<int:test_module_id>/', CommentListCreateView.as_view(), name='comment-list-create'),
+    path('test-results/<int:user_id>/', TestResultCreateView.as_view(), name='test-result-list-create'),
+    path('user-answers/<int:test_result_id>/', UserAnswerView.as_view(), name='user-answer-list-create')
 ]
