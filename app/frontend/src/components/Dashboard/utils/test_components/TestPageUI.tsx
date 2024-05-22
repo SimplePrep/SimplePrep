@@ -121,7 +121,7 @@ const TestPageUI = () => {
 
   const handleSubmit = async () => {
     const validUserAnswers = userAnswers.filter(answer => answer.selectedChoice !== null) as { questionId: number; selectedChoice: string }[];
-    await submitAnswers(user!.uid, Number(testId), Number(moduleId), validUserAnswers, navigate);
+    await submitAnswers(user!.uid, Number(moduleId), validUserAnswers, navigate);
   }
 
   if (!questions.length) {

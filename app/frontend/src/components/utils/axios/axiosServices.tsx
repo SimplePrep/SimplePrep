@@ -88,10 +88,10 @@ interface Question {
     }
   };
   
-  export const submitAnswers = async (userId: string, testId: number, moduleId: number, userAnswers: { questionId: number; selectedChoice: string; }[], navigate: (path: string) => void) => {
+  export const submitAnswers = async (userId: string,  moduleId: number, userAnswers: { questionId: number; selectedChoice: string; }[], navigate: (path: string) => void) => {
     try {
       // Submit test result
-      const testResultId = await submitTestResult(userId, testId);
+      const testResultId = await submitTestResult(userId, moduleId);
   
       // Submit user answers
       await submitUserAnswers(userId, moduleId, userAnswers);

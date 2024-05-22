@@ -139,15 +139,15 @@ class UserTestModulesView(APIView):
         if request.user != user:
             return Response({"error": "You are not authorized to perform this action."}, status=status.HTTP_403_FORBIDDEN)
 
-        test_id = request.data.get('test_id')
-        logger.debug(f"Received test_id: {test_id}")
-        test = get_object_or_404(TestModel, id=test_id)
+        test_module_id = request.data.get('test_module_id')
+        logger.debug(f"Received test_id: {test_module_id}")
+        test_module = get_object_or_404(TestModel, id=test_module_id)
 
         serializer = TestResultSerializer(data=request.data, context={'request': request})
         if serializer.is_valid():
             test_result, created = TestResult.objects.update_or_create(
                 user=user,
-                test_model=test,
+                test_model=test_module,
                 defaults={'score': serializer.validated_data.get('score')}
             )
             return Response(serializer.data, status=status.HTTP_201_CREATED if created else status.HTTP_200_OK)
@@ -161,7 +161,7 @@ class UserTestModuleAnswersView(APIView):
         if request.user != user:
             return Response({"error": "You are not authorized to view these answers."}, status=status.HTTP_403_FORBIDDEN)
         
-        test_result = get_object_or_404(TestResult, user=user, test_model_id=test_module_id)
+        test_result = get_object_or_404(TestResult, user=user, test_module_id=test_module_id)
         answers = UserAnswer.objects.filter(test_result=test_result)
         serializer = UserAnswerSerializer(answers, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
@@ -171,7 +171,7 @@ class UserTestModuleAnswersView(APIView):
         if request.user != user:
             return Response({"error": "You are not authorized to perform this action."}, status=status.HTTP_403_FORBIDDEN)
         
-        test_result = get_object_or_404(TestResult, user=user, test_model_id=test_module_id)
+        test_result = get_object_or_404(TestResult, user=user, test_module_id=test_module_id)
 
         user_answers = request.data  # Assuming data is a list of answers
         if not isinstance(user_answers, list):
