@@ -6,7 +6,7 @@ do
 done
 
 # Generate migrations
-until ./manage.py makemigrations --noinput
+until ./manage.py makemigrations core
 do
     echo "Waiting for makemigrations to be ready..."
     sleep 2
