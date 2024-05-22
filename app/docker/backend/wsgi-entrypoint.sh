@@ -5,6 +5,9 @@ do
     echo "Waiting for server volume..."
 done
 
+# Remove existing migration files (use with caution)
+find . -path "*/migrations/*.py" -not -name "__init__.py" -delete
+find . -path "*/migrations/*.pyc"  -delete
 # Generate migrations
 until ./manage.py makemigrations  --noinput
 do
