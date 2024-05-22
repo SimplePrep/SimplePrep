@@ -122,7 +122,7 @@ class UserTestModulesView(APIView):
     permission_classes = [IsAuthenticatedWithFirebase]
 
     def get(self, request, user_uid, format=None):
-        user = get_object_or_404(User, uid=user_uid)
+        user = get_object_or_404(User, firebase_uid=user_uid)
         if request.user != user:
             return Response({"error": "You are not authorized to view these test results."}, status=status.HTTP_403_FORBIDDEN)
         
@@ -131,7 +131,7 @@ class UserTestModulesView(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
     
     def post(self, request, user_uid, format=None):
-        user = get_object_or_404(User, uid=user_uid)
+        user = get_object_or_404(User, firebase_uid=user_uid)
         if request.user != user:
             return Response({"error": "You are not authorized to perform this action."}, status=status.HTTP_403_FORBIDDEN)
 
@@ -153,7 +153,7 @@ class UserTestModuleAnswersView(APIView):
     permission_classes = [IsAuthenticatedWithFirebase]
 
     def get(self, request, user_uid, test_module_id, format=None):
-        user = get_object_or_404(User, uid=user_uid)
+        user = get_object_or_404(User, firebase_uid=user_uid)
         if request.user != user:
             return Response({"error": "You are not authorized to view these answers."}, status=status.HTTP_403_FORBIDDEN)
         
@@ -163,7 +163,7 @@ class UserTestModuleAnswersView(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
     
     def post(self, request, user_uid, test_module_id, format=None):
-        user = get_object_or_404(User, uid=user_uid)
+        user = get_object_or_404(User, firebase_uid=user_uid)
         if request.user != user:
             return Response({"error": "You are not authorized to perform this action."}, status=status.HTTP_403_FORBIDDEN)
         
