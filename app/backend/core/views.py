@@ -10,7 +10,7 @@ from .serializers import (
     TestResultSerializer,
     UserAnswerSerializer)
 from .models import (
-    TestModule, 
+    TestModel, 
     Question, 
     Comment, 
     TestResult, 
@@ -55,7 +55,7 @@ class ManageTestModuleView(APIView):
 
     def get(self, request, test_id, format=None):
         try:
-            test_modules = TestModule.objects.filter(test_id=test_id)
+            test_modules = TestModel.objects.filter(test_id=test_id)
             serializer = TestModelSerializer(test_modules, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
         except Exception as e: 
@@ -141,7 +141,7 @@ class UserTestModulesView(APIView):
 
         test_module_id = request.data.get('test_module_id')
         logger.debug(f"Received test_module_id: {test_module_id}")
-        test_module = get_object_or_404(TestModule, id=test_module_id)
+        test_module = get_object_or_404(TestModel, id=test_module_id)
 
         data = request.data.copy()
         data['user'] = user.id
