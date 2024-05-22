@@ -143,6 +143,9 @@ class UserTestModulesView(APIView):
         logger.debug(f"Received test_id: {test_module_id}")
         test_module = get_object_or_404(TestModel, id=test_module_id)
 
+        data = request.data.copy()
+        data['user'] = user.id
+
         serializer = TestResultSerializer(data=request.data, context={'request': request})
         if serializer.is_valid():
             test_result, created = TestResult.objects.update_or_create(
