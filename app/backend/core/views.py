@@ -18,6 +18,9 @@ from .models import (
     Test)
 from .permissions import IsAuthenticatedWithFirebase
 from django.contrib.auth import get_user_model
+import logging
+
+logger = logging.getLogger(__name__)
 
 User = get_user_model()
 
@@ -131,11 +134,13 @@ class UserTestModulesView(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
     
     def post(self, request, user_uid, format=None):
+        logger.debug(f"Received user_uid: {user_uid}")
         user = get_object_or_404(User, firebase_uid=user_uid)
         if request.user != user:
             return Response({"error": "You are not authorized to perform this action."}, status=status.HTTP_403_FORBIDDEN)
 
         test_id = request.data.get('test_id')
+        logger.debug(f"Received test_id: {test_id}")
         test = get_object_or_404(TestModel, id=test_id)
 
         serializer = TestResultSerializer(data=request.data, context={'request': request})
@@ -146,8 +151,7 @@ class UserTestModulesView(APIView):
                 defaults={'score': serializer.validated_data.get('score')}
             )
             return Response(serializer.data, status=status.HTTP_201_CREATED if created else status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)   
 
 class UserTestModuleAnswersView(APIView):
     permission_classes = [IsAuthenticatedWithFirebase]
