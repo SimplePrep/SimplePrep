@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Test, TestModel, Question, Comment, TestResult, UserAnswer
+from .models import Test, TestModule, Question, Comment, TestResult, UserAnswer
 
 class TestSerializer(serializers.ModelSerializer):
     class Meta:
@@ -9,7 +9,7 @@ class TestSerializer(serializers.ModelSerializer):
 
 class TestModelSerializer(serializers.ModelSerializer):
     class Meta:
-        model = TestModel
+        model = TestModule
         fields = '__all__'
 
 class QuestionSerializer(serializers.ModelSerializer):
@@ -32,7 +32,14 @@ class TestResultSerializer(serializers.ModelSerializer):
     class Meta:
         model = TestResult
         fields = '__all__'
-        read_only_fields = ('created_at', 'updated_at', )
+
+    def create(self, validated_data):
+        validated_data['user'] = self.context['request'].user
+        return super().create(validated_data)
+
+    def update(self, instance, validated_data):
+        validated_data['user'] = self.context['request'].user
+        return super().update(instance, validated_data)
 
 class UserAnswerSerializer(serializers.ModelSerializer):
     class Meta:

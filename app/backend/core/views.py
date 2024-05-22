@@ -10,7 +10,7 @@ from .serializers import (
     TestResultSerializer,
     UserAnswerSerializer)
 from .models import (
-    TestModel, 
+    TestModule, 
     Question, 
     Comment, 
     TestResult, 
@@ -55,7 +55,7 @@ class ManageTestModuleView(APIView):
 
     def get(self, request, test_id, format=None):
         try:
-            test_modules = TestModel.objects.filter(test_id=test_id)
+            test_modules = TestModule.objects.filter(test_id=test_id)
             serializer = TestModelSerializer(test_modules, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
         except Exception as e: 
@@ -140,21 +140,21 @@ class UserTestModulesView(APIView):
             return Response({"error": "You are not authorized to perform this action."}, status=status.HTTP_403_FORBIDDEN)
 
         test_module_id = request.data.get('test_module_id')
-        logger.debug(f"Received test_id: {test_module_id}")
-        test_module = get_object_or_404(TestModel, id=test_module_id)
+        logger.debug(f"Received test_module_id: {test_module_id}")
+        test_module = get_object_or_404(TestModule, id=test_module_id)
 
         data = request.data.copy()
         data['user'] = user.id
 
-        serializer = TestResultSerializer(data=request.data, context={'request': request})
+        serializer = TestResultSerializer(data=data, context={'request': request})
         if serializer.is_valid():
             test_result, created = TestResult.objects.update_or_create(
                 user=user,
-                test_model=test_module,
+                test_module=test_module,
                 defaults={'score': serializer.validated_data.get('score')}
             )
             return Response(serializer.data, status=status.HTTP_201_CREATED if created else status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)   
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class UserTestModuleAnswersView(APIView):
     permission_classes = [IsAuthenticatedWithFirebase]
