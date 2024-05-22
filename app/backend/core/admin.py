@@ -1,11 +1,11 @@
 from django.contrib import admin
 from spa.admin import admin_site
-from .models import Test, TestModel, Question, Comment, TestResult, UserAnswer
+from .models import Test, TestModule, Question, Comment, TestResult, UserAnswer
 
 class TestAdmin(admin.ModelAdmin):
     list_display = ('id', 'title', 'created_at', 'updated_at')
 
-class TestModelAdmin(admin.ModelAdmin):
+class TestModuleAdmin(admin.ModelAdmin):
     list_display = ('title', 'num_questions', 'created_at', 'updated_at',)
 
 class QuestionAdmin(admin.ModelAdmin):
@@ -31,7 +31,7 @@ class UserAnswerAdmin(admin.ModelAdmin):
     list_filter = ('test_result', 'question')
 
 admin_site.register(Test, TestAdmin)
-admin_site.register(TestModel, TestModelAdmin)
+admin_site.register(TestModule, TestModuleAdmin)
 admin_site.register(Question, QuestionAdmin)
 admin_site.register(Comment, CommentAdmin)
 admin_site.register(TestResult, TestResultAdmin)
