@@ -34,12 +34,8 @@ const Login =():  React.ReactElement =>  {
         }
     }, [loginError])
 
-    const handleGoogleSignIn = async () => {
-        try {
-            await GoogleSignIn();
-        } catch (err) {
-            console.error('Error during Google Sign-In:', err);
-        }
+    const handleGoogleSignIn = () => {
+        GoogleSignIn();
     }
 
 
