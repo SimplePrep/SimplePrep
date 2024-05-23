@@ -30,11 +30,16 @@ const Login =():  React.ReactElement =>  {
     useEffect(() => {
         if (loginError){
             setPageError(loginError);
+            navigate('/demo');
         }
     }, [loginError])
 
-    const handleGoogleSignIn = () => {
-        GoogleSignIn();
+    const handleGoogleSignIn = async () => {
+        try {
+            await GoogleSignIn();
+        } catch (err) {
+            console.error('Error during Google Sign-In:', err);
+        }
     }
 
 
