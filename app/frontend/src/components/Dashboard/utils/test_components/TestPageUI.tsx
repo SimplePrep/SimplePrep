@@ -5,6 +5,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { getModules, getQuestionsByModuleId, submitAnswers, submitTestResult, submitUserAnswers } from '../../../utils/axios/axiosServices';
 import { useAuth } from '../../../utils/AuthProvider';
 import axios from 'axios';
+import Modal from '../../../../pages/Authentication/Modal';
 
 interface Question {
   id: number;
@@ -49,6 +50,7 @@ const TestPageUI = () => {
   const [currentModule, setCurrentModule] = useState<Module | null>(null);
   const [userAnswers, setUserAnswers] = useState<UserAnswer[]>([]);
   const [unansweredQuestions, setUnansweredQuestions] = useState<number[]>([]);
+  const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -137,7 +139,11 @@ const TestPageUI = () => {
       return;
     }
     await submitAnswers(user!.uid, Number(moduleId), validUserAnswers, navigate);
-  }
+    setShowModal(true);
+    setTimeout(() => {
+      setShowModal(false);
+      navigate('/');
+    }, 4000);}
 
   if (!questions.length) {
     return <div>Loading questions...</div>;
@@ -153,6 +159,7 @@ const TestPageUI = () => {
   const isCurrentQuestionUnanswered = unansweredQuestions.includes(currentQuestion.id);
   return (
     <div className={`w-full h-screen flex flex-col ${darkModeClass}`}>
+      {showModal && <Modal message={'Submission Successful. Please visit Analytics page on Dashboard to review the test results!'}/>}
     <div className='flex p-5 justify-between items-center'>
       <div className='mx-5 flex gap-10 items-center'>
         <p className='text-bold font-ubuntu text-2xl'>{currentModule?.title}</p>
