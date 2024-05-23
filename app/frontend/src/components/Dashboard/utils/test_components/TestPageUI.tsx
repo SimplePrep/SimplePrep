@@ -94,25 +94,25 @@ const TestPageUI = () => {
 
   const handlePreviousQuestion = () => {
     if (currentQuestionIndex > 0) {
+      if (!selectedChoice) {
+        setUnansweredQuestions(prev => [...prev, questions[currentQuestionIndex].id]);
+      } else {
+        setUnansweredQuestions(prev => prev.filter(id => id !== questions[currentQuestionIndex].id));
+      }
       setCurrentQuestionIndex(currentQuestionIndex - 1);
       setSelectedChoice(userAnswers.find(answer => answer.questionId === questions[currentQuestionIndex - 1].id)?.selectedChoice || null);
-    }
-    if (!selectedChoice) {
-      setUnansweredQuestions(prev => [...prev, questions[currentQuestionIndex].id]);
-    } else {
-      setUnansweredQuestions(prev => prev.filter(id => id !== questions[currentQuestionIndex].id));
     }
   };
 
   const handleNextQuestion = () => {
     if (currentQuestionIndex < questions.length - 1) {
+      if (!selectedChoice) {
+        setUnansweredQuestions(prev => [...prev, questions[currentQuestionIndex].id]);
+      } else {
+        setUnansweredQuestions(prev => prev.filter(id => id !== questions[currentQuestionIndex].id));
+      }
       setCurrentQuestionIndex(currentQuestionIndex + 1);
       setSelectedChoice(userAnswers.find(answer => answer.questionId === questions[currentQuestionIndex + 1].id)?.selectedChoice || null);
-    }
-    if (!selectedChoice) {
-      setUnansweredQuestions(prev => [...prev, questions[currentQuestionIndex].id]);
-    } else {
-      setUnansweredQuestions(prev => prev.filter(id => id !== questions[currentQuestionIndex].id));
     }
   };
 
@@ -133,7 +133,6 @@ const TestPageUI = () => {
   const handleSubmit = async () => {
     const validUserAnswers = userAnswers.filter(answer => answer.selectedChoice !== null) as { questionId: number; selectedChoice: string }[];
     if (validUserAnswers.length < questions.length) {
-      // Inform the user that there are unanswered questions
       alert("Please answer all questions before submitting.");
       return;
     }
@@ -154,73 +153,73 @@ const TestPageUI = () => {
   const isCurrentQuestionUnanswered = unansweredQuestions.includes(currentQuestion.id);
   return (
     <div className={`w-full h-screen flex flex-col ${darkModeClass}`}>
-      <div className='flex p-5 justify-between items-center'>
-        <div className='mx-5 flex gap-10 items-center'>
-          <p className={`text-bold font-ubuntu text-2xl ${isCurrentQuestionUnanswered ? 'text-red-500' : ''}`}>{currentModule?.title}</p>
-          <button onClick={toggleDarkMode} className="text-lg p-3 border-2 rounded-2xl hover:bg-[#00df9a] hover:border-blue-500">
-            <BsMoon />
-          </button>
-        </div>
-        <div className='flex justify-end items-center gap-5'>
-          <p className='font-semibold text-lg'>13:04</p>
-          <button className='py-2 px-6 border-2 rounded-xl hover:bg-[#00df9a] hover:border-blue-500 hover:text-white font-semibold text-lg'>Exit</button>
-        </div>
-      </div>
-      <hr className="border-gray-300 border-[1px]" />
-      <div className='flex flex-grow'>
-        <div className='w-[50%] border-r-2'>
-          <div className="p-14">
-            <p className='font-medium text-lg'>
-              {currentQuestion.context}
-            </p>
-          </div>
-        </div>
-        <div className='w-[50%]'>
-          <div className='p-14'>
-            <div className='flex gap-2 items-center'>
-              <p className={`font-bold text-lg ${isCurrentQuestionUnanswered ? 'text-red-500' : ''}`}>{`Question ${currentQuestionIndex + 1} of ${questions.length}`}</p>
-              <span><PiFlagThin size={30} /></span>
-            </div>
-            <p className='font-medium text-lg mt-3'>{currentQuestion.query}</p>
-            <div className='flex flex-col mt-7 gap-2'>
-              {answerChoices.map((choice, index) => (
-                <button
-                  key={index}
-                  className={`py-2 px-4 border-2 rounded-lg font-semibold text-lg w-full text-left 
-                            ${selectedChoice === choice.label ? 'border-[#00df9a]' : 'hover:border-blue-500'}`}
-                  onClick={() => handleAnswerSelection(choice.label)}
-                >
-                  {`(${choice.label})`} {choice.content}
-                </button>
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
-      <div className="flex justify-between p-5">
-        <button
-          onClick={handlePreviousQuestion}
-          className="py-2 px-6 border-2 rounded-xl hover:bg-[#00df9a] hover:border-blue-500 hover:text-white font-semibold text-lg"
-        >
-          <BsFillArrowLeftCircleFill className="inline mr-2" /> Previous
+    <div className='flex p-5 justify-between items-center'>
+      <div className='mx-5 flex gap-10 items-center'>
+        <p className={`text-bold font-ubuntu text-2xl ${isCurrentQuestionUnanswered ? 'text-red-500' : ''}`}>{currentModule?.title}</p>
+        <button onClick={toggleDarkMode} className="text-lg p-3 border-2 rounded-2xl hover:bg-[#00df9a] hover:border-blue-500">
+          <BsMoon />
         </button>
-        {currentQuestionIndex < questions.length - 1 ? (
-          <button
-            onClick={handleNextQuestion}
-            className="py-2 px-6 border-2 rounded-xl hover:bg-[#00df9a] hover:border-blue-500 hover:text-white font-semibold text-lg"
-          >
-            Next <BsFillArrowRightCircleFill className="inline ml-2" />
-          </button>
-        ) : (
-          <button
-            onClick={handleSubmit}
-            className="py-2 px-6 border-2 rounded-xl hover:bg-[#00df9a] hover:border-blue-500 hover:text-white font-semibold text-lg"
-          >
-            Submit
-          </button>
-        )}
+      </div>
+      <div className='flex justify-end items-center gap-5'>
+        <p className='font-semibold text-lg'>13:04</p>
+        <button className='py-2 px-6 border-2 rounded-xl hover:bg-[#00df9a] hover:border-blue-500 hover:text-white font-semibold text-lg'>Exit</button>
       </div>
     </div>
+    <hr className="border-gray-300 border-[1px]" />
+    <div className='flex flex-grow'>
+      <div className='w-[50%] border-r-2'>
+        <div className="p-14">
+          <p className='font-medium text-lg'>
+            {currentQuestion.context}
+          </p>
+        </div>
+      </div>
+      <div className='w-[50%]'>
+        <div className='p-14'>
+          <div className='flex gap-2 items-center'>
+            <p className={`font-bold text-lg ${isCurrentQuestionUnanswered ? 'text-red-500' : ''}`}>{`Question ${currentQuestionIndex + 1} of ${questions.length}`}</p>
+            <span><PiFlagThin size={30} /></span>
+          </div>
+          <p className='font-medium text-lg mt-3'>{currentQuestion.query}</p>
+          <div className='flex flex-col mt-7 gap-2'>
+            {answerChoices.map((choice, index) => (
+              <button
+                key={index}
+                className={`py-2 px-4 border-2 rounded-lg font-semibold text-lg w-full text-left 
+                          ${selectedChoice === choice.label ? 'border-[#00df9a]' : 'hover:border-blue-500'}`}
+                onClick={() => handleAnswerSelection(choice.label)}
+              >
+                {`(${choice.label})`} {choice.content}
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+    <div className="flex justify-between p-5">
+      <button
+        onClick={handlePreviousQuestion}
+        className="py-2 px-6 border-2 rounded-xl hover:bg-[#00df9a] hover:border-blue-500 hover:text-white font-semibold text-lg"
+      >
+        <BsFillArrowLeftCircleFill className="inline mr-2" /> Previous
+      </button>
+      {currentQuestionIndex < questions.length - 1 ? (
+        <button
+          onClick={handleNextQuestion}
+          className="py-2 px-6 border-2 rounded-xl hover:bg-[#00df9a] hover:border-blue-500 hover:text-white font-semibold text-lg"
+        >
+          Next <BsFillArrowRightCircleFill className="inline ml-2" />
+        </button>
+      ) : (
+        <button
+          onClick={handleSubmit}
+          className="py-2 px-6 border-2 rounded-xl hover:bg-[#00df9a] hover:border-blue-500 hover:text-white font-semibold text-lg"
+        >
+          Submit
+        </button>
+      )}
+    </div>
+  </div>
   );
 };
 
