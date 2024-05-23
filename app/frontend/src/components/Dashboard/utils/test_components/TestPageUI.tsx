@@ -142,7 +142,7 @@ const TestPageUI = () => {
     setShowModal(true);
     setTimeout(() => {
       setShowModal(false);
-      navigate('/');
+      navigate('/demo/analytics');
     }, 4000);}
 
   if (!questions.length) {
