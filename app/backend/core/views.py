@@ -146,7 +146,7 @@ class UserTestModulesView(APIView):
         data = request.data.copy()
         data['user'] = user.id
 
-        serializer = TestResultSerializer(data=request.data, context={'request': request})
+        serializer = TestResultSerializer(data=data, context={'request': request})
         if serializer.is_valid():
             test_result, created = TestResult.objects.update_or_create(
                 user=user,
