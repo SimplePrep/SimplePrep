@@ -140,21 +140,21 @@ class UserTestModulesView(APIView):
             return Response({"error": "You are not authorized to perform this action."}, status=status.HTTP_403_FORBIDDEN)
 
         test_module_id = request.data.get('test_module_id')
-        logger.debug(f"Received test_module_id: {test_module_id}")
+        logger.debug(f"Received test_id: {test_module_id}")
         test_module = get_object_or_404(TestModel, id=test_module_id)
 
         data = request.data.copy()
         data['user'] = user.id
 
-        serializer = TestResultSerializer(data=data, context={'request': request})
+        serializer = TestResultSerializer(data=request.data, context={'request': request})
         if serializer.is_valid():
             test_result, created = TestResult.objects.update_or_create(
                 user=user,
-                test_module=test_module,
+                test_model=test_module,
                 defaults={'score': serializer.validated_data.get('score')}
             )
             return Response(serializer.data, status=status.HTTP_201_CREATED if created else status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)   
 
 class UserTestModuleAnswersView(APIView):
     permission_classes = [IsAuthenticatedWithFirebase]
