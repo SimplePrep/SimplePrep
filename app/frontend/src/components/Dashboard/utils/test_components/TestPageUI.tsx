@@ -155,7 +155,7 @@ const TestPageUI = () => {
     <div className={`w-full h-screen flex flex-col ${darkModeClass}`}>
     <div className='flex p-5 justify-between items-center'>
       <div className='mx-5 flex gap-10 items-center'>
-        <p className={`text-bold font-ubuntu text-2xl ${isCurrentQuestionUnanswered ? 'text-red-500' : ''}`}>{currentModule?.title}</p>
+        <p className='text-bold font-ubuntu text-2xl'>{currentModule?.title}</p>
         <button onClick={toggleDarkMode} className="text-lg p-3 border-2 rounded-2xl hover:bg-[#00df9a] hover:border-blue-500">
           <BsMoon />
         </button>
@@ -178,14 +178,16 @@ const TestPageUI = () => {
         <div className='p-14'>
           <div className='flex gap-2 items-center'>
             <p className={`font-bold text-lg ${isCurrentQuestionUnanswered ? 'text-red-500' : ''}`}>{`Question ${currentQuestionIndex + 1} of ${questions.length}`}</p>
-            <span><PiFlagThin size={30} /></span>
+            <span>
+                <PiFlagThin size={30} className={`${isCurrentQuestionUnanswered ? 'text-red-500' : 'text-green-500'}`} />
+            </span>
           </div>
           <p className='font-medium text-lg mt-3'>{currentQuestion.query}</p>
-          <div className='flex flex-col mt-7 gap-2'>
+          <div className='flex flex-col mt-7 gap-5'>
             {answerChoices.map((choice, index) => (
               <button
                 key={index}
-                className={`py-2 px-4 border-2 rounded-lg font-semibold text-lg w-full text-left 
+                className={`py-3 px-4 border-2 rounded-lg font-semibold text-lg w-full text-left 
                           ${selectedChoice === choice.label ? 'border-[#00df9a]' : 'hover:border-blue-500'}`}
                 onClick={() => handleAnswerSelection(choice.label)}
               >
