@@ -48,6 +48,7 @@ const TestPageUI = () => {
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [currentModule, setCurrentModule] = useState<Module | null>(null);
   const [userAnswers, setUserAnswers] = useState<UserAnswer[]>([]);
+  const [unansweredQuestions, setUnansweredQuestions] = useState<number[]>([]);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -96,12 +97,22 @@ const TestPageUI = () => {
       setCurrentQuestionIndex(currentQuestionIndex - 1);
       setSelectedChoice(userAnswers.find(answer => answer.questionId === questions[currentQuestionIndex - 1].id)?.selectedChoice || null);
     }
+    if (!selectedChoice) {
+      setUnansweredQuestions(prev => [...prev, questions[currentQuestionIndex].id]);
+    } else {
+      setUnansweredQuestions(prev => prev.filter(id => id !== questions[currentQuestionIndex].id));
+    }
   };
 
   const handleNextQuestion = () => {
     if (currentQuestionIndex < questions.length - 1) {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
       setSelectedChoice(userAnswers.find(answer => answer.questionId === questions[currentQuestionIndex + 1].id)?.selectedChoice || null);
+    }
+    if (!selectedChoice) {
+      setUnansweredQuestions(prev => [...prev, questions[currentQuestionIndex].id]);
+    } else {
+      setUnansweredQuestions(prev => prev.filter(id => id !== questions[currentQuestionIndex].id));
     }
   };
 
@@ -121,6 +132,11 @@ const TestPageUI = () => {
 
   const handleSubmit = async () => {
     const validUserAnswers = userAnswers.filter(answer => answer.selectedChoice !== null) as { questionId: number; selectedChoice: string }[];
+    if (validUserAnswers.length < questions.length) {
+      // Inform the user that there are unanswered questions
+      alert("Please answer all questions before submitting.");
+      return;
+    }
     await submitAnswers(user!.uid, Number(moduleId), validUserAnswers, navigate);
   }
 
@@ -135,12 +151,12 @@ const TestPageUI = () => {
     { label: 'C', content: currentQuestion.option_C },
     { label: 'D', content: currentQuestion.option_D },
   ];
-
+  const isCurrentQuestionUnanswered = unansweredQuestions.includes(currentQuestion.id);
   return (
     <div className={`w-full h-screen flex flex-col ${darkModeClass}`}>
       <div className='flex p-5 justify-between items-center'>
         <div className='mx-5 flex gap-10 items-center'>
-          <p className='text-bold font-ubuntu text-2xl'>{currentModule?.title}</p>
+          <p className={`text-bold font-ubuntu text-2xl ${isCurrentQuestionUnanswered ? 'text-red-500' : ''}`}>{currentModule?.title}</p>
           <button onClick={toggleDarkMode} className="text-lg p-3 border-2 rounded-2xl hover:bg-[#00df9a] hover:border-blue-500">
             <BsMoon />
           </button>
@@ -162,7 +178,7 @@ const TestPageUI = () => {
         <div className='w-[50%]'>
           <div className='p-14'>
             <div className='flex gap-2 items-center'>
-              <p className='font-bold text-lg'>{`Question ${currentQuestionIndex + 1} of ${questions.length}`}</p>
+              <p className={`font-bold text-lg ${isCurrentQuestionUnanswered ? 'text-red-500' : ''}`}>{`Question ${currentQuestionIndex + 1} of ${questions.length}`}</p>
               <span><PiFlagThin size={30} /></span>
             </div>
             <p className='font-medium text-lg mt-3'>{currentQuestion.query}</p>
