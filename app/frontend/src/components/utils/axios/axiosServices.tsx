@@ -62,10 +62,10 @@ interface Question {
   };
 
   
-  export const submitTestResult = async (userId: string, testId: number) => {
+  export const submitTestResult = async (userId: string, test_module_id: number) => {
     try {
       const response = await axiosInstance.post(`api/core/${userId}/test_modules/`, {
-        test_id: testId,
+        test_module_id: test_module_id,
         score: 0
       });
       return response.data.id;
