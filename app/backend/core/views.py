@@ -173,8 +173,15 @@ class UserTestModuleAnswersView(APIView):
         user = get_object_or_404(User, firebase_uid=user_uid)
         if request.user != user:
             return Response({"error": "You are not authorized to perform this action."}, status=status.HTTP_403_FORBIDDEN)
-        
-        test_result = get_object_or_404(TestResult, user=user, test_module_id=test_module_id)
+
+        test_result, created = TestResult.objects.get_or_create(
+            user=user,
+            test_model_id=test_module_id,
+            defaults={'score': 0}  # or other defaults if necessary
+        )
+
+        if not created:
+            UserAnswer.objects.filter(test_result=test_result).delete()
 
         user_answers = request.data  # Assuming data is a list of answers
         if not isinstance(user_answers, list):
