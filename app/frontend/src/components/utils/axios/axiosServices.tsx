@@ -97,7 +97,7 @@ interface Question {
       await submitUserAnswers(userId, moduleId, userAnswers);
   
       // Redirect to a completion page
-      navigate('/dashboard');
+      navigate('/demo');
     } catch (error) {
       console.error('Error submitting answers:', error);
     }
