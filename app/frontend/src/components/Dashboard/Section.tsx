@@ -507,8 +507,8 @@ export const sections: SectionData[] = [
           Next <BsFillArrowRightCircleFill className="inline ml-2" />
         </button>
         </div>
-
-      {showMiniTest && <MiniTestModal onClose={() => setShowMiniTest(false)} />}
+{/* 
+      {showMiniTest && <MiniTestModal onClose={() => setShowMiniTest(false)} />} */}
           
       </div>
     );
