@@ -32,24 +32,60 @@ export const getModules = async (testId: number): Promise<Module[]>  => {
     }
 };
 
-interface Question {
+interface TestResult {
+  id: number;
+  score: number;
+  created_at: string;
+  test_model: {
     id: number;
-    test: number;
-    model: string;
-    section: string;
     title: string;
-    context: string;
-    query: string;
-    graph_img?: string;
-    option_A: string;
-    option_B: string;
-    option_C: string;
-    option_D: string;
-    correct_answer: string;
-    likes: number;
-    dislikes: number;
-    created_at: string;
-  }
+  };
+}
+
+interface Question {
+  id: number;
+  model: string;
+  section: string;
+  title: string;
+  context: string;
+  query: string;
+  explanation: string;
+  graph_img?: string;
+  option_A: string;
+  option_B: string;
+  option_C: string;
+  option_D: string;
+  correct_answer: string;
+  likes: number;
+  dislikes: number;
+  created_at: string;
+}
+
+interface UserAnswer {
+  questionId: number;
+  selectedChoice: string;
+}
+
+interface TestModuleDetails {
+  questions: Question[];
+  user_answers: UserAnswer[];
+}
+
+
+interface TestReport {
+  sections: Record<string, any>;
+  total_questions: number;
+  correct_answers: number;
+  incorrect_answers: number;
+  suggestions: string[];
+}
+
+interface DetailedTestResult extends TestResult {
+  questions?: Question[];
+  user_answers?: UserAnswer[];
+  report?: TestReport;
+}
+
   
   export const getQuestionsByModuleId = async (testModuleId: number): Promise<Question[]> => {
     try {
@@ -99,3 +135,35 @@ interface Question {
       console.error('Error submitting answers:', error);
     }
   };
+
+  export const getRecentTests = async (userId: string): Promise<TestResult[]> => {
+    try {
+      const response = await axiosInstance.get<TestResult[]>(`api/core/${userId}/test_modules/`);
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching recent tests:', error);
+      throw error;
+    }
+  };
+
+  export const getTestModuleDetails = async (userId: string, testModuleId: number): Promise<TestModuleDetails> => {
+    try {
+      const response = await axiosInstance.get<TestModuleDetails>(`api/core/${userId}/test_module/${testModuleId}/`);
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching test module details:', error);
+      throw error;
+    }
+  };
+  
+  export const getTestReport = async ( userId:string, testResultId: number): Promise<any> => {
+    try {
+      const response = await axiosInstance.get<any>(` api/core/${userId}/test_report/${testResultId}/`);
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching test report:', error);
+      throw error;
+    }
+  };
+ 
+ 

@@ -44,6 +44,7 @@ class Question(models.Model):
     option_B = models.TextField(blank=False, null=False)
     option_C = models.TextField(blank=False, null=False)
     option_D = models.TextField(blank=False, null=False)
+    explanation = models.TextField(default='')
     correct_answer = models.CharField(max_length=1, choices=[('A', 'Option A'), ('B', 'Option B'), ('C', 'Option C'), ('D', 'Option D')])
     likes = models.IntegerField(default=0)
     dislikes = models.IntegerField(default=0)
