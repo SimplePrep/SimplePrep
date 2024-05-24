@@ -85,3 +85,13 @@ class UserAnswer(models.Model):
 
     def __str__(self):
         return f"{self.test_result.test_model.title} - {self.question.query} - Selected Option: {self.selected_option}"
+
+
+class TestReport(models.Model):
+    test_result = models.OneToOneField(TestResult, on_delete=models.CASCADE, related_name='report')
+    report_data = models.JSONField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"Report for {self.test_result.test_model.title} - {self.test_result.user.first_name}"
