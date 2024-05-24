@@ -9,7 +9,7 @@ done
 find . -path "*/migrations/*.py" -not -name "__init__.py" -delete
 find . -path "*/migrations/*.pyc"  -delete
 # Generate migrations
-until ./manage.py makemigrations  --noinput
+until ./manage.py makemigrations 
 do
     echo "Waiting for makemigrations to be ready..."
     sleep 2
