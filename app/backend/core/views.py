@@ -132,7 +132,7 @@ class UserTestModulesView(APIView):
         if request.user != user:
             return Response({"error": "You are not authorized to view these test results."}, status=status.HTTP_403_FORBIDDEN)
         
-        test_results = TestResult.objects.filter(user=user)
+        test_results = TestResult.objects.filter(user=user).order_by('-created_at')[:10]
         serializer = TestResultSerializer(test_results, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
     
@@ -203,12 +203,26 @@ class UserTestModuleAnswersView(APIView):
         report = generate_report(test_result)
         return Response(responses, status=status.HTTP_201_CREATED)
     
+class TestModuleDetailView(APIView):
+    permission_classes = [IsAuthenticatedWithFirebase]
+
+    def get(self, request, test_module_id):
+        test_module = get_object_or_404(TestModel, id=test_module_id)
+        questions = Question.objects.filter(test_model=test_module).order_by('id')
+        question_serializer = QuestionSerializer(questions, many=True)
+        test_result = TestResult.objects.filter(user=request.user, test_model=test_module).first()
+        user_answers = UserAnswer.objects.filter(test_result=test_result)
+        user_answer_serializer = UserAnswerSerializer(user_answers, many=True)
+        return Response({
+            'test_module': TestModelSerializer(test_module).data,
+            'questions': question_serializer.data,
+            'user_answers': user_answer_serializer.data
+        }, status=status.HTTP_200_OK)
 
 class TestReportView(APIView):
     permission_classes = [IsAuthenticatedWithFirebase]
 
     def get(self, request, test_result_id, format=None):
         test_result = get_object_or_404(TestResult, id=test_result_id)
-        report = get_object_or_404(TestReport, test_result=test_result)
-        serializer = TestReportSerializer(report)
+        serializer = TestReportSerializer(test_result)
         return Response(serializer.data, status=status.HTTP_200_OK)

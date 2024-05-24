@@ -6,6 +6,8 @@ from .views import (
     UserTestModulesView,
     UserTestModuleAnswersView,
     ManageTestView,
+    TestModuleDetailView,
+    TestReportView
 )
 
 urlpatterns = [
@@ -14,5 +16,7 @@ urlpatterns = [
     path('questions/<int:test_module_id>/', QuestionListCreateView.as_view(), name='question-list-create'),
     path('comments/<int:test_module_id>/', CommentListCreateView.as_view(), name='comment-list-create'),
     path('<str:user_uid>/test_modules/', UserTestModulesView.as_view(), name='user-test-modules'),
-    path('<str:user_uid>/test_module/<int:test_module_id>/user_answers/', UserTestModuleAnswersView.as_view(), name='user-test-module-answers')
+    path('<str:user_uid>/test_module/<int:test_module_id>/user_answers/', UserTestModuleAnswersView.as_view(), name='user-test-module-answers'),
+    path('<str:user_uid>/test_module/<int:test_module_id>/', TestModuleDetailView.as_view(),  name='test-module-detail'),
+    path('<str:user_uid>/test_report/<int:test_result_id>/', TestReportView.as_view(), name='test-report')
 ]

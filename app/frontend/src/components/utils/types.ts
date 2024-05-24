@@ -21,3 +21,4 @@ export interface UserDetails {
   last_name: string;
   firebase_uid: string;
 }
+
