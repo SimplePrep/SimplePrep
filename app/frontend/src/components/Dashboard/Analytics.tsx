@@ -1,4 +1,6 @@
+// Analytics.tsx
 import React, { useEffect, useState } from 'react';
+import { BsMoon } from 'react-icons/bs';
 import Chart from 'chart.js/auto';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import Analysis from './utils/analytics_components/Analysis';
@@ -7,9 +9,73 @@ import MiniTestModal from './utils/test_components/MiniTestModal';
 import Discussion from './utils/Discussion';
 import { useAuth } from '../utils/AuthProvider';
 import { getRecentTests, getTestModuleDetails, getTestReport } from '../utils/axios/axiosServices';
-import { TestResult, DetailedTestResult } from './types';
 
-const Analytics: React.FC<{ isDarkMode: boolean }> = ({ isDarkMode }) => {
+interface TestResult {
+  id: number;
+  score: number;
+  created_at: string;
+  test_model: {
+    id: number;
+    title: string;
+  };
+}
+
+interface Question {
+  id: number;
+  model: string;
+  section: string;
+  title: string;
+  context: string;
+  query: string;
+  explanation: string;
+  graph_img?: string;
+  option_A: string;
+  option_B: string;
+  option_C: string;
+  option_D: string;
+  correct_answer: string;
+  likes: number;
+  dislikes: number;
+  created_at: string;
+}
+
+interface UserAnswer {
+  questionId: number;
+  selectedChoice: string;
+}
+
+interface TestReport {
+  modules: {
+    [key: string]: {
+      sections: {
+        [key: string]: {
+          total_questions: number;
+          correct_answers: number;
+          incorrect_answers: number;
+        };
+      };
+      total_questions: number;
+      correct_answers: number;
+      incorrect_answers: number;
+    };
+  };
+  total_questions: number;
+  correct_answers: number;
+  incorrect_answers: number;
+  suggestions: string[];
+}
+
+interface DetailedTestResult extends TestResult {
+  questions?: Question[];
+  user_answers?: UserAnswer[];
+  report?: TestReport;
+}
+
+interface AnalyticsProps {
+  isDarkMode: boolean;
+}
+
+const Analytics: React.FC<AnalyticsProps> = ({ isDarkMode }) => {
   const { user } = useAuth();
   const [testData, setTestData] = useState<TestResult[]>([]);
   const [selectedTestEntry, setSelectedTestEntry] = useState<DetailedTestResult | null>(null);
@@ -30,10 +96,9 @@ const Analytics: React.FC<{ isDarkMode: boolean }> = ({ isDarkMode }) => {
     };
 
     fetchRecentTests();
-  }, [user]);
+  }, []);
 
   Chart.register(ChartDataLabels);
-
   useEffect(() => {
     const ctx = (document.getElementById('testScoresChart') as HTMLCanvasElement).getContext('2d');
     const scores = testData.map(entry => entry.score);
@@ -41,7 +106,7 @@ const Analytics: React.FC<{ isDarkMode: boolean }> = ({ isDarkMode }) => {
       const testScoresChart = new Chart(ctx, {
         type: 'bar',
         data: {
-          labels: testData.map(entry => new Date(entry.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })),
+          labels: testData.map((entry) => new Date(entry.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })),
           datasets: [{
             label: 'Your Most Recent Scores from Practice Tests',
             data: scores,
@@ -55,12 +120,16 @@ const Analytics: React.FC<{ isDarkMode: boolean }> = ({ isDarkMode }) => {
                 return testData[context.dataIndex].test_model.title;
               }
             }
-          }]
+          }],
         },
         options: {
           scales: {
-            x: { stacked: true },
-            y: { stacked: true }
+            x: {
+              stacked: true,
+            },
+            y: {
+              stacked: true
+            }
           },
           plugins: {
             tooltip: {
@@ -68,7 +137,7 @@ const Analytics: React.FC<{ isDarkMode: boolean }> = ({ isDarkMode }) => {
               callbacks: {
                 label: function (context) {
                   const score = context.raw as number;
-                  const performance = score < 500 ? 'Poor' : 'Good';
+                  const performance = score < 500 ? "Poor" : "Good";
                   return `Score: ${score} (${performance})`;
                 }
               }
@@ -76,7 +145,9 @@ const Analytics: React.FC<{ isDarkMode: boolean }> = ({ isDarkMode }) => {
             datalabels: {
               color: '#444',
               display: true,
-              font: { weight: 'bold' }
+              font: {
+                weight: 'bold'
+              }
             }
           },
           onClick: (event, elements, chart) => {
@@ -89,7 +160,9 @@ const Analytics: React.FC<{ isDarkMode: boolean }> = ({ isDarkMode }) => {
             }
           },
           animation: {
-            onComplete: () => { delayed = true; },
+            onComplete: () => {
+              delayed = true;
+            },
             delay: (context) => {
               let delay = 0;
               if (context.type === 'data' && context.mode === 'default' && !delayed) {
