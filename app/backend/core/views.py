@@ -8,17 +8,20 @@ from .serializers import (
     QuestionSerializer,
     CommentSerializer,
     TestResultSerializer,
-    UserAnswerSerializer)
+    UserAnswerSerializer,
+    TestReportSerializer)
 from .models import (
     TestModel, 
     Question, 
     Comment, 
     TestResult, 
     UserAnswer,
-    Test)
+    Test,
+    TestReport)
 from .permissions import IsAuthenticatedWithFirebase
 from django.contrib.auth import get_user_model
 import logging
+from .analytics_algo import generate_report
 
 logger = logging.getLogger(__name__)
 
@@ -197,4 +200,15 @@ class UserTestModuleAnswersView(APIView):
             else:
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+        report = generate_report(test_result)
         return Response(responses, status=status.HTTP_201_CREATED)
+    
+
+class TestReportView(APIView):
+    permission_classes = [IsAuthenticatedWithFirebase]
+
+    def get(self, request, test_result_id, format=None):
+        test_result = get_object_or_404(TestResult, id=test_result_id)
+        report = get_object_or_404(TestReport, test_result=test_result)
+        serializer = TestReportSerializer(report)
+        return Response(serializer.data, status=status.HTTP_200_OK)

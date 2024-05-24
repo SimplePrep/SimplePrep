@@ -1,0 +1,51 @@
+# analytics_algo.py
+
+from .models import TestResult, UserAnswer, Question, TestReport
+
+def generate_report(test_result):
+    # Get all user answers for this test result
+    user_answers = UserAnswer.objects.filter(test_result=test_result)
+    
+    # Initialize report data
+    report = {
+        'sections': {},
+        'total_questions': 0,
+        'correct_answers': 0,
+        'incorrect_answers': 0,
+        'suggestions': []
+    }
+
+    # Process each user answer
+    for user_answer in user_answers:
+        question = user_answer.question
+        section = question.section
+        correct_answer = question.correct_answer
+        selected_option = user_answer.selected_option
+
+        # Initialize section data if not already present
+        if section not in report['sections']:
+            report['sections'][section] = {
+                'total_questions': 0,
+                'correct_answers': 0,
+                'incorrect_answers': 0
+            }
+
+        # Update section data
+        report['sections'][section]['total_questions'] += 1
+        report['total_questions'] += 1
+
+        if correct_answer == selected_option:
+            report['sections'][section]['correct_answers'] += 1
+            report['correct_answers'] += 1
+        else:
+            report['sections'][section]['incorrect_answers'] += 1
+            report['incorrect_answers'] += 1
+
+    # Generate suggestions (this is a simple example, adjust as needed)
+    for section, data in report['sections'].items():
+        if data['correct_answers'] / data['total_questions'] < 0.5:
+            report['suggestions'].append(f"Focus on improving your skills in the {section} section.")
+
+    # Save report to database
+    TestReport.objects.create(test_result=test_result, report_data=report)
+    return report

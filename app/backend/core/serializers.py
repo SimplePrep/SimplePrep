@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Test, TestModel, Question, Comment, TestResult, UserAnswer
+from .models import Test, TestModel, Question, Comment, TestResult, UserAnswer, TestReport
 
 class TestSerializer(serializers.ModelSerializer):
     class Meta:
@@ -37,4 +37,9 @@ class TestResultSerializer(serializers.ModelSerializer):
 class UserAnswerSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserAnswer
+        fields = '__all__'
+
+class TestReportSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TestReport
         fields = '__all__'
