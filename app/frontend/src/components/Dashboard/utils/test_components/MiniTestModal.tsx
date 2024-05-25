@@ -12,7 +12,6 @@ interface MiniTestProps {
 
 const MiniTestModal: React.FC<MiniTestProps> = ({ isOpen, onClose, questions, userAnswers }) => {
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-    const [selectedChoice, setSelectedChoice] = useState<string | null>(null);
     const [fadeIn, setFadeIn] = useState(false);
     const [isDarkMode, setIsDarkMode] = useState(false);
 
@@ -30,17 +29,12 @@ const MiniTestModal: React.FC<MiniTestProps> = ({ isOpen, onClose, questions, us
         return () => clearTimeout(timer);
     }, []);
 
-    useEffect(() => {
-        if (questions.length > 0) {
-            const currentQuestion = questions[currentQuestionIndex];
-            const userAnswer = userAnswers.find(answer => answer.questionId === currentQuestion.id);
-            setSelectedChoice(userAnswer ? userAnswer.selectedChoice : null);
-        }
-    }, [currentQuestionIndex, questions, userAnswers]);
-
     if (!isOpen) return null;
 
     const currentQuestion = questions[currentQuestionIndex];
+    const userAnswer = userAnswers.find(answer => answer.questionId === currentQuestion.id);
+    const selectedChoice = userAnswer ? userAnswer.selectedChoice : null;
+
     const answerChoices = [
         { label: 'A', content: currentQuestion.option_A },
         { label: 'B', content: currentQuestion.option_B },
@@ -92,10 +86,8 @@ const MiniTestModal: React.FC<MiniTestProps> = ({ isOpen, onClose, questions, us
                                     <button
                                         key={index}
                                         className={`py-2 px-4 border-2 rounded-lg font-semibold text-lg w-full text-left 
-                                                    ${selectedChoice === choice.label ? 'border-red-500' : 'hover:border-blue-500'}
-                                                    ${currentQuestion.correct_answer === choice.label ? 'bg-green-200' : ''}
-                                                    ${selectedChoice === choice.label && currentQuestion.correct_answer !== choice.label ? 'bg-red-200' : ''}`}
-                                        onClick={() => setSelectedChoice(choice.label)}
+                                                    ${selectedChoice === choice.label && selectedChoice !== currentQuestion.correct_answer ? 'border-red-500 bg-red-200' : ''}
+                                                    ${currentQuestion.correct_answer === choice.label ? 'border-green-500 bg-green-200' : 'hover:border-blue-500'}`}
                                     >
                                         {`(${choice.label})`} {choice.content}
                                     </button>
