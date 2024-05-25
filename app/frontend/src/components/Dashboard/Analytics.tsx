@@ -8,68 +8,8 @@ import MiniTestModal from './utils/test_components/MiniTestModal';
 import Discussion from './utils/Discussion';
 import { useAuth } from '../utils/AuthProvider';
 import { getRecentTests, getTestModuleDetails, getTestReport } from '../utils/axios/axiosServices';
+import { Question, TestResult, UserAnswer, DetailedTestResult, TestReport } from './types';
 
-interface TestResult {
-  id: number;
-  score: number;
-  created_at: string;
-  updated_at: string;
-  test_model: {
-    id: number;
-    title: string;
-  };
-}
-
-interface Question {
-  id: number;
-  model: string;
-  section: string;
-  title: string;
-  context: string;
-  query: string;
-  explanation: string;
-  graph_img?: string;
-  option_A: string;
-  option_B: string;
-  option_C: string;
-  option_D: string;
-  correct_answer: string;
-  likes: number;
-  dislikes: number;
-  created_at: string;
-}
-
-interface UserAnswer {
-  questionId: number;
-  selectedChoice: string;
-}
-
-interface TestReport {
-  modules: {
-    [key: string]: {
-      sections: {
-        [key: string]: {
-          total_questions: number;
-          correct_answers: number;
-          incorrect_answers: number;
-        };
-      };
-      total_questions: number;
-      correct_answers: number;
-      incorrect_answers: number;
-    };
-  };
-  total_questions: number;
-  correct_answers: number;
-  incorrect_answers: number;
-  suggestions: string[];
-}
-
-interface DetailedTestResult extends TestResult {
-  questions?: Question[];
-  user_answers?: UserAnswer[];
-  report?: TestReport;
-}
 
 interface AnalyticsProps {
   isDarkMode: boolean;
@@ -179,11 +119,8 @@ const Analytics: React.FC<AnalyticsProps> = ({ isDarkMode }) => {
 
   const handlePreviewClick = async (index: number) => {
     const selectedEntry = testData[index];
-    console.log('Selected Entry:', selectedEntry);
-    console.log('Test Module ID:', selectedEntry.test_model.id); // Debug log
     try {
       const data = await getTestModuleDetails(user!.uid, selectedEntry.test_model.id);
-      console.log('Fetched Test Module Details:', data); // Debug log
       setSelectedTestEntry({ ...selectedEntry, questions: data.questions, user_answers: data.user_answers });
       setShowPreview(true);
     } catch (error) {

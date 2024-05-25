@@ -18,20 +18,24 @@ export interface Question {
     created_at: string;
   }
   
-  export interface UserAnswer {
-    questionId: number;
-    selectedChoice: string;
-  }
-  
   export interface TestResult {
     id: number;
     score: number;
     created_at: string;
+    updated_at: string;
     test_model: {
       id: number;
       title: string;
     };
   }
+
+  export interface UserAnswer {
+    id: number;
+    test_result: number;
+    question: number;
+    selected_option: string;
+  }
+
   export interface SectionData {
     total_questions: number;
     correct_answers: number;
@@ -45,19 +49,31 @@ export interface Question {
     incorrect_answers: number;
 }
 
+
+  
 export interface TestReport {
-    modules: {
-        [key: string]: ModuleData;
+  modules: {
+    [key: string]: {
+      sections: {
+        [key: string]: {
+          total_questions: number;
+          correct_answers: number;
+          incorrect_answers: number;
+        };
+      };
+      total_questions: number;
+      correct_answers: number;
+      incorrect_answers: number;
     };
-    total_questions: number;
-    correct_answers: number;
-    incorrect_answers: number;
-    suggestions: string[];
+  };
+  total_questions: number;
+  correct_answers: number;
+  incorrect_answers: number;
+  suggestions: string[];
 }
-  
-  export interface DetailedTestResult extends TestResult {
-    questions?: Question[];
-    user_answers?: UserAnswer[];
-    report?: TestReport;
-  }
-  
+
+export interface DetailedTestResult extends TestResult {
+  questions?: Question[];
+  user_answers?: UserAnswer[];
+  report?: TestReport;
+}

@@ -1,7 +1,14 @@
 // MiniTestModal.tsx
 import React, { useState, useEffect } from 'react';
 import { BsFillArrowLeftCircleFill, BsFillArrowRightCircleFill, BsMoon } from 'react-icons/bs';
-import { Question, UserAnswer } from '../../types';
+import { Question } from '../../types';
+
+interface UserAnswer {
+    id: number;
+    test_result: number;
+    question: number;
+    selected_option: string;
+  }
 
 interface MiniTestProps {
     isOpen: boolean;
@@ -32,8 +39,8 @@ const MiniTestModal: React.FC<MiniTestProps> = ({ isOpen, onClose, questions, us
     if (!isOpen) return null;
 
     const currentQuestion = questions[currentQuestionIndex];
-    const userAnswer = userAnswers.find(answer => answer.questionId === currentQuestion.id);
-    const selectedChoice = userAnswer ? userAnswer.selectedChoice : null;
+    const userAnswer = userAnswers.find(answer => answer.question === currentQuestion.id);
+    const selectedChoice = userAnswer ? userAnswer.selected_option : null;
 
     const answerChoices = [
         { label: 'A', content: currentQuestion.option_A },

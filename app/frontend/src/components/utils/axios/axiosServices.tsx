@@ -1,5 +1,5 @@
 import axiosInstance from './axiosInterceptor';
-
+import { TestResult, Question, UserAnswer, TestReport, DetailedTestResult } from '../../Dashboard/types';
 
 // Example function to get tests
 export const getTests = async () => {
@@ -32,40 +32,6 @@ export const getModules = async (testId: number): Promise<Module[]>  => {
     }
 };
 
-interface TestResult {
-  id: number;
-  score: number;
-  created_at: string;
-  updated_at:string;
-  test_model: {
-    id: number;
-    title: string;
-  };
-}
-
-interface Question {
-  id: number;
-  model: string;
-  section: string;
-  title: string;
-  context: string;
-  query: string;
-  explanation: string;
-  graph_img?: string;
-  option_A: string;
-  option_B: string;
-  option_C: string;
-  option_D: string;
-  correct_answer: string;
-  likes: number;
-  dislikes: number;
-  created_at: string;
-}
-
-interface UserAnswer {
-  questionId: number;
-  selectedChoice: string;
-}
 
 interface TestModuleDetails {
   questions: Question[];
@@ -73,19 +39,6 @@ interface TestModuleDetails {
 }
 
 
-interface TestReport {
-  sections: Record<string, any>;
-  total_questions: number;
-  correct_answers: number;
-  incorrect_answers: number;
-  suggestions: string[];
-}
-
-interface DetailedTestResult extends TestResult {
-  questions?: Question[];
-  user_answers?: UserAnswer[];
-  report?: TestReport;
-}
 
   
   export const getQuestionsByModuleId = async (testModuleId: number): Promise<Question[]> => {
