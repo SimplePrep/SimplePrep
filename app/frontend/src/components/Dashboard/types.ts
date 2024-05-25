@@ -51,7 +51,7 @@ export interface Question {
 
 
   
-export interface TestReport {
+export interface TestReportData {
   modules: {
     [key: string]: {
       sections: {
@@ -66,10 +66,18 @@ export interface TestReport {
       incorrect_answers: number;
     };
   };
-  total_questions: number;
-  correct_answers: number;
-  incorrect_answers: number;
   suggestions: string[];
+  correct_answers: number;
+  total_questions: number;
+  incorrect_answers: number;
+}
+
+export interface TestReport {
+  id: number;
+  test_result: number;
+  report_data: TestReportData;
+  created_at: string;
+  updated_at: string;
 }
 
 export interface DetailedTestResult extends TestResult {

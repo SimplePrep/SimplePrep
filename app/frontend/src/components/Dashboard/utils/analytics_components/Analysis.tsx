@@ -1,11 +1,12 @@
 // Analysis.tsx
+
 import React, { useState, useEffect } from 'react';
 import { BsMoon } from 'react-icons/bs';
 import AnalyticsChart from './AnalyticsChart';
-import { TestReport } from '../../types';
+import { TestReportData } from '../../types';
 
 interface AnalysisProps {
-  data: TestReport;
+  data: TestReportData;
   onClose: () => void;
 }
 

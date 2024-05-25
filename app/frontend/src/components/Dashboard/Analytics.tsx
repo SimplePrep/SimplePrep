@@ -1,3 +1,5 @@
+// Analytics.tsx
+
 import React, { useEffect, useState } from 'react';
 import { BsMoon } from 'react-icons/bs';
 import Chart from 'chart.js/auto';
@@ -9,7 +11,6 @@ import Discussion from './utils/Discussion';
 import { useAuth } from '../utils/AuthProvider';
 import { getRecentTests, getTestModuleDetails, getTestReport } from '../utils/axios/axiosServices';
 import { Question, TestResult, UserAnswer, DetailedTestResult, TestReport } from './types';
-
 
 interface AnalyticsProps {
   isDarkMode: boolean;
@@ -131,9 +132,9 @@ const Analytics: React.FC<AnalyticsProps> = ({ isDarkMode }) => {
   const handleAnalyticsClick = async (index: number) => {
     const selectedEntry = testData[index];
     try {
-      console.log(selectedEntry.id)
+      console.log(selectedEntry.id);
       const report = await getTestReport(user!.uid, selectedEntry.id);
-      console.log('Report: ', report)
+      console.log('Report: ', report);
       setSelectedTestEntry({ ...selectedEntry, report });
       setShowAnalysis(true);
     } catch (error) {
@@ -160,7 +161,7 @@ const Analytics: React.FC<AnalyticsProps> = ({ isDarkMode }) => {
       </div>
 
       {showAnalysis && selectedTestEntry !== null && selectedTestEntry.report && (
-        <Analysis data={selectedTestEntry.report} onClose={() => setShowAnalysis(false)} />
+        <Analysis data={selectedTestEntry.report.report_data} onClose={() => setShowAnalysis(false)} />
       )}
       {showPreview && selectedTestEntry !== null && (
         <MiniTestModal
