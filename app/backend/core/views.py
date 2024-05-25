@@ -206,7 +206,10 @@ class UserTestModuleAnswersView(APIView):
 class TestModuleDetailView(APIView):
     permission_classes = [IsAuthenticatedWithFirebase]
 
-    def get(self, request, test_module_id):
+    def get(self, user_uid, request, test_module_id):
+        user = get_object_or_404(User, firebase_uid=user_uid)
+        if request.user != user:
+            return Response({"error": "You are not authorized to view these answers."}, status=status.HTTP_403_FORBIDDEN)
         test_module = get_object_or_404(TestModel, id=test_module_id)
         questions = Question.objects.filter(test_model=test_module).order_by('id')
         question_serializer = QuestionSerializer(questions, many=True)
