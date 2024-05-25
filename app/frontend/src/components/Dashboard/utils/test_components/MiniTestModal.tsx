@@ -92,7 +92,7 @@ const MiniTestModal: React.FC<MiniTestProps> = ({ isOpen, onClose, questions, us
                                     <button
                                         key={index}
                                         className={`py-2 px-4 border-2 rounded-lg font-semibold text-lg w-full text-left 
-                                                    ${selectedChoice === choice.label ? 'border-blue-500' : 'hover:border-blue-500'}
+                                                    ${selectedChoice === choice.label ? 'border-red-500' : 'hover:border-blue-500'}
                                                     ${currentQuestion.correct_answer === choice.label ? 'bg-green-200' : ''}
                                                     ${selectedChoice === choice.label && currentQuestion.correct_answer !== choice.label ? 'bg-red-200' : ''}`}
                                         onClick={() => setSelectedChoice(choice.label)}
