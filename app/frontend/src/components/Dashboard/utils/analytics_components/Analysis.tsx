@@ -59,26 +59,26 @@ const Analysis: React.FC<AnalysisProps> = ({ data, onClose }) => {
               </div>
             </div>
           ))}
-        </div>
-        <div className='w-1/3 flex flex-col gap-10 p-2 items-center rounded-lg'>
-          <div className='p-2 justify-center items-center'>
-            <h2 className='text-3xl font-medium'>Overall</h2>
-            <div className='py-5 flex flex-col gap-5 items-center w-full'>
-              <AnalyticsChart value={(data.correct_answers / data.total_questions) * 100} maxValue={100} />
-              <p><span className='font-bold'>{data.correct_answers}</span> Out of {data.total_questions} Correct</p>
+            <div className='w-1/3 flex flex-col gap-10 p-2 items-center rounded-lg'>
+                <div className='p-2 justify-center items-center'>
+                    <h2 className='text-3xl font-medium'>Overall</h2>
+                    <div className='py-5 flex flex-col gap-5 items-center w-full'>
+                    <AnalyticsChart value={(data.correct_answers / data.total_questions) * 100} maxValue={100} />
+                    <p><span className='font-bold'>{data.correct_answers}</span> Out of {data.total_questions} Correct</p>
+                    </div>
+                    <p className='text-lg text-gray-600'>
+                    Quick Note: Topics are sorted by importance based on your test performance.
+                    </p>
+                    <div className='pt-5 w-full'>
+                    <h3 className='font-medium text-2xl'>Topics to Review:</h3>
+                    <ul className='list-disc list-inside my-4'>
+                        {data.suggestions.map((suggestion, index) => (
+                        <li key={index}>{suggestion}</li>
+                        ))}
+                    </ul>
+                    </div>
+                </div>
             </div>
-            <p className='text-lg text-gray-600'>
-              Quick Note: Topics are sorted by importance based on your test performance.
-            </p>
-            <div className='pt-5 w-full'>
-              <h3 className='font-medium text-2xl'>Topics to Review:</h3>
-              <ul className='list-disc list-inside my-4'>
-                {data.suggestions.map((suggestion, index) => (
-                  <li key={index}>{suggestion}</li>
-                ))}
-              </ul>
-            </div>
-          </div>
         </div>
       </div>
     </div>
