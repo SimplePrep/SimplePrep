@@ -225,7 +225,11 @@ class TestModuleDetailView(APIView):
 class TestReportView(APIView):
     permission_classes = [IsAuthenticatedWithFirebase]
 
-    def get(self, request, test_result_id, format=None):
+    def get(self, request, user_uid, test_result_id, format=None):
+        user = get_object_or_404(User, firebase_uid=user_uid)
+        if request.user != user:
+            return Response({"error": "You are not authorized to view these answers."}, status=status.HTTP_403_FORBIDDEN)
         test_result = get_object_or_404(TestResult, id=test_result_id)
-        serializer = TestReportSerializer(test_result)
+        test_report = get_object_or_404(TestReport, test_result=test_result)
+        serializer = TestReportSerializer(test_report)
         return Response(serializer.data, status=status.HTTP_200_OK)
