@@ -1,5 +1,3 @@
-// Analysis.tsx
-
 import React, { useState, useEffect } from 'react';
 import { BsMoon } from 'react-icons/bs';
 import AnalyticsChart from './AnalyticsChart';
@@ -44,31 +42,43 @@ const Analysis: React.FC<AnalysisProps> = ({ data, onClose }) => {
           </div>
         </div>
         <hr className="border-gray-300 border-[1px]" />
-        <div className={`flex flex-wrap py-5 ${bodyModeClass}`}>
+        <div className={`flex h-auto w-full py-5 ${bodyModeClass}`}>
           {Object.entries(data.modules).map(([moduleName, moduleData]) => (
-            <div key={moduleName} className='w-1/2 p-2'>
-              <div className='border-r-2 justify-center items-center'>
+            <div key={moduleName} className='w-1/3 flex flex-col gap-10 p-2 items-center rounded-lg'>
+              <div className='p-2 border-r-2 justify-center items-center'>
                 <p className='text-3xl font-medium'>{moduleName}</p>
                 {Object.entries(moduleData.sections).map(([sectionName, sectionData]) => (
-                  <div key={sectionName} className='py-5'>
+                  <div key={sectionName} className='flex items-center'>
+                    <div className='py-5 relative flex flex-col gap-5 justify-center items-center w-full'>
+                      <AnalyticsChart value={(sectionData.correct_answers / sectionData.total_questions) * 100} maxValue={100} />
+                      <p className=''><span className='font-bold'>{sectionData.correct_answers}</span> Out of {sectionData.total_questions} Correct</p>
+                    </div>
                     <p className='text-lg font-medium'>{sectionName}</p>
-                    <AnalyticsChart value={sectionData.correct_answers} maxValue={sectionData.total_questions} />
-                    <p className=''>
-                      <span className='font-bold'>{sectionData.correct_answers}</span> Out of <span className='font-bold'>{sectionData.total_questions}</span> Correct
-                    </p>
                   </div>
                 ))}
               </div>
             </div>
           ))}
         </div>
-        <div className='pt-5 w-full'>
-          <h3 className='font-medium text-2xl'>Suggestions:</h3>
-          <ul className='list-disc list-inside my-4'>
-            {data.suggestions.map((suggestion, index) => (
-              <li key={index}>{suggestion}</li>
-            ))}
-          </ul>
+        <div className='w-1/3 flex flex-col gap-10 p-2 items-center rounded-lg'>
+          <div className='p-2 justify-center items-center'>
+            <h2 className='text-3xl font-medium'>Overall</h2>
+            <div className='py-5 flex flex-col gap-5 items-center w-full'>
+              <AnalyticsChart value={(data.correct_answers / data.total_questions) * 100} maxValue={100} />
+              <p><span className='font-bold'>{data.correct_answers}</span> Out of {data.total_questions} Correct</p>
+            </div>
+            <p className='text-lg text-gray-600'>
+              Quick Note: Topics are sorted by importance based on your test performance.
+            </p>
+            <div className='pt-5 w-full'>
+              <h3 className='font-medium text-2xl'>Topics to Review:</h3>
+              <ul className='list-disc list-inside my-4'>
+                {data.suggestions.map((suggestion, index) => (
+                  <li key={index}>{suggestion}</li>
+                ))}
+              </ul>
+            </div>
+          </div>
         </div>
       </div>
     </div>
