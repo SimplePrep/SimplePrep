@@ -65,5 +65,8 @@ def generate_report(test_result):
                 report['suggestions'].append(f"{section} of {module} module.")
 
     # Save report to database
-    TestReport.objects.create(test_result=test_result, report_data=report)
+    TestReport.objects.update_or_create(
+        test_result=test_result,
+        defaults={'report_data': report}
+    )
     return report
