@@ -110,9 +110,9 @@ interface TestModuleDetails {
     }
   };
   
-  export const getTestReport = async ( userId:string, testResultId: number): Promise<any> => {
+  export const getTestReport = async ( userId:string, testResultId: number): Promise<TestReport> => {
     try {
-      const response = await axiosInstance.get<any>(` api/core/${userId}/test_report/${testResultId}/`);
+      const response = await axiosInstance.get<TestReport>(` api/core/${userId}/test_report/${testResultId}/`);
       return response.data;
     } catch (error) {
       console.error('Error fetching test report:', error);
