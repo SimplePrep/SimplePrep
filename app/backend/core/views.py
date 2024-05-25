@@ -200,7 +200,11 @@ class UserTestModuleAnswersView(APIView):
             else:
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-        report = generate_report(test_result)
+        test_report, report_created = TestReport.objects.get_or_create(test_result=test_result)
+        report_data = generate_report(test_result)  # Function to generate report data
+        report_serializer = TestReportSerializer(test_report, data={'report_data': report_data}, partial=True)
+        if report_serializer.is_valid():
+            report_serializer.save()
         return Response(responses, status=status.HTTP_201_CREATED)
     
 class TestModuleDetailView(APIView):
