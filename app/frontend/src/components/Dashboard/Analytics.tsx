@@ -133,7 +133,7 @@ const Analytics: React.FC<AnalyticsProps> = ({ isDarkMode }) => {
     try {
       console.log(selectedEntry.id)
       const report = await getTestReport(user!.uid, selectedEntry.id);
-      console.log(report)
+      console.log('Report: ', report)
       setSelectedTestEntry({ ...selectedEntry, report });
       setShowAnalysis(true);
     } catch (error) {
