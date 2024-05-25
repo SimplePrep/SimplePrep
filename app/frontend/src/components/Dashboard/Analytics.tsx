@@ -14,6 +14,7 @@ interface TestResult {
   id: number;
   score: number;
   created_at: string;
+  updated_at: string;
   test_model: {
     id: number;
     title: string;
@@ -106,7 +107,7 @@ const Analytics: React.FC<AnalyticsProps> = ({ isDarkMode }) => {
       const testScoresChart = new Chart(ctx, {
         type: 'bar',
         data: {
-          labels: testData.map((entry) => new Date(entry.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })),
+          labels: testData.map((entry) => new Date(entry.updated_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })),
           datasets: [{
             label: 'Your Most Recent Scores from Practice Tests',
             data: scores,
@@ -240,7 +241,7 @@ const Analytics: React.FC<AnalyticsProps> = ({ isDarkMode }) => {
           <TestCard
             key={index}
             id={test.id}
-            date={new Date(test.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+            date={new Date(test.updated_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
             title={test.test_model.title}
             score={test.score}
             borderColorIndex={index}

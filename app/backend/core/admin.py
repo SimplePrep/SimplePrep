@@ -1,6 +1,6 @@
 from django.contrib import admin
 from spa.admin import admin_site
-from .models import Test, TestModel, Question, Comment, TestResult, UserAnswer
+from .models import Test, TestModel, Question, Comment, TestResult, UserAnswer, TestReport
 
 class TestAdmin(admin.ModelAdmin):
     list_display = ('id', 'title', 'created_at', 'updated_at')
@@ -30,9 +30,21 @@ class UserAnswerAdmin(admin.ModelAdmin):
     list_display = ('test_result', 'question', 'selected_option', )
     list_filter = ('test_result', 'question')
 
+class TestReportAdmin(admin.ModelAdmin):
+    list_display = ('test_result', 'created_at', 'updated_at')
+    search_fields = ('test_result__user__username', 'test_result__test_model__title')
+    readonly_fields = ('created_at', 'updated_at')
+
+    def has_add_permission(self, request, obj=None):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+    
 admin_site.register(Test, TestAdmin)
 admin_site.register(TestModel, TestModelAdmin)
 admin_site.register(Question, QuestionAdmin)
 admin_site.register(Comment, CommentAdmin)
 admin_site.register(TestResult, TestResultAdmin)
 admin_site.register(UserAnswer, UserAnswerAdmin)
+admin_site.register(TestReport, TestReportAdmin)
