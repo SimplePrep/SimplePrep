@@ -113,6 +113,7 @@ interface TestModuleDetails {
   export const getTestReport = async ( userId:string, testResultId: number): Promise<TestReport> => {
     try {
       const response = await axiosInstance.get<TestReport>(` api/core/${userId}/test_report/${testResultId}/`);
+      console.log('Response: ', response);
       return response.data;
     } catch (error) {
       console.error('Error fetching test report:', error);

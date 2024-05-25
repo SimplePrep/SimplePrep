@@ -28,10 +28,6 @@ const Analysis: React.FC<AnalysisProps> = ({ data, onClose }) => {
     return () => clearTimeout(timer);
   }, []);
 
-  // Debugging output
-  console.log('Rendering Analysis Component');
-  console.log('Data:', data);
-
   return (
     <div className={`fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50 ${animationClass}`}>
       <div className={`relative top-20 mb-8 max-w-[1400px] mx-auto p-5 border shadow-lg rounded-2xl ${darkModeClass}`}>
