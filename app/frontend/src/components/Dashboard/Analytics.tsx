@@ -1,4 +1,3 @@
-// Analytics.tsx
 import React, { useEffect, useState } from 'react';
 import { BsMoon } from 'react-icons/bs';
 import Chart from 'chart.js/auto';
@@ -89,7 +88,7 @@ const Analytics: React.FC<AnalyticsProps> = ({ isDarkMode }) => {
   useEffect(() => {
     const fetchRecentTests = async () => {
       try {
-        const data = await getRecentTests(user!.uid);
+        const data: TestResult[] = await getRecentTests(user!.uid);
         setTestData(data);
       } catch (error) {
         console.error('Error fetching recent tests:', error);
@@ -97,7 +96,7 @@ const Analytics: React.FC<AnalyticsProps> = ({ isDarkMode }) => {
     };
 
     fetchRecentTests();
-  }, []);
+  }, [user]);
 
   Chart.register(ChartDataLabels);
   useEffect(() => {
