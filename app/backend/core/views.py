@@ -211,7 +211,7 @@ class TestModuleDetailView(APIView):
         if request.user != user:
             return Response({"error": "You are not authorized to view these answers."}, status=status.HTTP_403_FORBIDDEN)
         test_module = get_object_or_404(TestModel, id=test_module_id)
-        questions = Question.objects.filter(test_model=test_module).order_by('id')
+        questions = Question.objects.filter(test=test_module).order_by('id')
         question_serializer = QuestionSerializer(questions, many=True)
         test_result = TestResult.objects.filter(user=request.user, test_model=test_module).first()
         user_answers = UserAnswer.objects.filter(test_result=test_result)
