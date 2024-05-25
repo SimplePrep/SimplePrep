@@ -180,10 +180,10 @@ const Analytics: React.FC<AnalyticsProps> = ({ isDarkMode }) => {
   const handlePreviewClick = async (index: number) => {
     const selectedEntry = testData[index];
     console.log('Selected Entry:', selectedEntry);
-    console.log('Test Module ID:', selectedEntry.test_model.id);
+    console.log('Test Module ID:', selectedEntry.test_model.id); // Debug log
     try {
       const data = await getTestModuleDetails(user!.uid, selectedEntry.test_model.id);
-      console.log('Fetched Test Module Details:', data);
+      console.log('Fetched Test Module Details:', data); // Debug log
       setSelectedTestEntry({ ...selectedEntry, questions: data.questions, user_answers: data.user_answers });
       setShowPreview(true);
     } catch (error) {
