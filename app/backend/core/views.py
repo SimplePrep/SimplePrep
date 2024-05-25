@@ -206,7 +206,7 @@ class UserTestModuleAnswersView(APIView):
 class TestModuleDetailView(APIView):
     permission_classes = [IsAuthenticatedWithFirebase]
 
-    def get(self, user_uid, request, test_module_id):
+    def get(self, user_uid, request, test_module_id, format=None):
         user = get_object_or_404(User, firebase_uid=user_uid)
         if request.user != user:
             return Response({"error": "You are not authorized to view these answers."}, status=status.HTTP_403_FORBIDDEN)
