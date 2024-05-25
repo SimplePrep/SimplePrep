@@ -131,7 +131,9 @@ const Analytics: React.FC<AnalyticsProps> = ({ isDarkMode }) => {
   const handleAnalyticsClick = async (index: number) => {
     const selectedEntry = testData[index];
     try {
+      console.log(selectedEntry.id)
       const report = await getTestReport(user!.uid, selectedEntry.id);
+      console.log(report)
       setSelectedTestEntry({ ...selectedEntry, report });
       setShowAnalysis(true);
     } catch (error) {
