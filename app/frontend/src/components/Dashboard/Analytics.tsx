@@ -171,7 +171,13 @@ const Analytics: React.FC<AnalyticsProps> = ({ isDarkMode }) => {
           userAnswers={selectedTestEntry.user_answers || []}
         />
       )}
-      {showDiscussion && selectedTestEntry !== null && <Discussion title={selectedTestEntry.test_model.title} onClose={() => setShowDiscussion(false)} />}
+      {showDiscussion && selectedTestEntry !== null && (
+        <Discussion
+          title={selectedTestEntry.test_model.title}
+          testModuleId={selectedTestEntry.test_model.id}
+          onClose={() => setShowDiscussion(false)}
+        />
+      )}
       <div className='py-20'>
         <p className='text-3xl font-semibold mb-2'>Recently Taken Tests</p>
         <p className='text-lg  mb-6'>

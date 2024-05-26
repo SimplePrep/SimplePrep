@@ -12,10 +12,6 @@ class QuestionAdmin(admin.ModelAdmin):
     list_display = ('test', 'title', 'created_at', )
     list_filter = ('test', )
 
-class CommentAdmin(admin.ModelAdmin):
-    list_display = ('test', 'user', 'text', 'created_at',)
-    list_filter = ('test', 'user',)
-
 class TestResultAdmin(admin.ModelAdmin):
     list_display = ('test_model_title', 'user', 'score', 'created_at', 'updated_at')
     list_filter = ('test_model__title', 'user')
@@ -44,7 +40,6 @@ class TestReportAdmin(admin.ModelAdmin):
 admin_site.register(Test, TestAdmin)
 admin_site.register(TestModel, TestModelAdmin)
 admin_site.register(Question, QuestionAdmin)
-admin_site.register(Comment, CommentAdmin)
 admin_site.register(TestResult, TestResultAdmin)
 admin_site.register(UserAnswer, UserAnswerAdmin)
 admin_site.register(TestReport, TestReportAdmin)

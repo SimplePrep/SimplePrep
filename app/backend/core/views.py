@@ -6,19 +6,22 @@ from .serializers import (
     TestSerializer,
     TestModelSerializer,
     QuestionSerializer,
-    CommentSerializer,
     TestResultSerializer,
     UserAnswerSerializer,
-    TestReportSerializer)
+    TestReportSerializer,
+    PostSerializer,
+    ReplySerializer)
 from .models import (
     TestModel, 
     Question, 
-    Comment, 
     TestResult, 
     UserAnswer,
     Test,
-    TestReport)
-from .permissions import IsAuthenticatedWithFirebase
+    TestReport,
+    Post,
+    Reply)
+from .permissions import IsAuthenticatedWithFirebase, IsOwnerOrReadOnly
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from django.contrib.auth import get_user_model
 import logging
 from .analytics_algo import generate_report
@@ -109,21 +112,7 @@ class QuestionListCreateView(APIView):
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
         
-class CommentListCreateView(APIView):
-    permission_classes = [IsAuthenticatedWithFirebase]
 
-    def get(self, request, test_id, format=None):
-        comments = Comment.objects.filter(test_id=test_id)
-        serializer = CommentSerializer(comments, many=True)
-        return Response(serializer.data)
-    
-    def post(self, request, test_id, format=None):
-        serializer = CommentSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save(user=request.user, test_id=test_id)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
 class UserTestModulesView(APIView):
     permission_classes = [IsAuthenticatedWithFirebase]
 
@@ -233,3 +222,85 @@ class TestReportView(APIView):
         test_report = get_object_or_404(TestReport, test_result=test_result)
         serializer = TestReportSerializer(test_report)
         return Response(serializer.data, status=status.HTTP_200_OK)
+    
+
+class PostListCreateView(APIView):
+    permission_classes = [IsAuthenticatedOrReadOnly]
+
+    def get(self, request, test_module_id, format=None):
+        posts = Post.objects.filter(test_module_id=test_module_id)
+        serializer = PostSerializer(posts, many=True)
+        return Response(serializer.data)
+    
+    def post(self, request, test_module_id, format=None):
+        serializer = PostSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(author=request.user, test_module_id=test_module_id)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+class PostDetailView(APIView):
+    permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
+
+    def get(self ,request, pk, format=None):
+        post = get_object_or_404(Post, pk=pk)
+        serializer = PostSerializer(post)
+        return Response(serializer.data)
+    
+    def put(self, request, pk, format=None):
+        post = get_object_or_404(Post, pk=pk)
+        self.check_object_permissions(request, post)
+
+        serializer = PostSerializer(post, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    def delete(self, request, pk, format=None):
+        post = get_object_or_404(Post, pk=pk)
+        self.check_object_permissions(request, post)
+
+        post.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+    
+class ReplyListCreateView(APIView):
+    permission_classes = [IsAuthenticatedWithFirebase]
+
+    def get(self, request, post_id, format=None):
+        replies = Reply.objects.filter(post_id=post_id)
+        serializer = ReplySerializer(replies, many=True)
+        return Response(serializer.data)
+    
+    def post(self, request, post_id, format=None):
+        serializer = ReplySerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(auth=request.user, post_id=post_id)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class ReplyDetailView(APIView):
+    permission_classes = [IsAuthenticatedWithFirebase, IsOwnerOrReadOnly]
+
+    def get(self, request, pk, format=None):
+        reply = get_object_or_404(Reply, pk=pk)
+        serializer = ReplySerializer(reply)
+        return Response(serializer.data)
+    
+    def put(self, request, pk, format=None):
+        reply = get_object_or_404(Reply, pk=pk)
+        self.check_object_permissions(request, reply)
+
+        serializer = ReplySerializer(reply, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, pk, format=None):
+        reply = get_object_or_404(Reply, pk=pk)
+        self.check_object_permissions(request, reply)
+
+        reply.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+

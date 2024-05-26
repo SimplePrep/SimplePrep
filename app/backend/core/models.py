@@ -50,18 +50,6 @@ class Question(models.Model):
     dislikes = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add = True)
 
-class Comment(models.Model):
-    """
-        Model for Comments
-    """
-    User = get_user_model()
-    test = models.ForeignKey(TestModel, on_delete=models.CASCADE, related_name = 'comments')
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name = 'comments')
-    text = models.TextField(blank=False, null=False)
-    created_at = models.DateTimeField(auto_now_add = True)
-    updated_at = models.DateTimeField(auto_now= True)
-    def __str__(self):
-        return f"Comment by {self.user.username} on {self.test.name}"
 
 class TestResult(models.Model):
     """
@@ -96,3 +84,26 @@ class TestReport(models.Model):
 
     def __str__(self):
         return f"Report for {self.test_result.test_model.title} - {self.test_result.user.first_name}"
+    
+class Post(models.Model):
+    test_module = models.ForeignKey(TestModel, on_delete=models.CASCADE, related_name="posts")
+    title = models.TextField(blank=False, null=False)
+    content = models.TextField(blank=False, null=False)
+    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='posts')
+    views = models.IntegerField(default=0)
+    likes = models.IntegerField(default=0)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.title
+
+class Reply(models.Model):
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='replies')
+    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='replies')
+    content = models.TextField(blank=False, null=False)
+    created_at = models.DateTimeField(audo_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"Reply by {self.author.get_full_name} on {self.post.title}"

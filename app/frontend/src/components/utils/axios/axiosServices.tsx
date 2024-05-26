@@ -1,5 +1,5 @@
 import axiosInstance from './axiosInterceptor';
-import { TestResult, Question, UserAnswer, TestReport, DetailedTestResult } from '../../Dashboard/types';
+import { TestResult, Question, UserAnswer, TestReport, DetailedTestResult, Reply, Post } from '../../Dashboard/types';
 
 // Example function to get tests
 export const getTests = async () => {
@@ -20,7 +20,7 @@ interface Module {
     num_questions: number;
     created_at: string;
     updated_at: string;
-}
+};
 
 export const getModules = async (testId: number): Promise<Module[]>  => {
     try{
@@ -36,7 +36,7 @@ export const getModules = async (testId: number): Promise<Module[]>  => {
 interface TestModuleDetails {
   questions: Question[];
   user_answers: UserAnswer[];
-}
+};
 
 
 
@@ -120,5 +120,87 @@ interface TestModuleDetails {
       throw error;
     }
   };
+
+  export const getPosts = async (testModuleId: number): Promise<Post[]> => {
+    try {
+      const response = await axiosInstance.get<Post[]>(`api/core/posts/${testModuleId}/`);
+      return response.data;
+    } catch(error){
+      console.error('Error fetching posts: ', error);
+      throw error;
+    }
+  };
+
+  interface PostData {
+    title: string;
+    content: string;
+    author:string;
+  };
+
+  export const addPost = async (postData: PostData, testModuleId: number): Promise<PostData> => {
+    try {
+      const response = await axiosInstance.post<Post>(`api/core/posts/${testModuleId}/`, postData);
+      return response.data;
+    } catch(error){
+      console.error('Error adding post: ', error);
+      throw error;
+    }
+  };
+
+  export const deletePost = async (postId: number): Promise<void> => {
+    try {
+      await axiosInstance.delete(`api/core/posts/detail/${postId}/`);
+    } catch(error) {
+      console.error('Error deleting post: ', error);
+      throw error;
+    }
+  };
+
+  export const editPost = async (postId:number, updatedPostData: PostData): Promise<PostData> => {
+    try {
+      const response = await axiosInstance.put<Post>(`api/core/posts/detail/${postId}/`, updatedPostData);
+      return response.data;
+    } catch(error) {
+      console.error('Error editing post: ', error);
+      throw error;
+    }
+  };
+
+  interface ReplyData {
+    content: string;
+    author: string;
+  }
+
+  export const addReply = async (postId: number, replyData: ReplyData): Promise<Reply> => {
+    try {
+      const response = await axiosInstance.post<Reply>(`api/core/replies/${postId}/`, replyData);
+      return response.data;
+    } catch(error){
+      console.error('Error adding reply: ', error);
+      throw error;
+    }
+  };
+
+  export const deleteReply = async (replyId: number): Promise<void> => {
+    try {
+      await axiosInstance.delete(`api/core/replies/detail/${replyId}/`);
+    } catch(error){
+      console.error('Error deleting reply: ', error);
+      throw error;
+    }
+  };
+
+  export const editReply = async (replyId: number, updatedReplyData: ReplyData): Promise<Reply> => {
+    try {
+      const response = await axiosInstance.put<Reply>(`api/core/replies/detail/${replyId}/`, updatedReplyData);
+      return response.data;
+    } catch(error) {
+      console.error('Error editing reply: ', error);
+      throw error;
+    }
+  };
+
+
+
  
  

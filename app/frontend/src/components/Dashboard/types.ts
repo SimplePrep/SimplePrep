@@ -85,3 +85,21 @@ export interface DetailedTestResult extends TestResult {
   user_answers?: UserAnswer[];
   report?: TestReport;
 }
+
+export interface Reply {
+  id: number;
+  author: string;
+  content: string;
+  date: string;
+}
+
+export interface Post {
+  id: number;
+  title: string;
+  content: string;
+  author: string;
+  views: number;
+  likes: number;
+  date: string;
+  replies: Reply[];
+}

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Test, TestModel, Question, Comment, TestResult, UserAnswer, TestReport
+from .models import Test, TestModel, Question, TestResult, UserAnswer, TestReport, Reply, Post
 
 class TestSerializer(serializers.ModelSerializer):
     class Meta:
@@ -24,16 +24,6 @@ class QuestionSerializer(serializers.ModelSerializer):
             'explanation', 'correct_answer', 'likes', 'dislikes', 'created_at'
         ]
 
-
-class CommentSerializer(serializers.ModelSerializer):
-    user_full_name = serializers.ReadOnlyField(source='user.get_full_name')
-
-    class Meta:
-        model = Comment
-        fields = ['id', 'test', 'user_full_name', 'text', 'created_at']
-        read_only_fields = ['created_at']
-
-
 class TestResultSerializer(serializers.ModelSerializer):
     test_model = TestModelSerializer(read_only=True)
 
@@ -52,3 +42,20 @@ class TestReportSerializer(serializers.ModelSerializer):
     class Meta:
         model = TestReport
         fields = ['id', 'test_result', 'report_data', 'created_at', 'updated_at']
+
+class ReplySerializer(serializers.ModelSerializer):
+    author = serializers.ReadOnlyField(source='auth.get_full_name')
+
+    class Meta:
+        model = Reply
+        fields = ['id', 'author', 'content', 'created_at', 'updated_at']
+
+
+class PostSerializer(serializers.ModelSerializer):
+    author = serializers.ReadOnlyField(source='auth.get_full_name')
+    replies = ReplySerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Post
+        fields = ['id', 'test_module', 'title', 'content', 'author', 'views', 'likes', 'created_at', 'updated_at', 'replies']
+        
