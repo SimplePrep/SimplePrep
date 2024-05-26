@@ -11,6 +11,8 @@ import { stateFromHTML } from 'draft-js-import-html';
 import { IoArrowBackCircleOutline } from "react-icons/io5";
 import { toolbarOptions } from './analytics_components/ToolBarOptions';
 import { getPosts, addPost, deletePost, editPost, addReply, deleteReply, editReply } from '../../utils/axios/axiosServices';
+import { getAuth } from 'firebase/auth';
+import { useAuth } from '../../utils/AuthProvider';
 
 export interface Post {
   id: number;
@@ -51,10 +53,9 @@ const Discussion: React.FC<DiscussionProps> = ({ onClose, title, testModuleId })
   const [isEditingPost, setIsEditingPost] = useState(false);
   const [postToEdit, setPostToEdit] = useState<Post | null>(null);
   const [editedPostTitle, setEditedPostTitle] = useState('');
-
-  // Simulate the current logged-in user
-  const currentUser = 'Current User';
-  const currentUserUid = '123456'; // Example user UID
+  const {user} = useAuth();
+  const currentUser = user?.displayName || 'Default Name';
+  const currentUserUid = user?.uid || 'Default UID';
 
   const darkModeClass = isDarkMode ? 'bg-gray-600 text-white' : 'bg-white text-black';
   const animationClass = fadeIn ? 'animate-fadeIn' : 'opacity-0';
