@@ -168,9 +168,9 @@ const Discussion: React.FC<DiscussionProps> = ({ onClose, title, testModuleId })
     const rawContent = contentState.getPlainText();
   
     const newPostData = {
+      test_module: testModuleId,
       title: newPostTitle,
       content: rawContent,
-      author_uid: currentUserUid!,
     };
   
     try {
@@ -221,7 +221,7 @@ const Discussion: React.FC<DiscussionProps> = ({ onClose, title, testModuleId })
     const content = contentState.getPlainText();
 
     try {
-      await editPost(postToEdit.id, { title: editedPostTitle, content: content, author_uid: postToEdit.author_uid });
+      await editPost(postToEdit.id, { title: editedPostTitle, content: content, test_module: testModuleId });
       setPosts(prevPosts =>
         prevPosts.map(post =>
           post.id === postToEdit.id ? { ...post, title: editedPostTitle, content: content } : post

@@ -134,7 +134,7 @@ interface TestModuleDetails {
   interface PostData {
     title: string;
     content: string;
-    author_uid: string;
+    test_module: number;
   }
   
   interface ReplyData {
