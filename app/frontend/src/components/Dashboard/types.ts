@@ -89,6 +89,7 @@ export interface DetailedTestResult extends TestResult {
 export interface Reply {
   id: number;
   author: string;
+  author_uid: string;
   content: string;
   date: string;
 }
@@ -98,6 +99,7 @@ export interface Post {
   title: string;
   content: string;
   author: string;
+  author_uid: string;
   views: number;
   likes: number;
   date: string;

@@ -10,22 +10,24 @@ import { stateToHTML } from 'draft-js-export-html';
 import { stateFromHTML } from 'draft-js-import-html';
 import { IoArrowBackCircleOutline } from "react-icons/io5";
 import { toolbarOptions } from './analytics_components/ToolBarOptions';
-import { getPosts, addPost, deletePost, editPost, addReply, deleteReply, editReply } from '../../utils/axios/axiosServices'
+import { getPosts, addPost, deletePost, editPost, addReply, deleteReply, editReply } from '../../utils/axios/axiosServices';
 
-interface Post {
+export interface Post {
   id: number;
   title: string;
   content: string;
   author: string;
+  author_uid: string;
   views: number;
   likes: number;
   date: string;
   replies: Reply[];
 }
 
-interface Reply {
+export interface Reply {
   id: number;
   author: string;
+  author_uid: string;
   content: string;
   date: string;
 }
@@ -49,6 +51,10 @@ const Discussion: React.FC<DiscussionProps> = ({ onClose, title, testModuleId })
   const [isEditingPost, setIsEditingPost] = useState(false);
   const [postToEdit, setPostToEdit] = useState<Post | null>(null);
   const [editedPostTitle, setEditedPostTitle] = useState('');
+
+  // Simulate the current logged-in user
+  const currentUser = 'Current User';
+  const currentUserUid = '123456'; // Example user UID
 
   const darkModeClass = isDarkMode ? 'bg-gray-600 text-white' : 'bg-white text-black';
   const animationClass = fadeIn ? 'animate-fadeIn' : 'opacity-0';
@@ -91,13 +97,14 @@ const Discussion: React.FC<DiscussionProps> = ({ onClose, title, testModuleId })
 
     const newReply: Reply = {
       id: Date.now(),
-      author: 'Current User',
+      author: currentUser,
+      author_uid: currentUserUid,
       content: rawContent,
       date: new Date().toISOString().split('T')[0],
     };
 
     try {
-      await addReply(selectedPost.id, { content: rawContent, author: 'Current User' });
+      await addReply(selectedPost.id, { content: rawContent, author_uid: currentUserUid });
       setPosts(prevPosts =>
         prevPosts.map(post =>
           post.id === selectedPost.id
@@ -144,7 +151,7 @@ const Discussion: React.FC<DiscussionProps> = ({ onClose, title, testModuleId })
     const htmlContent = contentState.getPlainText();
 
     try {
-      await editReply(replyToEdit.id, { content: htmlContent, author: replyToEdit.author });
+      await editReply(replyToEdit.id, { content: htmlContent, author_uid: replyToEdit.author_uid });
       setPosts(prevPosts =>
         prevPosts.map(post =>
           post.id === selectedPost.id
@@ -182,7 +189,8 @@ const Discussion: React.FC<DiscussionProps> = ({ onClose, title, testModuleId })
       id: Date.now(),
       title: newPostTitle,
       content: rawContent,
-      author: 'Current User',
+      author: currentUser,
+      author_uid: currentUserUid,
       views: 0,
       likes: 0,
       date: new Date().toISOString().split('T')[0],
@@ -190,7 +198,7 @@ const Discussion: React.FC<DiscussionProps> = ({ onClose, title, testModuleId })
     };
 
     try {
-      await addPost({ title: newPostTitle, content: rawContent }, testModuleId);
+      await addPost({ title: newPostTitle, content: rawContent, author_uid: currentUserUid }, testModuleId);
       setPosts(prevPosts => [...prevPosts, newPost]);
       setNewPostTitle('');
       setEditorState(EditorState.createEmpty());
@@ -226,7 +234,7 @@ const Discussion: React.FC<DiscussionProps> = ({ onClose, title, testModuleId })
     const content = contentState.getPlainText();
 
     try {
-      await editPost(postToEdit.id, { title: editedPostTitle, content: content});
+      await editPost(postToEdit.id, { title: editedPostTitle, content: content, author_uid: postToEdit.author_uid });
       setPosts(prevPosts =>
         prevPosts.map(post =>
           post.id === postToEdit.id ? { ...post, title: editedPostTitle, content: content } : post
@@ -301,23 +309,29 @@ const Discussion: React.FC<DiscussionProps> = ({ onClose, title, testModuleId })
         )}
         {currentView === 'post' && (
           <div>
-            {posts.map(post => (
-              <div key={post.id}
-                className={`p-5 cursor-pointer mt-5 rounded-lg shadow ${postBgClass}`}
-                onClick={() => {
-                  setSelectedPost(post);
-                  setCurrentView('postView');
-                }}>
-                <p className='text-lg font-bold'>{post.title}</p>
-                <p className='text-md'>{post.author}</p>
-                <div className='pt-3 flex items-center gap-14'>
-                  <span className='flex gap-2 items-center'><BsEye size={20} />{post.views}</span>
-                  <span className='flex gap-2 items-center'><AiOutlineLike size={25} />{post.likes}</span>
-                  <span className='flex gap-2 items-center'><MdAccessTime size={25} />{post.date}</span>
-                  <span className='flex gap-2 items-center'><BsChat size={20} />{post.replies.length}</span>
+            {posts.length > 0 ? (
+              posts.map(post => (
+                <div key={post.id}
+                  className={`p-5 cursor-pointer mt-5 rounded-lg shadow ${postBgClass}`}
+                  onClick={() => {
+                    setSelectedPost(post);
+                    setCurrentView('postView');
+                  }}>
+                  <p className='text-lg font-bold'>{post.title}</p>
+                  <p className='text-md'>{post.author}</p>
+                  <div className='pt-3 flex items-center gap-14'>
+                    <span className='flex gap-2 items-center'><BsEye size={20} />{post.views}</span>
+                    <span className='flex gap-2 items-center'><AiOutlineLike size={25} />{post.likes}</span>
+                    <span className='flex gap-2 items-center'><MdAccessTime size={25} />{post.date}</span>
+                    <span className='flex gap-2 items-center'><BsChat size={20} />{post.replies.length}</span>
+                  </div>
                 </div>
+              ))
+            ) : (
+              <div className={`p-5 mt-5 rounded-lg shadow ${postBgClass}`}>
+                <p className='text-lg font-bold'>No posts available.</p>
               </div>
-            ))}
+            )}
           </div>
         )}
         {currentView === 'postView' && selectedPost && (
@@ -329,7 +343,7 @@ const Discussion: React.FC<DiscussionProps> = ({ onClose, title, testModuleId })
                 <span className='flex gap-2 items-center'><MdAccessTime size={25} />{selectedPost.date}</span>
               </div>
               <p className='p-5'>{selectedPost.content}</p>
-              {selectedPost.author === 'Current User' && (
+              {selectedPost.author_uid === currentUserUid && (
                 <div className="flex gap-2">
                   <button
                     onClick={(e) => {
@@ -390,7 +404,7 @@ const Discussion: React.FC<DiscussionProps> = ({ onClose, title, testModuleId })
                     <FaUserCircle size={30} />
                     <p>{reply.author}</p>
                     <p>{reply.date}</p>
-                    {reply.author === 'Current User' && (
+                    {reply.author_uid === currentUserUid && (
                       <div className="flex gap-2">
                         <button
                           onClick={() => handleEditReply(reply)}

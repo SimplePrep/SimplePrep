@@ -134,11 +134,17 @@ interface TestModuleDetails {
   interface PostData {
     title: string;
     content: string;
-  };
+    author_uid: string;
+  }
+  
+  interface ReplyData {
+    content: string;
+    author_uid: string;
+  }
 
   export const addPost = async (postData: PostData, testModuleId: number): Promise<PostData> => {
     try {
-      const response = await axiosInstance.post<Post>(`api/core/posts/${testModuleId}/`, postData);
+      const response = await axiosInstance.post<PostData>(`api/core/posts/${testModuleId}/`, postData);
       return response.data;
     } catch(error){
       console.error('Error adding post: ', error);
@@ -157,7 +163,7 @@ interface TestModuleDetails {
 
   export const editPost = async (postId:number, updatedPostData: PostData): Promise<PostData> => {
     try {
-      const response = await axiosInstance.put<Post>(`api/core/posts/detail/${postId}/`, updatedPostData);
+      const response = await axiosInstance.put<PostData>(`api/core/posts/detail/${postId}/`, updatedPostData);
       return response.data;
     } catch(error) {
       console.error('Error editing post: ', error);
@@ -165,14 +171,9 @@ interface TestModuleDetails {
     }
   };
 
-  interface ReplyData {
-    content: string;
-    author: string;
-  }
-
-  export const addReply = async (postId: number, replyData: ReplyData): Promise<Reply> => {
+  export const addReply = async (postId: number, replyData: ReplyData): Promise<ReplyData> => {
     try {
-      const response = await axiosInstance.post<Reply>(`api/core/replies/${postId}/`, replyData);
+      const response = await axiosInstance.post<ReplyData>(`api/core/replies/${postId}/`, replyData);
       return response.data;
     } catch(error){
       console.error('Error adding reply: ', error);
@@ -189,9 +190,9 @@ interface TestModuleDetails {
     }
   };
 
-  export const editReply = async (replyId: number, updatedReplyData: ReplyData): Promise<Reply> => {
+  export const editReply = async (replyId: number, updatedReplyData: ReplyData): Promise<ReplyData> => {
     try {
-      const response = await axiosInstance.put<Reply>(`api/core/replies/detail/${replyId}/`, updatedReplyData);
+      const response = await axiosInstance.put<ReplyData>(`api/core/replies/detail/${replyId}/`, updatedReplyData);
       return response.data;
     } catch(error) {
       console.error('Error editing reply: ', error);

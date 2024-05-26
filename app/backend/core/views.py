@@ -235,6 +235,7 @@ class PostListCreateView(APIView):
     def post(self, request, test_module_id, format=None):
         data = request.data.copy()
         data['test_module'] = test_module_id
+        data['author_uid'] = request.user.firebase_uid
         serializer = PostSerializer(data=data)
         if serializer.is_valid():
             serializer.save(author=request.user, test_module_id=test_module_id)
@@ -253,7 +254,9 @@ class PostDetailView(APIView):
         post = get_object_or_404(Post, pk=pk)
         self.check_object_permissions(request, post)
 
-        serializer = PostSerializer(post, data=request.data)
+        data = request.data.copy()
+        data['author_uid'] = post.author.firebase_uid
+        serializer = PostSerializer(post, data=data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
@@ -275,9 +278,12 @@ class ReplyListCreateView(APIView):
         return Response(serializer.data)
     
     def post(self, request, post_id, format=None):
-        serializer = ReplySerializer(data=request.data)
+        data = request.data.copy()
+        data['post'] = post_id
+        data['author_uid'] = request.user.firebase_uid
+        serializer = ReplySerializer(data=data)
         if serializer.is_valid():
-            serializer.save(auth=request.user, post_id=post_id)
+            serializer.save(author=request.user, post_id=post_id)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -293,7 +299,9 @@ class ReplyDetailView(APIView):
         reply = get_object_or_404(Reply, pk=pk)
         self.check_object_permissions(request, reply)
 
-        serializer = ReplySerializer(reply, data=request.data)
+        data = request.data.copy()
+        data['author_uid'] = reply.author.firebase_uid
+        serializer = ReplySerializer(reply, data=data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)

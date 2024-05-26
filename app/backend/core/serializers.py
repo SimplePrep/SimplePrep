@@ -44,18 +44,18 @@ class TestReportSerializer(serializers.ModelSerializer):
         fields = ['id', 'test_result', 'report_data', 'created_at', 'updated_at']
 
 class ReplySerializer(serializers.ModelSerializer):
-    author = serializers.ReadOnlyField(source='auth.get_full_name')
-
+    author = serializers.ReadOnlyField(source='author.get_full_name')
+    author_uid = serializers.ReadOnlyField(source='author.firebase_uid')
     class Meta:
         model = Reply
-        fields = ['id', 'author', 'content', 'created_at', 'updated_at']
+        fields = ['id', 'author', 'author_uid', 'content', 'created_at', 'updated_at']
 
 
 class PostSerializer(serializers.ModelSerializer):
-    author = serializers.ReadOnlyField(source='auth.get_full_name')
+    author = serializers.ReadOnlyField(source='author.get_full_name')
+    author_uid = serializers.ReadOnlyField(source='author.firebase_uid')
     replies = ReplySerializer(many=True, read_only=True)
 
     class Meta:
         model = Post
-        fields = ['id', 'test_module', 'title', 'content', 'author', 'views', 'likes', 'created_at', 'updated_at', 'replies']
-        
+        fields = ['id', 'test_module', 'title', 'content', 'author', 'author_uid', 'views', 'likes', 'created_at', 'updated_at', 'replies']

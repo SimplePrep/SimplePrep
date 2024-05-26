@@ -90,6 +90,7 @@ class Post(models.Model):
     title = models.TextField(blank=False, null=False)
     content = models.TextField(blank=False, null=False)
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='posts')
+    author_uid = models.CharField(max_length=128)
     views = models.IntegerField(default=0)
     likes = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -101,6 +102,7 @@ class Post(models.Model):
 class Reply(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='replies')
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='replies')
+    author_uid = models.CharField(max_length=128)
     content = models.TextField(blank=False, null=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
