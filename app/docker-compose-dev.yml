@@ -1,52 +1,31 @@
-version: "3.9"
+version: '3.8'
 
 services:
-  frontend: 
-    build: 
-      context: ./client-spa
-      dockerfile: Dockerfile
-    ports:
-      - "3000:3000"
-    volumes:
-      - ./client-spa:/client-spa
-    depends_on:
-      - backend
   backend:
-    build: 
-      context: ./spa
-      args:
-        - DEV=true
-    image: backend
-    container_name: backend
-    ports:
-      - "8080:8000"
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    command: python manage.py runserver 0.0.0.0:8000
     volumes:
-      - ./spa:/spa
-      - ./data/web:/vol/web
-    command: >
-      sh -c "python manage.py migrate &&
-             python manage.py runserver 0.0.0.0:8000"
-    environment:
-      - DJANGO_DEBUG=1
-      - DB_HOST=db
-      - DB_NAME=devdb
-      - DB_USER=devuser
-      - DB_PASS=changeme
-      - DEBUG=1
+      - .:/app
+    ports:
+      - "8001:8000"
     depends_on:
       - db
+    environment:
+      POSTGRES_DB: mydatabase
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypassword
+
 
   db:
-    image: postgres:14-alpine
-    ports:
-      - '5432:5432'
+    image: postgres:13
     volumes:
-      - dev-db-data:/var/lib/postgres/data
+      - postgres_data:/var/lib/postgresql/data/
     environment:
-      - POSTGRES_DB=devdb
-      - POSTGRES_USER=devuser
-      - POSTGRES_PASSWORD=changeme
-  
+      POSTGRES_DB: mydatabase
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypassword
 
 volumes:
-  dev-db-data:
+  postgres_data:

@@ -33,3 +33,5 @@ sudo ./init-letsencrypt.sh
 docker-compose -f docker-compose-deploy.yml down #just a comment
 
 docker-compose exec backend python /app/backend/manage.py createsuperuser
+
+docker-compose exec db psql -U alijonadmin -d simpleprepdb
