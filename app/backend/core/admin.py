@@ -1,6 +1,6 @@
 from django.contrib import admin
 from spa.admin import admin_site
-from .models import Test, TestModel, Question, TestResult, UserAnswer, TestReport
+from .models import Test, TestModel, Question, TestResult, UserAnswer, TestReport, Post, Reply
 
 class TestAdmin(admin.ModelAdmin):
     list_display = ('id', 'title', 'created_at', 'updated_at')
@@ -37,9 +37,23 @@ class TestReportAdmin(admin.ModelAdmin):
     def has_delete_permission(self, request, obj=None):
         return False
     
+class PostAdmin(admin.ModelAdmin):
+    list_display = ('title', 'author', 'test_module', 'created_at', 'updated_at')
+    search_fields = ('title', 'author__username', 'test_module__title')
+    list_filter = ('test_module', 'author')
+    readonly_fields = ('created_at', 'updated_at')
+
+class ReplyAdmin(admin.ModelAdmin):
+    list_display = ('post', 'author', 'created_at', 'updated_at')
+    search_fields = ('post__title', 'author__username')
+    list_filter = ('post', 'author')
+    readonly_fields = ('created_at', 'updated_at')
+    
 admin_site.register(Test, TestAdmin)
 admin_site.register(TestModel, TestModelAdmin)
 admin_site.register(Question, QuestionAdmin)
 admin_site.register(TestResult, TestResultAdmin)
 admin_site.register(UserAnswer, UserAnswerAdmin)
 admin_site.register(TestReport, TestReportAdmin)
+admin_site.register(Post, PostAdmin)
+admin_site.register(Reply, ReplyAdmin)
