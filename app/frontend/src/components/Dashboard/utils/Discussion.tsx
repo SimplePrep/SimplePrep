@@ -190,7 +190,7 @@ const Discussion: React.FC<DiscussionProps> = ({ onClose, title, testModuleId })
     };
 
     try {
-      await addPost({ title: newPostTitle, content: rawContent, author: 'Current User' }, testModuleId);
+      await addPost({ title: newPostTitle, content: rawContent }, testModuleId);
       setPosts(prevPosts => [...prevPosts, newPost]);
       setNewPostTitle('');
       setEditorState(EditorState.createEmpty());
@@ -226,7 +226,7 @@ const Discussion: React.FC<DiscussionProps> = ({ onClose, title, testModuleId })
     const content = contentState.getPlainText();
 
     try {
-      await editPost(postToEdit.id, { title: editedPostTitle, content: content, author: postToEdit.author });
+      await editPost(postToEdit.id, { title: editedPostTitle, content: content});
       setPosts(prevPosts =>
         prevPosts.map(post =>
           post.id === postToEdit.id ? { ...post, title: editedPostTitle, content: content } : post

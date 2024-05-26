@@ -134,7 +134,6 @@ interface TestModuleDetails {
   interface PostData {
     title: string;
     content: string;
-    author:string;
   };
 
   export const addPost = async (postData: PostData, testModuleId: number): Promise<PostData> => {
