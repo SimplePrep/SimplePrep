@@ -1,6 +1,6 @@
 from django.contrib import admin
 from spa.admin import admin_site
-from .models import Test, TestModel, Question, Comment, TestResult, UserAnswer, TestReport
+from .models import Test, TestModel, Question, TestResult, UserAnswer, TestReport
 
 class TestAdmin(admin.ModelAdmin):
     list_display = ('id', 'title', 'created_at', 'updated_at')
