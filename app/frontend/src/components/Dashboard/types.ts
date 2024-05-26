@@ -102,6 +102,7 @@ export interface Post {
   author_uid: string;
   views: number;
   likes: number;
-  date: string;
+  created_at: string;
+  updated_at: string;
   replies: Reply[];
 }

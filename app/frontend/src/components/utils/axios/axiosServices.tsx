@@ -142,9 +142,9 @@ interface TestModuleDetails {
     author_uid: string;
   }
 
-  export const addPost = async (postData: PostData, testModuleId: number): Promise<PostData> => {
+  export const addPost = async (postData: PostData, testModuleId: number): Promise<Post> => {
     try {
-      const response = await axiosInstance.post<PostData>(`api/core/posts/${testModuleId}/`, postData);
+      const response = await axiosInstance.post<Post>(`api/core/posts/${testModuleId}/`, postData);
       return response.data;
     } catch(error){
       console.error('Error adding post: ', error);

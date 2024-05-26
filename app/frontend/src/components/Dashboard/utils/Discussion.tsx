@@ -13,26 +13,7 @@ import { toolbarOptions } from './analytics_components/ToolBarOptions';
 import { getPosts, addPost, deletePost, editPost, addReply, deleteReply, editReply } from '../../utils/axios/axiosServices';
 import { getAuth } from 'firebase/auth';
 import { useAuth } from '../../utils/AuthProvider';
-
-export interface Post {
-  id: number;
-  title: string;
-  content: string;
-  author: string;
-  author_uid: string;
-  views: number;
-  likes: number;
-  date: string;
-  replies: Reply[];
-}
-
-export interface Reply {
-  id: number;
-  author: string;
-  author_uid: string;
-  content: string;
-  date: string;
-}
+import { Post, Reply } from '../types';
 
 interface DiscussionProps {
   title: string;
@@ -179,28 +160,33 @@ const Discussion: React.FC<DiscussionProps> = ({ onClose, title, testModuleId })
     const contentState = editorState.getCurrentContent();
     const isEditorEmpty = !contentState.hasText();
     const isTitleEmpty = !newPostTitle.trim();
-
+  
     if (isEditorEmpty || isTitleEmpty) {
       alert('Please fill in both title and content for the post.');
       return;
     }
     const rawContent = contentState.getPlainText();
-
-    const newPost: Post = {
-      id: Date.now(),
+  
+    const newPostData = {
       title: newPostTitle,
       content: rawContent,
-      author: currentUser,
-      author_uid: currentUserUid,
-      views: 0,
-      likes: 0,
-      date: new Date().toISOString().split('T')[0],
-      replies: [],
+      author_uid: currentUserUid!,
     };
-
+  
     try {
-      await addPost({ title: newPostTitle, content: rawContent, author_uid: currentUserUid }, testModuleId);
-      setPosts(prevPosts => [...prevPosts, newPost]);
+      // Call the API to add the post and get the response which includes the ID
+      const addedPost = await addPost(newPostData, testModuleId);
+  
+      // Update the local state with the new post including the ID from the backend
+      setPosts(prevPosts => [...prevPosts, {
+        ...addedPost,
+        id: addedPost.id, // Ensure the id is included
+        replies: [],
+        views: 0,
+        likes: 0,
+        author: currentUser || 'Default Name',
+        date: addedPost.created_at || new Date().toISOString().split('T')[0]
+      } as Post]);
       setNewPostTitle('');
       setEditorState(EditorState.createEmpty());
       setCurrentView('post');
@@ -323,7 +309,7 @@ const Discussion: React.FC<DiscussionProps> = ({ onClose, title, testModuleId })
                   <div className='pt-3 flex items-center gap-14'>
                     <span className='flex gap-2 items-center'><BsEye size={20} />{post.views}</span>
                     <span className='flex gap-2 items-center'><AiOutlineLike size={25} />{post.likes}</span>
-                    <span className='flex gap-2 items-center'><MdAccessTime size={25} />{post.date}</span>
+                    <span className='flex gap-2 items-center'><MdAccessTime size={25} />{post.created_at}</span>
                     <span className='flex gap-2 items-center'><BsChat size={20} />{post.replies.length}</span>
                   </div>
                 </div>
@@ -341,7 +327,7 @@ const Discussion: React.FC<DiscussionProps> = ({ onClose, title, testModuleId })
               <p className='text-lg font-bold'>{selectedPost.title}</p>
               <div className='flex gap-5'>
                 <p className='text-md'>{selectedPost.author}</p>
-                <span className='flex gap-2 items-center'><MdAccessTime size={25} />{selectedPost.date}</span>
+                <span className='flex gap-2 items-center'><MdAccessTime size={25} />{selectedPost.created_at}</span>
               </div>
               <p className='p-5'>{selectedPost.content}</p>
               {selectedPost.author_uid === currentUserUid && (
