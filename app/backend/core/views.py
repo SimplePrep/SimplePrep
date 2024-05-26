@@ -233,7 +233,9 @@ class PostListCreateView(APIView):
         return Response(serializer.data)
     
     def post(self, request, test_module_id, format=None):
-        serializer = PostSerializer(data=request.data)
+        data = request.data.copy()
+        data['test_module'] = test_module_id
+        serializer = PostSerializer(data=data)
         if serializer.is_valid():
             serializer.save(author=request.user, test_module_id=test_module_id)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
