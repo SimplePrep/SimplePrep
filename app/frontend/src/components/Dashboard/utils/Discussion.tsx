@@ -216,17 +216,28 @@ const Discussion: React.FC<DiscussionProps> = ({ onClose, title, testModuleId })
 
   const handleSaveEditedPost = async () => {
     if (!postToEdit) return;
-
+  
     const contentState = editorState.getCurrentContent();
     const content = contentState.getPlainText();
-
+  
     try {
-      await editPost(postToEdit.id, { title: editedPostTitle, content: content, test_module: testModuleId });
+      const updatedPost = await editPost(postToEdit.id, { 
+        title: editedPostTitle, 
+        content: content, 
+        test_module: testModuleId
+      });
+  
       setPosts(prevPosts =>
         prevPosts.map(post =>
           post.id === postToEdit.id ? { ...post, title: editedPostTitle, content: content } : post
         )
       );
+  
+      // Update the selectedPost with the updated details
+      setSelectedPost(prevPost => 
+        prevPost ? { ...prevPost, title: editedPostTitle, content: content } : null
+      );
+  
       setIsEditingPost(false);
       setPostToEdit(null);
       setEditedPostTitle('');
