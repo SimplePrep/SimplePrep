@@ -91,7 +91,7 @@ export interface Reply {
   author: string;
   author_uid: string;
   content: string;
-  date: string;
+  updated_at: string;
 }
 
 export interface Post {

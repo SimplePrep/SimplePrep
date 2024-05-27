@@ -330,7 +330,7 @@ const Discussion: React.FC<DiscussionProps> = ({ onClose, title, testModuleId })
                     <div className='pt-3 flex items-center gap-14'>
                       <span className='flex gap-2 items-center'><BsEye size={20} />{post.views}</span>
                       <span className='flex gap-2 items-center'><AiOutlineLike size={25} />{post.likes}</span>
-                      <span className='flex gap-2 items-center'><MdAccessTime size={25} />{post.created_at}</span>
+                      <span className='flex gap-2 items-center'><MdAccessTime size={25} />{formatDate(post.created_at)}</span>
                       <span className='flex gap-2 items-center'><BsChat size={20} />{post.replies.length}</span>
                     </div>
                   </div>
@@ -348,7 +348,7 @@ const Discussion: React.FC<DiscussionProps> = ({ onClose, title, testModuleId })
                 <p className='text-lg font-bold'>{selectedPost.title}</p>
                 <div className='flex gap-5'>
                   <p className='text-md'>{selectedPost.author}</p>
-                  <span className='flex gap-2 items-center'><MdAccessTime size={25} />{selectedPost.created_at}</span>
+                  <span className='flex gap-2 items-center'><MdAccessTime size={25} />{formatDate(selectedPost.created_at)}</span>
                 </div>
                 <p className='p-5'>{selectedPost.content}</p>
                 {selectedPost.author_uid === currentUserUid && (
@@ -411,7 +411,7 @@ const Discussion: React.FC<DiscussionProps> = ({ onClose, title, testModuleId })
                     <div className='flex items-center gap-4'>
                       <FaUserCircle size={30} />
                       <p>{reply.author}</p>
-                      <p>{reply.date}</p>
+                      <p>{formatDate(reply.updated_at)}</p>
                       {reply.author_uid === currentUserUid && (
                         <div className="flex gap-2">
                           <button
