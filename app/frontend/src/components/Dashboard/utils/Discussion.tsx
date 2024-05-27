@@ -21,6 +21,11 @@ interface DiscussionProps {
   onClose: () => void;
 }
 
+interface ReplyData {
+    content: string;
+    author_uid: string;
+}
+
 const Discussion: React.FC<DiscussionProps> = ({ onClose, title, testModuleId }) => {
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [fadeIn, setFadeIn] = useState(false);
@@ -77,27 +82,24 @@ const Discussion: React.FC<DiscussionProps> = ({ onClose, title, testModuleId })
       return;
     }
 
-    const newReply: Reply = {
-      id: Date.now(),
-      author: currentUser,
-      author_uid: currentUserUid,
-      content: rawContent,
-      date: new Date().toISOString().split('T')[0],
-    };
+    const newReplyData: ReplyData = {
+        content: rawContent,
+        author_uid: currentUserUid,
+      };
 
-    try {
-      await addReply(selectedPost.id, { content: rawContent, author_uid: currentUserUid });
-      setPosts(prevPosts =>
-        prevPosts.map(post =>
-          post.id === selectedPost.id
-            ? { ...post, replies: [...post.replies, newReply] }
-            : post
-        )
-      );
-      setEditorState(EditorState.createEmpty());
-    } catch (error) {
-      console.error('Error adding reply:', error);
-    }
+      try {
+        const addedReply = await addReply(selectedPost.id, newReplyData);
+        setPosts(prevPosts =>
+          prevPosts.map(post =>
+            post.id === selectedPost.id
+              ? { ...post, replies: [...post.replies, { ...addedReply, author: currentUser, date: new Date().toISOString().split('T')[0] }] }
+              : post
+          )
+        );
+        setEditorState(EditorState.createEmpty());
+      } catch (error) {
+        console.error('Error adding reply:', error);
+      }
   };
 
   const handleDeleteReply = async (replyId: number) => {

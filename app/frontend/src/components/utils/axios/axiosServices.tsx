@@ -171,9 +171,9 @@ interface TestModuleDetails {
     }
   };
 
-  export const addReply = async (postId: number, replyData: ReplyData): Promise<ReplyData> => {
+  export const addReply = async (postId: number, replyData: ReplyData): Promise<Reply> => {
     try {
-      const response = await axiosInstance.post<ReplyData>(`api/core/replies/${postId}/`, replyData);
+      const response = await axiosInstance.post<Reply>(`api/core/replies/${postId}/`, replyData);
       return response.data;
     } catch(error){
       console.error('Error adding reply: ', error);
@@ -190,9 +190,9 @@ interface TestModuleDetails {
     }
   };
 
-  export const editReply = async (replyId: number, updatedReplyData: ReplyData): Promise<ReplyData> => {
+  export const editReply = async (replyId: number, updatedReplyData: ReplyData): Promise<Reply> => {
     try {
-      const response = await axiosInstance.put<ReplyData>(`api/core/replies/detail/${replyId}/`, updatedReplyData);
+      const response = await axiosInstance.put<Reply>(`api/core/replies/detail/${replyId}/`, updatedReplyData);
       return response.data;
     } catch(error) {
       console.error('Error editing reply: ', error);
