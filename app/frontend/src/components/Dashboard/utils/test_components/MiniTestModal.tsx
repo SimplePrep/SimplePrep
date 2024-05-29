@@ -8,7 +8,7 @@ interface UserAnswer {
     test_result: number;
     question: number;
     selected_option: string;
-  }
+}
 
 interface MiniTestProps {
     isOpen: boolean;
@@ -21,6 +21,7 @@ const MiniTestModal: React.FC<MiniTestProps> = ({ isOpen, onClose, questions, us
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [fadeIn, setFadeIn] = useState(false);
     const [isDarkMode, setIsDarkMode] = useState(false);
+    const [showExplanation, setShowExplanation] = useState(false);
 
     const darkModeClass = isDarkMode ? 'dark bg-gray-800 text-white' : 'bg-white text-black';
     const animationClass = fadeIn ? 'animate-fadeIn' : 'opacity-0';
@@ -52,13 +53,19 @@ const MiniTestModal: React.FC<MiniTestProps> = ({ isOpen, onClose, questions, us
     const handlePreviousQuestion = () => {
         if (currentQuestionIndex > 0) {
             setCurrentQuestionIndex(currentQuestionIndex - 1);
+            setShowExplanation(false);
         }
     };
 
     const handleNextQuestion = () => {
         if (currentQuestionIndex < questions.length - 1) {
             setCurrentQuestionIndex(currentQuestionIndex + 1);
+            setShowExplanation(false);
         }
+    };
+
+    const handleShowExplanation = () => {
+        setShowExplanation(true);
     };
 
     return (
@@ -100,7 +107,19 @@ const MiniTestModal: React.FC<MiniTestProps> = ({ isOpen, onClose, questions, us
                                     </button>
                                 ))}
                             </div>
-                            <p className='mt-5 font-medium text-md'>Explanation: {currentQuestion.explanation}</p>
+                            <button 
+                                onClick={handleShowExplanation} 
+                                className="mt-5 py-2 px-4 border-2 rounded-lg hover:bg-[#00df9a] hover:border-blue-500 font-semibold text-lg"
+                            >
+                                Show Explanation
+                            </button>
+                            {showExplanation && (
+                                <div className='mt-5 font-medium text-md'>
+                                    {currentQuestion.explanation.split('\n').map((line, index) => (
+                                        <p key={index}>{line}</p>
+                                    ))}
+                                </div>
+                            )}
                         </div>
                     </div>
                 </div>
