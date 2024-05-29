@@ -64,8 +64,21 @@ const MiniTestModal: React.FC<MiniTestProps> = ({ isOpen, onClose, questions, us
         }
     };
 
-    const handleShowExplanation = () => {
-        setShowExplanation(true);
+    const toggleExplanation = () => {
+        setShowExplanation(!showExplanation);
+    };
+
+    const renderExplanation = (explanation: string) => {
+        const sections = explanation.split('\n');
+        return (
+            <div className="mt-5 font-medium text-md">
+                {sections.map((section, index) => (
+                    <p key={index} className={index === 0 ? 'font-bold text-lg' : 'mt-2'}>
+                        {section}
+                    </p>
+                ))}
+            </div>
+        );
     };
 
     return (
@@ -108,18 +121,12 @@ const MiniTestModal: React.FC<MiniTestProps> = ({ isOpen, onClose, questions, us
                                 ))}
                             </div>
                             <button 
-                                onClick={handleShowExplanation} 
+                                onClick={toggleExplanation} 
                                 className="mt-5 py-2 px-4 border-2 rounded-lg hover:bg-[#00df9a] hover:border-blue-500 font-semibold text-lg"
                             >
-                                Show Explanation
+                                {showExplanation ? 'Close Explanation' : 'Show Explanation'}
                             </button>
-                            {showExplanation && (
-                                <div className='mt-5 font-medium text-md'>
-                                    {currentQuestion.explanation.split('\n').map((line, index) => (
-                                        <p key={index}>{line}</p>
-                                    ))}
-                                </div>
-                            )}
+                            {showExplanation && renderExplanation(currentQuestion.explanation)}
                         </div>
                     </div>
                 </div>
