@@ -157,6 +157,11 @@ const TestPageUI = () => {
     { label: 'D', content: currentQuestion.option_D },
   ];
   const isCurrentQuestionUnanswered = unansweredQuestions.includes(currentQuestion.id);
+
+  const handleExit = ()=> {
+    navigate('/demo')
+  }
+  
   return (
     <div className={`w-full h-screen flex flex-col ${darkModeClass}`}>
       {showModal && <Modal message={'Submission Successful. Please visit Analytics page on Dashboard to review the test results!'}/>}
@@ -169,7 +174,7 @@ const TestPageUI = () => {
       </div>
       <div className='flex justify-end items-center gap-5'>
         <p className='font-semibold text-lg'>13:04</p>
-        <button className='py-2 px-6 border-2 rounded-xl hover:bg-[#00df9a] hover:border-blue-500 hover:text-white font-semibold text-lg'>Exit</button>
+        <button onClick={handleExit} className='py-2 px-6 border-2 rounded-xl hover:bg-[#00df9a] hover:border-blue-500 hover:text-white font-semibold text-lg'>Exit</button>
       </div>
     </div>
     <hr className="border-gray-300 border-[1px]" />
