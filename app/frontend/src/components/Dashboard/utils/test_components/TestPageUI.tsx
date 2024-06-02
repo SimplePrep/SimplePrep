@@ -4,7 +4,6 @@ import { PiFlagThin } from 'react-icons/pi';
 import { useNavigate, useParams } from 'react-router-dom';
 import { getModules, getQuestionsByModuleId, submitAnswers, submitTestResult, submitUserAnswers } from '../../../utils/axios/axiosServices';
 import { useAuth } from '../../../utils/AuthProvider';
-import axios from 'axios';
 import Modal from '../../../../pages/Authentication/Modal';
 
 interface Question {
@@ -145,6 +144,19 @@ const TestPageUI = () => {
       navigate('/demo');
     }, 4000);}
 
+  const handleParagraphSplit = (context: string) => {
+    const sections = context.split('\n');
+    return (
+      <div className=''>
+        {sections.map((section, index) => (
+          <p key={index === 0 ? '' : 'mt-2'}>
+            {section}
+          </p>
+        ))}
+      </div>
+    )
+  }
+
   if (!questions.length) {
     return <div>Loading questions...</div>;
   }
@@ -182,7 +194,7 @@ const TestPageUI = () => {
       <div className='w-[50%] border-r-2'>
         <div className="p-14">
           <p className='font-medium text-lg'>
-            {currentQuestion.context}
+            {handleParagraphSplit(currentQuestion.context)}
           </p>
         </div>
       </div>

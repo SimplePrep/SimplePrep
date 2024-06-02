@@ -25,6 +25,7 @@ from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from django.contrib.auth import get_user_model
 import logging
 from .analytics_algo import generate_report
+from django.db import transaction
 
 logger = logging.getLogger(__name__)
 
@@ -161,6 +162,7 @@ class UserTestModuleAnswersView(APIView):
         serializer = UserAnswerSerializer(answers, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
     
+    @transaction.atomic
     def post(self, request, user_uid, test_module_id, format=None):
         user = get_object_or_404(User, firebase_uid=user_uid)
         if request.user != user:
@@ -189,8 +191,13 @@ class UserTestModuleAnswersView(APIView):
             else:
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-        report = generate_report(test_result)
-        return Response(responses, status=status.HTTP_201_CREATED)
+        try:
+            report = generate_report(test_result)
+            return Response(responses, status=status.HTTP_201_CREATED)
+        except Exception as e:
+            transaction.set_rollback(True)
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
     
 class TestModuleDetailView(APIView):
     permission_classes = [IsAuthenticatedWithFirebase]

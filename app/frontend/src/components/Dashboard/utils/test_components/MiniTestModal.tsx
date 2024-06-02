@@ -1,4 +1,3 @@
-// MiniTestModal.tsx
 import React, { useState, useEffect } from 'react';
 import { BsFillArrowLeftCircleFill, BsFillArrowRightCircleFill, BsMoon } from 'react-icons/bs';
 import { Question } from '../../types';

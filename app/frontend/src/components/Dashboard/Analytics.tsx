@@ -152,7 +152,7 @@ const Analytics: React.FC<AnalyticsProps> = ({ isDarkMode }) => {
     <div className={`max-w-[1400px] mx-auto p-20 ${Mode}`}>
       <div className="mb-8 flex flex-col justify-center items-center">
         <h2 className="text-2xl font-semibold ">Welcome to Your Performance Dashboard</h2>
-        <p className="mt-2 text-lg ">Here, you can track your progress, view your test scores over time, and identify areas for improvement. Let's get started!</p>
+        <p className="mt-2 text-lg ">Here, you can track your progress, view your test scores in percentage(Out of 100) over time, and identify areas for improvement. Let's get started!</p>
       </div>
       <div className='flex justify-center items-center'>
         <div className="flex justify-center items-center bg-slate-100 rounded-xl" style={{ width: '850px', height: '550px' }}>
