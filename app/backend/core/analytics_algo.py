@@ -64,9 +64,12 @@ def generate_report(test_result):
             if section_data['correct_answers'] / section_data['total_questions'] < 0.5:
                 report['suggestions'].append(f"{section} of {module} module.")
 
+    test_result.score = round(report['correct_answers'] / report['total_questions'] * 100, 2)
+    test_result.save()
     # Save report to database
     TestReport.objects.update_or_create(
         test_result=test_result,
         defaults={'report_data': report}
     )
+    
     return report
