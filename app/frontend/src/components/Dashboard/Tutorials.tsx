@@ -47,7 +47,7 @@ const Tutorials = () => {
         {
             title: "English",
             imagePath: read_icon,
-            items: ["Command of Evidence", "Central Ideas and Details", "Inferences", "Text Structure and Purpose", "Cross-Text Connections", "Transitions"],
+            items: ["Words in Context", "Central Ideas and Details", "Inferences", "Text Structure and Purpose", "Cross-Text Connections"],
             linkPath: `${basePath}/english`
         },
         {
