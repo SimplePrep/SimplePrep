@@ -47,21 +47,15 @@ const Tutorials = () => {
         {
             title: "English",
             imagePath: read_icon,
-            items: ["Command of Evidence", "Central Ideas and Details", "Inferences", "Text Structure and Purpose", "Cross-Text Connections", "Transitions"],
+            items: ["Words in Context", "Central Ideas and Details", "Inferences", "Text Structure and Purpose", "Cross-Text Connections"],
             linkPath: `${basePath}/english`
         },
         {
             title: "Writing",
             imagePath: write_icon,
-            items: ["Conventions of English", "Tenses", "Pronouns", "Parallelism", "-", "-"],
+            items: ["Boundaries", "Form, Structure, Tense", "Transitions", "Notes",],
             linkPath: `${basePath}/writing`
         },
-        {
-            title: "Math",
-            imagePath: math_icon,
-            items: ["Algebra", "Data Analysis", "Geometry and Trigonometry", "Advanced Math", "-", "-"],
-            linkPath: `${basePath}/math`
-        }
     ]
 
   return (
