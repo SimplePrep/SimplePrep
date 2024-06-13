@@ -53,15 +53,9 @@ const Tutorials = () => {
         {
             title: "Writing",
             imagePath: write_icon,
-            items: ["Conventions of English", "Tenses", "Pronouns", "Parallelism", "-", "-"],
+            items: ["Boundaries", "Form, Structure, Tense", "Transitions", "Notes",],
             linkPath: `${basePath}/writing`
         },
-        {
-            title: "Math",
-            imagePath: math_icon,
-            items: ["Algebra", "Data Analysis", "Geometry and Trigonometry", "Advanced Math", "-", "-"],
-            linkPath: `${basePath}/math`
-        }
     ]
 
   return (
