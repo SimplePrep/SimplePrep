@@ -2,10 +2,16 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500&display=swap');
 @import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap");
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --radial-gradient-background: 0, 0, 128;
+  --solid-color-background: 0, 0, 128;
+  --overlay-color: 0, 0, 128;
+}
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -73,4 +79,61 @@ code {
 
 .text-color-light {
   color: #000000;
+}
+
+.radial-gradient {
+  background: radial-gradient(
+          circle at 50% 0%,
+          rgba(var(--radial-gradient-background), 0.05) 0%,
+          transparent 100%
+      )
+      rgba(var(--solid-color-background), 1);
+}
+
+.linear-mask {
+  mask-image: linear-gradient(
+      -75deg,
+      white calc(var(--x) + 100%),
+      transparent calc(var(--x) + 30%),
+      white calc(var(--x) + 100%)
+  );
+  -webkit-mask-image: linear-gradient(
+      -75deg,
+      white calc(var(--x) + 20%),
+      transparent calc(var(--x) + 30%),
+      white calc(var(--x) + 100%)
+  );
+}
+
+.linear-overlay {
+  background-image: linear-gradient(
+      -75deg,
+      rgba(var(--overlay-color), 0.1) calc(var(--x) + 10%),
+      rgba(var(--overlay-color), 0.5) calc(var(--x) + 25%),
+      rgba(var(--overlay-color), 0.1) calc(var(--x) + 100%)
+  );
+  mask:
+      linear-gradient(black, black) content-box,
+      linear-gradient(white, white);
+  -webkit-mask:
+      linear-gradient(black, black) content-box,
+      linear-gradient(black, black);
+  mask-composite: exclude;
+  -webkit-mask-composite: xor;
+}
+
+.login-button {
+  padding: 10px 20px;
+  font-size: 16px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  background: linear-gradient(to right, #ff4081, #ff4081);
+  background-size: 200% auto;
+  transition: color 0.3s ease;
+}
+
+.login-button:hover {
+  background-position: right center; /* Change the direction of the gradient */
+  color: #fff; /* Change the text color */
 }
