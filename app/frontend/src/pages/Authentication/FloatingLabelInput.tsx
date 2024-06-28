@@ -40,7 +40,7 @@ const FloatingLabelInput: React.FC<InputProps> = ({id, label, type, value, setVa
                 id={id} 
                 type={type} 
                 placeholder=' '
-                className='w-full p-4 pt-6 font-light bg-white border-2 rounded-md outline-none transition disabled:opacity-70 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500'
+                className='w-full p-2 pt-5 font-light bg-white border-2 rounded-2xl outline-none transition disabled:opacity-70 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500'
                 value={value}
                 onChange={e=> setValue(e.target.value)}
                 onFocus={handleFocus}
@@ -49,7 +49,7 @@ const FloatingLabelInput: React.FC<InputProps> = ({id, label, type, value, setVa
             />
             <label
                 htmlFor={id}
-                className={`absolute text-md duration-150 disabled:cursor-not-allowed transform -translate-y-3 top-5 z-5 origin-[0] left-4 peer-placeholder-shown:scale-200 peer-placeholder-shown:translate-y-0 ${
+                className={`absolute text-md duration-150 disabled:cursor-not-allowed transform -translate-y-3 top-4 z-5 origin-[0] left-4 peer-placeholder-shown:scale-200 peer-placeholder-shown:translate-y-0 ${
                 isFocused || value ? 'scale-75 -translate-y-4' : 'scale-200 translate-y-0'
                 }`}
             >
