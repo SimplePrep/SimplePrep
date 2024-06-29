@@ -41,7 +41,7 @@ const ResetPassword = (): React.ReactElement =>  {
   return (
     <div className='flex w-full h-screen bg-gray-300 p-5'>
         {showModal && <Loader message="If your email is registered with us, you will receive a password reset link to your email shortly." />}
-        <div className='flex  h-full max-w-[1450px] mx-auto flex-row  p-5 rounded-2xl justify-center'style={backgroundImageStyle}>
+        <div className='flex  h-full max-w-[1450px] mx-auto flex-row  p-5 rounded-2xl justify-center border-4 border-white'style={backgroundImageStyle}>
             <div className='w-[50%]'>
                 <div className= 'h-full p-9 flex flex-col gap-5 bg-transparent justify-center'>
                     <div className='flex flex-row items-center'>
@@ -72,7 +72,7 @@ const ResetPassword = (): React.ReactElement =>  {
                                         {error}
                                     </p>
                                 )}
-                                <button type='submit' className="mt-5 w-full bg-blue-500 text-white py-3 rounded-2xl hover:bg-blue-600">Reset Password</button>
+                                <button type='submit' className="mt-5 w-full bg-blue-500 border-2 border-gray-200 hover:border-blue-400 text-white py-3 rounded-2xl hover:bg-blue-600">Reset Password</button>
                             </div>
                         </form>
                 </div>

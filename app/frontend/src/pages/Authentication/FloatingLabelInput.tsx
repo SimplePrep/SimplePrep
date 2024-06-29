@@ -40,7 +40,7 @@ const FloatingLabelInput: React.FC<InputProps> = ({id, label, type, value, setVa
                 id={id} 
                 type={type} 
                 placeholder=' '
-                className='w-full p-2 pt-5 font-light bg-white border-2 rounded-2xl outline-none transition disabled:opacity-70 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500'
+                className='w-full p-2 pt-5 font-light bg-slate-100 border-2 rounded-2xl outline-none transition disabled:opacity-70 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500'
                 value={value}
                 onChange={e=> setValue(e.target.value)}
                 onFocus={handleFocus}
