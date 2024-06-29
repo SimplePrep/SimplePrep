@@ -86,7 +86,7 @@ const SignUp = ():  React.ReactElement =>  {
   return (
     <div className='flex w-full h-screen  bg-gray-300 p-5'>
         {accountCreated && showModal && <Modal message={modalMessage} />}
-        <div className='flex  h-full max-w-[1450px] mx-auto flex-row  p-5 rounded-2xl justify-center'style={backgroundImageStyle}>
+        <div className='flex  h-full max-w-[1450px] mx-auto flex-row  p-5 rounded-2xl justify-center border-4 border-white'style={backgroundImageStyle}>
             <div className='w-[50%]'>
                 <div className= 'p-10  flex flex-col gap-5 bg-transparent'>
                     <div className='flex flex-row items-center'>
@@ -100,7 +100,7 @@ const SignUp = ():  React.ReactElement =>  {
                     <h2 className='font-bold text-xl text-white'>But with us, you will learn more.</h2>
                 </div>
             </div>
-            <div className='bg-white shadow-lg w-[50%] flex flex-col py-12 items-center  rounded-2xl'>
+            <div className='bg-white shadow-lg w-[50%] flex flex-col py-12 items-center  rounded-2xl border-4 border-slate-100'>
                 <div className='max-w-lg'>
                 <h1 className='font-normal text-xl text-black '>Create your account!</h1>
                     <p className='mt-2 text-md text-slate-500'>Already have an account? <a className='text-blue-500 font-bold' href="/login">Login</a></p>
@@ -124,7 +124,7 @@ const SignUp = ():  React.ReactElement =>  {
                                     </p>
                             </div>  
                             <div className='mt-7 flex items-center justify-center'>
-                                <button type='submit' className="w-full bg-blue-500 text-white py-3 rounded-2xl hover:bg-blue-600">Register</button>
+                                <button type='submit' className="w-full bg-blue-500 text-white py-3 rounded-2xl border-2 border-gray-200 hover:border-blue-400 hover:bg-blue-600">Register</button>
                             </div>                         
                         </div>
                     </form>
@@ -133,7 +133,7 @@ const SignUp = ():  React.ReactElement =>  {
                         <span className="px-2 text-slate-500">or</span>
                         <span className="border-t w-1/2 border-2"></span>
                     </div>
-                    <button onClick={handleGoogleSignIn} className="w-full  flex items-center justify-center mt-2 border-2 font-medium py-2 rounded-2xl hover:bg-slate-100 hover:border-green-800">
+                    <button onClick={handleGoogleSignIn} className="w-full  flex items-center justify-center bg-gray-100 mt-2 border-2 font-medium py-2 rounded-2xl hover:bg-gray-300 hover:border-green-800">
                         <FcGoogle className="mr-2" size={30}/>
                         <p className="text-center">Continue with Google</p>
                     </button>

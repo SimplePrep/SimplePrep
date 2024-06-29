@@ -54,7 +54,7 @@ const Login =():  React.ReactElement =>  {
 
   return (
     <div className='flex w-full h-screen bg-gray-300 p-5'>
-        <div className='flex h-full max-w-[1450px] mx-auto flex-row p-5 rounded-2xl'  style={backgroundImageStyle}>
+        <div className='flex h-full max-w-[1450px] mx-auto flex-row p-5 rounded-2xl border-4 border-white'  style={backgroundImageStyle}>
             <div className='w-[50%]'>
                 <div className= 'p-9 flex flex-col gap-5 bg-transparent'>
                     <div className='flex flex-row items-center'>
@@ -68,7 +68,7 @@ const Login =():  React.ReactElement =>  {
                     <h2 className='font-bold text-xl text-white'>But with us, you will learn more.</h2>
                 </div>
             </div>
-            <div className='bg-white shadow-lg  w-[50%] rounded-2xl flex flex-col p-12 bg-transparent'>
+            <div className='bg-white shadow-lg  w-[50%] rounded-2xl flex flex-col p-12 bg-transparent border-4 border-slate-100'>
                 <div className='max-w-lg'>
                     <h1 className='font-bold text-3xl text-black'>Hello, Welcome back</h1>
                     <p className='text-slate-500 mt-5'>Enter your login credentials</p>
@@ -87,7 +87,7 @@ const Login =():  React.ReactElement =>  {
                                         {pageError || 'Placeholder'}
                                     </p>
                                 </div>
-                            <button type='submit' className="w-full bg-blue-500 text-white py-3 rounded-2xl hover:bg-blue-600">Login</button>
+                            <button type='submit' className="w-full bg-blue-500 text-white py-3 rounded-2xl border-2 border-gray-200 hover:border-blue-400 hover:bg-blue-600">Login</button>
                         </div>
                     </form>
                     <p className='mt-5'>
@@ -98,7 +98,7 @@ const Login =():  React.ReactElement =>  {
                         <span className="px-2 text-slate-500">or</span>
                         <span className="border-t w-1/2 border-2"></span>
                     </div>
-                    <button onClick={handleGoogleSignIn} className="w-full mt-2 border-2 font-medium py-3 rounded-2xl hover:bg-slate-100 flex items-center justify-center hover:border-green-800">
+                    <button onClick={handleGoogleSignIn} className="w-full bg-gray-100 mt-2 border-2 font-medium py-2 rounded-2xl hover:bg-gray-300 flex items-center justify-center hover:border-green-800">
                         <FcGoogle className="mr-2" size={30}/>
                         <p className="text-center">Sign in with Google</p>
                     </button>
