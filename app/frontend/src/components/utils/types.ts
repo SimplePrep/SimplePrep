@@ -12,6 +12,13 @@ export interface UserFormValues {
   password: string;
 }
 
+export interface SafeUser {
+  uid: string;
+  email: string | null;
+  displayName: string | null;
+  emailVerified: boolean;
+}
+
 export interface IAuth {
   user: User | null;
   loading: boolean;
