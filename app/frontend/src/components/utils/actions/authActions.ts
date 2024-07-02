@@ -3,38 +3,16 @@ import { auth } from '../firebaseConfig';
 import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
-  signOut,
   sendPasswordResetEmail,
   signInWithPopup,
   GoogleAuthProvider,
   onAuthStateChanged,
   sendEmailVerification,
 } from 'firebase/auth';
+import {signOut as firebaseSignOut} from 'firebase/auth'
 import axios from 'axios';
 import { LoginFormValues, UserFormValues } from '../types';
-import { AUTH_LOADING, AUTH_SUCCESS, AUTH_ERROR, SIGN_OUT } from './actionTypes';
-import { authError, authLoading, authSuccess, clearError } from '../reducers/authReducer';
-
-interface AuthLoadingAction {
-  type: typeof AUTH_LOADING;
-}
-
-interface AuthSuccessAction {
-  type: typeof AUTH_SUCCESS;
-  payload: any;  // Adjust the type accordingly
-}
-
-interface AuthErrorAction {
-  type: typeof AUTH_ERROR;
-  payload: string;
-}
-
-interface SignOutAction {
-  type: typeof SIGN_OUT;
-}
-
-type AuthActionTypes = AuthLoadingAction | AuthSuccessAction | AuthErrorAction | SignOutAction;
-
+import { authLoading, authSuccess, authError, signOut as signOutAction, clearError } from '../reducers/authReducer';
 
 export const SignIn = (creds: LoginFormValues, onSuccess: () => void) => async (dispatch: Dispatch) => {
   dispatch(authLoading());
@@ -106,7 +84,6 @@ export const GoogleSignIn = () => async (dispatch: Dispatch) => {
   }
 };
 
-
 export const SignUp = (creds: UserFormValues) => async (dispatch: Dispatch) => {
   dispatch(authLoading());
 
@@ -134,56 +111,56 @@ export const SignUp = (creds: UserFormValues) => async (dispatch: Dispatch) => {
   }
 };
 
-export const SignOut = () => async (dispatch: Dispatch<AuthActionTypes>) => {
-  dispatch({ type: AUTH_LOADING });
+export const SignOut = () => async (dispatch: Dispatch) => {
+  dispatch(authLoading());
 
   try {
-    await signOut(auth);
-    dispatch({ type: SIGN_OUT });
+    await firebaseSignOut(auth);
+    dispatch(signOutAction());
   } catch (error) {
-    dispatch({ type: AUTH_ERROR, payload: (error as Error).message });
+    dispatch(authError((error as Error).message));
   }
 };
 
-
-export const SendResetPasswordEmail = (email: string) => async (dispatch: Dispatch<AuthActionTypes>) => {
-  dispatch({ type: AUTH_LOADING });
+export const SendResetPasswordEmail = (email: string) => async (dispatch: Dispatch) => {
+  dispatch(authLoading());
 
   try {
     await sendPasswordResetEmail(auth, email);
-    dispatch({ type: AUTH_SUCCESS, payload: null });
+    dispatch(authSuccess(null));
   } catch (error) {
-    dispatch({ type: AUTH_ERROR, payload: (error as Error).message });
+    dispatch(authError((error as Error).message));
   }
 };
 
-export const checkAuthenticated = () => async (dispatch: Dispatch<AuthActionTypes>) => {
-  dispatch({ type: AUTH_LOADING });
+export const checkAuthenticated = () => async (dispatch: Dispatch) => {
+  dispatch(authLoading());
 
   try {
     const user = auth.currentUser;
 
     if (user && user.emailVerified) {
-      dispatch({ type: AUTH_SUCCESS, payload: user });
+      dispatch(authSuccess(user));
     } else {
-      dispatch({ type: SIGN_OUT });
+      dispatch(signOutAction());
     }
   } catch (error) {
-    dispatch({ type: AUTH_ERROR, payload: (error as Error).message });
+    dispatch(authError((error as Error).message));
   }
 };
 
-export const loadUser = () => (dispatch: Dispatch<AuthActionTypes>) => {
-  dispatch({ type: AUTH_LOADING });
+export const loadUser = () => (dispatch: Dispatch) => {
+  dispatch(authLoading());
 
   onAuthStateChanged(auth, user => {
     if (user && user.emailVerified) {
-      dispatch({ type: AUTH_SUCCESS, payload: user });
+      dispatch(authSuccess(user));
     } else {
-      dispatch({ type: SIGN_OUT });
+      dispatch(signOutAction());
     }
   });
 };
+
 export const clearAuthError = () => (dispatch: Dispatch) => {
   dispatch(clearError());
 };
