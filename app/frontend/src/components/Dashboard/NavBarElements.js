@@ -10,26 +10,21 @@ export const SideBarLinks = [
     {
         title : "Dashboard",
         path: 'dashboard',
-        icon: <TbLayoutDashboard size={25} color='green' />
+        icon: <TbLayoutDashboard size={25} color='blue' />
     },
     {
         title: "Tutorials",
         path: 'tutorials',
-        icon: <VscBook size={25} color='green' />
+        icon: <VscBook size={25} color='blue' />
     },
     {
         title: "Discord",
         path: 'https://discord.gg/7c93kyfC',
-        icon: <BsDiscord size={25} color='green' />
+        icon: <BsDiscord size={25} color='blue' />
     },
     {
         title: "Analytics",
         path: 'analytics',
-        icon: <GiProgression size={25} color='green' />
+        icon: <GiProgression size={25} color='blue' />
     },
-    {
-        title: "",
-        path: 'settings',
-        icon: <AiOutlineSetting size={25} color='green' />
-    }
 ]
