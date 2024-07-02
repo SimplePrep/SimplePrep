@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Logo from '../assets/logo4.png';
 import { Link, useNavigate } from 'react-router-dom';
 import { AiOutlineClose, AiOutlineMenu } from 'react-icons/ai';
@@ -67,12 +67,12 @@ const Navbar: React.FC<NavbarProps> = ({ isAuthenticated, user }) => {
                 mass: 0.1,
               },
             }}
-            className="px-6 py-3  relative hover:bg-blue-900 rounded-3xl  hover:text-white"
+            className="px-6 py-3 relative hover:bg-blue-900 rounded-3xl hover:text-white"
             onClick={handleLoginClick}
           >
             <span className="block absolute inset-0 rounded-3xl hover:bg-blue-900 border-[2px] border-blue-900 p-px linear-overlay" />
             <span className='text-xl font-medium tracking-wide h-full w-full block relative linear-mask'>
-               Login →
+              {isAuthenticated ? 'Go to Demo' : 'Login'} →
             </span>
           </motion.button>
         </div>
@@ -83,12 +83,16 @@ const Navbar: React.FC<NavbarProps> = ({ isAuthenticated, user }) => {
         <div className={nav ? 'fixed left-0 top-24 w-[100%] h-full border-r border-r-gray-900 bg-white ease-in-out duration-500' : 'fixed hidden'}>
           <ul className='flex flex-col p-3 gap-4 text-md'>
             {NavLinks.map((link, index) => (
-              <Link className='p-4 border-b border-gray-600' to={link.path} key={index}>
+              <Link className='p-4 border-b border-gray-600' to={link.path} key={index} onClick={() => setNav(false)}>
                 {link.title}
               </Link>
             ))}
-            <Link to='/login' className='p-4 text-2xl font-medium bg-gray-100 rounded-lg'>Sign In</Link>
-            <Link to='/signup' className='p-4 text-2xl font-medium bg-[#00df9a] rounded-lg'>Sign Up</Link>
+            <button onClick={handleLoginClick} className='p-4 text-2xl font-medium bg-gray-100 rounded-lg'>
+              {isAuthenticated ? 'Go to Demo' : 'Sign In'}
+            </button>
+            <Link to='/signup' className='p-4 text-2xl font-medium bg-[#00df9a] rounded-lg' onClick={() => setNav(false)}>
+              Sign Up
+            </Link>
           </ul>
         </div>
       </div>
