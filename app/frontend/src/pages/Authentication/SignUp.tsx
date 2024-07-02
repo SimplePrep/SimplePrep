@@ -5,83 +5,87 @@ import {LiaFastForwardSolid} from 'react-icons/lia';
 import { useNavigate} from 'react-router-dom';
 import FloatingLabelInput from './FloatingLabelInput';
 import Modal from './Modal';
-import  AuthContext  from '../../components/utils/AuthContext';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '../../components/store';
+import { SignUp, GoogleSignIn, clearAuthError } from '../../components/utils/actions/authActions';
 
-const SignUp = ():  React.ReactElement =>  {
-    const {SignUp, GoogleSignIn, error} = useContext(AuthContext);
-    const [accountCreated, setAccountCreated] = useState(false);
-    const [firstName, setFirstName] = useState('');
-    const [lastName, setLastName] = useState('');
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [rePassword, setRePassword] = useState('');
-    const [showModal, setShowModal] = useState(false);
-    const [pageError, setPageError] = useState('');
-    const [modalMessage, setModalMessage] = useState('');
+const SignUpComponent = ():  React.ReactElement =>  {
+    const dispatch = useDispatch<AppDispatch>();
+  const { error, loading } = useSelector((state: RootState) => state.auth);
+  const [accountCreated, setAccountCreated] = useState(false);
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [rePassword, setRePassword] = useState('');
+  const [showModal, setShowModal] = useState(false);
+  const [pageError, setPageError] = useState('');
+  const [modalMessage, setModalMessage] = useState('');
 
+  const backgroundImageStyle = {
+    backgroundImage: `url(${banner})`,
+  };
+  const navigate = useNavigate();
 
-    const backgroundImageStyle = {
-        backgroundImage: `url(${banner})`,
-    };
-    const navigate = useNavigate();
-
-
-    const handleGoogleSignIn = async () => {
-        try {
-            await GoogleSignIn();
-            setModalMessage('Account created successfully! Redirecting you to Demo page.');
-            setShowModal(true);
-            setTimeout(() => {
-                setShowModal(false);
-                navigate('/demo');
-            }, 5000);
-        } catch (err) {
-            console.error('Error during Google Sign-In:', err);
-        }
-    };
-    
-
-    const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        if (password !== rePassword) {
-            setPageError('Passwords do not match.');
-            return;
-        }
-        setPageError('');
-        setAccountCreated(false);
+  const handleGoogleSignIn = async () => {
+    try {
+      dispatch(GoogleSignIn());
+      setModalMessage('Account created successfully! Redirecting you to Demo page.');
+      setShowModal(true);
+      setTimeout(() => {
         setShowModal(false);
-        
-        try {
-            await SignUp({firstName, lastName, email, password});
-            setAccountCreated(true);
-        }  catch (err: unknown) {
-            if (err instanceof Error) {
-                setPageError(err.message);
-            } else {
-                setPageError('An unexpected error occurred during sign up.');
-            }
-        }
-        
-    };
-    useEffect(() => {
-        if (accountCreated && !error) {
-            setModalMessage("Account created successfully! Check your email to follow the link to activate your account. Redirecting you to home page.");
-        setShowModal(true);
-        setTimeout(() => {
-            setShowModal(false);
-            navigate('/');
-        }, 7000);
-        }
-    }, [accountCreated, navigate])
-    
-    useEffect(() => {
-        if (error) {
-            setPageError(error);
-            setAccountCreated(false);
-            setShowModal(false);
-        }
-    }, [error])
-    
+        navigate('/demo');
+      }, 5000);
+    } catch (err) {
+      console.error('Error during Google Sign-In:', err);
+    }
+  };
+
+  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (password !== rePassword) {
+      setPageError('Passwords do not match.');
+      return;
+    }
+    setPageError('');
+    setAccountCreated(false);
+    setShowModal(false);
+
+    try {
+      const creds = { firstName, lastName, email, password };
+      await dispatch(SignUp(creds));
+      setAccountCreated(true);
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setPageError(err.message);
+      } else {
+        setPageError('An unexpected error occurred during sign up.');
+      }
+    }
+  };
+
+  useEffect(() => {
+    dispatch(clearAuthError());
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (accountCreated && !error) {
+      setModalMessage('Account created successfully! Check your email to follow the link to activate your account. Redirecting you to home page.');
+      setShowModal(true);
+      setTimeout(() => {
+        setShowModal(false);
+        navigate('/');
+      }, 7000);
+    }
+  }, [accountCreated, navigate, error]);
+
+  useEffect(() => {
+    if (error) {
+      setPageError(error);
+      setAccountCreated(false);
+      setShowModal(false);
+    }
+  }, [error]);
 
   return (
     <div className='flex w-full h-screen  bg-gray-300 p-5'>
@@ -144,4 +148,4 @@ const SignUp = ():  React.ReactElement =>  {
   )
 }
 
-export default SignUp;
+export default SignUpComponent;

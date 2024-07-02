@@ -9,6 +9,7 @@
     "@fortawesome/free-regular-svg-icons": "^6.4.2",
     "@fortawesome/free-solid-svg-icons": "^6.4.2",
     "@fortawesome/react-fontawesome": "^0.2.0",
+    "@reduxjs/toolkit": "^2.2.6",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
@@ -35,7 +36,7 @@
     "react-draft-wysiwyg": "^1.15.0",
     "react-firebase-hooks": "^5.1.1",
     "react-icons": "^4.10.1",
-    "react-redux": "^9.0.4",
+    "react-redux": "^9.1.2",
     "react-router-dom": "^6.21.1",
     "web-vitals": "^2.1.4"
   },

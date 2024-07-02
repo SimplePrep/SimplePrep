@@ -1,16 +1,27 @@
 import { User } from 'firebase/auth';
-import { LoginFormValues, UserFormValues } from './AuthServices';
+
+export interface LoginFormValues {
+  email: string;
+  password: string;
+}
+
+export interface UserFormValues {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+}
 
 export interface IAuth {
   user: User | null;
   loading: boolean;
   isAuthenticated: boolean;
-  error: string | null;  // Allow `null` for the error property
+  error: string | null;
   SignIn: (creds: LoginFormValues, onSuccess: () => void) => Promise<void>;
   SignUp: (creds: UserFormValues) => Promise<void>;
   SignOut: () => Promise<void>;
   GoogleSignIn: () => Promise<void>;
-  SendResetPasswordEmail: (email: string) => Promise<void>; 
+  SendResetPasswordEmail: (email: string) => Promise<void>;
   checkAuthenticated: () => Promise<void>;
   loadUser: () => Promise<void>;
 }
@@ -21,4 +32,3 @@ export interface UserDetails {
   last_name: string;
   firebase_uid: string;
 }
-

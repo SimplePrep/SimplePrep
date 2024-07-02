@@ -1,14 +1,12 @@
+import {configureStore} from '@reduxjs/toolkit';
+import authReducer from './utils/reducers/authReducer';
 
-// import {configureStore} from '@reduxjs/toolkit'
-// import * as thunk from 'redux-thunk';
-// import rootReducer from './reducers/rootReducer';
+export const store = configureStore({
+    reducer: {
+        auth: authReducer
+    },
+});
 
-// const initialState = {};
+export type RootState = ReturnType<typeof store.getState>;
+export type AppDispatch = typeof store.dispatch;
 
-// const store = configureStore({
-//     reducer: rootReducer,
-//     preloadedState: initialState,
-// });
-
-// export default store;
-export {}
