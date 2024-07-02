@@ -4,7 +4,6 @@ import { Route, Routes } from 'react-router';
 import DashboardPage from './pages/DashboardPage';
 import Layout, {LandingPage} from './pages/LandingPage';
 import Login from './pages/Authentication/Login';
-import SignUp from './pages/Authentication/SignUp';
 import BlogPostDetails from './components/Landing/features/BlogPostDetails';
 import Blogs from './components/Landing/Blogs';
 import TestPageUI from './components/Dashboard/utils/test_components/TestPageUI';
@@ -17,6 +16,7 @@ import { Navigate , BrowserRouter as Router} from 'react-router-dom';
 import Analytics from './components/Dashboard/Analytics';
 import AuthProvider from './components/utils/AuthProvider';
 import { Provider } from 'react-redux';
+import SignUpComponent from './pages/Authentication/SignUp';
 
 
 const App = () => {
@@ -45,7 +45,7 @@ const App = () => {
                 </Route>
               {/* Authentication Routes */}
               <Route path="/login" element={<Login/>}/>
-              <Route path="/signup" element={<SignUp/>}/>
+              <Route path="/signup" element={<SignUpComponent/>}/>
               <Route path="/reset-password" element={<ResetPassword/>}/>
 
               <Route path="practice-tests/:testId/sections/:sectionId/:sectionName" element={<TestPageUI/>}/>
