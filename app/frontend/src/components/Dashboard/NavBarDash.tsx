@@ -1,6 +1,6 @@
 import React from 'react';
 import Logo from '../assets/logo4.png';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate} from 'react-router-dom';
 import { SideBarLinks } from './NavBarElements';
 import { BsMoon } from 'react-icons/bs';
 import { useSelector, useDispatch } from 'react-redux';
@@ -14,12 +14,15 @@ interface SideBarProps {
 
 const SideBar: React.FC<SideBarProps> = ({ toggleDarkMode, isDarkMode }): React.ReactElement => {
   const dispatch = useDispatch<AppDispatch>();
+  const navigate = useNavigate();
   const { user } = useSelector((state: RootState) => state.auth);
   const userInitial = user?.displayName?.charAt(0) || 'A';
   const darkModeClass = isDarkMode ? 'dark text-color-dark' : 'light text-color-light';
 
   const handleSignOut = () => {
-    dispatch(SignOut());
+    dispatch(SignOut()).then(() => {
+        navigate('/');
+    });
   };
 
   return (
