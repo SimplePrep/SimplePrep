@@ -82,7 +82,7 @@ const TestPageUI = () => {
     }
   }, [navigate, isAuthenticated, user]);
 
-  const toggleDarkMode = () => {
+  const toggleDarkMode = () => { 
     setIsDarkMode(!isDarkMode);
   };
 

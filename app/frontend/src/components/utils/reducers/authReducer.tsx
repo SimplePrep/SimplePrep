@@ -1,12 +1,13 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { User } from 'firebase/auth';
+import { SafeUser } from '../types';
 
-interface AuthState {
-  user: User | null;
-  loading: boolean;
-  isAuthenticated: boolean;
-  error: string | null;
-}
+  interface AuthState {
+    user: SafeUser | null;
+    loading: boolean;
+    isAuthenticated: boolean;
+    error: string | null;
+  }
 
 const initialState: AuthState = {
   user: null,
@@ -24,11 +25,21 @@ const authSlice = createSlice({
       state.error = null;
     },
     authSuccess(state, action: PayloadAction<User | null>) {
-      state.user = action.payload;
-      state.isAuthenticated = !!action.payload;
-      state.loading = false;
-      state.error = null;
-    },
+        if (action.payload) {
+          state.user = {
+            uid: action.payload.uid,
+            email: action.payload.email,
+            displayName: action.payload.displayName,
+            emailVerified: action.payload.emailVerified,
+            // Add other non-sensitive fields as needed
+          };
+        } else {
+          state.user = null;
+        }
+        state.isAuthenticated = !!action.payload;
+        state.loading = false;
+        state.error = null;
+      },
     authError(state, action: PayloadAction<string>) {
       state.error = action.payload;
       state.loading = false;

@@ -2,8 +2,8 @@ import { useState } from 'react';
 import Logo from '../assets/logo4.png';
 import { Link, useNavigate } from 'react-router-dom';
 import { AiOutlineClose, AiOutlineMenu } from 'react-icons/ai';
-import { User } from 'firebase/auth';
 import { motion } from 'framer-motion';
+import { SafeUser } from '../utils/types';
 
 const NavLinks = [
   { title: 'Product', path: '#product' },
@@ -16,7 +16,7 @@ const NavLinks = [
 
 interface NavbarProps {
   isAuthenticated: boolean;
-  user: User | null;
+  user: SafeUser | null;
 }
 
 const Navbar: React.FC<NavbarProps> = ({ isAuthenticated, user }) => {
