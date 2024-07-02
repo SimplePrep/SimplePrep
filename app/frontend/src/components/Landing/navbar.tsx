@@ -27,7 +27,7 @@ const Navbar: React.FC<NavbarProps> = ({ isAuthenticated, user }) => {
 
   const handleLoginClick = () => {
     if (isAuthenticated) {
-      navigate('/dashboard');
+      navigate('/demo');
     } else {
       navigate('/login');
     }
@@ -72,7 +72,7 @@ const Navbar: React.FC<NavbarProps> = ({ isAuthenticated, user }) => {
           >
             <span className="block absolute inset-0 rounded-3xl hover:bg-blue-900 border-[2px] border-blue-900 p-px linear-overlay" />
             <span className='text-xl font-medium tracking-wide h-full w-full block relative linear-mask'>
-              {isAuthenticated ? 'Dashboard' : 'Login →'}
+               Login →
             </span>
           </motion.button>
         </div>
