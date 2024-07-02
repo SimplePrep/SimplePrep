@@ -9,10 +9,34 @@ import {
   onAuthStateChanged,
   sendEmailVerification,
 } from 'firebase/auth';
-import {signOut as firebaseSignOut} from 'firebase/auth'
+import { signOut as firebaseSignOut } from 'firebase/auth';
 import axios from 'axios';
 import { LoginFormValues, UserFormValues } from '../types';
 import { authLoading, authSuccess, authError, signOut as signOutAction, clearError } from '../reducers/authReducer';
+
+// Error mapping function
+const getErrorMessage = (errorCode: string): string => {
+  switch (errorCode) {
+    case 'auth/invalid-email':
+      return 'The email address is not valid.';
+    case 'auth/user-disabled':
+      return 'The user account has been disabled.';
+    case 'auth/user-not-found':
+      return 'There is no user corresponding to this email.';
+    case 'auth/wrong-password':
+      return 'The password is invalid.';
+    case 'auth/email-already-in-use':
+      return 'The email address is already in use by another account.';
+    case 'auth/weak-password':
+      return 'The password is too weak.';
+    case 'auth/too-many-requests':
+      return 'Too many requests. Please try again later.';
+    case 'auth/network-request-failed':
+      return 'A network error has occurred. Please try again.';
+    default:
+      return 'An unexpected error occurred. Please try again.';
+  }
+};
 
 export const SignIn = (creds: LoginFormValues, onSuccess: () => void) => async (dispatch: Dispatch) => {
   dispatch(authLoading());
@@ -31,7 +55,8 @@ export const SignIn = (creds: LoginFormValues, onSuccess: () => void) => async (
     }
   } catch (error) {
     if (error instanceof Error) {
-      dispatch(authError(error.message));
+      const errorMessage = getErrorMessage(error.message);
+      dispatch(authError(errorMessage));
     } else {
       dispatch(authError('An unexpected error occurred.'));
     }
@@ -77,7 +102,8 @@ export const GoogleSignIn = () => async (dispatch: Dispatch) => {
     }
   } catch (error) {
     if (error instanceof Error) {
-      dispatch(authError(error.message));
+      const errorMessage = getErrorMessage(error.message);
+      dispatch(authError(errorMessage));
     } else {
       dispatch(authError('An unexpected error occurred.'));
     }
@@ -107,7 +133,12 @@ export const SignUp = (creds: UserFormValues) => async (dispatch: Dispatch) => {
       dispatch(authSuccess(user));
     }
   } catch (error) {
-    dispatch(authError((error as Error).message));
+    if (error instanceof Error) {
+      const errorMessage = getErrorMessage(error.message);
+      dispatch(authError(errorMessage));
+    } else {
+      dispatch(authError('An unexpected error occurred.'));
+    }
   }
 };
 
@@ -118,7 +149,12 @@ export const SignOut = () => async (dispatch: Dispatch) => {
     await firebaseSignOut(auth);
     dispatch(signOutAction());
   } catch (error) {
-    dispatch(authError((error as Error).message));
+    if (error instanceof Error) {
+      const errorMessage = getErrorMessage(error.message);
+      dispatch(authError(errorMessage));
+    } else {
+      dispatch(authError('An unexpected error occurred.'));
+    }
   }
 };
 
@@ -129,7 +165,12 @@ export const SendResetPasswordEmail = (email: string) => async (dispatch: Dispat
     await sendPasswordResetEmail(auth, email);
     dispatch(authSuccess(null));
   } catch (error) {
-    dispatch(authError((error as Error).message));
+    if (error instanceof Error) {
+      const errorMessage = getErrorMessage(error.message);
+      dispatch(authError(errorMessage));
+    } else {
+      dispatch(authError('An unexpected error occurred.'));
+    }
   }
 };
 
@@ -145,7 +186,12 @@ export const checkAuthenticated = () => async (dispatch: Dispatch) => {
       dispatch(signOutAction());
     }
   } catch (error) {
-    dispatch(authError((error as Error).message));
+    if (error instanceof Error) {
+      const errorMessage = getErrorMessage(error.message);
+      dispatch(authError(errorMessage));
+    } else {
+      dispatch(authError('An unexpected error occurred.'));
+    }
   }
 };
 
