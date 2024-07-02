@@ -20,7 +20,6 @@ const App = () => {
   const toggleDarkMode = () => setIsDarkMode(!isDarkMode);
 
   return (
-      <Router>
         <Routes>
           <Route path="/" element={<Layout />}>
             <Route index element={<LandingPage />} />
@@ -45,7 +44,6 @@ const App = () => {
           <Route path="practice-tests/:testId/sections/:sectionId/:sectionName" element={<TestPageUI />} />
           <Route path="/test/:testId/module/:moduleId" element={<TestPageUI />} />
         </Routes>
-      </Router>
   );
 }
 
