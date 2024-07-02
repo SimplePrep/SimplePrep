@@ -69,7 +69,9 @@ const Contents:React.FC = () => {
       ];
 
       const handleModuleClick = (testId: number, moduleId: number) => {
+        console.log('clicked module')
         navigate(`/test/${testId}/module/${moduleId}`);
+        console.log('something went wrong')
       };
 
   return (
