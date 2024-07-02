@@ -36,13 +36,13 @@ const App = () => {
               <Route path=":sectionId/:subsectionId" element={<Section isDarkMode={isDarkMode} />} />
             </Route>
             <Route path="analytics" element={<Analytics isDarkMode={isDarkMode} />} />
+            <Route path="test/:testId/module/:moduleId" element={<TestPageUI />} />
           </Route>
           {/* Authentication Routes */}
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<SignUpComponent />} />
           <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="practice-tests/:testId/sections/:sectionId/:sectionName" element={<TestPageUI />} />
-          <Route path="/test/:testId/module/:moduleId" element={<TestPageUI />} />
         </Routes>
   );
 }
