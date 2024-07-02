@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import { comingsoon } from '../utils'
-import axiosInstance from '../utils/axios/axiosInterceptor';
 import { getModules, getTests } from '../utils/axios/axiosServices';
 import { useNavigate } from 'react-router-dom';
 
