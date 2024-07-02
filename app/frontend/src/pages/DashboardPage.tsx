@@ -31,7 +31,7 @@ const DashboardPage:React.FC<DashboardPageProps> = ({
   }
 
   return (
-        <div className={`w-full h-full ${darkModeClass} font-montserrat`}>
+        <div className={`w-full h-full ${darkModeClass} font-opensans`}>
             <NavBarDash toggleDarkMode={toggleDarkMode} isDarkMode={isDarkMode}/>
             <div>
               <Outlet/>
