@@ -5,8 +5,7 @@ import { LiaFastForwardSolid } from 'react-icons/lia';
 import { Link, useNavigate } from 'react-router-dom';
 import FloatingLabelInput from './FloatingLabelInput';
 import { useSelector, useDispatch } from 'react-redux';
-import { RootState, AppDispatch } from '../../components/store'
-import { FirebaseError } from 'firebase/app';
+import { RootState, AppDispatch } from '../../components/store';
 import { GoogleSignIn, SignIn, clearAuthError } from '../../components/utils/actions/authActions';
 import { LoginFormValues } from '../../components/utils/types';
 
@@ -44,14 +43,8 @@ const Login = (): React.ReactElement => {
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    try {
-      const creds: LoginFormValues = { email, password };
-      dispatch(SignIn(creds, () => navigate('/demo', { replace: true })));
-    } catch (error) {
-      if (error instanceof FirebaseError) {
-        setPageError(error.message);
-      }
-    }
+    const creds: LoginFormValues = { email, password };
+    dispatch(SignIn(creds, () => navigate('/demo', { replace: true })));
   };
 
   return (
@@ -81,9 +74,7 @@ const Login = (): React.ReactElement => {
                 <FloatingLabelInput id="email" label='Email' type='email' value={email} setValue={setEmail} validate={false} />
                 <FloatingLabelInput id="password" label="Password" type='password' value={password} setValue={setPassword} validate={false} />
                 <div className="relative h-10 mb-4">
-                  <p
-                    className={`text-red-500 absolute inset-0 ${pageError ? 'visible' : 'invisible'}`}
-                  >
+                  <p className={`text-red-500 absolute inset-0 ${pageError ? 'visible' : 'invisible'}`}>
                     {pageError || 'Placeholder'}
                   </p>
                 </div>

@@ -35,8 +35,9 @@ interface SignOutAction {
 
 type AuthActionTypes = AuthLoadingAction | AuthSuccessAction | AuthErrorAction | SignOutAction;
 
-export const SignIn = (creds: LoginFormValues, onSuccess: () => void) => async (dispatch: Dispatch<AuthActionTypes>) => {
-  dispatch({ type: AUTH_LOADING });
+
+export const SignIn = (creds: LoginFormValues, onSuccess: () => void) => async (dispatch: Dispatch) => {
+  dispatch(authLoading());
 
   try {
     const userCredential = await signInWithEmailAndPassword(auth, creds.email, creds.password);
@@ -47,50 +48,15 @@ export const SignIn = (creds: LoginFormValues, onSuccess: () => void) => async (
     }
 
     if (user) {
-      const idToken = await user.getIdToken();
-      dispatch({ type: AUTH_SUCCESS, payload: user });
+      dispatch(authSuccess(user));
       onSuccess();
     }
   } catch (error) {
-    dispatch({ type: AUTH_ERROR, payload: (error as Error).message });
-  }
-};
-
-export const SignUp = (creds: UserFormValues) => async (dispatch: Dispatch) => {
-  dispatch(authLoading());
-
-  try {
-    const userCredential = await createUserWithEmailAndPassword(auth, creds.email, creds.password);
-    const user = userCredential.user;
-
-    if (user) {
-      await sendEmailVerification(user, { url: "https://beta-simpleprep.com" });
-
-      const userData = {
-        firebase_uid: user.uid,
-        email: user.email,
-        first_name: creds.firstName,
-        last_name: creds.lastName,
-        subscription_type: "free",
-      };
-
-      await axios.post('https://beta-simpleprep.com/auth/user/signup', userData);
-
-      dispatch(authSuccess(user));
+    if (error instanceof Error) {
+      dispatch(authError(error.message));
+    } else {
+      dispatch(authError('An unexpected error occurred.'));
     }
-  } catch (error) {
-    dispatch(authError((error as Error).message));
-  }
-};
-
-export const SignOut = () => async (dispatch: Dispatch<AuthActionTypes>) => {
-  dispatch({ type: AUTH_LOADING });
-
-  try {
-    await signOut(auth);
-    dispatch({ type: SIGN_OUT });
-  } catch (error) {
-    dispatch({ type: AUTH_ERROR, payload: (error as Error).message });
   }
 };
 
@@ -132,9 +98,53 @@ export const GoogleSignIn = () => async (dispatch: Dispatch) => {
       }
     }
   } catch (error) {
+    if (error instanceof Error) {
+      dispatch(authError(error.message));
+    } else {
+      dispatch(authError('An unexpected error occurred.'));
+    }
+  }
+};
+
+
+export const SignUp = (creds: UserFormValues) => async (dispatch: Dispatch) => {
+  dispatch(authLoading());
+
+  try {
+    const userCredential = await createUserWithEmailAndPassword(auth, creds.email, creds.password);
+    const user = userCredential.user;
+
+    if (user) {
+      await sendEmailVerification(user, { url: "https://beta-simpleprep.com" });
+
+      const userData = {
+        firebase_uid: user.uid,
+        email: user.email,
+        first_name: creds.firstName,
+        last_name: creds.lastName,
+        subscription_type: "free",
+      };
+
+      await axios.post('https://beta-simpleprep.com/auth/user/signup', userData);
+
+      dispatch(authSuccess(user));
+    }
+  } catch (error) {
     dispatch(authError((error as Error).message));
   }
 };
+
+export const SignOut = () => async (dispatch: Dispatch<AuthActionTypes>) => {
+  dispatch({ type: AUTH_LOADING });
+
+  try {
+    await signOut(auth);
+    dispatch({ type: SIGN_OUT });
+  } catch (error) {
+    dispatch({ type: AUTH_ERROR, payload: (error as Error).message });
+  }
+};
+
 
 export const SendResetPasswordEmail = (email: string) => async (dispatch: Dispatch<AuthActionTypes>) => {
   dispatch({ type: AUTH_LOADING });
