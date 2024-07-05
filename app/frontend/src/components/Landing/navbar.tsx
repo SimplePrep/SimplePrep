@@ -3,7 +3,6 @@ import Logo from '../assets/logo4.png';
 import { Link, useNavigate } from 'react-router-dom';
 import { AiOutlineClose, AiOutlineMenu } from 'react-icons/ai';
 import { motion } from 'framer-motion';
-import { SafeUser } from '../utils/types';
 
 const NavLinks = [
   { title: 'Product', path: '#product' },
@@ -16,10 +15,9 @@ const NavLinks = [
 
 interface NavbarProps {
   isAuthenticated: boolean;
-  user: SafeUser | null;
 }
 
-const Navbar: React.FC<NavbarProps> = ({ isAuthenticated, user }) => {
+const Navbar: React.FC<NavbarProps> = ({ isAuthenticated }) => {
   const [nav, setNav] = useState(false);
   const navigate = useNavigate();
 

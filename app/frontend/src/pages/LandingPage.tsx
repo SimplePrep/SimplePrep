@@ -8,6 +8,7 @@ import Hero from '../components/Landing/Hero';
 import Testimonials from '../components/Landing/Testimonials';
 import Notification from '../components/Landing/Newsletter';
 import FAQ from '../components/Landing/FAQ';
+import { auth } from '../components/utils/firebaseConfig';
 
 export const LandingPage = () => {
   return(
@@ -21,11 +22,11 @@ export const LandingPage = () => {
   )
 }
 const Layout = () => {
-  const { user, isAuthenticated } = useSelector((state: RootState) => state.auth);
+  const {  isAuthenticated } = useSelector((state: RootState) => state.auth);
 
   return (
     <>
-      <Navbar isAuthenticated={isAuthenticated} user={user} />
+      <Navbar isAuthenticated={isAuthenticated} />
       <Outlet />
     </>
   );

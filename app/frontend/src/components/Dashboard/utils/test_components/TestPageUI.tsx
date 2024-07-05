@@ -6,6 +6,7 @@ import { useSelector } from 'react-redux';
 import { getModules, getQuestionsByModuleId, submitAnswers } from '../../../utils/axios/axiosServices';
 import Modal from '../../../../pages/Authentication/Modal';
 import { RootState } from '../../../store';
+import { auth } from '../../../utils/firebaseConfig';
 
 interface Question {
   id: number;
@@ -41,7 +42,8 @@ interface UserAnswer {
 }
 
 const TestPageUI = () => {
-  const { user, isAuthenticated } = useSelector((state: RootState) => state.auth);
+  const { isAuthenticated } = useSelector((state: RootState) => state.auth);
+  const user = auth.currentUser;
   const { testId, moduleId } = useParams<{ testId: string; moduleId: string }>();
   const [questions, setQuestions] = useState<Question[]>([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);

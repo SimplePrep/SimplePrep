@@ -50,7 +50,7 @@ export const SignIn = (creds: LoginFormValues, onSuccess: () => void) => async (
     }
 
     if (user) {
-      dispatch(authSuccess(user));
+      dispatch(authSuccess());
       onSuccess();
     }
   } catch (error) {
@@ -95,7 +95,7 @@ export const GoogleSignIn = () => async (dispatch: Dispatch) => {
       }
 
       if (user.emailVerified) {
-        dispatch(authSuccess(user));
+        dispatch(authSuccess());
       } else {
         dispatch(authError('Please verify your email before logging in.'));
       }
@@ -130,7 +130,7 @@ export const SignUp = (creds: UserFormValues) => async (dispatch: Dispatch) => {
 
       await axios.post('https://beta-simpleprep.com/auth/user/signup', userData);
 
-      dispatch(authSuccess(user));
+      dispatch(authSuccess());
     }
   } catch (error) {
     if (error instanceof Error) {
@@ -163,7 +163,7 @@ export const SendResetPasswordEmail = (email: string) => async (dispatch: Dispat
 
   try {
     await sendPasswordResetEmail(auth, email);
-    dispatch(authSuccess(null));
+    dispatch(authSuccess());
   } catch (error) {
     if (error instanceof Error) {
       const errorMessage = getErrorMessage(error.message);
@@ -181,7 +181,7 @@ export const checkAuthenticated = () => async (dispatch: Dispatch) => {
     const user = auth.currentUser;
 
     if (user && user.emailVerified) {
-      dispatch(authSuccess(user));
+      dispatch(authSuccess());
     } else {
       dispatch(signOutAction());
     }
@@ -200,7 +200,7 @@ export const loadUser = () => (dispatch: Dispatch) => {
 
   onAuthStateChanged(auth, user => {
     if (user && user.emailVerified) {
-      dispatch(authSuccess(user));
+      dispatch(authSuccess());
     } else {
       dispatch(signOutAction());
     }

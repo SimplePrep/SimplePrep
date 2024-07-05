@@ -10,13 +10,14 @@ import { useSelector } from 'react-redux';
 import { getRecentTests, getTestModuleDetails, getTestReport } from '../utils/axios/axiosServices';
 import { Question, TestResult, DetailedTestResult, TestReport } from './types';
 import { RootState } from '../store';
+import { auth } from '../utils/firebaseConfig';
 
 interface AnalyticsProps {
   isDarkMode: boolean;
 }
 
 const Analytics: React.FC<AnalyticsProps> = ({ isDarkMode }) => {
-  const { user, isAuthenticated } = useSelector((state: RootState) => state.auth);
+  const { isAuthenticated } = useSelector((state: RootState) => state.auth);
   const [testData, setTestData] = useState<TestResult[]>([]);
   const [selectedTestEntry, setSelectedTestEntry] = useState<DetailedTestResult | null>(null);
   const [showAnalysis, setShowAnalysis] = useState(false);
@@ -26,18 +27,21 @@ const Analytics: React.FC<AnalyticsProps> = ({ isDarkMode }) => {
   let delayed: boolean;
 
   useEffect(() => {
-    if (isAuthenticated && user) {
+    if (isAuthenticated) {
       const fetchRecentTests = async () => {
         try {
-          const data: TestResult[] = await getRecentTests(user.uid);
-          setTestData(data);
+          const user = auth.currentUser;
+          if (user) {
+            const data: TestResult[] = await getRecentTests(user.uid);
+            setTestData(data);
+          }
         } catch (error) {
           console.error('Error fetching recent tests:', error);
         }
       };
       fetchRecentTests();
     }
-  }, [isAuthenticated, user]);
+  }, [isAuthenticated]);
 
   Chart.register(ChartDataLabels);
   useEffect(() => {
@@ -123,9 +127,12 @@ const Analytics: React.FC<AnalyticsProps> = ({ isDarkMode }) => {
   const handlePreviewClick = async (index: number) => {
     const selectedEntry = testData[index];
     try {
-      const data = await getTestModuleDetails(user!.uid, selectedEntry.test_model.id);
-      setSelectedTestEntry({ ...selectedEntry, questions: data.questions, user_answers: data.user_answers });
-      setShowPreview(true);
+      const user = auth.currentUser;
+      if (user) {
+        const data = await getTestModuleDetails(user.uid, selectedEntry.test_model.id);
+        setSelectedTestEntry({ ...selectedEntry, questions: data.questions, user_answers: data.user_answers });
+        setShowPreview(true);
+      }
     } catch (error) {
       console.error('Error fetching test module details:', error);
     }
@@ -134,11 +141,14 @@ const Analytics: React.FC<AnalyticsProps> = ({ isDarkMode }) => {
   const handleAnalyticsClick = async (index: number) => {
     const selectedEntry = testData[index];
     try {
-      console.log(selectedEntry.id);
-      const report = await getTestReport(user!.uid, selectedEntry.id);
-      console.log('Report: ', report);
-      setSelectedTestEntry({ ...selectedEntry, report });
-      setShowAnalysis(true);
+      const user = auth.currentUser;
+      if (user) {
+        console.log(selectedEntry.id);
+        const report = await getTestReport(user.uid, selectedEntry.id);
+        console.log('Report: ', report);
+        setSelectedTestEntry({ ...selectedEntry, report });
+        setShowAnalysis(true);
+      }
     } catch (error) {
       console.error('Error fetching test report:', error);
     }

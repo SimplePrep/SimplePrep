@@ -14,6 +14,7 @@ import { useSelector } from 'react-redux';
 import { Post, Reply } from '../types';
 import { format } from 'date-fns';
 import { RootState } from '../../store';
+import { auth } from '../../utils/firebaseConfig';
 
 interface DiscussionProps {
   title: string;
@@ -39,7 +40,8 @@ const Discussion: React.FC<DiscussionProps> = ({ onClose, title, testModuleId })
   const [isEditingPost, setIsEditingPost] = useState(false);
   const [postToEdit, setPostToEdit] = useState<Post | null>(null);
   const [editedPostTitle, setEditedPostTitle] = useState('');
-  const { user, isAuthenticated } = useSelector((state: RootState) => state.auth);
+  const { isAuthenticated } = useSelector((state: RootState) => state.auth);
+  const user = auth.currentUser;
   const currentUser = user?.displayName || 'Default Name';
   const currentUserUid = user?.uid || 'default-uid';
 
