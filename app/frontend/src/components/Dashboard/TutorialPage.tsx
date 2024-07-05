@@ -14,10 +14,6 @@ const TutorialPage: React.FC<TutorialPageProps> = ({ isDarkMode }) => {
   const [activeSection, setActiveSection] = useState<Section | null>(null);
   const navigate = useNavigate();
 
-  const Mode = isDarkMode ? 'bg-[#121212] text-white' : 'bg-white text-gray-800';
-  const linkHoverClass = isDarkMode ? 'hover:text-gray-100 hover:bg-[#353535]' : 'hover:bg-slate-200';
-  const activeSectionClass = isDarkMode ? 'bg-[#353535]' : 'bg-slate-300';
-
   useEffect(() => {
     const fetchTutorialData = async () => {
       try {
@@ -25,27 +21,31 @@ const TutorialPage: React.FC<TutorialPageProps> = ({ isDarkMode }) => {
         setTutorial(tutorialData);
         const sectionsData = await getSections(Number(tutorialId));
         setSections(sectionsData);
-        if (sectionSlug) {
+
+        if (sectionsData.length > 0 && !sectionSlug) {
+          navigate(`/demo/tutorials/${tutorialId}/${sectionsData[0].slug}`, { replace: true });
+        } else if (sectionSlug) {
           const active = sectionsData.find((section: Section) => section.slug === sectionSlug);
           setActiveSection(active || null);
         }
-        console.log('Fetched tutorial:', tutorialData);
-        console.log('Fetched sections:', sectionsData);
       } catch (error) {
         console.error('Error fetching tutorial or sections:', error);
       }
     };
 
     fetchTutorialData();
-  }, [tutorialId, sectionSlug]);
+  }, [tutorialId, sectionSlug, navigate]);
 
   useEffect(() => {
     if (sections.length > 0 && !activeSection && sectionSlug) {
       const active = sections.find((section: Section) => section.slug === sectionSlug);
       setActiveSection(active || null);
-      console.log('Set active section:', active);
     }
   }, [sections, sectionSlug, activeSection]);
+
+  const Mode = isDarkMode ? 'bg-[#121212] text-white' : 'bg-white text-gray-800';
+  const linkHoverClass = isDarkMode ? 'hover:text-gray-100 hover:bg-[#353535]' : 'hover:bg-slate-200';
+  const activeSectionClass = isDarkMode ? 'bg-[#353535]' : 'bg-slate-300';
 
   const currentIndex = sections.findIndex(section => section.slug === activeSection?.slug);
   const prevSection = currentIndex > 0 ? sections[currentIndex - 1] : null;
