@@ -96,10 +96,10 @@ const SectionContent: React.FC<{ isDarkMode: boolean }> = ({ isDarkMode }) => {
         animate={{ y: 0, opacity: 1 }}
         exit={{ y: -10, opacity: 0 }}
         transition={{ duration: 0.2 }}
-        className={`min-h-screen rounded-2xl ${modeClass} px-10 py-40`}
+        className={`min-h-screen rounded-2xl ${modeClass} p-10`}
       >
-        <motion.div className="fixed top-0 left-0 right-0 h-1 bg-blue-500 origin-left z-50" style={{ scaleX }} />
-        <div className='flex flex-col gap-6 justify-center items-center pb-10'>
+        <motion.div className="fixed top-0 left-0 right-0 h-1 bg-blue-500 origin-left z-50 py-20" style={{ scaleX }} />
+        <div className='flex flex-col gap-6 justify-center items-center'>
           <h1 className='text-center text-4xl font-bold mb-4'>{titleToRender}</h1>
           <p className='text-center text-lg mb-6'>{descriptionToRender}</p>
         </div>
