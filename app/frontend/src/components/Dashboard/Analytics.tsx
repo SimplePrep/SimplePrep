@@ -56,8 +56,8 @@ const Analytics: React.FC<AnalyticsProps> = ({ isDarkMode }) => {
             datasets: [{
               label: 'Your Most Recent Scores from Practice Tests',
               data: scores,
-              backgroundColor: scores.map(score => score < 500 ? '#9333ea' : '#22c55e'),
-              borderColor: scores.map(score => score < 500 ? 'darkred' : 'darkgreen'),
+              backgroundColor: scores.map(score => score < 50 ? '#9333ea' : '#22c55e'),
+              borderColor: scores.map(score => score < 50 ? 'darkred' : 'darkgreen'),
               borderWidth: 1,
               datalabels: {
                 align: 'end',

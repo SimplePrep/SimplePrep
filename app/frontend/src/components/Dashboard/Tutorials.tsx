@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useResolvedPath, NavLink } from 'react-router-dom';
-import { Tutorial, Chapter} from '../utils/types';
+import { Tutorial, Chapter } from '../utils/types';
 import tutorial1Image from '../assets/tutorials/tutorial1.jpg';
 import tutorial2Image from '../assets/tutorials/tutorial2.jpg';
 import { getChapters, getTutorials } from '../utils/axios/axiosServices';
-
+import { motion } from 'framer-motion';
 
 const basePath = "/demo/tutorials";
 
@@ -15,17 +15,18 @@ interface TutorialCardProps {
 const TutorialCard: React.FC<TutorialCardProps> = ({ tutorial }) => {
   const [chapters, setChapters] = useState<Chapter[]>([]);
   
-  useEffect(()=> {
-    const fetchChapters = async ()=> {
-      try{
+  useEffect(() => {
+    const fetchChapters = async () => {
+      try {
         const data = await getChapters(tutorial.id);
         setChapters(data);
-      } catch(error){
+      } catch (error) {
         console.error('Error fetching chapters in TutorialCard:', error);
       }
     };
     fetchChapters();
-  }, []);
+  }, [tutorial.id]);
+
   const { pathname } = useResolvedPath(`${basePath}/${tutorial.id}`);
 
   const tutorialImages: { [key: number]: string } = {
@@ -36,13 +37,18 @@ const TutorialCard: React.FC<TutorialCardProps> = ({ tutorial }) => {
   const tutorialImage = tutorialImages[tutorial.id] || 'path/to/default/image.jpg';
 
   return (
-    <div className='bg-teal-200 rounded'>
+    <motion.div
+      className="bg-teal-200 rounded"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, ease: 'easeOut' }}
+    >
       <div className="m-1 rounded overflow-hidden shadow-lg bg-white">
         <img className="h-56 object-cover shadow-2xl shadow-teal-100" src={tutorialImage} alt={`${tutorial.title} icon`} />
         <div className="px-6 py-4">
           <p className="font-bold text-xl mb-2">{tutorial.title}</p>
           <ul className='text-gray-700 text-base'>
-              {chapters.map((chapter, index) => <li key={index}>{chapter.title}</li>)}
+            {chapters.map((chapter, index) => <li key={index}>{chapter.title}</li>)}
           </ul>
         </div>
         <div className='flex justify-center pb-4'>
@@ -51,7 +57,7 @@ const TutorialCard: React.FC<TutorialCardProps> = ({ tutorial }) => {
           </NavLink>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 
