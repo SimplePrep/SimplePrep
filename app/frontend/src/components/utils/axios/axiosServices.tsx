@@ -231,10 +231,11 @@ interface TestModuleDetails {
 
   export const getSection = async (slug: string): Promise<Section> => {
     try {
-      const response = await axiosInstance.get<Section>(`/api/core2/sections/${slug}//`);
+      const response = await axiosInstance.get<Section>(`/api/core2/sections/${slug}/`);
+      console.log('Section data:', response.data); // Add this line to log the data
       return response.data;
-    } catch(error){
-      console.error('Error fetcing section: ', error);
+    } catch (error) {
+      console.error('Error fetching section: ', error);
       throw error;
     }
   }

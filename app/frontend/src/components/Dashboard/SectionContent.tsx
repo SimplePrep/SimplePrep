@@ -30,6 +30,7 @@ const SectionContent: React.FC<{ isDarkMode: boolean }> = ({ isDarkMode }) => {
         try {
           const sectionData = await getSection(sectionSlug);
           setSection(sectionData);
+          console.log('Section state:', sectionData); // Add this line to log the state
           setSections((prevSections) => {
             const updatedSections = [...prevSections];
             const sectionIndex = updatedSections.findIndex(sec => sec.slug === sectionSlug);
@@ -75,7 +76,7 @@ const SectionContent: React.FC<{ isDarkMode: boolean }> = ({ isDarkMode }) => {
   };
 
   const modeClass = isDarkMode ? 'bg-[#121212] text-white' : 'bg-white text-gray-800';
-  const contentToRender = section?.content;
+  const contentToRender = section?.content || ''; // Ensure there's a fallback for the content
   const titleToRender = section ? section.title : '';
 
   return (
@@ -84,7 +85,7 @@ const SectionContent: React.FC<{ isDarkMode: boolean }> = ({ isDarkMode }) => {
         <p className='text-center text-3xl font-bold'>{titleToRender}</p>
       </div>
       <div className='py-5'>
-        {contentToRender?.split('\n').map((paragraph, index) => {
+        {contentToRender.split('\n').map((paragraph, index) => {
           const isHighlighted = paragraph.includes("**");
           return <Paragraph key={index} text={paragraph} isHighlighted={isHighlighted} />;
         })}
