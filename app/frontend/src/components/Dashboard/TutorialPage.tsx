@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { Link, Outlet, useParams, useNavigate } from 'react-router-dom';
-import { Section } from '../utils/types';
-import { getSections } from '../utils/axios/axiosServices';
+import { Section, Tutorial } from '../utils/types';
+import { getSections, getTutorial } from '../utils/axios/axiosServices';
 
 interface TutorialPageProps {
   isDarkMode: boolean;
 }
 
 const TutorialPage: React.FC<TutorialPageProps> = ({ isDarkMode }) => {
-  const { tutorialTitle, sectionSlug } = useParams<{ tutorialTitle: string, sectionSlug: string }>();
+  const { tutorialId, sectionSlug } = useParams<{ tutorialId: string, sectionSlug: string }>();
   const [sections, setSections] = useState<Section[]>([]);
+  const [tutorial, setTutorial] = useState<Tutorial | null>(null);
   const [activeSection, setActiveSection] = useState<Section | null>(null);
   const navigate = useNavigate();
 
@@ -18,22 +19,25 @@ const TutorialPage: React.FC<TutorialPageProps> = ({ isDarkMode }) => {
   const activeSectionClass = isDarkMode ? 'bg-[#353535]' : 'bg-slate-300';
 
   useEffect(() => {
-    const fetchSections = async () => {
+    const fetchTutorialData = async () => {
       try {
-        const data = await getSections(Number(tutorialTitle));
-        setSections(data);
+        const tutorialData = await getTutorial(Number(tutorialId));
+        setTutorial(tutorialData);
+        const sectionsData = await getSections(Number(tutorialId));
+        setSections(sectionsData);
         if (sectionSlug) {
-          const active = data.find((section: Section) => section.slug === sectionSlug);
+          const active = sectionsData.find((section: Section) => section.slug === sectionSlug);
           setActiveSection(active || null);
         }
-        console.log('Fetched sections:', data);
+        console.log('Fetched tutorial:', tutorialData);
+        console.log('Fetched sections:', sectionsData);
       } catch (error) {
-        console.error('Error fetching sections:', error);
+        console.error('Error fetching tutorial or sections:', error);
       }
     };
 
-    fetchSections();
-  }, [tutorialTitle, sectionSlug]);
+    fetchTutorialData();
+  }, [tutorialId, sectionSlug]);
 
   useEffect(() => {
     if (sections.length > 0 && !activeSection && sectionSlug) {
@@ -51,13 +55,13 @@ const TutorialPage: React.FC<TutorialPageProps> = ({ isDarkMode }) => {
     <div className="w-full py-10 gap-10">
       <div className="flex justify-between">
         <div className={`w-96 h-screen py-4 sticky top-28 rounded-2xl shadow-lg ${Mode}`}>
-          <p className="mx-10 text-4xl font-bold font-sans p-5">{tutorialTitle}</p>
+          <p className="mx-10 text-4xl font-bold font-sans p-5">{tutorial?.title}</p>
           <hr className="border-gray-300" />
           <ul className="space-y-2 mt-4">
             {sections.map((section) => (
               <li key={section.id} className="flex flex-col">
                 <Link
-                  to={`/demo/tutorials/${tutorialTitle}/${section.slug}`}
+                  to={`/demo/tutorials/${tutorialId}/${section.slug}`}
                   className={`py-4 text-xl font-medium mx-5 flex items-center rounded-md ${activeSection?.slug === section.slug ? activeSectionClass : ''} ${linkHoverClass}`}
                   onClick={() => setActiveSection(section)}
                 >
@@ -72,7 +76,7 @@ const TutorialPage: React.FC<TutorialPageProps> = ({ isDarkMode }) => {
           <div className="flex justify-between mt-4">
             {prevSection && (
               <button
-                onClick={() => navigate(`/demo/tutorials/${tutorialTitle}/${prevSection.slug}`)}
+                onClick={() => navigate(`/demo/tutorials/${tutorialId}/${prevSection.slug}`)}
                 className="py-2 px-4 bg-blue-500 text-white text-lg rounded hover:bg-blue-600 transition-colors duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-opacity-50"
               >
                 Previous
@@ -80,7 +84,7 @@ const TutorialPage: React.FC<TutorialPageProps> = ({ isDarkMode }) => {
             )}
             {nextSection && (
               <button
-                onClick={() => navigate(`/demo/tutorials/${tutorialTitle}/${nextSection.slug}`)}
+                onClick={() => navigate(`/demo/tutorials/${tutorialId}/${nextSection.slug}`)}
                 className="py-2 px-4 bg-blue-500 text-white text-lg rounded hover:bg-blue-600 transition-colors duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-opacity-50 ml-auto"
               >
                 Next

@@ -201,6 +201,16 @@ interface TestModuleDetails {
       throw error;
     }
   };
+
+  export const getTutorial = async (tutorialId: number): Promise<Tutorial> => {
+    try {
+      const response = await axiosInstance.get<Tutorial>(`/api/core2/tutorials/${tutorialId}/`);
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching tutorial:', error);
+      throw error;
+    }
+  };
   
   export const getSections = async (tutorialId: number): Promise<Section[]> => {
     try {

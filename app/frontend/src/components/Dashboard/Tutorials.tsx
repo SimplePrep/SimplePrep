@@ -15,9 +15,9 @@ interface TutorialCardProps {
 }
 
 const TutorialCard: React.FC<TutorialCardProps> = ({ tutorial }) => {
-  const { pathname } = useResolvedPath(`${basePath}/${tutorial.title}`);
+  const { pathname } = useResolvedPath(`${basePath}/${tutorial.id}`);
 
-  // Define a mapping between tutorial titles and images
+  // Define a mapping between tutorial IDs and images
   const tutorialImages: { [key: number]: string } = {
     1: tutorial1Image,
     2: tutorial2Image,
@@ -44,6 +44,7 @@ const TutorialCard: React.FC<TutorialCardProps> = ({ tutorial }) => {
     </div>
   );
 };
+
 
 const Tutorials = () => {
   const [tutorials, setTutorials] = useState<Tutorial[]>([]);
