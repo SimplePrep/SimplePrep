@@ -15,15 +15,15 @@ interface TutorialCardProps {
 }
 
 const TutorialCard: React.FC<TutorialCardProps> = ({ tutorial }) => {
-  const { pathname } = useResolvedPath(`${basePath}/${tutorial.id}`);
+  const { pathname } = useResolvedPath(`${basePath}/${tutorial.title}`);
 
   // Define a mapping between tutorial titles and images
-  const tutorialImages: { [key: string]: string } = {
-    'Tutorial 1': tutorial1Image,
-    'Tutorial 2': tutorial2Image,
+  const tutorialImages: { [key: number]: string } = {
+    1: tutorial1Image,
+    2: tutorial2Image,
   };
 
-  const tutorialImage = tutorialImages[tutorial.title] || 'path/to/default/image.jpg';
+  const tutorialImage = tutorialImages[tutorial.id] || 'path/to/default/image.jpg';
 
   return (
     <div className='bg-teal-200 rounded'>
@@ -63,10 +63,10 @@ const Tutorials = () => {
 
   return (
     <div className='h-[92vh] max-w-[1200px] mx-auto p-20'>
-      <h1 className='text-white text-3xl font-roboto font-medium'>Welcome to Tutorials</h1>
+      <h1 className='text-blue-900 text-3xl font-roboto font-medium'>Welcome to Tutorials</h1>
       <div className='my-20 flex flex-row items-center justify-evenly'>
-        {tutorials.map((tutorial, index) => (
-          <TutorialCard key={index} tutorial={tutorial} />
+        {tutorials.map((tutorial) => (
+          <TutorialCard key={tutorial.id} tutorial={tutorial} />
         ))}
       </div>
     </div>
