@@ -1,9 +1,35 @@
-import { useParams, useNavigate } from "react-router-dom";
 import React, { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import axios from 'axios';
 import { BsFillArrowLeftCircleFill, BsFillArrowRightCircleFill } from 'react-icons/bs';
-import { getSection } from '../utils/axios/axiosServices';
-import { Section } from "../utils/types";
+import { getSection, getSections } from "../utils/axios/axiosServices";
 
+// Interfaces
+export interface Section {
+  id: number;
+  slug: string;
+  title: string;
+  description: string;
+  content: string;
+  chapter: number;
+}
+
+export interface Chapter {
+  id: number;
+  title: string;
+  order: number;
+  tutorial: number;
+}
+
+export interface Tutorial {
+  id: number;
+  title: string;
+}
+
+// API functions
+
+
+// Paragraph component
 interface ParagraphProps {
   text: string | null;
   isHighlighted?: boolean;
@@ -17,41 +43,42 @@ const Paragraph: React.FC<ParagraphProps> = ({ text, isHighlighted = false }) =>
   );
 };
 
+// Main SectionContent component
 const SectionContent: React.FC<{ isDarkMode: boolean }> = ({ isDarkMode }) => {
   const { tutorialId, chapterId, sectionSlug } = useParams<{ tutorialId: string, chapterId: string, sectionSlug: string }>();
   const navigate = useNavigate();
   const [section, setSection] = useState<Section | null>(null);
   const [sections, setSections] = useState<Section[]>([]);
   const [currentSectionIndex, setCurrentSectionIndex] = useState<number | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    console.log('Section slug:', sectionSlug); // Log the sectionSlug
+    console.log('Route params:', { tutorialId, chapterId, sectionSlug });
 
-    const fetchSection = async () => {
-      if (sectionSlug) {
+    const fetchSectionAndSections = async () => {
+      if (sectionSlug && chapterId) {
+        setLoading(true);
+        setError(null);
         try {
-          console.log('Fetching section data...');
-          const sectionData = await getSection(sectionSlug);
-          console.log('Section data:', sectionData); // Log the fetched data
+          const [sectionData, sectionsData] = await Promise.all([
+            getSection(sectionSlug),
+            getSections(parseInt(chapterId))
+          ]);
           setSection(sectionData);
-          setSections((prevSections) => {
-            const updatedSections = [...prevSections];
-            const sectionIndex = updatedSections.findIndex(sec => sec.slug === sectionSlug);
-            if (sectionIndex !== -1) {
-              updatedSections[sectionIndex] = sectionData;
-            } else {
-              updatedSections.push(sectionData);
-            }
-            setCurrentSectionIndex(updatedSections.findIndex(sec => sec.slug === sectionSlug));
-            return updatedSections;
-          });
+          setSections(sectionsData);
+          setCurrentSectionIndex(sectionsData.findIndex(sec => sec.slug === sectionSlug));
         } catch (error) {
-          console.error('Error fetching section:', error);
+          console.error('Error fetching data:', error);
+          setError('Failed to load content. Please try again.');
+        } finally {
+          setLoading(false);
         }
       }
     };
-    fetchSection();
-  }, [sectionSlug]);
+
+    fetchSectionAndSections();
+  }, [sectionSlug, chapterId]);
 
   const navigateToSection = (chapterId: string, index: number) => {
     const targetSection = sections[index];
@@ -65,27 +92,28 @@ const SectionContent: React.FC<{ isDarkMode: boolean }> = ({ isDarkMode }) => {
   const handlePreviousClick = () => {
     if (currentSectionIndex !== null && currentSectionIndex > 0) {
       navigateToSection(chapterId!, currentSectionIndex - 1);
-    } else {
-      // logic for navigating to the previous chapter's last section if needed
     }
   };
 
   const handleNextClick = () => {
     if (currentSectionIndex !== null && currentSectionIndex < sections.length - 1) {
       navigateToSection(chapterId!, currentSectionIndex + 1);
-    } else {
-      // logic for navigating to the next chapter's first section if needed
     }
   };
 
   const modeClass = isDarkMode ? 'bg-[#121212] text-white' : 'bg-white text-gray-800';
-  const contentToRender = section?.content || ''; // Ensure there's a fallback for the content
-  const titleToRender = section ? section.title : '';
+  const contentToRender = section?.content || '';
+  const titleToRender = section?.title || '';
+  const descriptionToRender = section?.description || '';
+
+  if (loading) return <div className="text-center p-4">Loading...</div>;
+  if (error) return <div className="text-center p-4 text-red-500">{error}</div>;
 
   return (
     <div className={`h-full rounded-2xl ${modeClass}`}>
       <div className='flex flex-col gap-6 justify-center items-center p-10'>
-        <p className='text-center text-3xl font-bold'>{titleToRender}</p>
+        <h1 className='text-center text-3xl font-bold'>{titleToRender}</h1>
+        <p className='text-center text-xl'>{descriptionToRender}</p>
       </div>
       <div className='py-5'>
         {contentToRender.split('\n').map((paragraph, index) => {
@@ -96,13 +124,15 @@ const SectionContent: React.FC<{ isDarkMode: boolean }> = ({ isDarkMode }) => {
       <div className='p-5 flex justify-between items-center'>
         <button
           onClick={handlePreviousClick}
-          className="py-2 px-6 border-2 rounded-xl hover:bg-[#00df9a] hover:border-blue-500 hover:text-white font-semibold text-lg"
+          disabled={currentSectionIndex === 0}
+          className="py-2 px-6 border-2 rounded-xl hover:bg-[#00df9a] hover:border-blue-500 hover:text-white font-semibold text-lg disabled:opacity-50"
         >
           <BsFillArrowLeftCircleFill className="inline mr-2" /> Previous
         </button>
         <button
           onClick={handleNextClick}
-          className="py-2 px-6 border-2 rounded-xl hover:bg-[#00df9a] hover:border-blue-500 hover:text-white font-semibold text-lg"
+          disabled={currentSectionIndex === sections.length - 1}
+          className="py-2 px-6 border-2 rounded-xl hover:bg-[#00df9a] hover:border-blue-500 hover:text-white font-semibold text-lg disabled:opacity-50"
         >
           Next <BsFillArrowRightCircleFill className="inline ml-2" />
         </button>

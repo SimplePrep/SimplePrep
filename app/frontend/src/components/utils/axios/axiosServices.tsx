@@ -222,17 +222,18 @@ interface TestModuleDetails {
   export const getSections = async (chapterId: number): Promise<Section[]> => {
     try {
       const response = await axiosInstance.get<Section[]>(`/api/core2/chapters/${chapterId}/sections/`);
+      console.log('Full API response for sections:', response);
       return response.data;
     } catch (error) {
       console.error('Error fetching sections:', error);
       throw error;
     }
-  };
+  }
 
   export const getSection = async (slug: string): Promise<Section> => {
     try {
       const response = await axiosInstance.get<Section>(`/api/core2/sections/${slug}/`);
-      console.log('Section data:', response.data); // Add this line to log the data
+      console.log('Full API response for section:', response);
       return response.data;
     } catch (error) {
       console.error('Error fetching section: ', error);

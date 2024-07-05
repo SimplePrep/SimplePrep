@@ -14,7 +14,7 @@ interface TutorialCardProps {
 
 const TutorialCard: React.FC<TutorialCardProps> = ({ tutorial }) => {
   const [chapters, setChapters] = useState<Chapter[]>([]);
-  
+
   useEffect(()=> {
     const fetchChapters = async ()=> {
       try{
@@ -72,7 +72,7 @@ const Tutorials = () => {
   }, []);
 
   return (
-    <div className='h-[92vh] max-w-[1200px] mx-auto p-20'>
+    <div className='h-full max-w-[1200px] mx-auto p-20'>
       <h1 className='text-blue-900 text-3xl font-roboto font-medium'>Welcome to Tutorials</h1>
       <div className='my-20 flex flex-row items-center justify-evenly'>
         {tutorials.map((tutorial) => (
