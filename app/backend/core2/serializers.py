@@ -12,16 +12,11 @@ class PracticeQuestionSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class ChapterSerializer(serializers.ModelSerializer):
-    sections = SectionSerializer(many=True, read_only=True)
-    practice_questions = PracticeQuestionSerializer(many=True, read_only=True)
-
     class Meta:
         model = Chapter
         fields = '__all__'
 
 class TutorialSerializer(serializers.ModelSerializer):
-    chapters = ChapterSerializer(many=True, read_only=True)
-
     class Meta:
         model = Tutorial
         fields = '__all__'
