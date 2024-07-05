@@ -79,7 +79,7 @@ const Analytics: React.FC<AnalyticsProps> = ({ isDarkMode }) => {
                 callbacks: {
                   label: function (context) {
                     const score = context.raw as number;
-                    const performance = score < 500 ? "Poor" : "Good";
+                    const performance = score < 50 ? "Poor" : "Good";
                     return `Score: ${score} (${performance})`;
                   }
                 }

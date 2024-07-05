@@ -1,8 +1,8 @@
 from django.urls import path
-from .views import TutorialView, SectionView, SectionDetailView
+from .views import TutorialListCreateView, SectionListCreateView, SectionDetailView
 
 urlpatterns = [
-    path('tutorials/', TutorialView.as_view(), name='tutorial-list'),
-    path('tutorials/<int:id>/sections/', SectionView.as_view()),
-    path('sections/<slug:slug>/', SectionDetailView.as_view())
+    path('tutorials/', TutorialListCreateView.as_view(), name='tutorial-list-create'),
+    path('tutorials/<int:id>/sections/', SectionListCreateView.as_view(), name='section-list-create'),
+    path('sections/<slug:slug>/', SectionDetailView.as_view(), name='section-detail'),
 ]
