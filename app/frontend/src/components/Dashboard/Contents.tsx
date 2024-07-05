@@ -75,7 +75,7 @@ const Contents:React.FC = () => {
 
   return (
     <div className='max-w-[1200px] h-full mx-auto'>
-        <div className='my-20  rounded-2xl'>
+        <div className='py-40  rounded-2xl'>
             <p className='p-10 font-medium text-xl text-slate-600'>Freemium English and Writing Practice tests</p>
             <div className='max-w-[1000px] mx-auto'>
             <div className="flex justify-center items-center space-x-4">
