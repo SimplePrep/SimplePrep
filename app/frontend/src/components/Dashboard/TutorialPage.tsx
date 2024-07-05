@@ -19,6 +19,7 @@ const TutorialPage: React.FC<TutorialPageProps> = ({ isDarkMode }) => {
   const Mode = isDarkMode ? 'bg-[#121212] text-white' : 'bg-white text-gray-800';
   const linkHoverClass = isDarkMode ? 'hover:text-gray-100 hover:bg-[#353535]' : 'hover:bg-slate-200';
   const activeSectionClass = isDarkMode ? 'bg-[#353535]' : 'bg-slate-300';
+  const location = useLocation();
 
   useEffect(() => {
     const fetchTutorialData = async () => {
@@ -27,14 +28,15 @@ const TutorialPage: React.FC<TutorialPageProps> = ({ isDarkMode }) => {
         setTutorial(tutorialData);
         const chaptersData = await getChapters(Number(tutorialId));
         setChapters(chaptersData);
-
-        // Automatically set the first chapter and its first section as active if no sectionSlug
+  
         if (chaptersData.length > 0) {
           const firstChapter = chaptersData[0];
           setActiveChapter(firstChapter);
           const sectionsData = await getSections(firstChapter.id);
           setSections(sectionsData);
-          if (sectionsData.length > 0 && !window.location.pathname.includes('/')) {
+  
+          // Check if we're not already on a specific section page
+          if (sectionsData.length > 0 && !location.pathname.includes('/section/')) {
             const firstSection = sectionsData[0];
             navigate(`/demo/tutorials/${tutorialId}/${firstChapter.id}/${firstSection.slug}`, { replace: true });
           }
@@ -44,7 +46,7 @@ const TutorialPage: React.FC<TutorialPageProps> = ({ isDarkMode }) => {
       }
     };
     fetchTutorialData();
-  }, [tutorialId, navigate]);
+  }, [tutorialId, navigate, location.pathname]);
 
   const toggleChapter = async (chapter: Chapter) => {
     if (activeChapter?.id === chapter.id) {
@@ -57,7 +59,6 @@ const TutorialPage: React.FC<TutorialPageProps> = ({ isDarkMode }) => {
     }
   };
 
-  const location = useLocation();
   const currentUrl = location.pathname;
 
   return (
