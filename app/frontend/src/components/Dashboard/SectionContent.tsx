@@ -89,7 +89,7 @@ const SectionContent: React.FC<{ isDarkMode: boolean }> = ({ isDarkMode }) => {
   if (error) return <div className="text-center p-4 text-red-500">{error}</div>;
 
   return (
-    <div className="py-20">
+    <div className="pt-20">
       <AnimatePresence>
         <motion.div
           key={sectionSlug}
