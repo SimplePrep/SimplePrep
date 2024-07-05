@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, Outlet, useParams, useLocation } from 'react-router-dom';
+import { Link, Outlet, useParams, useLocation, useNavigate } from 'react-router-dom';
 import { Chapter, Section, Tutorial } from '../utils/types';
 import { getChapters, getSections, getTutorial } from '../utils/axios/axiosServices';
 import { MdOutlineKeyboardArrowUp, MdOutlineKeyboardArrowDown } from "react-icons/md";
@@ -14,6 +14,7 @@ const TutorialPage: React.FC<TutorialPageProps> = ({ isDarkMode }) => {
   const [sections, setSections] = useState<Section[]>([]);
   const [tutorial, setTutorial] = useState<Tutorial | null>(null);
   const [activeChapter, setActiveChapter] = useState<Chapter | null>(null);
+  const navigate = useNavigate();
 
   const Mode = isDarkMode ? 'bg-[#121212] text-white' : 'bg-white text-gray-800';
   const linkHoverClass = isDarkMode ? 'hover:text-gray-100 hover:bg-[#353535]' : 'hover:bg-slate-200';
@@ -26,12 +27,24 @@ const TutorialPage: React.FC<TutorialPageProps> = ({ isDarkMode }) => {
         setTutorial(tutorialData);
         const chaptersData = await getChapters(Number(tutorialId));
         setChapters(chaptersData);
+
+        // Automatically set the first chapter and its first section as active
+        if (chaptersData.length > 0) {
+          const firstChapter = chaptersData[0];
+          setActiveChapter(firstChapter);
+          const sectionsData = await getSections(firstChapter.id);
+          setSections(sectionsData);
+          if (sectionsData.length > 0) {
+            const firstSection = sectionsData[0];
+            navigate(`/demo/tutorials/${tutorialId}/${firstChapter.id}/${firstSection.slug}`, { replace: true });
+          }
+        }
       } catch (error) {
         console.error('Error fetching tutorial or chapters:', error);
       }
     };
     fetchTutorialData();
-  }, [tutorialId]);
+  }, [tutorialId, navigate]);
 
   const toggleChapter = async (chapter: Chapter) => {
     if (activeChapter?.id === chapter.id) {
@@ -58,7 +71,7 @@ const TutorialPage: React.FC<TutorialPageProps> = ({ isDarkMode }) => {
               <li key={chapter.id} className='flex flex-col'>
                 <Link
                   to={`/demo/tutorials/${tutorialId}/${chapter.id}`}
-                  className={`py-4 text-xl font-medium px-2 flex items-center  ${activeChapter?.id === chapter.id ? 'text-blue-600' : ''} ${linkHoverClass}`}
+                  className={`py-4 text-xl font-medium px-2 flex items-center ${activeChapter?.id === chapter.id ? 'text-blue-600' : ''} ${linkHoverClass}`}
                   onClick={(e) => {
                     e.preventDefault();
                     toggleChapter(chapter);
@@ -77,7 +90,7 @@ const TutorialPage: React.FC<TutorialPageProps> = ({ isDarkMode }) => {
                     key={section.id}
                     className={`pl-12 pr-3 py-4 flex items-center ${
                       section.slug === currentUrl.split('/').pop() ? activeSectionClass : linkHoverClass
-                    } font-medium  transition-colors duration-150`}
+                    } font-medium transition-colors duration-150`}
                   >
                     {section.title}
                   </Link>

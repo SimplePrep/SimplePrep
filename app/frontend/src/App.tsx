@@ -9,11 +9,11 @@ import Blogs from './components/Landing/Blogs';
 import TestPageUI from './components/Dashboard/utils/test_components/TestPageUI';
 import ResetPassword from './pages/Authentication/ResetPassword';
 import Contents from './components/Dashboard/Contents';
-import Tutorials from './components/Dashboard/Tutorials';
 import TutorialPage from './components/Dashboard/TutorialPage';
 import SectionContent from './components/Dashboard/SectionContent';
 import Analytics from './components/Dashboard/Analytics';
 import SignUpComponent from './pages/Authentication/SignUp';
+import Tutorials from './components/Dashboard/Tutorials';
 
 const App = () => {
   const [isDarkMode, setIsDarkMode] = useState(false);
