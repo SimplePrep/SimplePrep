@@ -11,7 +11,7 @@ interface ParagraphProps {
 
 const Paragraph: React.FC<ParagraphProps> = ({ text, isHighlighted = false }) => {
   return (
-    <p className={`text-xl leading-relaxed max-w-prose mx-auto text-indent ${isHighlighted ? "bg-slate-200 rounded-xl p-4 text-black" : ""}`} style={{ marginBottom: '30px' }}>
+    <p className={`text-xl leading-relaxed max-w-prose mx-auto text-indent ${isHighlighted ? "bg-slate-200 rounded-xl p-4 text-black " : ""}`} style={{ marginBottom: '30px' }}>
       {text}
     </p>
   );

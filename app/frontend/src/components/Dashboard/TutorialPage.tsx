@@ -28,13 +28,13 @@ const TutorialPage: React.FC<TutorialPageProps> = ({ isDarkMode }) => {
         const chaptersData = await getChapters(Number(tutorialId));
         setChapters(chaptersData);
 
-        // Automatically set the first chapter and its first section as active
+        // Automatically set the first chapter and its first section as active if no sectionSlug
         if (chaptersData.length > 0) {
           const firstChapter = chaptersData[0];
           setActiveChapter(firstChapter);
           const sectionsData = await getSections(firstChapter.id);
           setSections(sectionsData);
-          if (sectionsData.length > 0) {
+          if (sectionsData.length > 0 && !window.location.pathname.includes('/')) {
             const firstSection = sectionsData[0];
             navigate(`/demo/tutorials/${tutorialId}/${firstChapter.id}/${firstSection.slug}`, { replace: true });
           }
