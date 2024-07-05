@@ -50,15 +50,15 @@ const TutorialPage: React.FC<TutorialPageProps> = ({ isDarkMode }) => {
   return (
     <div className={`w-full py-10 gap-10`}>
       <div className='flex justify-between'>
-        <div className={`w-96 h-screen py-4 sticky top-28 rounded-2xl shadow-lg ${Mode}`}>
+        <div className={`w-96 h-full py-4 sticky top-28 rounded-2xl shadow-lg ${Mode}`}>
           <p className='mx-10 text-4xl font-bold font-sans p-5'>{tutorial?.title}</p>
-          <hr className='border-gray-300' />
+          <hr className='border-gray-300 border-[2px]' />
           <ul className='space-y-2 mt-4'>
             {chapters.map((chapter) => (
               <li key={chapter.id} className='flex flex-col'>
                 <Link
                   to={`/demo/tutorials/${tutorialId}/${chapter.id}`}
-                  className={`py-4 text-xl font-medium mx-5 flex items-center rounded-md ${activeChapter?.id === chapter.id ? 'text-blue-600' : ''} ${linkHoverClass}`}
+                  className={`py-4 text-xl font-medium px-2 flex items-center  ${activeChapter?.id === chapter.id ? 'text-blue-600' : ''} ${linkHoverClass}`}
                   onClick={(e) => {
                     e.preventDefault();
                     toggleChapter(chapter);
@@ -77,7 +77,7 @@ const TutorialPage: React.FC<TutorialPageProps> = ({ isDarkMode }) => {
                     key={section.id}
                     className={`pl-12 pr-3 py-4 flex items-center ${
                       section.slug === currentUrl.split('/').pop() ? activeSectionClass : linkHoverClass
-                    } font-medium rounded-md transition-colors duration-150`}
+                    } font-medium  transition-colors duration-150`}
                   >
                     {section.title}
                   </Link>
