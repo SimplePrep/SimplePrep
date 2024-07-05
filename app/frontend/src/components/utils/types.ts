@@ -36,20 +36,22 @@ export interface UserDetails {
 
 export interface Section {
   id: number;
+  slug: string;
   title: string;
+  description: string;
   content: string;
+  chapter: number;
 }
-
 export interface Chapter {
   id: number;
   title: string;
-  sections: Section[];
+  order: number;
+  tutorial: number;
 }
 
 export interface Tutorial {
   id: number;
   title: string;
-  chapters: Chapter[];
 }
 
 export interface Module {

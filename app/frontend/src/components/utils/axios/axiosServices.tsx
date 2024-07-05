@@ -209,22 +209,22 @@ interface TestModuleDetails {
     }
   };
   
-  export const getSections = async (tutorialId: number): Promise<Section[]> => {
-    try {
-      const response = await axiosInstance.get<Section[]>(`/api/core2/tutorials/${tutorialId}/sections/`);
-      return response.data;
-    } catch (error) {
-      console.error('Error fetching sections:', error);
-      throw error;
-    }
-  };
-  
   export const getChapters = async (tutorialId: number): Promise<Chapter[]> => {
     try {
       const response = await axiosInstance.get<Chapter[]>(`/api/core2/tutorials/${tutorialId}/chapters/`);
       return response.data;
     } catch (error) {
       console.error('Error fetching chapters:', error);
+      throw error;
+    }
+  };
+  
+  export const getSections = async (chapterId: number): Promise<Section[]> => {
+    try {
+      const response = await axiosInstance.get<Section[]>(`/api/core2/chapters/${chapterId}/sections/`);
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching sections:', error);
       throw error;
     }
   };

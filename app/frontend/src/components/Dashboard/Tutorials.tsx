@@ -5,8 +5,8 @@ import tutorial1Image from '../assets/tutorials/tutorial1.jpg';
 import tutorial2Image from '../assets/tutorials/tutorial2.jpg';
 import { getTutorials } from '../utils/axios/axiosServices';
 
-
 const basePath = "/demo/tutorials";
+
 interface TutorialCardProps {
   tutorial: Tutorial;
 }
@@ -27,16 +27,6 @@ const TutorialCard: React.FC<TutorialCardProps> = ({ tutorial }) => {
         <img className="h-56 object-cover shadow-2xl shadow-teal-100" src={tutorialImage} alt={`${tutorial.title} icon`} />
         <div className="px-6 py-4">
           <p className="font-bold text-xl mb-2">{tutorial.title}</p>
-          {tutorial.chapters.map((chapter, chapterIndex) => (
-            <div key={chapterIndex}>
-              <p className="font-semibold text-lg">{chapter.title}</p>
-              <ul className='text-gray-700 text-base'>
-                {chapter.sections.map((section, sectionIndex) => (
-                  <li key={sectionIndex}>{section.title}</li>
-                ))}
-              </ul>
-            </div>
-          ))}
         </div>
         <div className='flex justify-center pb-4'>
           <NavLink to={pathname} className="mx-auto py-2 px-4 bg-blue-500 text-white text-lg rounded hover:bg-blue-600 transition-colors duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-opacity-50">

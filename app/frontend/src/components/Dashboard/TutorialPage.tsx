@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, Outlet, useParams, useLocation } from 'react-router-dom';
-import { Chapter, Tutorial } from '../utils/types';
-import { getChapters, getTutorial } from '../utils/axios/axiosServices';
+import { Chapter, Section, Tutorial } from '../utils/types';
+import { getChapters, getSections, getTutorial } from '../utils/axios/axiosServices';
 import { MdOutlineKeyboardArrowUp, MdOutlineKeyboardArrowDown } from "react-icons/md";
 
 interface TutorialPageProps {
@@ -11,6 +11,7 @@ interface TutorialPageProps {
 const TutorialPage: React.FC<TutorialPageProps> = ({ isDarkMode }) => {
   const { tutorialId } = useParams<{ tutorialId: string }>();
   const [chapters, setChapters] = useState<Chapter[]>([]);
+  const [sections, setSections] = useState<Section[]>([]);
   const [tutorial, setTutorial] = useState<Tutorial | null>(null);
   const [activeChapter, setActiveChapter] = useState<Chapter | null>(null);
 
@@ -32,13 +33,19 @@ const TutorialPage: React.FC<TutorialPageProps> = ({ isDarkMode }) => {
     fetchTutorialData();
   }, [tutorialId]);
 
-  const toggleChapter = (id: number) => {
-    setActiveChapter(activeChapter?.id === id ? null : chapters.find(chapter => chapter.id === id) || null);
+  const toggleChapter = async (chapter: Chapter) => {
+    if (activeChapter?.id === chapter.id) {
+      setActiveChapter(null);
+      setSections([]);
+    } else {
+      setActiveChapter(chapter);
+      const sectionsData = await getSections(chapter.id);
+      setSections(sectionsData);
+    }
   };
 
   const location = useLocation();
   const currentUrl = location.pathname;
-  const currentSectionId = currentUrl.split('/').pop();
 
   return (
     <div className={`w-full py-10 gap-10`}>
@@ -47,35 +54,34 @@ const TutorialPage: React.FC<TutorialPageProps> = ({ isDarkMode }) => {
           <p className='mx-10 text-4xl font-bold font-sans p-5'>{tutorial?.title}</p>
           <hr className='border-gray-300' />
           <ul className='space-y-2 mt-4'>
-            {chapters.map(({ id, title, sections }) => (
-              <li key={id} className='flex flex-col'>
+            {chapters.map((chapter) => (
+              <li key={chapter.id} className='flex flex-col'>
                 <Link
-                  to={`/demo/tutorials/${tutorialId}/${id}`}
-                  className={`py-4 text-xl font-medium mx-5 flex items-center rounded-md ${activeChapter?.id === id ? 'text-blue-600' : ''} ${linkHoverClass}`}
+                  to={`/demo/tutorials/${tutorialId}/${chapter.id}`}
+                  className={`py-4 text-xl font-medium mx-5 flex items-center rounded-md ${activeChapter?.id === chapter.id ? 'text-blue-600' : ''} ${linkHoverClass}`}
                   onClick={(e) => {
                     e.preventDefault();
-                    toggleChapter(id);
+                    toggleChapter(chapter);
                   }}
                 >
-                  {title}
-                  {activeChapter?.id === id ? (
+                  {chapter.title}
+                  {activeChapter?.id === chapter.id ? (
                     <MdOutlineKeyboardArrowUp className="ml-auto" />
                   ) : (
                     <MdOutlineKeyboardArrowDown className="ml-auto" />
                   )}
                 </Link>
-                {activeChapter?.id === id && sections &&
-                  sections.map((section) => (
-                    <Link
-                      to={`/demo/tutorials/${tutorialId}/${id}/${section.id}`}
-                      key={section.id}
-                      className={`pl-12 pr-3 py-4 flex items-center ${
-                        section.id.toString() === currentSectionId ? activeSectionClass : linkHoverClass
-                      } font-medium rounded-md transition-colors duration-150`}
-                    >
-                      {section.title}
-                    </Link>
-                  ))}
+                {activeChapter?.id === chapter.id && sections.map((section) => (
+                  <Link
+                    to={`/demo/tutorials/${tutorialId}/${chapter.id}/${section.slug}`}
+                    key={section.id}
+                    className={`pl-12 pr-3 py-4 flex items-center ${
+                      section.slug === currentUrl.split('/').pop() ? activeSectionClass : linkHoverClass
+                    } font-medium rounded-md transition-colors duration-150`}
+                  >
+                    {section.title}
+                  </Link>
+                ))}
               </li>
             ))}
           </ul>
