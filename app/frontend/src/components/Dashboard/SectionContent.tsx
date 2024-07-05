@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import axios from 'axios';
 import { BsFillArrowLeftCircleFill, BsFillArrowRightCircleFill } from 'react-icons/bs';
 import { getSection, getSections } from "../utils/axios/axiosServices";
 import { Section } from "../utils/types";
@@ -12,13 +11,12 @@ interface ParagraphProps {
 
 const Paragraph: React.FC<ParagraphProps> = ({ text, isHighlighted = false }) => {
   return (
-    <p className={`text-xl leading-relaxed max-w-prose mx-auto text-indent ${isHighlighted ? "bg-slate-200 rounded-xl p-4 text-black " : ""}`} style={{ marginBottom: '30px' }}>
+    <p className={`text-xl leading-relaxed max-w-prose mx-auto text-indent ${isHighlighted ? "bg-slate-200 rounded-xl p-4 text-black" : ""}`} style={{ marginBottom: '30px' }}>
       {text}
     </p>
   );
 };
 
-// Main SectionContent component
 const SectionContent: React.FC<{ isDarkMode: boolean }> = ({ isDarkMode }) => {
   const { tutorialId, chapterId, sectionSlug } = useParams<{ tutorialId: string, chapterId: string, sectionSlug: string }>();
   const navigate = useNavigate();
@@ -85,18 +83,18 @@ const SectionContent: React.FC<{ isDarkMode: boolean }> = ({ isDarkMode }) => {
   if (error) return <div className="text-center p-4 text-red-500">{error}</div>;
 
   return (
-    <div className={`h-full rounded-2xl ${modeClass}`}>
-      <div className='flex flex-col gap-6 justify-center items-center p-10'>
-        <h1 className='text-center text-3xl font-bold'>{titleToRender}</h1>
-        <p className='text-center text-xl'>{descriptionToRender}</p>
+    <div className={`h-full rounded-2xl ${modeClass} p-10`}>
+      <div className='flex flex-col gap-6 justify-center items-center pb-10'>
+        <h1 className='text-center text-4xl font-bold mb-4'>{titleToRender}</h1>
+        <p className='text-center text-lg mb-6'>{descriptionToRender}</p>
       </div>
-      <div className='py-5'>
+      <div className='py-5 bg-gray-100 rounded-lg shadow-md p-6'>
         {contentToRender.split('\n').map((paragraph, index) => {
           const isHighlighted = paragraph.includes("**");
           return <Paragraph key={index} text={paragraph} isHighlighted={isHighlighted} />;
         })}
       </div>
-      <div className='p-5 flex justify-between items-center'>
+      <div className='p-5 flex justify-between items-center mt-6'>
         <button
           onClick={handlePreviousClick}
           disabled={currentSectionIndex === 0}
