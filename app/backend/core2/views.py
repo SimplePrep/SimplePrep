@@ -27,7 +27,20 @@ class TutorialListCreateView(generics.ListCreateAPIView):
                 {'error': f"Something went wrong while creating tutorial: {e}"},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
+class TutorialDetailView(generics.RetrieveAPIView):
+    queryset = Tutorial.objects.all()
+    serializer_class = TutorialSerializer
+    lookup_field = 'id'
 
+    def retrieve(self, request, *args, **kwargs):
+        try:
+            return super().retrieve(request, *args, **kwargs)
+        except Exception as e:
+            return Response(
+                {'error': f"Something went wrong while fetching tutorial: {e}"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+        
 class SectionListCreateView(generics.ListCreateAPIView):
     serializer_class = SectionSerializer
 

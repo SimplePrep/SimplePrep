@@ -31,8 +31,7 @@ const App = () => {
           <Route index element={<Contents />} />
           <Route path="dashboard" element={<Contents />} />
           <Route path="tutorials" element={<Tutorials />} />
-          <Route path="tutorials/:tutorialTitle" element={<TutorialPage isDarkMode={isDarkMode} />}>
-            <Route index element={<Navigate to={`command-of-evidence`} replace />} />
+          <Route path="tutorials/:tutorialId" element={<TutorialPage isDarkMode={isDarkMode} />}>
             <Route path=":sectionSlug" element={<SectionContent />} />
           </Route>
           <Route path="analytics" element={<Analytics isDarkMode={isDarkMode} />} />
