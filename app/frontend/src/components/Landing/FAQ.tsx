@@ -1,100 +1,96 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import { faCircleXmark, faCircleCheck } from '@fortawesome/free-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-
 interface QuestionItemProps {
-    question: string;
-    answer: string;
+  question: string;
+  answer: string;
 }
 
 interface QuestionListProps {
-    questions: QuestionItemProps[];
+  questions: QuestionItemProps[];
 }
 
 const QuestionItem: React.FC<QuestionItemProps> = ({ question, answer }) => {
-    const [isExpanded, setIsExpanded] = useState(false);
-  
-    const toggleAnswer = () => {
-      setIsExpanded(!isExpanded);
-    };
-  
-    return (
-      <li>
-        <div className="mt-10 flex items-center justify-between">
-          <button onClick={toggleAnswer}><p className='text-lg font-bold'>{question}</p></button>
-          <button onClick={toggleAnswer}>
-            {isExpanded ? <span><FontAwesomeIcon icon={faCircleXmark} size='2x'/></span> : <span><FontAwesomeIcon icon={faCircleCheck} size='2x' /></span>}
-          </button>
-          
-        </div>
-        {isExpanded && <p className="mt-5 text-lg text-slate-500">{answer}</p>}
-        <hr/>
-      </li>
-    );
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  const toggleAnswer = () => {
+    setIsExpanded(!isExpanded);
+  };
+
+  return (
+    <li>
+      <div className="mt-10 flex items-center justify-between">
+        <button onClick={toggleAnswer}>
+          <p className='text-lg font-bold'>{question}</p>
+        </button>
+        <button onClick={toggleAnswer}>
+          {isExpanded ? <span><FontAwesomeIcon icon={faCircleXmark} size='2x'/></span> : <span><FontAwesomeIcon icon={faCircleCheck} size='2x' /></span>}
+        </button>
+      </div>
+      {isExpanded && <p className="mt-5 text-lg text-slate-500">{answer}</p>}
+      <hr/>
+    </li>
+  );
 };
 
 const QuestionList: React.FC<QuestionListProps> = ({ questions }) => {
-    return (
-      <ul className="space-y-4">
-        {questions.map((question, index) => (
-          <QuestionItem key={index} question={question.question} answer={question.answer} />
-        ))}
-      </ul>
-    );
+  return (
+    <ul className="space-y-4">
+      {questions.map((question, index) => (
+        <QuestionItem key={index} question={question.question} answer={question.answer} />
+      ))}
+    </ul>
+  );
 };
 
-
-
-
 const FAQ = () => {
-
-    const questions = [
-        {
-          question: "How can your platform help me prepare for the SAT?",
-          answer: "Our platform offers SAT preparation resources such as study materials, practice tests, and personalized feedback to help students prepare for the SAT online exam."
-        }, 
-        {
-          question: "Is there a free trial?",
-          answer: "Answer2"
-        }, 
-        {
-          question: "How often are the study materials updated?",
-          answer: "Answer1"
-        }, 
-        {
-          question: "What is your cancellation policy?",
-          answer: "Answer1"
-        }, 
-        {
-          question: "How do I sign up for an account?",
-          answer: "Answer1"
-        }, 
-        {
-          question: "What payment methods do you accept?",
-          answer: "Answer1"
-        }, 
-        {
-          question: "Can I access the platform from my mobile device?",
-          answer: "Answer1"
-        }, 
-        {
-          question: "Can I track my progress and see my scores?",
-          answer: "Answer1"
-        }, 
-      ]
+  const questions = [
+    {
+      question: "How can your platform help me prepare for the SAT?",
+      answer: "Our platform offers SAT preparation resources such as study materials, practice tests, and personalized feedback to help students prepare for the SAT online exam."
+    },
+    {
+      question: "Is there a free trial?",
+      answer: "Yes, we offer a free trial for new users to explore our platform and see how it can help them prepare for the SAT. Sign up to get started with your free trial."
+    },
+    {
+      question: "How often are the study materials updated?",
+      answer: "Our study materials are updated regularly to reflect the latest changes in the SAT exam format and content. We ensure that our resources are always current and effective."
+    },
+    {
+      question: "What is your cancellation policy?",
+      answer: "You can cancel your subscription at any time. If you cancel before the end of your billing cycle, you will still have access to the platform until the billing period ends."
+    },
+    {
+      question: "How do I sign up for an account?",
+      answer: "Signing up is easy! Simply click on the 'Login' button on top right, fill in your details, and follow the prompts to create your account."
+    },
+    {
+      question: "What payment methods do you accept?",
+      answer: "We accept various payment methods including credit/debit cards, PayPal, and other secure online payment options."
+    },
+    {
+      question: "Can I access the platform from my mobile device?",
+      answer: "Yes, our platform is mobile-friendly and can be accessed from any device with an internet connection, including smartphones and tablets."
+    },
+    {
+      question: "Can I track my progress and see my scores?",
+      answer: "Absolutely! Our platform includes tools to track your progress, review your scores, and identify areas for improvement, helping you stay on track with your SAT prep."
+    },
+  ];
 
   return (
     <div className='max-w-[1240px] mx-auto w-full my-24  items-center'>
-        <div className='flex flex-col gap-5'>
-            <h1 className='text-6xl font-bold lg:4xl md:3xl text-center'>Frequently Asked Questions</h1>
-            <p className='text-center font-medium text-2xl'>Have questions? We are here to help.</p>
-        </div>
-        <div className='mt-20 w-[90%] mx-auto items-center justify-center'>
-            <QuestionList questions={questions} />
-        </div>
+      <div className='flex flex-col gap-5'>
+        <h1 className='text-6xl font-bold lg:4xl md:3xl text-center'>Frequently Asked Questions</h1>
+        <p className='text-center font-medium text-2xl'>Have questions? We are here to help.</p>
+      </div>
+      <div className='mt-20 w-[90%] mx-auto items-center justify-center'>
+        <QuestionList questions={questions} />
+      </div>
     </div>
-  )
+  );
 }
 
-export default FAQ
+export default FAQ;
