@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, Outlet, useParams, useLocation } from 'react-router-dom';
-import { Chapter, Tutorial } from '../utils/types'; 
+import { Chapter, Tutorial } from '../utils/types';
 import { getChapters, getTutorial } from '../utils/axios/axiosServices';
 import { MdOutlineKeyboardArrowUp, MdOutlineKeyboardArrowDown } from "react-icons/md";
 
@@ -32,13 +32,13 @@ const TutorialPage: React.FC<TutorialPageProps> = ({ isDarkMode }) => {
     fetchTutorialData();
   }, [tutorialId]);
 
-  const toggleChapter = (id: string) => {
-    const numericId = Number(id);
-    setActiveChapter(activeChapter?.id === numericId ? null : chapters.find(chapter => chapter.id === numericId) || null);
+  const toggleChapter = (id: number) => {
+    setActiveChapter(activeChapter?.id === id ? null : chapters.find(chapter => chapter.id === id) || null);
   };
 
   const location = useLocation();
   const currentUrl = location.pathname;
+  const currentSectionId = currentUrl.split('/').pop();
 
   return (
     <div className={`w-full py-10 gap-10`}>
@@ -54,7 +54,7 @@ const TutorialPage: React.FC<TutorialPageProps> = ({ isDarkMode }) => {
                   className={`py-4 text-xl font-medium mx-5 flex items-center rounded-md ${activeChapter?.id === id ? 'text-blue-600' : ''} ${linkHoverClass}`}
                   onClick={(e) => {
                     e.preventDefault();
-                    toggleChapter(id.toString());
+                    toggleChapter(id);
                   }}
                 >
                   {title}
@@ -70,9 +70,7 @@ const TutorialPage: React.FC<TutorialPageProps> = ({ isDarkMode }) => {
                       to={`/demo/tutorials/${tutorialId}/${id}/${section.id}`}
                       key={section.id}
                       className={`pl-12 pr-3 py-4 flex items-center ${
-                        section.id.toString() === currentUrl.split('/').pop()
-                          ? activeSectionClass
-                          : linkHoverClass
+                        section.id.toString() === currentSectionId ? activeSectionClass : linkHoverClass
                       } font-medium rounded-md transition-colors duration-150`}
                     >
                       {section.title}
