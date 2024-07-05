@@ -6,12 +6,11 @@ class TutorialAdmin(admin.ModelAdmin):
     list_display = ('id', 'title')
 
 class ChapterAdmin(admin.ModelAdmin):
-    list_display = ('id', 'tutorial', 'title', 'order')
+    list_display = ('tutorial', 'title', 'order')
     list_filter = ('tutorial', )
-    ordering = ('order',)
 
 class SectionAdmin(admin.ModelAdmin):
-    list_display = ('id', 'chapter', 'title', 'slug')
+    list_display = ('chapter', 'title', 'slug')
     list_filter = ('chapter', )
 
 class PracticeQuestionAdmin(admin.ModelAdmin):
