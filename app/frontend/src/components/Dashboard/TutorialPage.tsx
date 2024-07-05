@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, Outlet, useParams, useLocation, useNavigate } from 'react-router-dom';
-import { motion, Variants } from 'framer-motion';
+import { motion, Variants, useSpring } from 'framer-motion';
 import { Chapter, Section, Tutorial } from '../utils/types';
 import { getChapters, getSections, getTutorial } from '../utils/axios/axiosServices';
 import { MdOutlineKeyboardArrowUp, MdOutlineKeyboardArrowDown } from "react-icons/md";
@@ -72,6 +72,7 @@ const TutorialPage: React.FC<TutorialPageProps> = ({ isDarkMode }) => {
       setSections(sectionsData);
       if (sectionsData.length > 0) {
         navigate(`/demo/tutorials/${tutorialId}/${chapter.id}/${sectionsData[0].slug}`);
+        window.scrollTo(0, 0);  // Add smooth scrolling effect
       }
     }
   };

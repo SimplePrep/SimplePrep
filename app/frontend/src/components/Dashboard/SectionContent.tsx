@@ -3,7 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { BsFillArrowLeftCircleFill, BsFillArrowRightCircleFill } from 'react-icons/bs';
 import { getSection, getSections } from "../utils/axios/axiosServices";
 import { Section } from "../utils/types";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, useSpring, AnimatePresence } from "framer-motion";
 
 interface ParagraphProps {
   text: string | null;
