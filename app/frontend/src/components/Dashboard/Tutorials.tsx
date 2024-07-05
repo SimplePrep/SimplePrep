@@ -78,7 +78,7 @@ const Tutorials = () => {
   }, []);
 
   return (
-    <div className='h-full max-w-[1200px] mx-auto p-20'>
+    <div className='h-full max-w-[1200px] mx-auto px-20 py-40'>
       <h1 className='text-blue-900 text-3xl font-roboto font-medium'>Welcome to Tutorials</h1>
       <div className='my-20 flex flex-row items-center justify-evenly'>
         {tutorials.map((tutorial) => (
