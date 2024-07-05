@@ -140,7 +140,7 @@ const TutorialPage: React.FC<TutorialPageProps> = ({ isDarkMode }) => {
                         section.slug === location.pathname.split('/').pop() ? activeSectionClass : linkHoverClass
                       }`}
                     >
-                      <Link to={`/demo/tutorials/${tutorialId}/${chapter.id}/${section.slug}`} className="w-full">
+                      <Link to={`/demo/tutorials/${tutorialId}/${chapter.id}/${section.slug}`} className="w-full text-purple-700">
                         {section.title}
                       </Link>
                     </motion.li>
