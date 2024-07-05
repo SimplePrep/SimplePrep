@@ -1,7 +1,7 @@
 import { useParams, useNavigate } from "react-router-dom";
 import React, { useState, useEffect } from "react";
 import { BsFillArrowLeftCircleFill, BsFillArrowRightCircleFill } from 'react-icons/bs';
-import { getSections } from '../utils/axios/axiosServices';
+import { getSection } from '../utils/axios/axiosServices';
 import { Section } from "../utils/types";
 
 interface ParagraphProps {
@@ -20,24 +20,34 @@ const Paragraph: React.FC<ParagraphProps> = ({ text, isHighlighted = false }) =>
 const SectionContent: React.FC<{ isDarkMode: boolean }> = ({ isDarkMode }) => {
   const { tutorialId, chapterId, sectionSlug } = useParams<{ tutorialId: string, chapterId: string, sectionSlug: string }>();
   const navigate = useNavigate();
+  const [section, setSection] = useState<Section | null>(null);
   const [sections, setSections] = useState<Section[]>([]);
   const [currentSectionIndex, setCurrentSectionIndex] = useState<number | null>(null);
 
   useEffect(() => {
-    const fetchSections = async () => {
-      if (chapterId) {
+    const fetchSection = async () => {
+      if (sectionSlug) {
         try {
-          const sectionsData = await getSections(Number(chapterId));
-          setSections(sectionsData);
-          const sectionIndex = sectionsData.findIndex(sec => sec.slug === sectionSlug);
-          setCurrentSectionIndex(sectionIndex !== -1 ? sectionIndex : null);
+          const sectionData = await getSection(sectionSlug);
+          setSection(sectionData);
+          setSections((prevSections) => {
+            const updatedSections = [...prevSections];
+            const sectionIndex = updatedSections.findIndex(sec => sec.slug === sectionSlug);
+            if (sectionIndex !== -1) {
+              updatedSections[sectionIndex] = sectionData;
+            } else {
+              updatedSections.push(sectionData);
+            }
+            setCurrentSectionIndex(updatedSections.findIndex(sec => sec.slug === sectionSlug));
+            return updatedSections;
+          });
         } catch (error) {
-          console.error('Error fetching sections:', error);
+          console.error('Error fetching section:', error);
         }
       }
     };
-    fetchSections();
-  }, [chapterId, sectionSlug]);
+    fetchSection();
+  }, [sectionSlug]);
 
   const navigateToSection = (chapterId: string, index: number) => {
     const targetSection = sections[index];
@@ -65,7 +75,6 @@ const SectionContent: React.FC<{ isDarkMode: boolean }> = ({ isDarkMode }) => {
   };
 
   const modeClass = isDarkMode ? 'bg-[#121212] text-white' : 'bg-white text-gray-800';
-  const section = sectionSlug ? sections.find(sec => sec.slug === sectionSlug) : undefined;
   const contentToRender = section?.content;
   const titleToRender = section ? section.title : '';
 
