@@ -96,7 +96,7 @@ const SectionContent: React.FC<{ isDarkMode: boolean }> = ({ isDarkMode }) => {
         animate={{ y: 0, opacity: 1 }}
         exit={{ y: -10, opacity: 0 }}
         transition={{ duration: 0.2 }}
-        className={`min-h-screen rounded-2xl ${modeClass} py-24`}
+        className={`min-h-screen rounded-2xl ${modeClass} py-40`}
       >
         <motion.div className="fixed top-0 left-0 right-0 h-1 bg-blue-500 origin-left z-50" style={{ scaleX }} />
         <div className='flex flex-col gap-6 justify-center items-center'>
