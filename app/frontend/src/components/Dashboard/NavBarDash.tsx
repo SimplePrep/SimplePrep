@@ -6,6 +6,7 @@ import { BsMoon } from 'react-icons/bs';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState, AppDispatch } from '../store';
 import { SignOut } from '../utils/actions/authActions';
+import { auth } from '../utils/firebaseConfig';
 
 interface SideBarProps {
   toggleDarkMode: () => void;
@@ -15,7 +16,7 @@ interface SideBarProps {
 const SideBar: React.FC<SideBarProps> = ({ toggleDarkMode, isDarkMode }): React.ReactElement => {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
-  const { user } = useSelector((state: RootState) => state.auth);
+  const user = auth.currentUser;
   const userInitial = user?.displayName?.charAt(0) || 'A';
   const darkModeClass = isDarkMode ? 'dark text-color-dark' : 'light text-color-light';
 
