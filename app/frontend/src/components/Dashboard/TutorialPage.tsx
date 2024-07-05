@@ -89,7 +89,7 @@ const TutorialPage: React.FC<TutorialPageProps> = ({ isDarkMode }) => {
                 <motion.button
                   whileTap={{ scale: 0.97 }}
                   onClick={() => toggleChapter(chapter)}
-                  className={`py-4 text-xl font-medium px-2 flex items-center ${activeChapter?.id === chapter.id ? 'text-blue-600' : ''} ${linkHoverClass}`}
+                  className={`py-4 text-xl font-medium px-5 flex items-center ${activeChapter?.id === chapter.id ? 'text-blue-600' : ''} ${linkHoverClass}`}
                 >
                   {chapter.title}
                   <motion.div
