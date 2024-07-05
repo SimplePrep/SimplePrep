@@ -3,33 +3,8 @@ import { useParams, useNavigate } from "react-router-dom";
 import axios from 'axios';
 import { BsFillArrowLeftCircleFill, BsFillArrowRightCircleFill } from 'react-icons/bs';
 import { getSection, getSections } from "../utils/axios/axiosServices";
+import { Section } from "../utils/types";
 
-// Interfaces
-export interface Section {
-  id: number;
-  slug: string;
-  title: string;
-  description: string;
-  content: string;
-  chapter: number;
-}
-
-export interface Chapter {
-  id: number;
-  title: string;
-  order: number;
-  tutorial: number;
-}
-
-export interface Tutorial {
-  id: number;
-  title: string;
-}
-
-// API functions
-
-
-// Paragraph component
 interface ParagraphProps {
   text: string | null;
   isHighlighted?: boolean;
