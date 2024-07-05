@@ -3,8 +3,8 @@ import Logo from '../assets/logo4.png';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { SideBarLinks } from './NavBarElements';
 import { BsMoon, BsChevronDown, BsChevronUp } from 'react-icons/bs';
-import { useSelector, useDispatch } from 'react-redux';
-import { RootState, AppDispatch } from '../store';
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from '../store';
 import { SignOut } from '../utils/actions/authActions';
 import { auth } from '../utils/firebaseConfig';
 import { motion } from 'framer-motion';
@@ -33,15 +33,20 @@ const SideBar: React.FC<SideBarProps> = ({ toggleDarkMode, isDarkMode }): React.
   };
 
   return (
-    <div className={`p-1 shadow-xl sticky top-0 max-w-[1300px] mx-auto z-10 shadow-blue-300 bg-white rounded-3xl ${darkModeClass} border-2 border-white`}>
+    <div className={`fixed top-0 left-0 w-full z-10`}>
+      <div className={`flex justify-end p-2`}>
+        <button onClick={toggleVisibility} className='text-xl p-2 border-2 rounded-full hover:bg-white hover:border-blue-700'>
+          {isVisible ? <BsChevronUp /> : <BsChevronDown />}
+        </button>
+      </div>
       <motion.div
-        initial={{ height: 0 }}
-        animate={{ height: isVisible ? 'auto' : 0 }}
+        initial={{ height: 0, opacity: 0 }}
+        animate={{ height: isVisible ? 'auto' : 0, opacity: isVisible ? 1 : 0 }}
         transition={{ type: 'spring', stiffness: 300, damping: 24 }}
-        className="overflow-hidden"
+        className={`overflow-hidden shadow-xl max-w-[1300px] mx-auto shadow-blue-300 bg-white rounded-3xl ${darkModeClass} border-2 border-white`}
       >
-        <div className='flex gap-3 items-center justify-center'>
-          <img className='my-5 w-[200px]' src={Logo} alt="" />
+        <div className='flex gap-3 items-center justify-center p-5'>
+          <img className='w-[200px]' src={Logo} alt="" />
           {SideBarLinks.map((link) => (
             <NavLink
               to={link.path}
@@ -69,9 +74,6 @@ const SideBar: React.FC<SideBarProps> = ({ toggleDarkMode, isDarkMode }): React.
           </div>
         </div>
       </motion.div>
-      <button onClick={toggleVisibility} className='flex items-center justify-center w-full py-2'>
-        {isVisible ? <BsChevronUp className='text-xl' /> : <BsChevronDown className='text-xl' />}
-      </button>
     </div>
   );
 };
