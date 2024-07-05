@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, useAnimation, useInView } from 'framer-motion';
-import MathPic from '../assets/tutorials/math.jpg';
 import { Link } from 'react-router-dom';
 import Banket from "../assets/guy-lesson.jpg";
 
@@ -112,7 +111,6 @@ const Blogs = () => {
                     <p>{blog.reading_time} min read</p>
                   </div>
                 </div>
-                <Link to={`/blogs/${blog.id}`}><img className='w-[300px] mx-5 my-3 rounded-md' src={MathPic} alt="" /></Link>
               </motion.div>
             ))}
           </div>
