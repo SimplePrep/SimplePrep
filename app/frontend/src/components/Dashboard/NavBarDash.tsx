@@ -35,7 +35,7 @@ const SideBar: React.FC<SideBarProps> = ({ toggleDarkMode, isDarkMode }): React.
             key={link.title}
             className={({ isActive }) =>
               isActive
-                ? "text-xl font-medium leading-tight border-2 border-blue-700 hover:border-gray-200 bg-white p-4 mx-4 mt-2 rounded-3xl cursor-pointer"
+                ? "text-xl text-black font-medium leading-tight border-2 border-blue-700 hover:border-gray-200 bg-white p-4 mx-4 mt-2 rounded-3xl cursor-pointer"
                 : "text-xl font-medium leading-tight hover:bg-white border-2 hover:border-blue-700 hover:text-black hover:rounded-3xl p-4 mx-4 mt-2 rounded-3xl cursor-pointer"
             }
           >

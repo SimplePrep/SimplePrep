@@ -39,3 +39,25 @@ export interface UserDetails {
   last_name: string;
   firebase_uid: string;
 }
+export interface Section {
+  id: number;
+  slug: string;
+  title: string;
+  description: string;
+  content: string;
+}
+export interface Tutorial {
+  id: number;
+  title: string;
+  sections: Section[];
+}
+
+export interface Module {
+    id: number;
+    test: number;
+    title: string;
+    description: string;
+    num_questions: number;
+    created_at: string;
+    updated_at: string;
+};

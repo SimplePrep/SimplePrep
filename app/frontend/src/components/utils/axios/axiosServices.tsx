@@ -1,5 +1,6 @@
 import axiosInstance from './axiosInterceptor';
 import { TestResult, Question, UserAnswer, TestReport, DetailedTestResult, Reply, Post } from '../../Dashboard/types';
+import { Module, Section, Tutorial } from '../types';
 
 // Example function to get tests
 export const getTests = async () => {
@@ -12,15 +13,6 @@ export const getTests = async () => {
   }
 };
 
-interface Module {
-    id: number;
-    test: number;
-    title: string;
-    description: string;
-    num_questions: number;
-    created_at: string;
-    updated_at: string;
-};
 
 export const getModules = async (testId: number): Promise<Module[]>  => {
     try{
@@ -37,9 +29,6 @@ interface TestModuleDetails {
   questions: Question[];
   user_answers: UserAnswer[];
 };
-
-
-
   
   export const getQuestionsByModuleId = async (testModuleId: number): Promise<Question[]> => {
     try {
@@ -203,4 +192,22 @@ interface TestModuleDetails {
 
 
  
- 
+  export const getTutorials = async (): Promise<Tutorial[]> => {
+    try {
+      const response = await axiosInstance.get<Tutorial[]>('/api/core2/tutorials/');
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching tutorials:', error);
+      throw error;
+    }
+  };
+  
+  export const getSections = async (tutorialId: number): Promise<Section[]> => {
+    try {
+      const response = await axiosInstance.get<Section[]>(`/api/core2/tutorials/${tutorialId}/sections/`);
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching sections:', error);
+      throw error;
+    }
+  };

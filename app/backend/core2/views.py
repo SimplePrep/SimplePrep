@@ -1,61 +1,75 @@
-from rest_framework.views import APIView
-from .models import Tutorial, Section
-from .serializers import TutorialSerializer, SectionSerializer
-from rest_framework import status
+from rest_framework import generics, status
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
+from .models import Tutorial, Section
+from .serializers import TutorialSerializer, SectionSerializer
 
-class TutorialView(APIView):
-    def get(self, request, format=None):
+class TutorialListCreateView(generics.ListCreateAPIView):
+    serializer_class = TutorialSerializer
+
+    def get_queryset(self):
+        return Tutorial.objects.all().order_by('id')
+
+    def list(self, request, *args, **kwargs):
         try:
-            tutorials = Tutorial.objects.all()
-            serializer = TutorialSerializer(tutorials, many=True)
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        except Exception as e: 
+            return super().list(request, *args, **kwargs)
+        except Exception as e:
             return Response(
-                {'error': f"Something went wrong while fetching tutorial -> {e}"},
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR
-            )
-    def post(self, request, format=None):
-        try:
-            serializer = TutorialSerializer(data=request.data)
-            if serializer.is_valid():
-                serializer.save()
-                return Response(serializer.data, status=status.HTTP_201_CREATED)
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        except Exception as e: 
-            return Response(
-                {'error': f"Something went wrong while fetching tutorial -> {e}"},
+                {'error': f"Something went wrong while fetching tutorials: {e}"},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
 
-class SectionView(APIView):
-    def get(self, request, id=None, format=None):
-        if id is not None:
-            sections = Section.objects.filter(module_id=id)
-            serializer = SectionSerializer(sections, many=True)
-            return Response(serializer.data)
-        else:
+    def create(self, request, *args, **kwargs):
+        try:
+            return super().create(request, *args, **kwargs)
+        except Exception as e:
+            return Response(
+                {'error': f"Something went wrong while creating tutorial: {e}"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+class SectionListCreateView(generics.ListCreateAPIView):
+    serializer_class = SectionSerializer
+
+    def get_queryset(self):
+        module_id = self.kwargs.get('id')
+        if module_id:
+            return Section.objects.filter(module_id=module_id).order_by('id')
+        return Section.objects.none()
+
+    def list(self, request, *args, **kwargs):
+        if not self.kwargs.get('id'):
             return Response(
                 {'error': 'Tutorial ID is required'},
                 status=status.HTTP_400_BAD_REQUEST
             )
-    
-    def post(self, request, format=None):
         try:
-            serializer = SectionSerializer(data=request.data)
-            if serializer.is_valid():
-                serializer.save()
-                return Response(serializer.data, status=status.HTTP_201_CREATED)
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        except Exception as e: 
+            return super().list(request, *args, **kwargs)
+        except Exception as e:
             return Response(
-                {'error': f"Something went wrong while fetching tutorial -> {e}"},
+                {'error': f"Something went wrong while fetching sections: {e}"},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
-        
-class SectionDetailView(APIView):
-    def get(self, request, slug=None, format=None):
-        section = get_object_or_404(Section, slug=slug)
-        serializer = SectionSerializer(section)
-        return Response(serializer.data)
+
+    def create(self, request, *args, **kwargs):
+        try:
+            return super().create(request, *args, **kwargs)
+        except Exception as e:
+            return Response(
+                {'error': f"Something went wrong while creating section: {e}"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+class SectionDetailView(generics.RetrieveAPIView):
+    queryset = Section.objects.all()
+    serializer_class = SectionSerializer
+    lookup_field = 'slug'
+
+    def retrieve(self, request, *args, **kwargs):
+        try:
+            return super().retrieve(request, *args, **kwargs)
+        except Exception as e:
+            return Response(
+                {'error': f"Something went wrong while fetching section: {e}"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
