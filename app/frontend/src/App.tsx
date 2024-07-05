@@ -32,7 +32,7 @@ const App = () => {
           <Route path="dashboard" element={<Contents />} />
           <Route path="tutorials" element={<Tutorials />} />
           <Route path="tutorials/:tutorialId" element={<TutorialPage isDarkMode={isDarkMode} />}>
-            <Route path=":sectionSlug" element={<SectionContent isDarkMode={isDarkMode} />} />
+            <Route path=":chapterId/:sectionSlug" element={<SectionContent isDarkMode={isDarkMode} />} />
           </Route>
           <Route path="analytics" element={<Analytics isDarkMode={isDarkMode} />} />
         </Route>

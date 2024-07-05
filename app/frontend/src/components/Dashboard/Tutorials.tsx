@@ -14,7 +14,7 @@ interface TutorialCardProps {
 
 const TutorialCard: React.FC<TutorialCardProps> = ({ tutorial }) => {
   const [chapters, setChapters] = useState<Chapter[]>([]);
-
+  
   useEffect(()=> {
     const fetchChapters = async ()=> {
       try{
