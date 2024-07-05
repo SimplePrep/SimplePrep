@@ -25,12 +25,15 @@ const SectionContent: React.FC<{ isDarkMode: boolean }> = ({ isDarkMode }) => {
   const [currentSectionIndex, setCurrentSectionIndex] = useState<number | null>(null);
 
   useEffect(() => {
+    console.log('Section slug:', sectionSlug); // Log the sectionSlug
+
     const fetchSection = async () => {
       if (sectionSlug) {
         try {
+          console.log('Fetching section data...');
           const sectionData = await getSection(sectionSlug);
+          console.log('Section data:', sectionData); // Log the fetched data
           setSection(sectionData);
-          console.log('Section state:', sectionData); // Add this line to log the state
           setSections((prevSections) => {
             const updatedSections = [...prevSections];
             const sectionIndex = updatedSections.findIndex(sec => sec.slug === sectionSlug);
