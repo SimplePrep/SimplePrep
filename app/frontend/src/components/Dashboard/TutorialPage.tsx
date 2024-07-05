@@ -8,7 +8,7 @@ interface TutorialPageProps {
 }
 
 const TutorialPage: React.FC<TutorialPageProps> = ({ isDarkMode }) => {
-  const { tutorialId, sectionSlug } = useParams<{ tutorialId: string, sectionSlug: string }>();
+  const { tutorialTitle, sectionSlug } = useParams<{ tutorialTitle: string, sectionSlug: string }>();
   const [sections, setSections] = useState<Section[]>([]);
   const [activeSection, setActiveSection] = useState<Section | null>(null);
   const navigate = useNavigate();
@@ -20,19 +20,28 @@ const TutorialPage: React.FC<TutorialPageProps> = ({ isDarkMode }) => {
   useEffect(() => {
     const fetchSections = async () => {
       try {
-        const data = await getSections(Number(tutorialId));
+        const data = await getSections(Number(tutorialTitle));
         setSections(data);
         if (sectionSlug) {
           const active = data.find((section: Section) => section.slug === sectionSlug);
           setActiveSection(active || null);
         }
+        console.log('Fetched sections:', data);
       } catch (error) {
         console.error('Error fetching sections:', error);
       }
     };
 
     fetchSections();
-  }, [tutorialId, sectionSlug]);
+  }, [tutorialTitle, sectionSlug]);
+
+  useEffect(() => {
+    if (sections.length > 0 && !activeSection && sectionSlug) {
+      const active = sections.find((section: Section) => section.slug === sectionSlug);
+      setActiveSection(active || null);
+      console.log('Set active section:', active);
+    }
+  }, [sections, sectionSlug, activeSection]);
 
   const currentIndex = sections.findIndex(section => section.slug === activeSection?.slug);
   const prevSection = currentIndex > 0 ? sections[currentIndex - 1] : null;
@@ -42,13 +51,13 @@ const TutorialPage: React.FC<TutorialPageProps> = ({ isDarkMode }) => {
     <div className="w-full py-10 gap-10">
       <div className="flex justify-between">
         <div className={`w-96 h-screen py-4 sticky top-28 rounded-2xl shadow-lg ${Mode}`}>
-          <p className="mx-10 text-4xl font-bold font-sans p-5">Tutorial</p>
+          <p className="mx-10 text-4xl font-bold font-sans p-5">{tutorialTitle}</p>
           <hr className="border-gray-300" />
           <ul className="space-y-2 mt-4">
             {sections.map((section) => (
               <li key={section.id} className="flex flex-col">
                 <Link
-                  to={`/demo/tutorials/${tutorialId}/${section.slug}`}
+                  to={`/demo/tutorials/${tutorialTitle}/${section.slug}`}
                   className={`py-4 text-xl font-medium mx-5 flex items-center rounded-md ${activeSection?.slug === section.slug ? activeSectionClass : ''} ${linkHoverClass}`}
                   onClick={() => setActiveSection(section)}
                 >
@@ -59,11 +68,11 @@ const TutorialPage: React.FC<TutorialPageProps> = ({ isDarkMode }) => {
           </ul>
         </div>
         <div className="flex-1 max-w-5xl mx-auto rounded-2xl">
-          <Outlet />
+          <Outlet context={{ activeSection }} />
           <div className="flex justify-between mt-4">
             {prevSection && (
               <button
-                onClick={() => navigate(`/demo/tutorials/${tutorialId}/${prevSection.slug}`)}
+                onClick={() => navigate(`/demo/tutorials/${tutorialTitle}/${prevSection.slug}`)}
                 className="py-2 px-4 bg-blue-500 text-white text-lg rounded hover:bg-blue-600 transition-colors duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-opacity-50"
               >
                 Previous
@@ -71,7 +80,7 @@ const TutorialPage: React.FC<TutorialPageProps> = ({ isDarkMode }) => {
             )}
             {nextSection && (
               <button
-                onClick={() => navigate(`/demo/tutorials/${tutorialId}/${nextSection.slug}`)}
+                onClick={() => navigate(`/demo/tutorials/${tutorialTitle}/${nextSection.slug}`)}
                 className="py-2 px-4 bg-blue-500 text-white text-lg rounded hover:bg-blue-600 transition-colors duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-opacity-50 ml-auto"
               >
                 Next
