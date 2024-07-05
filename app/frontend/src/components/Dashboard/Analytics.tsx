@@ -56,8 +56,8 @@ const Analytics: React.FC<AnalyticsProps> = ({ isDarkMode }) => {
             datasets: [{
               label: 'Your Most Recent Scores from Practice Tests',
               data: scores,
-              backgroundColor: scores.map(score => score < 500 ? '#9333ea' : '#22c55e'),
-              borderColor: scores.map(score => score < 500 ? 'darkred' : 'darkgreen'),
+              backgroundColor: scores.map(score => score < 50 ? '#9333ea' : '#22c55e'),
+              borderColor: scores.map(score => score < 50 ? 'darkred' : 'darkgreen'),
               borderWidth: 1,
               datalabels: {
                 align: 'end',
@@ -161,7 +161,7 @@ const Analytics: React.FC<AnalyticsProps> = ({ isDarkMode }) => {
   };
 
   return (
-    <div className={`max-w-[1400px] mx-auto p-20 ${Mode}`}>
+    <div className={`max-w-[1400px] mx-auto px-20 py-40 ${Mode}`}>
       <div className="mb-8 flex flex-col justify-center items-center">
         <h2 className="text-2xl font-semibold ">Welcome to Your Performance Dashboard</h2>
         <p className="mt-2 text-lg ">Here, you can track your progress, view your test scores in percentage (Out of 100) over time, and identify areas for improvement. Let's get started!</p>
