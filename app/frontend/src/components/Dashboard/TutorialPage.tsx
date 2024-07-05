@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, Outlet, useParams, useLocation, useNavigate } from 'react-router-dom';
+import { motion, Variants } from 'framer-motion';
 import { Chapter, Section, Tutorial } from '../utils/types';
 import { getChapters, getSections, getTutorial } from '../utils/axios/axiosServices';
 import { MdOutlineKeyboardArrowUp, MdOutlineKeyboardArrowDown } from "react-icons/md";
@@ -7,6 +8,15 @@ import { MdOutlineKeyboardArrowUp, MdOutlineKeyboardArrowDown } from "react-icon
 interface TutorialPageProps {
   isDarkMode: boolean;
 }
+
+const itemVariants: Variants = {
+  open: {
+    opacity: 1,
+    y: 0,
+    transition: { type: "spring", stiffness: 300, damping: 24 }
+  },
+  closed: { opacity: 0, y: 20, transition: { duration: 0.2 } }
+};
 
 const TutorialPage: React.FC<TutorialPageProps> = ({ isDarkMode }) => {
   const { tutorialId, chapterId: urlChapterId, sectionSlug } = useParams<{ tutorialId: string, chapterId?: string, sectionSlug?: string }>();
@@ -17,9 +27,9 @@ const TutorialPage: React.FC<TutorialPageProps> = ({ isDarkMode }) => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const Mode = isDarkMode ? 'bg-[#121212] text-white' : 'bg-white text-gray-800';
-  const linkHoverClass = isDarkMode ? 'hover:text-gray-100 hover:bg-[#353535]' : 'hover:bg-slate-200';
-  const activeSectionClass = isDarkMode ? 'bg-[#353535]' : 'bg-slate-300';
+  const Mode = isDarkMode ? 'bg-gray-900 text-white' : 'bg-white text-gray-900';
+  const linkHoverClass = isDarkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-100';
+  const activeSectionClass = isDarkMode ? 'bg-gray-700' : 'bg-gray-200';
 
   useEffect(() => {
     const fetchTutorialData = async () => {
@@ -67,36 +77,75 @@ const TutorialPage: React.FC<TutorialPageProps> = ({ isDarkMode }) => {
   };
 
   return (
-    <div className={`w-full py-10 gap-10`}>
+    <div className="w-full py-10 gap-10">
       <div className='flex justify-between'>
         <div className={`w-96 h-full py-4 sticky top-28 rounded-2xl shadow-lg ${Mode}`}>
-          <p className='mx-10 text-4xl font-bold font-sans p-5'>{tutorial?.title}</p>
-          <hr className='border-gray-300 border-[2px]' />
+          <p className='mx-10 text-4xl font-bold p-5'>{tutorial?.title}</p>
+          <hr className='border-gray-300' />
           <ul className='space-y-2 mt-4'>
             {chapters.map((chapter) => (
               <li key={chapter.id} className='flex flex-col'>
-                <button
-                  className={`py-4 text-xl font-medium px-2 flex items-center ${activeChapter?.id === chapter.id ? 'text-blue-600' : ''} ${linkHoverClass}`}
+                <motion.button
+                  whileTap={{ scale: 0.97 }}
                   onClick={() => toggleChapter(chapter)}
+                  className={`py-4 text-xl font-medium px-2 flex items-center ${activeChapter?.id === chapter.id ? 'text-blue-600' : ''} ${linkHoverClass}`}
                 >
                   {chapter.title}
-                  {activeChapter?.id === chapter.id ? (
-                    <MdOutlineKeyboardArrowUp className="ml-auto" />
-                  ) : (
-                    <MdOutlineKeyboardArrowDown className="ml-auto" />
-                  )}
-                </button>
-                {activeChapter?.id === chapter.id && sections.map((section) => (
-                  <Link
-                    to={`/demo/tutorials/${tutorialId}/${chapter.id}/${section.slug}`}
-                    key={section.id}
-                    className={`pl-12 pr-3 py-4 flex items-center ${
-                      section.slug === location.pathname.split('/').pop() ? activeSectionClass : linkHoverClass
-                    } font-medium transition-colors duration-150`}
+                  <motion.div
+                    variants={{
+                      open: { rotate: 180 },
+                      closed: { rotate: 0 }
+                    }}
+                    animate={activeChapter?.id === chapter.id ? "open" : "closed"}
+                    transition={{ duration: 0.2 }}
+                    style={{ originY: 0.55 }}
                   >
-                    {section.title}
-                  </Link>
-                ))}
+                    {activeChapter?.id === chapter.id ? (
+                      <MdOutlineKeyboardArrowUp className="ml-auto" />
+                    ) : (
+                      <MdOutlineKeyboardArrowDown className="ml-auto" />
+                    )}
+                  </motion.div>
+                </motion.button>
+                <motion.ul
+                  initial={false}
+                  animate={activeChapter?.id === chapter.id ? "open" : "closed"}
+                  variants={{
+                    open: {
+                      clipPath: "inset(0% 0% 0% 0% round 10px)",
+                      transition: {
+                        type: "spring",
+                        bounce: 0,
+                        duration: 0.7,
+                        delayChildren: 0.3,
+                        staggerChildren: 0.05
+                      }
+                    },
+                    closed: {
+                      clipPath: "inset(10% 50% 90% 50% round 10px)",
+                      transition: {
+                        type: "spring",
+                        bounce: 0,
+                        duration: 0.3
+                      }
+                    }
+                  }}
+                  style={{ pointerEvents: activeChapter?.id === chapter.id ? "auto" : "none" }}
+                >
+                  {activeChapter?.id === chapter.id && sections.map((section) => (
+                    <motion.li
+                      key={section.id}
+                      variants={itemVariants}
+                      className={`pl-12 pr-3 py-4 flex items-center ${
+                        section.slug === location.pathname.split('/').pop() ? activeSectionClass : linkHoverClass
+                      }`}
+                    >
+                      <Link to={`/demo/tutorials/${tutorialId}/${chapter.id}/${section.slug}`} className="w-full">
+                        {section.title}
+                      </Link>
+                    </motion.li>
+                  ))}
+                </motion.ul>
               </li>
             ))}
           </ul>

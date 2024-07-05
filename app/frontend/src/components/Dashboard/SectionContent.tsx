@@ -88,7 +88,7 @@ const SectionContent: React.FC<{ isDarkMode: boolean }> = ({ isDarkMode }) => {
         <h1 className='text-center text-4xl font-bold mb-4'>{titleToRender}</h1>
         <p className='text-center text-lg mb-6'>{descriptionToRender}</p>
       </div>
-      <div className='py-5 bg-gray-100 rounded-lg shadow-md p-6'>
+      <div className='py-5  rounded-lg shadow-md p-6'>
         {contentToRender.split('\n').map((paragraph, index) => {
           const isHighlighted = paragraph.includes("**");
           return <Paragraph key={index} text={paragraph} isHighlighted={isHighlighted} />;
