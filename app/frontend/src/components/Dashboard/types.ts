@@ -29,6 +29,8 @@ export interface TestResult {
   };
 }
 
+
+
 export interface UserAnswer {
   id: number;
   test_result: number;
