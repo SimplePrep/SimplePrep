@@ -12,7 +12,7 @@ interface ParagraphProps {
 
 const Paragraph: React.FC<ParagraphProps> = ({ text, isHighlighted = false }) => {
   return (
-    <p className={`text-xl leading-relaxed max-w-prose mx-auto text-indent ${isHighlighted ? "bg-slate-200 rounded-xl p-4 text-black " : ""}`} style={{ marginBottom: '30px' }}>
+    <p className={`text-lg leading-relaxed max-w-prose mx-auto ${isHighlighted ? "bg-slate-200 rounded-lg p-4 text-black" : ""} mb-6`}>
       {text}
     </p>
   );
@@ -28,8 +28,6 @@ const SectionContent: React.FC<{ isDarkMode: boolean }> = ({ isDarkMode }) => {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    console.log('Route params:', { tutorialId, chapterId, sectionSlug });
-
     const fetchSectionAndSections = async () => {
       if (sectionSlug && chapterId) {
         setLoading(true);
@@ -91,7 +89,7 @@ const SectionContent: React.FC<{ isDarkMode: boolean }> = ({ isDarkMode }) => {
         animate={{ y: 0, opacity: 1 }}
         exit={{ y: -10, opacity: 0 }}
         transition={{ duration: 0.2 }}
-        className={`h-full rounded-2xl ${modeClass} p-10`}
+        className={`min-h-screen rounded-2xl ${modeClass} p-10`}
       >
         <div className='flex flex-col gap-6 justify-center items-center pb-10'>
           <h1 className='text-center text-4xl font-bold mb-4'>{titleToRender}</h1>
@@ -100,14 +98,14 @@ const SectionContent: React.FC<{ isDarkMode: boolean }> = ({ isDarkMode }) => {
         <div className='py-5 rounded-lg shadow-md p-6'>
           {contentToRender.split('\n').map((paragraph, index) => {
             const isHighlighted = paragraph.includes("**");
-            return <Paragraph key={index} text={paragraph} isHighlighted={isHighlighted} />;
+            return <Paragraph key={index} text={paragraph.replace(/\*\*/g, "")} isHighlighted={isHighlighted} />;
           })}
         </div>
         <div className='p-5 flex justify-between items-center mt-6'>
           <motion.button
             onClick={handlePreviousClick}
             disabled={currentSectionIndex === 0}
-            className="py-2 px-6 border-2 rounded-xl hover:bg-[#00df9a] hover:border-blue-500 hover:text-white font-semibold text-lg disabled:opacity-50"
+            className="py-2 px-6 border-2 rounded-xl hover:bg-blue-500 hover:text-white font-semibold text-lg disabled:opacity-50"
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
           >
@@ -116,7 +114,7 @@ const SectionContent: React.FC<{ isDarkMode: boolean }> = ({ isDarkMode }) => {
           <motion.button
             onClick={handleNextClick}
             disabled={currentSectionIndex === sections.length - 1}
-            className="py-2 px-6 border-2 rounded-xl hover:bg-[#00df9a] hover:border-blue-500 hover:text-white font-semibold text-lg disabled:opacity-50"
+            className="py-2 px-6 border-2 rounded-xl hover:bg-blue-500 hover:text-white font-semibold text-lg disabled:opacity-50"
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
           >
