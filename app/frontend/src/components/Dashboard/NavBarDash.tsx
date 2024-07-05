@@ -59,7 +59,7 @@ const SideBar: React.FC<SideBarProps> = ({ toggleDarkMode, isDarkMode }): React.
                 </div>
               </NavLink>
             ))}
-            <button onClick={toggleDarkMode} className='text-xl p-3 border-2 rounded-2xl hover:bg-white hover:border-blue-700'>
+            <button onClick={toggleDarkMode} className={`text-xl p-3 border-2 rounded-2xl hover:border-blue-700 ${isDarkMode}? 'text-white hover:bg-black': 'text-black hover:bg-white'`}>
               <BsMoon />
             </button>
             <button onClick={handleSignOut} className='text-xl font-medium p-3 border-2 rounded-2xl hover:bg-white hover:border-blue-500 hover:text-black'>
@@ -71,7 +71,7 @@ const SideBar: React.FC<SideBarProps> = ({ toggleDarkMode, isDarkMode }): React.
           </div>
         </motion.div>
         <div className='flex items-center p-2'>
-            <button onClick={toggleVisibility} className='text-xl p-2 border-[3px] rounded-full hover:bg-white hover:border-blue-700'>
+            <button onClick={toggleVisibility} className={`text-xl p-2 border-[3px] rounded-full  hover:border-blue-700 ${isDarkMode ? 'text-white' : 'text-black hover:bg-white'}` }>
               {isVisible ? <BsChevronUp /> : <BsChevronDown />}
             </button>
         </div>

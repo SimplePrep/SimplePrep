@@ -78,7 +78,7 @@ const TutorialPage: React.FC<TutorialPageProps> = ({ isDarkMode }) => {
   };
 
   return (
-    <div className="w-full py-20 gap-10">
+    <div className="w-full py-24 gap-10">
       <div className='flex justify-between'>
         <div className={`w-96 h-full py-4 sticky top-28 rounded-2xl shadow-lg ${Mode}`}>
           <p className='mx-10 text-4xl font-bold p-5'>{tutorial?.title}</p>
@@ -141,7 +141,7 @@ const TutorialPage: React.FC<TutorialPageProps> = ({ isDarkMode }) => {
                         section.slug === location.pathname.split('/').pop() ? activeSectionClass : linkHoverClass
                       }`}
                     >
-                      <Link to={`/demo/tutorials/${tutorialId}/${chapter.id}/${section.slug}`} className="w-full text-purple-700">
+                      <Link to={`/demo/tutorials/${tutorialId}/${chapter.id}/${section.slug}`} className="w-full">
                         {section.title}
                       </Link>
                     </motion.li>
