@@ -1,76 +1,92 @@
-import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { AiOutlineClose } from 'react-icons/ai';
-import { BsFillArrowLeftCircleFill, BsFillArrowRightCircleFill, BsMoon } from 'react-icons/bs';
-import { Section } from '../utils/types';
-import { getSections } from '../utils/axios/axiosServices';
+import { useParams, useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { BsFillArrowLeftCircleFill, BsFillArrowRightCircleFill } from 'react-icons/bs';
+import { getChapters } from '../utils/axios/axiosServices'; // Adjust the path as needed
+import { Chapter, Section } from "../utils/types";
 
 interface ParagraphProps {
-    text: string | null;
-    isHighlighted?: boolean; // New prop to indicate highlighting
-  }
-  
-  const Paragraph: React.FC<ParagraphProps> = ({ text, isHighlighted = false }) => {
-    return (
-      <p className={`text-xl leading-relaxed max-w-prose mx-auto text-indent ${isHighlighted ? "bg-slate-200 rounded-xl p-4 text-black " : ""}`} style={{ marginBottom: '30px' }}>
-        {text}
-      </p>
-    );
-  };
-  
-interface SectionContentProps {
-  isDarkMode: boolean;
+  text: string | null;
+  isHighlighted?: boolean;
 }
 
-const SectionContent: React.FC<SectionContentProps> = ({ isDarkMode }) => {
-  const { tutorialId, sectionSlug } = useParams<{ tutorialId: string, sectionSlug: string }>();
-  const [sections, setSections] = useState<Section[]>([]);
-  const [activeSection, setActiveSection] = useState<Section | null>(null);
+const Paragraph: React.FC<ParagraphProps> = ({ text, isHighlighted = false }) => {
+  return (
+    <p className={`text-xl leading-relaxed max-w-prose mx-auto text-indent ${isHighlighted ? "bg-slate-200 rounded-xl p-4 text-black " : ""}`} style={{ marginBottom: '30px' }}>
+      {text}
+    </p>
+  );
+};
+
+const SectionContent: React.FC<{ isDarkMode: boolean }> = ({ isDarkMode }) => {
+  const { tutorialId, chapterId, sectionId } = useParams<{ tutorialId: string, chapterId: string, sectionId: string }>();
   const navigate = useNavigate();
+  const [chapters, setChapters] = useState<Chapter[]>([]);
+  const [activeChapter, setActiveChapter] = useState<Chapter | null>(null);
+  const [currentSectionIndex, setCurrentSectionIndex] = useState<number | null>(null);
 
   useEffect(() => {
-    const fetchSections = async () => {
-      try {
-        const data = await getSections(Number(tutorialId));
-        setSections(data);
-        const currentSection = data.find(section => section.slug === sectionSlug) || null;
-        setActiveSection(currentSection);
-      } catch (error) {
-        console.error('Error fetching sections:', error);
+    const fetchChapters = async () => {
+      if (tutorialId) {
+        try {
+          const data = await getChapters(Number(tutorialId));
+          setChapters(data);
+          const chapter = data.find(c => c.id === Number(chapterId));
+          setActiveChapter(chapter || null);
+          if (chapter && sectionId) {
+            const sectionIndex = chapter.sections.findIndex(sec => sec.id === Number(sectionId));
+            setCurrentSectionIndex(sectionIndex !== -1 ? sectionIndex : null);
+          }
+        } catch (error) {
+          console.error('Error fetching chapters:', error);
+        }
       }
     };
+    fetchChapters();
+  }, [tutorialId, chapterId, sectionId]);
 
-    fetchSections();
-  }, [tutorialId, sectionSlug]);
-
-  if (!activeSection) {
-    return <div>Loading...</div>;
-  }
-
-  const modeClass = isDarkMode ? 'bg-[#121212] text-white' : 'bg-white text-gray-800';
-  const contentToRender = activeSection.content;
-  const titleToRender = activeSection.title;
-
-  const currentIndex = sections.findIndex(section => section.slug === activeSection.slug);
-
-  const navigateToSection = (index: number) => {
-    const targetSection = sections[index];
-    const targetPath = `/demo/tutorials/${tutorialId}/${targetSection.slug}`;
+  const navigateToChapter = (index: number) => {
+    const targetChapter = chapters[index];
+    const targetPath = `/demo/tutorials/${tutorialId}/${targetChapter.id}`;
     navigate(targetPath);
     window.scrollTo(0, 0);
   };
 
+  const navigateToSection = (chapterIndex: number, sectionIndex: number) => {
+    const targetSection = chapters[chapterIndex]?.sections?.[sectionIndex];
+    if (targetSection) {
+      const targetPath = `/demo/tutorials/${tutorialId}/${chapters[chapterIndex].id}/${targetSection.id}`;
+      navigate(targetPath);
+      window.scrollTo(0, 0);
+    }
+  };
+
   const handlePreviousClick = () => {
-    if (currentIndex > 0) {
-      navigateToSection(currentIndex - 1);
+    if (currentSectionIndex !== null && currentSectionIndex > 0) {
+      navigateToSection(chapters.findIndex(ch => ch.id === activeChapter?.id), currentSectionIndex - 1);
+    } else {
+      const currentChapterIndex = chapters.findIndex(ch => ch.id === activeChapter?.id);
+      if (currentChapterIndex > 0) {
+        navigateToChapter(currentChapterIndex - 1);
+      }
     }
   };
 
   const handleNextClick = () => {
-    if (currentIndex < sections.length - 1) {
-      navigateToSection(currentIndex + 1);
+    const sectionCount = activeChapter?.sections?.length ?? 0;
+    if (currentSectionIndex !== null && currentSectionIndex < sectionCount - 1) {
+      navigateToSection(chapters.findIndex(ch => ch.id === activeChapter?.id), currentSectionIndex + 1);
+    } else {
+      const currentChapterIndex = chapters.findIndex(ch => ch.id === activeChapter?.id);
+      if (currentChapterIndex < chapters.length - 1) {
+        navigateToChapter(currentChapterIndex + 1);
+      }
     }
   };
+
+  const modeClass = isDarkMode ? 'bg-[#121212] text-white' : 'bg-white text-gray-800';
+  const section = sectionId ? activeChapter?.sections?.find(sec => sec.id === Number(sectionId)) : undefined;
+  const contentToRender = section?.content;
+  const titleToRender = section ? section.title : activeChapter?.title;
 
   return (
     <div className={`h-full rounded-2xl ${modeClass}`}>
@@ -78,7 +94,7 @@ const SectionContent: React.FC<SectionContentProps> = ({ isDarkMode }) => {
         <p className='text-center text-3xl font-bold'>{titleToRender}</p>
       </div>
       <div className='py-5'>
-        {contentToRender.split('\n').map((paragraph, index) => {
+        {contentToRender?.split('\n').map((paragraph, index) => {
           const isHighlighted = paragraph.includes("**");
           return <Paragraph key={index} text={paragraph} isHighlighted={isHighlighted} />;
         })}

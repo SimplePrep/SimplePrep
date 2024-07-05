@@ -1,14 +1,25 @@
 from django.contrib import admin
 from spa.admin import admin_site
-from .models import Tutorial, Section
+from .models import Tutorial, Chapter, Section, PracticeQuestion
 
 class TutorialAdmin(admin.ModelAdmin):
     list_display = ('id', 'title')
 
-class SectionAdmin(admin.ModelAdmin):
-    list_display = ('module', 'title', 'slug')
-    list_filter = ('module', )
+class ChapterAdmin(admin.ModelAdmin):
+    list_display = ('id', 'tutorial', 'title', 'order')
+    list_filter = ('tutorial', )
+    ordering = ('order',)
 
+class SectionAdmin(admin.ModelAdmin):
+    list_display = ('id', 'chapter', 'title', 'slug')
+    list_filter = ('chapter', )
+
+class PracticeQuestionAdmin(admin.ModelAdmin):
+    list_display = ('id', 'chapter', 'title', 'correct_answer', 'likes', 'dislikes', 'created_at')
+    list_filter = ('chapter', 'correct_answer')
+    search_fields = ('title', 'context', 'query')
 
 admin_site.register(Tutorial, TutorialAdmin)
+admin_site.register(Chapter, ChapterAdmin)
 admin_site.register(Section, SectionAdmin)
+admin_site.register(PracticeQuestion, PracticeQuestionAdmin)

@@ -1,14 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { useResolvedPath } from 'react-router-dom';
-import { NavLink } from 'react-router-dom';
+import { useResolvedPath, NavLink } from 'react-router-dom';
 import { Tutorial } from '../utils/types';
-import tutorial1Image from '../assets/tutorials/tutorial1.jpg'
+import tutorial1Image from '../assets/tutorials/tutorial1.jpg';
 import tutorial2Image from '../assets/tutorials/tutorial2.jpg';
 import { getTutorials } from '../utils/axios/axiosServices';
 
 const basePath = "/demo/tutorials";
-
-// Import your images
 
 interface TutorialCardProps {
   tutorial: Tutorial;
@@ -17,7 +14,6 @@ interface TutorialCardProps {
 const TutorialCard: React.FC<TutorialCardProps> = ({ tutorial }) => {
   const { pathname } = useResolvedPath(`${basePath}/${tutorial.id}`);
 
-  // Define a mapping between tutorial IDs and images
   const tutorialImages: { [key: number]: string } = {
     1: tutorial1Image,
     2: tutorial2Image,
@@ -44,7 +40,6 @@ const TutorialCard: React.FC<TutorialCardProps> = ({ tutorial }) => {
     </div>
   );
 };
-
 
 const Tutorials = () => {
   const [tutorials, setTutorials] = useState<Tutorial[]>([]);

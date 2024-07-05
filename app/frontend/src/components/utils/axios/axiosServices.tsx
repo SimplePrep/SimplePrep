@@ -1,6 +1,6 @@
 import axiosInstance from './axiosInterceptor';
 import { TestResult, Question, UserAnswer, TestReport, DetailedTestResult, Reply, Post } from '../../Dashboard/types';
-import { Module, Section, Tutorial } from '../types';
+import { Chapter, Module, Section, Tutorial } from '../types';
 
 // Example function to get tests
 export const getTests = async () => {
@@ -189,9 +189,6 @@ interface TestModuleDetails {
     }
   };
 
-
-
- 
   export const getTutorials = async (): Promise<Tutorial[]> => {
     try {
       const response = await axiosInstance.get<Tutorial[]>('/api/core2/tutorials/');
@@ -201,7 +198,7 @@ interface TestModuleDetails {
       throw error;
     }
   };
-
+  
   export const getTutorial = async (tutorialId: number): Promise<Tutorial> => {
     try {
       const response = await axiosInstance.get<Tutorial>(`/api/core2/tutorials/${tutorialId}/`);
@@ -218,6 +215,16 @@ interface TestModuleDetails {
       return response.data;
     } catch (error) {
       console.error('Error fetching sections:', error);
+      throw error;
+    }
+  };
+  
+  export const getChapters = async (tutorialId: number): Promise<Chapter[]> => {
+    try {
+      const response = await axiosInstance.get<Chapter[]>(`/api/core2/tutorials/${tutorialId}/chapters/`);
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching chapters:', error);
       throw error;
     }
   };
