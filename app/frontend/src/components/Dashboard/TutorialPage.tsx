@@ -78,7 +78,7 @@ const TutorialPage: React.FC<TutorialPageProps> = ({ isDarkMode }) => {
   };
 
   return (
-    <div className="w-full px-10 py-20 gap-10">
+    <div className="w-full py-10 gap-10">
       <div className='flex justify-between'>
         <div className={`w-96 h-full py-4 sticky top-28 rounded-2xl shadow-lg ${Mode}`}>
           <p className='mx-10 text-4xl font-bold p-5'>{tutorial?.title}</p>
