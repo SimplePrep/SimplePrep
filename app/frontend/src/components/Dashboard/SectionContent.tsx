@@ -89,14 +89,14 @@ const SectionContent: React.FC<{ isDarkMode: boolean }> = ({ isDarkMode }) => {
   if (error) return <div className="text-center p-4 text-red-500">{error}</div>;
 
   return (
-    <AnimatePresence exitBeforeEnter>
+    <AnimatePresence>
       <motion.div
         key={sectionSlug}
         initial={{ y: 10, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         exit={{ y: -10, opacity: 0 }}
         transition={{ duration: 0.2 }}
-        className={`min-h-screen rounded-2xl ${modeClass} p-10`}
+        className={`min-h-screen rounded-2xl ${modeClass} px-10 py-20`}
       >
         <motion.div className="fixed top-0 left-0 right-0 h-1 bg-blue-500 origin-left z-50" style={{ scaleX }} />
         <div className='flex flex-col gap-6 justify-center items-center pb-10'>
