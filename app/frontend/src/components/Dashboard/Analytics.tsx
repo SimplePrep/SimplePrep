@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { BsMoon } from 'react-icons/bs';
 import Chart from 'chart.js/auto';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import Analysis from './utils/analytics_components/Analysis';
@@ -8,9 +7,10 @@ import MiniTestModal from './utils/test_components/MiniTestModal';
 import Discussion from './utils/Discussion';
 import { useSelector } from 'react-redux';
 import { getRecentTests, getTestModuleDetails, getTestReport } from '../utils/axios/axiosServices';
-import { Question, TestResult, DetailedTestResult, TestReport } from './types';
+import { TestResult, DetailedTestResult } from './types';
 import { RootState } from '../store';
 import { auth } from '../utils/firebaseConfig';
+import { Link } from 'react-router-dom';
 
 interface AnalyticsProps {
   isDarkMode: boolean;
@@ -23,7 +23,7 @@ const Analytics: React.FC<AnalyticsProps> = ({ isDarkMode }) => {
   const [showAnalysis, setShowAnalysis] = useState(false);
   const [showPreview, setShowPreview] = useState(false);
   const [showDiscussion, setShowDiscussion] = useState(false);
-  const Mode = isDarkMode ? ' text-white' : 'text-gray-800';
+  const Mode = isDarkMode ? 'text-white' : 'text-gray-800';
   let delayed: boolean;
 
   useEffect(() => {
@@ -74,8 +74,8 @@ const Analytics: React.FC<AnalyticsProps> = ({ isDarkMode }) => {
                 stacked: true,
               },
               y: {
-                stacked: true
-              }
+                stacked: true,
+              },
             },
             plugins: {
               tooltip: {
@@ -161,16 +161,39 @@ const Analytics: React.FC<AnalyticsProps> = ({ isDarkMode }) => {
   };
 
   return (
-    <div className={`max-w-[1400px] mx-auto px-20 py-40 ${Mode}`}>
-      <div className="mb-8 flex flex-col justify-center items-center">
-        <h2 className="text-2xl font-semibold ">Welcome to Your Performance Dashboard</h2>
-        <p className="mt-2 text-lg ">Here, you can track your progress, view your test scores in percentage (Out of 100) over time, and identify areas for improvement. Let's get started!</p>
-      </div>
-      <div className='flex justify-center items-center'>
-        <div className="flex justify-center items-center bg-slate-100 rounded-xl" style={{ width: '850px', height: '550px' }}>
-          <canvas id="testScoresChart" className='w-full h-full mx-10 '></canvas>
+    <div className={`max-w-[1400px] mx-auto px-6 py-12 ${Mode}`}>
+      {testData.length === 0 ? (
+        <div className="min-h-screen  flex items-center justify-center px-4">
+        <div className="max-w-md w-full bg-white rounded-lg shadow-md p-8 text-center">
+          <h1 className="text-3xl font-bold text-gray-800 mb-4">
+            Welcome to Your Performance Dashboard
+          </h1>
+          <p className="text-gray-600 mb-6">
+            This page is designed to help you track your progress, view your test scores, and identify areas for improvement.
+          </p>
+          <p className="text-gray-600 mb-8">
+            To get started, please go to the dashboard and take a test. Once you've completed a test, come back to this page to see your results and analysis.
+          </p>
+          <button className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-md transition duration-300 ease-in-out">
+            <Link to='/demo/dashboard'>
+              Go to Dashboard
+            </Link>
+          </button>
         </div>
       </div>
+      ) : (
+        <>
+          <div className="mb-8 flex flex-col justify-center items-center text-center">
+            <h2 className="text-2xl font-semibold mb-4">Your Performance Dashboard</h2>
+            <p className="text-lg">Here, you can track your progress, view your test scores over time, and identify areas for improvement. Let's get started!</p>
+          </div>
+          <div className="flex justify-center items-center mb-12">
+            <div className="flex justify-center items-center bg-slate-100 rounded-xl shadow-lg p-6 w-full max-w-3xl">
+              <canvas id="testScoresChart" className='w-full h-full'></canvas>
+            </div>
+          </div>
+        </>
+      )}
 
       {showAnalysis && selectedTestEntry !== null && selectedTestEntry.report && (
         <Analysis data={selectedTestEntry.report.report_data} onClose={() => setShowAnalysis(false)} />
@@ -190,13 +213,16 @@ const Analytics: React.FC<AnalyticsProps> = ({ isDarkMode }) => {
           onClose={() => setShowDiscussion(false)}
         />
       )}
-      <div className='py-20'>
-        <p className='text-3xl font-semibold mb-2'>Recently Taken Tests</p>
-        <p className='text-lg mb-6'>
-          Dive back into your practice journey with a quick glance at your most recent tests. Each test card offers a detailed review through <strong>Preview</strong> and insights into your performance with <strong>Analytics</strong>. Use these insights to focus your studies on areas needing improvement and celebrate your progress. Ready to see how you've been doing?
-        </p>
-      </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+      
+      {testData.length > 0 && (
+        <div className='py-20'>
+          <p className='text-3xl font-semibold mb-2'>Recently Taken Tests</p>
+          <p className='text-lg mb-6'>
+            Dive back into your practice journey with a quick glance at your most recent tests. Each test card offers a detailed review through <strong>Preview</strong> and insights into your performance with <strong>Analytics</strong>. Use these insights to focus your studies on areas needing improvement and celebrate your progress. Ready to see how you've been doing?
+          </p>
+        </div>
+      )}
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
         {testData.map((test, index) => (
           <TestCard
             key={index}
