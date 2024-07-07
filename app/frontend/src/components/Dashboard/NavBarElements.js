@@ -19,7 +19,7 @@ export const SideBarLinks = [
     },
     {
         title: "Discord",
-        path: 'https://discord.gg/7c93kyfC',
+        path: 'https://discord.gg/HgKAgAhZZq',
         icon: <BsDiscord size={25} color='blue' />
     },
     {
