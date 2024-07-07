@@ -6,8 +6,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import FloatingLabelInput from './FloatingLabelInput';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState, AppDispatch } from '../../components/store';
-import { GoogleSignIn, SignIn, clearAuthError } from '../../components/utils/actions/authActions';
-import { LoginFormValues } from '../../components/utils/types';
+import { GoogleSignIn, SignIn, clearAuthError } from '../../components/auth_utils/actions/authActions';
+import { LoginFormValues } from '../../components/auth_utils/types';
 
 const Login = (): React.ReactElement => {
   const dispatch = useDispatch<AppDispatch>();

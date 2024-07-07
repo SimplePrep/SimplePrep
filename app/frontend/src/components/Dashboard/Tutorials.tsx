@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useResolvedPath, NavLink } from 'react-router-dom';
-import { Tutorial, Chapter } from '../utils/types';
+import { Tutorial, Chapter } from '../auth_utils/types';
 import tutorial1Image from '../assets/tutorials/tutorial1.jpg';
 import tutorial2Image from '../assets/tutorials/tutorial2.jpg';
-import { getChapters, getTutorials } from '../utils/axios/axiosServices';
+import { getChapters, getTutorials } from '../auth_utils/axios/axiosServices';
 import { motion } from 'framer-motion';
 
 const basePath = "/demo/tutorials";

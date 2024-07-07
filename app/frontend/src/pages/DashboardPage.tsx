@@ -3,7 +3,7 @@ import { Outlet, useNavigate } from 'react-router-dom';
 import NavBarDash from '../components/Dashboard/NavBarDash';
 import { useSelector, useDispatch } from 'react-redux';
 import { AppDispatch, RootState } from '../components/store';
-import { checkAuthenticated, loadUser } from '../components/utils/actions/authActions';
+import { checkAuthenticated, loadUser } from '../components/auth_utils/actions/authActions';
 
 interface DashboardPageProps {
   toggleDarkMode: () => void;

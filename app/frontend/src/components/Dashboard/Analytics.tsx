@@ -6,10 +6,10 @@ import TestCard from './utils/analytics_components/TestCardAnalysis';
 import MiniTestModal from './utils/test_components/MiniTestModal';
 import Discussion from './utils/Discussion';
 import { useSelector } from 'react-redux';
-import { getRecentTests, getTestModuleDetails, getTestReport } from '../utils/axios/axiosServices';
+import { getRecentTests, getTestModuleDetails, getTestReport } from '../auth_utils/axios/axiosServices';
 import { TestResult, DetailedTestResult } from './types';
 import { RootState } from '../store';
-import { auth } from '../utils/firebaseConfig';
+import { auth } from '../auth_utils/firebaseConfig';
 import { Link } from 'react-router-dom';
 
 interface AnalyticsProps {

@@ -22,9 +22,7 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div>
             <h3 className="text-lg font-semibold mb-4">Company</h3>
-            <p className="text-gray-400">13844 Azalea, Tampa, Florida 33613</p>
-            <p className="text-gray-400">Email: alijonkarimberdi@gmail.com</p>
-            <p className="text-gray-400">Phone: (813) 509-3961</p>
+            <p className="text-gray-400">Email: alijon@beta-simpleprep.com</p>
           </div>
           <div>
             <h3 className="text-lg font-semibold mb-4">Useful Links</h3>

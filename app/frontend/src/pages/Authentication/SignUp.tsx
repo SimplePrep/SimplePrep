@@ -7,7 +7,7 @@ import FloatingLabelInput from './FloatingLabelInput';
 import Modal from './Modal';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../components/store';
-import { SignUp, GoogleSignIn, clearAuthError } from '../../components/utils/actions/authActions';
+import { SignUp, GoogleSignIn, clearAuthError } from '../../components/auth_utils/actions/authActions';
 
 const SignUpComponent = ():  React.ReactElement =>  {
     const dispatch = useDispatch<AppDispatch>();

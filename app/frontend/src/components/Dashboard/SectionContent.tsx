@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { BsFillArrowLeftCircleFill, BsFillArrowRightCircleFill } from 'react-icons/bs';
-import { getSection, getSections } from "../utils/axios/axiosServices";
-import { Section } from "../utils/types";
+import { getSection, getSections } from "../auth_utils/axios/axiosServices";
+import { Section } from "../auth_utils/types";
 import { motion, useScroll, useSpring, AnimatePresence } from "framer-motion";
 
 interface ParagraphProps {

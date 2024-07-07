@@ -8,7 +8,7 @@ COPY ./frontend/package.json ./
 COPY ./frontend/package-lock.json ./
 RUN npm ci --verbose
 COPY ./frontend/ ./
-RUN npm run build
+RUN GENERATE_SOURCEMAP=false npm run build
 
 # The second stage
 # Copy React static files and start nginx
