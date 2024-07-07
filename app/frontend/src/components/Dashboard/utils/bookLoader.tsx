@@ -2,7 +2,43 @@ import React from "react";
 import styled from "styled-components";
 import { useMediaQuery } from "react-responsive";
 
-interface LoaderProps {
+// Define props interfaces
+interface LoaderDivProps {
+  sizeParentShadow1: number;
+  sizeParentShadow2: number;
+  sizeParentBeforeWidth: number;
+  sizeParentWidth: number;
+  sizeParentHeight: number;
+  shadowColor: string;
+}
+
+interface StyledDivProps {
+  sizeDivBorderRadius: number;
+  shadowColor: string;
+  background: string;
+}
+
+interface StyledLiProps {
+  sizeLi: number;
+  pageColor: string;
+  duration: string;
+}
+
+interface StyledLiColorProps extends StyledLiProps {
+  foldPageColor: string;
+}
+
+interface StyledSVGProps {
+  sizeSVGWidth: number;
+  sizeSVGHeight: number;
+}
+
+interface StyledSpanProps {
+  sizeText: number;
+  textColor: string;
+}
+
+interface BookLoaderProps {
   className?: string;
   text?: string;
   background?: string;
@@ -23,14 +59,7 @@ const ParentDiv = styled.div`
   padding: 20px;
 `;
 
-const LoaderDiv = styled.div<{
-  sizeParentWidth: number;
-  sizeParentHeight: number;
-  sizeParentBeforeWidth: number;
-  sizeParentShadow1: number;
-  sizeParentShadow2: number;
-  shadowColor: string;
-}>`
+const LoaderDiv = styled.div<LoaderDivProps>`
   width: ${(props) => props.sizeParentWidth}px;
   height: ${(props) => props.sizeParentHeight}px;
   position: relative;
@@ -54,11 +83,7 @@ const LoaderDiv = styled.div<{
   }
 `;
 
-const StyledDiv = styled.div<{
-  sizeDivBorderRadius: number;
-  shadowColor: string;
-  background: string;
-}>`
+const StyledDiv = styled.div<StyledDivProps>`
   width: 100%;
   height: 100%;
   border-radius: ${(props) => props.sizeDivBorderRadius}px;
@@ -76,21 +101,13 @@ const StyledUl = styled.ul`
   position: relative;
 `;
 
-const StyledInnerSVG = styled.svg<{
-  sizeSVGWidth: number;
-  sizeSVGHeight: number;
-}>`
+const StyledInnerSVG = styled.svg<StyledSVGProps>`
   width: ${(props) => props.sizeSVGWidth}px;
   height: ${(props) => props.sizeSVGHeight}px;
   display: block;
 `;
 
-const StyledLi = styled.li<{
-  sizeLi: number;
-  pageColor: string;
-  duration: string;
-  foldPageColor?: string;
-}>`
+const StyledLi = styled.li<StyledLiProps>`
   --r: 180deg;
   --o: 0;
   --c: ${(props) => props.pageColor};
@@ -109,7 +126,7 @@ const StyledLi1 = styled(StyledLi)`
   --o: 1;
 `;
 
-const StyledLi2 = styled(StyledLi)`
+const StyledLi2 = styled(StyledLi)<StyledLiColorProps>`
   @keyframes page-2 {
     0% {
       transform: rotateY(180deg);
@@ -131,7 +148,7 @@ const StyledLi2 = styled(StyledLi)`
   animation-name: page-2;
 `;
 
-const StyledLi3 = styled(StyledLi)`
+const StyledLi3 = styled(StyledLi)<StyledLiColorProps>`
   @keyframes page-3 {
     15% {
       transform: rotateY(180deg);
@@ -153,7 +170,7 @@ const StyledLi3 = styled(StyledLi)`
   animation-name: page-3;
 `;
 
-const StyledLi4 = styled(StyledLi)`
+const StyledLi4 = styled(StyledLi)<StyledLiColorProps>`
   @keyframes page-4 {
     30% {
       transform: rotateY(180deg);
@@ -175,7 +192,7 @@ const StyledLi4 = styled(StyledLi)`
   animation-name: page-4;
 `;
 
-const StyledLi5 = styled(StyledLi)`
+const StyledLi5 = styled(StyledLi)<StyledLiColorProps>`
   @keyframes page-5 {
     45% {
       transform: rotateY(180deg);
@@ -201,10 +218,7 @@ const StyledLi6 = styled(StyledLi)`
   --o: 1;
 `;
 
-const StyledSpan = styled.span<{
-  sizeText: number;
-  textColor: string;
-}>`
+const StyledSpan = styled.span<StyledSpanProps>`
   display: block;
   top: 100%;
   font-size: ${(props) => props.sizeText}px;
@@ -213,7 +227,7 @@ const StyledSpan = styled.span<{
   color: ${(props) => props.textColor};
 `;
 
-const BookLoader: React.FC<LoaderProps> = ({
+const BookLoader: React.FC<BookLoaderProps> = ({
   className = `bookloader`,
   text = `Loading...`,
   background = `linear-gradient(135deg, #23c4f8, #275efe)`,
@@ -229,7 +243,7 @@ const BookLoader: React.FC<LoaderProps> = ({
   const isDesktopOrLaptop = useMediaQuery({ query: "(min-width: 1224px)" });
   const isTabletOrMobile = useMediaQuery({ query: "(max-width: 1224px)" });
 
-  let sizeFound = 0;
+  let sizeFound = 0.0;
   if (isDesktopOrLaptop) {
     if (desktopSize !== "") sizeFound = parseFloat(desktopSize);
     else sizeFound = parseFloat(size) * 2;
@@ -273,7 +287,11 @@ const BookLoader: React.FC<LoaderProps> = ({
           background={background}
         >
           <StyledUl>
-            <StyledLi1 sizeLi={sizeLi} pageColor={pageColor} duration={duration}>
+            <StyledLi1
+              sizeLi={sizeLi}
+              pageColor={pageColor}
+              duration={duration}
+            >
               <StyledInnerSVG
                 sizeSVGWidth={sizeSVGWidth}
                 sizeSVGHeight={sizeSVGHeight}
@@ -304,7 +322,7 @@ const BookLoader: React.FC<LoaderProps> = ({
               duration={duration}
               foldPageColor={foldPageColor}
             >
-              <StyledInnerSVG
+            <StyledInnerSVG
                 sizeSVGWidth={sizeSVGWidth}
                 sizeSVGHeight={sizeSVGHeight}
                 viewBox="0 0 90 120"
