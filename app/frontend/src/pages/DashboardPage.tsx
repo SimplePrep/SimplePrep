@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 import NavBarDash from '../components/Dashboard/NavBarDash';
 import { useSelector, useDispatch } from 'react-redux';
@@ -16,22 +16,26 @@ const DashboardPage: React.FC<DashboardPageProps> = ({
 }) => {
   const dispatch = useDispatch<AppDispatch>();
   const { isAuthenticated, loading } = useSelector((state: RootState) => state.auth);
+  const [initialLoad, setInitialLoad] = useState(true);
   const darkModeClass = isDarkMode ? 'grid-background-dark' : 'grid-background-light';
   const navigate = useNavigate();
 
   useEffect(() => {
-    dispatch(checkAuthenticated()).then(() => {
-      dispatch(loadUser());
-    });
+    const checkAuthStatus = async () => {
+      await dispatch(checkAuthenticated());
+      await dispatch(loadUser());
+      setInitialLoad(false);
+    };
+    checkAuthStatus();
   }, [dispatch]);
 
   useEffect(() => {
-    if (!loading && !isAuthenticated) {
+    if (!loading && !isAuthenticated && !initialLoad) {
       navigate('/login');
     }
-  }, [loading, isAuthenticated, navigate]);
+  }, [loading, isAuthenticated, initialLoad, navigate]);
 
-  if (loading) {
+  if (initialLoad || loading) {
     return <div>Loading...</div>;  // Or any other loading indicator
   }
 
