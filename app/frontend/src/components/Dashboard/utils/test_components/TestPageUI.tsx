@@ -96,7 +96,7 @@ const TestPageUI = () => {
         size='40px'
         minLoadTime={2000}
         onLoadComplete={handleLoadComplete}
-        text="Loading Dashboard..."
+        text="Loading Test Module..."
         isDarkMode={isDarkMode}
       />
     );
