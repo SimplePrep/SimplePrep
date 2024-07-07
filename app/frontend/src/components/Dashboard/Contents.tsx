@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import { comingsoon } from '../utils'
-import { getModules, getTests } from '../utils/axios/axiosServices';
+import { comingsoon } from '../auth_utils'
+import { getModules, getTests } from '../auth_utils/axios/axiosServices';
 import { useNavigate } from 'react-router-dom';
 
 interface Test {

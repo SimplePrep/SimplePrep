@@ -8,7 +8,7 @@ import Hero from '../components/Landing/Hero';
 import Testimonials from '../components/Landing/Testimonials';
 import Notification from '../components/Landing/Newsletter';
 import FAQ from '../components/Landing/FAQ';
-import { auth } from '../components/utils/firebaseConfig';
+import { auth } from '../components/auth_utils/firebaseConfig';
 import Footer from '../components/Landing/Footer';
 
 export const LandingPage = () => {

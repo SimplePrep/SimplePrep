@@ -3,10 +3,10 @@ import { BsFillArrowLeftCircleFill, BsFillArrowRightCircleFill, BsMoon } from 'r
 import { PiFlagThin } from 'react-icons/pi';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { getModules, getQuestionsByModuleId, submitAnswers } from '../../../utils/axios/axiosServices';
+import { getModules, getQuestionsByModuleId, submitAnswers } from '../../../auth_utils/axios/axiosServices';
 import Modal from '../../../../pages/Authentication/Modal';
 import { RootState } from '../../../store';
-import { auth } from '../../../utils/firebaseConfig';
+import { auth } from '../../../auth_utils/firebaseConfig';
 
 interface Question {
   id: number;
