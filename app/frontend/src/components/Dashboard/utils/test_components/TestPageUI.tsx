@@ -7,6 +7,7 @@ import { getModules, getQuestionsByModuleId, submitAnswers } from '../../../auth
 import Modal from '../../../../pages/Authentication/Modal';
 import { RootState } from '../../../store';
 import { auth } from '../../../auth_utils/firebaseConfig';
+import LoaderWrapper from '../LoaderWrapper';
 
 interface Question {
   id: number;
@@ -42,7 +43,7 @@ interface UserAnswer {
 }
 
 const TestPageUI = () => {
-  const { isAuthenticated } = useSelector((state: RootState) => state.auth);
+  const { isAuthenticated, loading } = useSelector((state: RootState) => state.auth);
   const user = auth.currentUser;
   const { testId, moduleId } = useParams<{ testId: string; moduleId: string }>();
   const [questions, setQuestions] = useState<Question[]>([]);
@@ -53,6 +54,7 @@ const TestPageUI = () => {
   const [userAnswers, setUserAnswers] = useState<UserAnswer[]>([]);
   const [unansweredQuestions, setUnansweredQuestions] = useState<number[]>([]);
   const [showModal, setShowModal] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -83,6 +85,22 @@ const TestPageUI = () => {
       navigate('/login');
     }
   }, [navigate, isAuthenticated, user]);
+
+  const handleLoadComplete = () => {
+    setIsLoading(false);
+  }
+
+  if (isLoading) {
+    return (
+      <LoaderWrapper
+        size='40px'
+        minLoadTime={2000}
+        onLoadComplete={handleLoadComplete}
+        text="Loading Dashboard..."
+        isDarkMode={isDarkMode}
+      />
+    );
+  }
 
   const toggleDarkMode = () => { 
     setIsDarkMode(!isDarkMode);
