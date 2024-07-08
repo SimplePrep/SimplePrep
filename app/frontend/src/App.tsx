@@ -14,6 +14,7 @@ import SectionContent from './components/Dashboard/SectionContent';
 import Analytics from './components/Dashboard/Analytics';
 import SignUpComponent from './pages/Authentication/SignUp';
 import Tutorials from './components/Dashboard/Tutorials';
+import NotFoundPage from './pages/404NotFoundPage';
 
 const App = () => {
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -26,6 +27,7 @@ const App = () => {
           <Route index element={<LandingPage />} />
           <Route path="blogs" element={<Blogs />} />
           <Route path="blogs/:id" element={<BlogPostDetails />} />
+          <Route path="*" element={<NotFoundPage/>} />
         </Route>
         <Route path="demo" element={<DashboardPage toggleDarkMode={toggleDarkMode} isDarkMode={isDarkMode} />}>
           <Route index element={<Contents />} />
