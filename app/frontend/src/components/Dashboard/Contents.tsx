@@ -35,13 +35,18 @@ const SkeletonCard = () => (
     </div>
   );
 
-const Contents:React.FC = () => {
+  interface ContentsProps {
+    isDarkMode: boolean
+  }
+
+const Contents:React.FC<ContentsProps> = ({isDarkMode}) => {
 
     const [tests, setTests] = useState<Test[]>([]);
     const [modules, setModules] = useState<{ [key: number]: Module[] }>({});
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>('');
     const navigate = useNavigate();
+    const Mode = isDarkMode ? 'text-white' : 'text-gray-800';
 
     useEffect(() => {
         const fetchTestsAndModules = async () => {
@@ -139,7 +144,7 @@ const Contents:React.FC = () => {
   return (
     <div className='max-w-[1200px] h-full mx-auto'>
         <div className='py-40  rounded-2xl'>
-            <p className='p-10 font-medium text-xl text-slate-600'>Freemium English and Writing Practice tests</p>
+            <p className={`p-10 font-medium text-xl ${Mode} `}>Freemium English and Writing Practice tests</p>
             <div className='max-w-[1000px] mx-auto'>
                 <div className="flex justify-center items-center space-x-4">
                 {renderContent()}

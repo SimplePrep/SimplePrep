@@ -30,8 +30,8 @@ const App = () => {
           <Route path="*" element={<NotFoundPage/>} />
         </Route>
         <Route path="demo" element={<DashboardPage toggleDarkMode={toggleDarkMode} isDarkMode={isDarkMode} />}>
-          <Route index element={<Contents />} />
-          <Route path="dashboard" element={<Contents />} />
+          <Route index element={<Contents  isDarkMode={isDarkMode} />}/>
+          <Route path="dashboard" element={<Contents isDarkMode={isDarkMode}/>} />
           <Route path="tutorials" element={<Tutorials />} />
           <Route path="tutorials/:tutorialId" element={<TutorialPage isDarkMode={isDarkMode} />}>
             <Route path=":chapterId/:sectionSlug" element={<SectionContent isDarkMode={isDarkMode} />} />
