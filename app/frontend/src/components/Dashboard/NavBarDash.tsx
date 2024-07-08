@@ -33,15 +33,15 @@ const SideBar: React.FC<SideBarProps> = ({ toggleDarkMode, isDarkMode }): React.
   };
 
   return (
-    <div className={`fixed top-0 left-0 w-full z-40`}>
+    <div className={`fixed top-5 left-0 w-full z-40`}>
       <div className=' flex flex-row'>
         <motion.div
           initial={{ height: 0, opacity: 0 }}
           animate={{ height: isVisible ? 'auto' : 0, opacity: isVisible ? 1 : 0 }}
           transition={{ type: 'spring', stiffness: 300, damping: 24 }}
-          className={`overflow-hidden shadow-xl max-w-[1300px] mx-auto shadow-blue-300 bg-white rounded-3xl ${darkModeClass} border-4 border-white`}
+          className={`px-3 py-2 overflow-hidden shadow-xl max-w-[1300px] mx-auto shadow-blue-300 bg-white rounded-full ${darkModeClass} border-[3px] border-white items-center`}
         >
-          <div className='flex gap-3 items-center justify-center p-5'>
+          <div className='flex gap-5  justify-center items-center'>
             <img className='w-[200px]' src={Logo} alt="" />
             {SideBarLinks.map((link) => (
               <NavLink
@@ -49,11 +49,11 @@ const SideBar: React.FC<SideBarProps> = ({ toggleDarkMode, isDarkMode }): React.
                 key={link.title}
                 className={({ isActive }) =>
                   isActive
-                    ? "text-xl text-black font-medium leading-tight border-2 border-blue-700 hover:border-gray-200 bg-white p-4 mx-4 mt-2 rounded-3xl cursor-pointer"
-                    : "text-xl font-medium leading-tight hover:bg-white border-2 hover:border-blue-700 hover:text-black hover:rounded-3xl p-4 mx-4 mt-2 rounded-3xl cursor-pointer"
+                    ? "text-xl text-black font-medium leading-tight border-2 border-blue-700 hover:border-gray-200 bg-white p-4  rounded-3xl cursor-pointer"
+                    : "text-xl font-medium leading-tight hover:bg-white border-2 hover:border-blue-700 hover:text-black hover:rounded-3xl p-4  rounded-3xl cursor-pointer"
                 }
               >
-                <div className='flex flex-row items-center gap-3'>
+                <div className='flex flex-row justify-center items-center gap-2'>
                   {link.icon}
                   {link.title}
                 </div>

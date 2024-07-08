@@ -4,7 +4,8 @@ import NavBarDash from '../components/Dashboard/NavBarDash';
 import { useSelector, useDispatch } from 'react-redux';
 import { AppDispatch, RootState } from '../components/store';
 import { checkAuthenticated, loadUser } from '../components/auth_utils/actions/authActions';
-import LoaderWrapper from '../components/Dashboard/utils/LoaderWrapper';
+import LoaderWrapper from '../components/Dashboard/utils/tools/LoaderWrapper';
+
 
 interface DashboardPageProps {
   toggleDarkMode: () => void;
@@ -42,7 +43,7 @@ const DashboardPage: React.FC<DashboardPageProps> = ({
   if (isLoading) {
     return (
       <LoaderWrapper
-        size='40px'
+        size='35px'
         minLoadTime={2000}
         onLoadComplete={handleLoadComplete}
         text="Loading Dashboard..."

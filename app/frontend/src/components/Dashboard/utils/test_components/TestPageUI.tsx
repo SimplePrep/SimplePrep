@@ -7,7 +7,8 @@ import { getModules, getQuestionsByModuleId, submitAnswers } from '../../../auth
 import Modal from '../../../../pages/Authentication/Modal';
 import { RootState } from '../../../store';
 import { auth } from '../../../auth_utils/firebaseConfig';
-import LoaderWrapper from '../LoaderWrapper';
+import LoaderWrapper from '../tools/LoaderWrapper';
+
 
 interface Question {
   id: number;
@@ -93,7 +94,7 @@ const TestPageUI = () => {
   if (isLoading) {
     return (
       <LoaderWrapper
-        size='40px'
+        size='35px'
         minLoadTime={2000}
         onLoadComplete={handleLoadComplete}
         text="Loading Test Module..."
