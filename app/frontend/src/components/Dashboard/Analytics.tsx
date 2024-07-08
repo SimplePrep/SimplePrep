@@ -183,7 +183,7 @@ const Analytics: React.FC<AnalyticsProps> = ({ isDarkMode }) => {
       </div>
       ) : (
         <>
-          <div className="py-12 max-w-[1200px] mx-auto mb-8 flex flex-col justify-center items-center text-center">
+          <div className="py-28 max-w-[1200px] mx-auto mb-8 flex flex-col justify-center items-center text-center">
             <h2 className="text-2xl font-semibold mb-4">Your Performance Dashboard</h2>
             <p className="text-lg">Here, you can track your progress, view your test scores over time, and identify areas for improvement. Let's get started!</p>
           </div>
