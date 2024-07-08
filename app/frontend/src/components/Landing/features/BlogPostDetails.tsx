@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react'
 import { useParams } from 'react-router-dom'
 import { BlogPost } from '../../models/blog';
-import img1 from '../../assets/example2.png'
+import img1 from '../../assets/example2.webp'
 
 interface Props { 
   text: string | null;
