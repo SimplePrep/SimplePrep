@@ -19,16 +19,19 @@ interface Module {
 }
 
 const SkeletonCard = () => (
-    <div className="p-6 bg-gray-100 rounded-lg border-2 border-gray-200 shadow-lg animate-pulse">
-      <div className="flex justify-between items-center mb-6">
-        <div className="h-6 w-8 bg-gray-300 rounded"></div>
+    <div className="p-6 bg-gray-100 rounded-lg border-2 border-gray-200 shadow-lg overflow-hidden relative">
+      <div className="animate-pulse">
+        <div className="flex justify-between items-center mb-6">
+          <div className="h-6 w-8 bg-gray-300 rounded"></div>
+        </div>
+        <div className="h-7 w-3/4 bg-gray-300 rounded mb-2"></div>
+        <div className="h-4 w-full bg-gray-300 rounded mb-4"></div>
+        <div className="flex flex-row gap-5 justify-between items-center">
+          <div className="h-10 w-28 bg-gray-300 rounded"></div>
+          <div className="h-10 w-28 bg-gray-300 rounded"></div>
+        </div>
       </div>
-      <div className="h-7 w-3/4 bg-gray-300 rounded mb-2"></div>
-      <div className="h-4 w-full bg-gray-300 rounded mb-4"></div>
-      <div className="flex flex-row gap-5 justify-between items-center">
-        <div className="h-10 w-28 bg-gray-300 rounded"></div>
-        <div className="h-10 w-28 bg-gray-300 rounded"></div>
-      </div>
+      <div className="absolute inset-0 -translate-x-full animate-[shimmer_1s_infinite] bg-gradient-to-r from-transparent via-gray-200 to-transparent"></div>
     </div>
   );
 
