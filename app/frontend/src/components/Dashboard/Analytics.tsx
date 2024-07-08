@@ -161,7 +161,7 @@ const Analytics: React.FC<AnalyticsProps> = ({ isDarkMode }) => {
   };
 
   return (
-    <div className={`max-w-[1400px] mx-auto px-6 py-12 ${Mode}`}>
+    <div className={`max-w-[1200px] mx-auto px-6 py-12 ${Mode}`}>
       {testData.length === 0 ? (
         <div className="min-h-screen  flex items-center justify-center px-4">
         <div className="max-w-md w-full bg-white rounded-lg shadow-md p-8 text-center">
@@ -183,7 +183,7 @@ const Analytics: React.FC<AnalyticsProps> = ({ isDarkMode }) => {
       </div>
       ) : (
         <>
-          <div className="mb-8 flex flex-col justify-center items-center text-center">
+          <div className="py-12 max-w-[1200px] mx-auto mb-8 flex flex-col justify-center items-center text-center">
             <h2 className="text-2xl font-semibold mb-4">Your Performance Dashboard</h2>
             <p className="text-lg">Here, you can track your progress, view your test scores over time, and identify areas for improvement. Let's get started!</p>
           </div>
