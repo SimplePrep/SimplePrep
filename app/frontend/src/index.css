@@ -27,30 +27,36 @@ code {
 }
 
 /* Add this inside your <style> tag or CSS file */
-.grid-background-dark{
-  /* Start with a black background */
-  background-color: #000;
+/* Add this inside your <style> tag or CSS file */
+.grid-background-dark {
+  /* Start with a dark background */
+  background-color: #1e1e1e;
 
   /* Create a grid pattern using repeating linear gradients */
   background-image: 
     linear-gradient(90deg, rgba(255, 255, 255, 0.1) 1px, transparent 1px),
-    linear-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px);
-  
+    linear-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+    linear-gradient(45deg, rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+    linear-gradient(-45deg, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+
   /* Set the size of the grid lines and the space between them */
   background-size: 160px 160px;
 
   /* Position the grid correctly */
   background-position: center;
 }
-.grid-background-light{
-  /* Start with a black background */
-  background-color: #cbd5e1;
+
+.grid-background-light {
+  /* Start with a light background */
+  background-color: #f3f4f6;
 
   /* Create a grid pattern using repeating linear gradients */
   background-image: 
     linear-gradient(90deg, rgba(26, 14, 14, 0.1) 1px, transparent 1px),
-    linear-gradient(rgba(3, 2, 2, 0.1) 1px, transparent 1px);
-  
+    linear-gradient(rgba(3, 2, 2, 0.1) 1px, transparent 1px),
+    linear-gradient(45deg, rgba(26, 14, 14, 0.1) 1px, transparent 1px),
+    linear-gradient(-45deg, rgba(3, 2, 2, 0.1) 1px, transparent 1px);
+
   /* Set the size of the grid lines and the space between them */
   background-size: 160px 160px;
 
@@ -58,6 +64,21 @@ code {
   background-position: center;
 }
 
+
+.dark-background {
+  background: 
+    radial-gradient(circle at 10% 20%, #0e294c 0%, #0e294c 80%),
+    linear-gradient(135deg, #0e294c 0%, #0e294c 100%);
+  min-height: 100vh;
+}
+
+/* Enhanced modern light background */
+.light-background {
+  background: 
+    radial-gradient(circle at 90% 10%, #f3f7ff 0%, #f3f7ff 80%),
+    linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  min-height: 100vh;
+}
 
 .dark {
   background-color: #1a1a1a;
