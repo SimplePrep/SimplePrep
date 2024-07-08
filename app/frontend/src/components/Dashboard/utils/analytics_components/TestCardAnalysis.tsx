@@ -39,9 +39,7 @@ const borderColorClasses = [
     return (
         
     <div className={`p-6 bg-black rounded-lg border-2 ${borderColorClass} border-white shadow-lg`}>
-        <div className="flex justify-between items-center mb-6">
-            <div className="text-xl text-purple-500">{id}</div>
-        </div>
+        
         <h5 className="text-white text-xl leading-tight font-medium mb-2">{title}</h5>
         <p className="text-gray-400 text-base mb-4">Taken on {date}</p>
         <p className="text-gray-400 text-base mb-4">Score: {score}</p>
