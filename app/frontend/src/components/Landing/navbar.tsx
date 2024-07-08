@@ -86,12 +86,12 @@ const Navbar: React.FC<NavbarProps> = ({ isAuthenticated }) => {
 
   return (
     <motion.div
-      className="sticky top-0 bg-white font-ubuntu z-10 px-10"
+      className="sticky top-0 bg-white font-ubuntu z-20 px-10"
       variants={navVariants}
       initial="hidden"
       animate="visible"
     >
-      <div className='flex h-24 lg:max-w-[1200px] xl:max-w-[1500px] mx-auto justify-between items-center p-4 my-4'>
+      <div className='flex  lg:max-w-[1200px] xl:max-w-[1500px] mx-auto justify-between items-center p-4'>
         <motion.div
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -106,7 +106,7 @@ const Navbar: React.FC<NavbarProps> = ({ isAuthenticated }) => {
               <button onClick={() => handleScroll(link.path)} className='p-3 text-xl font-medium hover:text-blue-900'>
                 {link.title}
               </button>
-              <span className="block h-1 rounded bg-blue-900 transform translate-y-7 max-w-0 group-hover:max-w-full transition-all duration-300"></span>
+              <span className="block h-1 rounded bg-blue-900 transform translate-y-3 max-w-0 group-hover:max-w-full transition-all duration-300"></span>
             </div>
           ))}
         </motion.div>

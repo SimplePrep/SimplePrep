@@ -19,7 +19,6 @@ export const LandingPage = () => {
           <Notification/>
           <Testimonials/>
           <FAQ/>
-          <Footer/>
       </>
   )
 }
@@ -30,6 +29,7 @@ const Layout = () => {
     <>
       <Navbar isAuthenticated={isAuthenticated} />
       <Outlet />
+      <Footer/>
     </>
   );
 };

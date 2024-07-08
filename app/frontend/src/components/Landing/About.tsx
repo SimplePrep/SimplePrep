@@ -68,7 +68,7 @@ const About = () => {
   }, [controls2, inView2]);
 
   return (
-    <div className="h-full mt-10 relative isolate px-6 pt-14 lg:px-8">
+    <div className="h-full relative isolate px-6  lg:px-8">
       <div
         className="absolute inset-x-0 -top-40 -z-10 transform-gpu blur-3xl sm:-top-80 overflow-hidden"
         aria-hidden="true"
