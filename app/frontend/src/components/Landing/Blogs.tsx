@@ -85,7 +85,7 @@ const Blogs = () => {
         />
       </div>
       <motion.div
-        className="max-w-[1240px] mx-auto w-full items-center"
+        className="max-w-[1240px] min-h-screen mx-auto w-full items-center"
         variants={containerVariants}
         initial="hidden"
         animate={controls1}
