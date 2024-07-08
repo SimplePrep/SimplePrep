@@ -19,15 +19,15 @@ interface Module {
 }
 
 const SkeletonCard = () => (
-    <div className="p-6 bg-gray-800 rounded-lg border-2 border-gray-700 shadow-lg animate-pulse">
+    <div className="p-6 bg-gray-100 rounded-lg border-2 border-gray-200 shadow-lg animate-pulse">
       <div className="flex justify-between items-center mb-6">
-        <div className="h-4 w-8 bg-gray-600 rounded"></div>
+        <div className="h-6 w-8 bg-gray-300 rounded"></div>
       </div>
-      <div className="h-6 w-3/4 bg-gray-600 rounded mb-2"></div>
-      <div className="h-4 w-full bg-gray-600 rounded mb-4"></div>
+      <div className="h-7 w-3/4 bg-gray-300 rounded mb-2"></div>
+      <div className="h-4 w-full bg-gray-300 rounded mb-4"></div>
       <div className="flex flex-row gap-5 justify-between items-center">
-        <div className="h-10 w-24 bg-gray-600 rounded"></div>
-        <div className="h-10 w-24 bg-gray-600 rounded"></div>
+        <div className="h-10 w-28 bg-gray-300 rounded"></div>
+        <div className="h-10 w-28 bg-gray-300 rounded"></div>
       </div>
     </div>
   );
@@ -78,38 +78,38 @@ const Contents:React.FC = () => {
         if (error) {
           return <div className="text-red-500">{error}</div>;
         }
-
+    
         return (
-            <div className="my-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-                    {tests.map((test, index) => {
-                        const borderColorClass = borderColorClasses[index % borderColorClasses.length];
-                        const testModules = modules[test.id] || [];
-                        return(
-                            <div key={test.id} className={`p-6 bg-black rounded-lg border-2 ${borderColorClass} border-white shadow-lg`}>
-                                <div className="flex justify-between items-center mb-6">
-                                    <div className="text-xl text-purple-500">{test.id}</div>
-                                </div>
-                                <h5 className="text-white text-xl leading-tight font-medium mb-2">{test.title}</h5>
-                                <p className="text-gray-400 text-base mb-4">
-                                Test your skills with this practice test.
-                                </p>
-                                <div className='flex flex-row gap-5 justify-between items-center'>
-                                    {testModules.map((module, moduleIndex) => (
-                                        <button
-                                            key={module.id}
-                                            onClick={() => handleModuleClick(test.id, module.id)}
-                                            className='mt-auto py-2 px-4 bg-blue-500 text-white text-lg rounded hover:bg-blue-600 transition-colors duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-opacity-50'
-                                        >
-                                            {`Module ${moduleIndex + 1}`}
-                                        </button>
-                                    ))}
-                                </div>
-                            </div>
-                         )
-                    })}
-            </div>
-        )
-    }
+          <div className="my-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+            {tests.map((test, index) => {
+              const borderColorClass = borderColorClasses[index % borderColorClasses.length];
+              const testModules = modules[test.id] || [];
+              return(
+                <div key={test.id} className={`p-6 bg-black rounded-lg border-2 ${borderColorClass} border-white shadow-lg`}>
+                  <div className="flex justify-between items-center mb-6">
+                    <div className="text-xl text-purple-500">{test.id}</div>
+                  </div>
+                  <h5 className="text-white text-xl leading-tight font-medium mb-2">{test.title}</h5>
+                  <p className="text-gray-400 text-base mb-4">
+                    Test your skills with this practice test.
+                  </p>
+                  <div className='flex flex-row gap-5 justify-between items-center'>
+                    {testModules.map((module, moduleIndex) => (
+                      <button
+                        key={module.id}
+                        onClick={() => handleModuleClick(test.id, module.id)}
+                        className='mt-auto py-2 px-4 bg-blue-500 text-white text-lg rounded hover:bg-blue-600 transition-colors duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-opacity-50'
+                      >
+                        {`Module ${moduleIndex + 1}`}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+        );
+      };
 
     
       const borderColorClasses = [
