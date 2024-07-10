@@ -8,43 +8,10 @@ import Modal from '../../../../pages/Authentication/Modal';
 import { AppDispatch, RootState } from '../../../store';
 import { auth } from '../../../auth_utils/firebaseConfig';
 import LoaderWrapper from '../tools/LoaderWrapper';
+import { Module, Question, UserAnswer } from '../../../auth_utils/types';
 import { checkAuthenticated, loadUser } from '../../../auth_utils/actions/Actions';
-import { clearModules, clearQuestions, saveUserAnswers, setModules, setQuestions } from '../../../auth_utils/reducers/dataReducer';
+import { clearModules, clearQuestions, clearUserAnswers, saveUserAnswers, setModules, setQuestions } from '../../../auth_utils/reducers/dataReducer';
 
-interface Question {
-  id: number;
-  model: string;
-  section: string;
-  title: string;
-  context: string;
-  query: string;
-  graph_img?: string;
-  option_A: string;
-  option_B: string;
-  option_C: string;
-  option_D: string;
-  correct_answer: string;
-  likes: number;
-  dislikes: number;
-  created_at: string;
-}
-
-interface Module {
-  id: number;
-  test: number;
-  title: string;
-  description: string;
-  num_questions: number;
-  created_at: string;
-  updated_at: string;
-}
-
-export interface UserAnswer {
-  id: number;
-  test_result: number;
-  question: number;
-  selected_option: string;
-}
 
 const TestPageUI = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -137,6 +104,24 @@ const TestPageUI = () => {
     setIsLoading(false);
   };
 
+  const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+    // Clear user answers when the user closes the page
+    if (moduleId) {
+      dispatch(clearUserAnswers(moduleId));
+    }
+    // Standard way to show the confirmation dialog
+    const confirmationMessage = 'You have unsaved changes. Are you sure you want to leave?';
+    e.returnValue = confirmationMessage; // Gecko, Trident, Chrome 34+
+    return confirmationMessage; // Gecko, WebKit, Chrome <34
+  };
+
+  useEffect(() => {
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, [moduleId, dispatch]);
+
   if (isLoading) {
     return (
       <LoaderWrapper
@@ -213,10 +198,11 @@ const TestPageUI = () => {
         setShowModal(false);
         navigate('/demo');
       }, 4000);
-      // Clear questions and modules from Redux state after submission
+      // Clear questions, modules, and user answers from Redux state after submission
       if (moduleId && testId) {
         dispatch(clearQuestions(moduleId));
         dispatch(clearModules(testId));
+        dispatch(clearUserAnswers(moduleId));
       }
     } catch (error) {
       console.error('Error submitting answers:', error);
