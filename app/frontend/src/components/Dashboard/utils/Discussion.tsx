@@ -11,10 +11,10 @@ import { IoArrowBackCircleOutline } from "react-icons/io5";
 import { toolbarOptions } from './analytics_components/ToolBarOptions';
 import { getPosts, addPost, deletePost, editPost, addReply, deleteReply, editReply } from '../../auth_utils/axios/axiosServices';
 import { useSelector } from 'react-redux';
-import { Post, Reply } from '../types';
 import { format } from 'date-fns';
 import { RootState } from '../../store';
 import { auth } from '../../auth_utils/firebaseConfig';
+import { Post, Reply } from '../../auth_utils/types';
 
 interface DiscussionProps {
   title: string;

@@ -7,10 +7,10 @@ import MiniTestModal from './utils/test_components/MiniTestModal';
 import Discussion from './utils/Discussion';
 import { useSelector } from 'react-redux';
 import { getRecentTests, getTestModuleDetails, getTestReport } from '../auth_utils/axios/axiosServices';
-import { TestResult, DetailedTestResult } from './types';
 import { RootState } from '../store';
 import { auth } from '../auth_utils/firebaseConfig';
 import { Link } from 'react-router-dom';
+import { DetailedTestResult, TestResult } from '../auth_utils/types';
 
 interface AnalyticsProps {
   isDarkMode: boolean;

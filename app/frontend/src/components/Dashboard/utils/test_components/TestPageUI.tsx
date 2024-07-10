@@ -8,8 +8,8 @@ import Modal from '../../../../pages/Authentication/Modal';
 import { AppDispatch, RootState } from '../../../store';
 import { auth } from '../../../auth_utils/firebaseConfig';
 import LoaderWrapper from '../tools/LoaderWrapper';
-import { checkAuthenticated, loadUser } from '../../../auth_utils/actions/authActions';
-import { saveUserAnswers } from '../../../auth_utils/reducers/authReducer';
+import { checkAuthenticated, loadUser } from '../../../auth_utils/actions/Actions';
+import { clearModules, clearQuestions, saveUserAnswers, setModules, setQuestions } from '../../../auth_utils/reducers/dataReducer';
 
 interface Question {
   id: number;
@@ -48,10 +48,11 @@ export interface UserAnswer {
 
 const TestPageUI = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const { isAuthenticated, loading, userAnswers } = useSelector((state: RootState) => state.auth);
+  const { questions, modules, userAnswers } = useSelector((state: RootState) => state.data);
+  const { isAuthenticated, loading } = useSelector((state: RootState) => state.auth);
   const user = auth.currentUser;
   const { testId, moduleId } = useParams<{ testId: string; moduleId: string }>();
-  const [questions, setQuestions] = useState<Question[]>([]);
+  const [localQuestions, setLocalQuestions] = useState<Question[]>([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedChoice, setSelectedChoice] = useState<string | null>(null);
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -61,31 +62,6 @@ const TestPageUI = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [localUserAnswers, setLocalUserAnswers] = useState<UserAnswer[]>([]); // Local state to manage user answers
   const navigate = useNavigate();
-
-  useEffect(() => {
-    const fetchQuestions = async () => {
-      try {
-        const fetchedQuestions = await getQuestionsByModuleId(Number(moduleId));
-        setQuestions(fetchedQuestions);
-      } catch (error) {
-        console.error('Error fetching questions:', error);
-      }
-    };
-    const fetchModule = async () => {
-      try {
-        const modules = await getModules(Number(testId));
-        const module = modules.find((mod) => mod.id === Number(moduleId));
-        setCurrentModule(module || null);
-      } catch (error) {
-        console.error('Error fetching module:', error);
-      }
-    };
-
-    if (moduleId && testId) {
-      fetchQuestions();
-      fetchModule();
-    }
-  }, [moduleId, testId]);
 
   useEffect(() => {
     const checkAuthStatus = async () => {
@@ -100,13 +76,49 @@ const TestPageUI = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    if (!loading && !isAuthenticated && isLoading) {
+    if (!loading && !isAuthenticated && !isLoading) {
       navigate('/login');
     }
   }, [loading, isAuthenticated, isLoading, navigate]);
 
   useEffect(() => {
-    // Load user answers from Redux state if available
+    const fetchQuestions = async () => {
+      if (!moduleId) return;
+      try {
+        const fetchedQuestions = await getQuestionsByModuleId(Number(moduleId));
+        dispatch(setQuestions({ moduleId, questions: fetchedQuestions }));
+        setLocalQuestions(fetchedQuestions);
+      } catch (error) {
+        console.error('Error fetching questions:', error);
+      }
+    };
+    const fetchModule = async () => {
+      if (!testId) return;
+      try {
+        const fetchedModules = await getModules(Number(testId));
+        const module = fetchedModules.find((mod) => mod.id === Number(moduleId));
+        dispatch(setModules({ testId, modules: fetchedModules }));
+        setCurrentModule(module || null);
+      } catch (error) {
+        console.error('Error fetching module:', error);
+      }
+    };
+
+    if (moduleId && testId) {
+      if (!questions[moduleId]) {
+        fetchQuestions();
+      } else {
+        setLocalQuestions(questions[moduleId]);
+      }
+      if (!modules[testId]) {
+        fetchModule();
+      } else {
+        setCurrentModule(modules[testId].find((mod) => mod.id === Number(moduleId)) || null);
+      }
+    }
+  }, [moduleId, testId, questions, modules, dispatch]);
+
+  useEffect(() => {
     if (moduleId) {
       const savedAnswers = userAnswers[moduleId];
       if (savedAnswers) {
@@ -146,36 +158,36 @@ const TestPageUI = () => {
   const handlePreviousQuestion = () => {
     if (currentQuestionIndex > 0) {
       if (!selectedChoice) {
-        setUnansweredQuestions((prev) => [...prev, questions[currentQuestionIndex].id]);
+        setUnansweredQuestions((prev) => [...prev, localQuestions[currentQuestionIndex].id]);
       } else {
-        setUnansweredQuestions((prev) => prev.filter((id) => id !== questions[currentQuestionIndex].id));
+        setUnansweredQuestions((prev) => prev.filter((id) => id !== localQuestions[currentQuestionIndex].id));
       }
       setCurrentQuestionIndex(currentQuestionIndex - 1);
-      setSelectedChoice(localUserAnswers.find((answer) => answer.question === questions[currentQuestionIndex - 1]?.id)?.selected_option || null);
+      setSelectedChoice(localUserAnswers.find((answer) => answer.question === localQuestions[currentQuestionIndex - 1]?.id)?.selected_option || null);
     }
   };
 
   const handleNextQuestion = () => {
-    if (currentQuestionIndex < questions.length - 1) {
+    if (currentQuestionIndex < localQuestions.length - 1) {
       if (!selectedChoice) {
-        setUnansweredQuestions((prev) => [...prev, questions[currentQuestionIndex].id]);
+        setUnansweredQuestions((prev) => [...prev, localQuestions[currentQuestionIndex].id]);
       } else {
-        setUnansweredQuestions((prev) => prev.filter((id) => id !== questions[currentQuestionIndex].id));
+        setUnansweredQuestions((prev) => prev.filter((id) => id !== localQuestions[currentQuestionIndex].id));
       }
       setCurrentQuestionIndex(currentQuestionIndex + 1);
-      setSelectedChoice(localUserAnswers.find((answer) => answer.question === questions[currentQuestionIndex + 1]?.id)?.selected_option || null);
+      setSelectedChoice(localUserAnswers.find((answer) => answer.question === localQuestions[currentQuestionIndex + 1]?.id)?.selected_option || null);
     }
   };
 
   const handleAnswerSelection = (choice: string) => {
     setSelectedChoice(choice);
     const updatedAnswers = [...localUserAnswers];
-    const answerIndex = updatedAnswers.findIndex((answer) => answer.question === questions[currentQuestionIndex].id);
+    const answerIndex = updatedAnswers.findIndex((answer) => answer.question === localQuestions[currentQuestionIndex].id);
 
     if (answerIndex > -1) {
       updatedAnswers[answerIndex].selected_option = choice;
     } else {
-      updatedAnswers.push({ id: 0, test_result: Number(testId), question: questions[currentQuestionIndex].id, selected_option: choice });
+      updatedAnswers.push({ id: 0, test_result: Number(testId), question: localQuestions[currentQuestionIndex].id, selected_option: choice });
     }
 
     setLocalUserAnswers(updatedAnswers);
@@ -184,7 +196,7 @@ const TestPageUI = () => {
 
   const handleSubmit = async () => {
     const validUserAnswers = localUserAnswers.filter((answer) => answer.selected_option !== null);
-    if (validUserAnswers.length < questions.length) {
+    if (validUserAnswers.length < localQuestions.length) {
       alert('Please answer all questions before submitting.');
       return;
     }
@@ -201,9 +213,10 @@ const TestPageUI = () => {
         setShowModal(false);
         navigate('/demo');
       }, 4000);
-      // Clear answers from Redux state after submission
-      if (moduleId) {
-        dispatch(saveUserAnswers({ moduleId, answers: [] }));
+      // Clear questions and modules from Redux state after submission
+      if (moduleId && testId) {
+        dispatch(clearQuestions(moduleId));
+        dispatch(clearModules(testId));
       }
     } catch (error) {
       console.error('Error submitting answers:', error);
@@ -223,7 +236,7 @@ const TestPageUI = () => {
     );
   };
 
-  const currentQuestion = questions[currentQuestionIndex] || { query: '', option_A: '', option_B: '', option_C: '', option_D: '' };
+  const currentQuestion = localQuestions[currentQuestionIndex] || { query: '', option_A: '', option_B: '', option_C: '', option_D: '' };
   const answerChoices = [
     { label: 'A', content: currentQuestion.option_A },
     { label: 'B', content: currentQuestion.option_B },
@@ -263,7 +276,7 @@ const TestPageUI = () => {
         <div className="w-[50%]">
           <div className="p-14">
             <div className="flex gap-2 items-center">
-              <p className={`font-bold text-lg ${isCurrentQuestionUnanswered ? 'text-red-500' : ''}`}>{`Question ${currentQuestionIndex + 1} of ${questions.length}`}</p>
+              <p className={`font-bold text-lg ${isCurrentQuestionUnanswered ? 'text-red-500' : ''}`}>{`Question ${currentQuestionIndex + 1} of ${localQuestions.length}`}</p>
               <span>
                 <PiFlagThin size={30} className={`${isCurrentQuestionUnanswered ? 'text-red-500' : 'text-green-500'}`} />
               </span>
@@ -291,7 +304,7 @@ const TestPageUI = () => {
         >
           <BsFillArrowLeftCircleFill className="inline mr-2" /> Previous
         </button>
-        {currentQuestionIndex < questions.length - 1 ? (
+        {currentQuestionIndex < localQuestions.length - 1 ? (
           <button
             onClick={handleNextQuestion}
             className="py-2 px-6 border-2 rounded-xl hover:bg-[#00df9a] hover:border-blue-500 hover:text-white font-semibold text-lg"

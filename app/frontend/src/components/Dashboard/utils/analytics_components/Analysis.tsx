@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { BsMoon } from 'react-icons/bs';
 import AnalyticsChart from './AnalyticsChart';
-import { TestReportData } from '../../types';
+import { TestReportData } from '../../../auth_utils/types';
 
 interface AnalysisProps {
   data: TestReportData;

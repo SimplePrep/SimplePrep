@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { BsFillArrowLeftCircleFill, BsFillArrowRightCircleFill, BsMoon } from 'react-icons/bs';
-import { Question } from '../../types';
+import { Question } from '../../../auth_utils/types';
 
 interface UserAnswer {
     id: number;
