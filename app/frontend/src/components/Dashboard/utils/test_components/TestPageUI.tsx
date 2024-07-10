@@ -10,7 +10,6 @@ import { auth } from '../../../auth_utils/firebaseConfig';
 import LoaderWrapper from '../tools/LoaderWrapper';
 import { checkAuthenticated, loadUser } from '../../../auth_utils/actions/authActions';
 
-
 interface Question {
   id: number;
   model: string;
@@ -88,18 +87,19 @@ const TestPageUI = () => {
       await dispatch(checkAuthenticated());
       await dispatch(loadUser());
     };
-    checkAuthStatus();
-  }, [dispatch])
-
-  useEffect(() => {
-    if ( !loading && !isAuthenticated && isLoading) {
-      navigate('/login');
-    }
-  }, [loading, isAuthenticated, isLoading, navigate]);
+    checkAuthStatus().then(() => {
+      setIsLoading(false);
+    });
+  }, [dispatch]);
 
   const handleLoadComplete = () => {
     setIsLoading(false);
-  }
+  };
+  useEffect(() => {
+    if (!loading && !isAuthenticated && !isLoading) {
+      navigate('/login');
+    }
+  }, [loading, isAuthenticated, isLoading, navigate]);
 
   if (isLoading) {
     return (
@@ -113,7 +113,7 @@ const TestPageUI = () => {
     );
   }
 
-  const toggleDarkMode = () => { 
+  const toggleDarkMode = () => {
     setIsDarkMode(!isDarkMode);
   };
 
@@ -122,24 +122,24 @@ const TestPageUI = () => {
   const handlePreviousQuestion = () => {
     if (currentQuestionIndex > 0) {
       if (!selectedChoice) {
-        setUnansweredQuestions(prev => [...prev, questions[currentQuestionIndex].id]);
+        setUnansweredQuestions((prev) => [...prev, questions[currentQuestionIndex].id]);
       } else {
-        setUnansweredQuestions(prev => prev.filter(id => id !== questions[currentQuestionIndex].id));
+        setUnansweredQuestions((prev) => prev.filter((id) => id !== questions[currentQuestionIndex].id));
       }
       setCurrentQuestionIndex(currentQuestionIndex - 1);
-      setSelectedChoice(userAnswers.find(answer => answer.questionId === questions[currentQuestionIndex - 1].id)?.selectedChoice || null);
+      setSelectedChoice(userAnswers.find((answer) => answer.questionId === questions[currentQuestionIndex - 1].id)?.selectedChoice || null);
     }
   };
 
   const handleNextQuestion = () => {
     if (currentQuestionIndex < questions.length - 1) {
       if (!selectedChoice) {
-        setUnansweredQuestions(prev => [...prev, questions[currentQuestionIndex].id]);
+        setUnansweredQuestions((prev) => [...prev, questions[currentQuestionIndex].id]);
       } else {
-        setUnansweredQuestions(prev => prev.filter(id => id !== questions[currentQuestionIndex].id));
+        setUnansweredQuestions((prev) => prev.filter((id) => id !== questions[currentQuestionIndex].id));
       }
       setCurrentQuestionIndex(currentQuestionIndex + 1);
-      setSelectedChoice(userAnswers.find(answer => answer.questionId === questions[currentQuestionIndex + 1].id)?.selectedChoice || null);
+      setSelectedChoice(userAnswers.find((answer) => answer.questionId === questions[currentQuestionIndex + 1].id)?.selectedChoice || null);
     }
   };
 
@@ -158,9 +158,9 @@ const TestPageUI = () => {
   };
 
   const handleSubmit = async () => {
-    const validUserAnswers = userAnswers.filter(answer => answer.selectedChoice !== null) as { questionId: number; selectedChoice: string }[];
+    const validUserAnswers = userAnswers.filter((answer) => answer.selectedChoice !== null) as { questionId: number; selectedChoice: string }[];
     if (validUserAnswers.length < questions.length) {
-      alert("Please answer all questions before submitting.");
+      alert('Please answer all questions before submitting.');
       return;
     }
     await submitAnswers(user!.uid, Number(moduleId), validUserAnswers, navigate);
@@ -174,15 +174,15 @@ const TestPageUI = () => {
   const handleParagraphSplit = (context: string) => {
     const sections = context.split('\n');
     return (
-      <div className=''>
+      <div className="">
         {sections.map((section, index) => (
           <p key={index} className={index === 0 ? '' : 'mt-2'}>
             {section}
           </p>
         ))}
       </div>
-    )
-  }
+    );
+  };
 
   const currentQuestion = questions[currentQuestionIndex];
   const answerChoices = [
@@ -200,37 +200,37 @@ const TestPageUI = () => {
   return (
     <div className={`w-full h-screen flex flex-col ${darkModeClass}`}>
       {showModal && <Modal message={'Submission Successful. Please visit Analytics page on Dashboard to review the test results!'} />}
-      <div className='flex p-5 justify-between items-center'>
-        <div className='mx-5 flex gap-10 items-center'>
-          <p className='text-bold font-ubuntu text-2xl'>{currentModule?.title}</p>
+      <div className="flex p-5 justify-between items-center">
+        <div className="mx-5 flex gap-10 items-center">
+          <p className="text-bold font-ubuntu text-2xl">{currentModule?.title}</p>
           <button onClick={toggleDarkMode} className="text-lg p-3 border-2 rounded-2xl hover:bg-[#00df9a] hover:border-blue-500">
             <BsMoon />
           </button>
         </div>
-        <div className='flex justify-end items-center gap-5'>
-          <p className='font-semibold text-lg'>13:04</p>
-          <button onClick={handleExit} className='py-2 px-6 border-2 rounded-xl hover:bg-[#00df9a] hover:border-blue-500 hover:text-white font-semibold text-lg'>Exit</button>
+        <div className="flex justify-end items-center gap-5">
+          <p className="font-semibold text-lg">13:04</p>
+          <button onClick={handleExit} className="py-2 px-6 border-2 rounded-xl hover:bg-[#00df9a] hover:border-blue-500 hover:text-white font-semibold text-lg">Exit</button>
         </div>
       </div>
       <hr className="border-gray-300 border-[1px]" />
-      <div className='flex flex-grow'>
-        <div className='w-[50%] border-r-2'>
+      <div className="flex flex-grow">
+        <div className="w-[50%] border-r-2">
           <div className="p-14">
-            <p className='font-medium text-lg'>
+            <p className="font-medium text-lg">
               {handleParagraphSplit(currentQuestion.context)}
             </p>
           </div>
         </div>
-        <div className='w-[50%]'>
-          <div className='p-14'>
-            <div className='flex gap-2 items-center'>
+        <div className="w-[50%]">
+          <div className="p-14">
+            <div className="flex gap-2 items-center">
               <p className={`font-bold text-lg ${isCurrentQuestionUnanswered ? 'text-red-500' : ''}`}>{`Question ${currentQuestionIndex + 1} of ${questions.length}`}</p>
               <span>
                 <PiFlagThin size={30} className={`${isCurrentQuestionUnanswered ? 'text-red-500' : 'text-green-500'}`} />
               </span>
             </div>
-            <p className='font-medium text-lg mt-3'>{currentQuestion.query}</p>
-            <div className='flex flex-col mt-7 gap-5'>
+            <p className="font-medium text-lg mt-3">{currentQuestion.query}</p>
+            <div className="flex flex-col mt-7 gap-5">
               {answerChoices.map((choice, index) => (
                 <button
                   key={index}
