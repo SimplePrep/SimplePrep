@@ -34,8 +34,11 @@ const dataSlice = createSlice({
     clearModules: (state, action: PayloadAction<string>) => {
       delete state.modules[action.payload];
     },
+    clearUserAnswers: (state, action: PayloadAction<string>) => {
+      delete state.userAnswers[action.payload];
+    }
   },
 });
 
-export const { setQuestions, setModules, saveUserAnswers, clearQuestions, clearModules } = dataSlice.actions;
+export const { setQuestions, setModules, saveUserAnswers, clearQuestions, clearModules, clearUserAnswers} = dataSlice.actions;
 export default dataSlice.reducer;
