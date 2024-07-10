@@ -111,21 +111,39 @@ const TestPageUI = () => {
   };
 
   useEffect(() => {
+    let isReloading = false;
+  
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
-      const confirmationMessage = 'You have unsaved changes. Are you sure you want to leave?';
-      e.returnValue = confirmationMessage;
-
-      if (moduleId) {
-        sessionStorage.setItem(`userAnswers-${moduleId}`, JSON.stringify(localUserAnswers));
+      if (!isReloading) {
+        // This is a close or navigate away action
+        const confirmationMessage = 'You have unsaved changes. Are you sure you want to leave?';
+        e.preventDefault(); // Cancel the event
+        e.returnValue = confirmationMessage; // Show dialog
+        return confirmationMessage;
+      } else {
+        // This is a reload action
+        if (moduleId) {
+          sessionStorage.setItem(`userAnswers-${moduleId}`, JSON.stringify(localUserAnswers));
+        }
       }
-
-      return confirmationMessage;
     };
-
+  
+    const handleUnload = () => {
+      isReloading = false;
+    };
+  
+    const handleBeforeReload = () => {
+      isReloading = true;
+    };
+  
     window.addEventListener('beforeunload', handleBeforeUnload);
-
+    window.addEventListener('unload', handleUnload);
+    window.addEventListener('beforereload', handleBeforeReload);
+  
     return () => {
       window.removeEventListener('beforeunload', handleBeforeUnload);
+      window.removeEventListener('unload', handleUnload);
+      window.removeEventListener('beforereload', handleBeforeReload);
     };
   }, [moduleId, localUserAnswers]);
 
