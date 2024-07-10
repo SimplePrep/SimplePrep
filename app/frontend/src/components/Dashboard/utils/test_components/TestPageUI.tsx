@@ -2,12 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { BsFillArrowLeftCircleFill, BsFillArrowRightCircleFill, BsMoon } from 'react-icons/bs';
 import { PiFlagThin } from 'react-icons/pi';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { getModules, getQuestionsByModuleId, submitAnswers } from '../../../auth_utils/axios/axiosServices';
 import Modal from '../../../../pages/Authentication/Modal';
-import { RootState } from '../../../store';
+import { AppDispatch, RootState } from '../../../store';
 import { auth } from '../../../auth_utils/firebaseConfig';
 import LoaderWrapper from '../tools/LoaderWrapper';
+import { checkAuthenticated, loadUser } from '../../../auth_utils/actions/authActions';
 
 
 interface Question {
@@ -44,6 +45,7 @@ interface UserAnswer {
 }
 
 const TestPageUI = () => {
+  const dispatch = useDispatch<AppDispatch>();
   const { isAuthenticated, loading } = useSelector((state: RootState) => state.auth);
   const user = auth.currentUser;
   const { testId, moduleId } = useParams<{ testId: string; moduleId: string }>();
@@ -82,10 +84,18 @@ const TestPageUI = () => {
   }, [moduleId, testId]);
 
   useEffect(() => {
-    if (!isAuthenticated || !user?.emailVerified) {
+    const checkAuthStatus = async () => {
+      await dispatch(checkAuthenticated());
+      await dispatch(loadUser());
+    };
+    checkAuthStatus();
+  }, [dispatch])
+
+  useEffect(() => {
+    if ( !loading && !isAuthenticated && isLoading) {
       navigate('/login');
     }
-  }, [navigate, isAuthenticated, user]);
+  }, [loading, isAuthenticated, isLoading, navigate]);
 
   const handleLoadComplete = () => {
     setIsLoading(false);
@@ -172,10 +182,6 @@ const TestPageUI = () => {
         ))}
       </div>
     )
-  }
-
-  if (!questions.length) {
-    return <div>Loading questions...</div>;
   }
 
   const currentQuestion = questions[currentQuestionIndex];
