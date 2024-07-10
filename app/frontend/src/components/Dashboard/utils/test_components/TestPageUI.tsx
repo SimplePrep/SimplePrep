@@ -87,9 +87,11 @@ const TestPageUI = () => {
 
   useEffect(() => {
     if (moduleId) {
-      const savedAnswers = userAnswers[moduleId];
+      const savedAnswers = sessionStorage.getItem(`userAnswers-${moduleId}`);
       if (savedAnswers) {
-        setLocalUserAnswers(savedAnswers);
+        setLocalUserAnswers(JSON.parse(savedAnswers));
+      } else if (userAnswers[moduleId]) {
+        setLocalUserAnswers(userAnswers[moduleId]);
       }
     }
   }, [moduleId, userAnswers]);
@@ -97,6 +99,7 @@ const TestPageUI = () => {
   const saveAnswers = (answers: UserAnswer[]) => {
     if (moduleId) {
       dispatch(saveUserAnswers({ moduleId, answers }));
+      sessionStorage.setItem(`userAnswers-${moduleId}`, JSON.stringify(answers));
     }
   };
 
@@ -108,6 +111,7 @@ const TestPageUI = () => {
     // Clear user answers when the user closes the page
     if (moduleId) {
       dispatch(clearUserAnswers(moduleId));
+      sessionStorage.removeItem(`userAnswers-${moduleId}`);
     }
     // Standard way to show the confirmation dialog
     const confirmationMessage = 'You have unsaved changes. Are you sure you want to leave?';
@@ -176,7 +180,7 @@ const TestPageUI = () => {
     }
 
     setLocalUserAnswers(updatedAnswers);
-    saveAnswers(updatedAnswers); // Save answers to Redux state
+    saveAnswers(updatedAnswers); // Save answers to Redux state and session storage
   };
 
   const handleSubmit = async () => {
@@ -198,11 +202,12 @@ const TestPageUI = () => {
         setShowModal(false);
         navigate('/demo');
       }, 4000);
-      // Clear questions, modules, and user answers from Redux state after submission
+      // Clear questions, modules, and user answers from Redux state and session storage after submission
       if (moduleId && testId) {
         dispatch(clearQuestions(moduleId));
         dispatch(clearModules(testId));
         dispatch(clearUserAnswers(moduleId));
+        sessionStorage.removeItem(`userAnswers-${moduleId}`);
       }
     } catch (error) {
       console.error('Error submitting answers:', error);
