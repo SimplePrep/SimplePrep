@@ -114,38 +114,32 @@ const TestPageUI = () => {
     let isReloading = false;
   
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
-      if (!isReloading) {
-        // This is a close or navigate away action
-        const confirmationMessage = 'You have unsaved changes. Are you sure you want to leave?';
-        e.preventDefault(); // Cancel the event
-        e.returnValue = confirmationMessage; // Show dialog
-        return confirmationMessage;
-      } else {
-        // This is a reload action
-        if (moduleId) {
-          sessionStorage.setItem(`userAnswers-${moduleId}`, JSON.stringify(localUserAnswers));
-        }
+      if (moduleId) {
+        sessionStorage.setItem(`userAnswers-${moduleId}`, JSON.stringify(localUserAnswers));
       }
     };
   
     const handleUnload = () => {
-      isReloading = false;
+      if (!isReloading && moduleId) {
+        sessionStorage.removeItem(`userAnswers-${moduleId}`);
+        dispatch(clearUserAnswers(moduleId));
+      }
     };
   
-    const handleBeforeReload = () => {
+    const handleReload = () => {
       isReloading = true;
     };
   
     window.addEventListener('beforeunload', handleBeforeUnload);
     window.addEventListener('unload', handleUnload);
-    window.addEventListener('beforereload', handleBeforeReload);
+    window.addEventListener('reload', handleReload);
   
     return () => {
       window.removeEventListener('beforeunload', handleBeforeUnload);
       window.removeEventListener('unload', handleUnload);
-      window.removeEventListener('beforereload', handleBeforeReload);
+      window.removeEventListener('reload', handleReload);
     };
-  }, [moduleId, localUserAnswers]);
+  }, [moduleId, localUserAnswers, dispatch]);
 
   if (isLoading) {
     return (
