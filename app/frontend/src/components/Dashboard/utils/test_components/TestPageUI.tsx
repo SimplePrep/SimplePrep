@@ -92,17 +92,15 @@ const TestPageUI = () => {
       try {
         await dispatch(checkAuthenticated());
         await dispatch(loadUser());
-        setIsLoading(false); // Ensure this is set to false after authentication checks
       } catch (error) {
         console.error('Error checking authentication status:', error);
-        setIsLoading(false);
       }
     };
     checkAuthStatus();
   }, [dispatch]);
 
   useEffect(() => {
-    if (!loading && !isAuthenticated && !isLoading) {
+    if (!loading && !isAuthenticated && isLoading) {
       navigate('/login');
     }
   }, [loading, isAuthenticated, isLoading, navigate]);
@@ -122,6 +120,7 @@ const TestPageUI = () => {
       dispatch(saveUserAnswers({ moduleId, answers }));
     }
   };
+
   const handleLoadComplete = () => {
     setIsLoading(false);
   };
