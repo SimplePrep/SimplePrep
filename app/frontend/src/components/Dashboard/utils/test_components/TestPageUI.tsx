@@ -9,9 +9,7 @@ import { AppDispatch, RootState } from '../../../store';
 import { auth } from '../../../auth_utils/firebaseConfig';
 import LoaderWrapper from '../tools/LoaderWrapper';
 import { checkAuthenticated, loadUser } from '../../../auth_utils/actions/authActions';
-import { UserAnswer } from '../../types';
 import { saveUserAnswers } from '../../../auth_utils/reducers/authReducer';
-
 
 interface Question {
   id: number;
@@ -41,6 +39,12 @@ interface Module {
   updated_at: string;
 }
 
+export interface UserAnswer {
+  id: number;
+  test_result: number;
+  question: number;
+  selected_option: string;
+}
 
 const TestPageUI = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -77,28 +81,31 @@ const TestPageUI = () => {
       }
     };
 
-    fetchQuestions();
-    fetchModule();
+    if (moduleId && testId) {
+      fetchQuestions();
+      fetchModule();
+    }
   }, [moduleId, testId]);
 
   useEffect(() => {
     const checkAuthStatus = async () => {
-      await dispatch(checkAuthenticated());
-      await dispatch(loadUser());
-      setIsLoading(false);
+      try {
+        await dispatch(checkAuthenticated());
+        await dispatch(loadUser());
+        setIsLoading(false); // Ensure this is set to false after authentication checks
+      } catch (error) {
+        console.error('Error checking authentication status:', error);
+        setIsLoading(false);
+      }
     };
     checkAuthStatus();
-  }, [dispatch])
+  }, [dispatch]);
 
   useEffect(() => {
-    if (!loading && !isAuthenticated && isLoading) {
+    if (!loading && !isAuthenticated && !isLoading) {
       navigate('/login');
     }
   }, [loading, isAuthenticated, isLoading, navigate]);
-
-  const handleLoadComplete = () => {
-    setIsLoading(false);
-  }
 
   useEffect(() => {
     // Load user answers from Redux state if available
@@ -115,20 +122,23 @@ const TestPageUI = () => {
       dispatch(saveUserAnswers({ moduleId, answers }));
     }
   };
+  const handleLoadComplete = () => {
+    setIsLoading(false);
+  };
 
   if (isLoading) {
     return (
       <LoaderWrapper
         size='35px'
         minLoadTime={2000}
-        onLoadComplete={handleLoadComplete}
         text="Loading Test Module..."
         isDarkMode={isDarkMode}
+        onLoadComplete={handleLoadComplete}
       />
     );
   }
 
-  const toggleDarkMode = () => { 
+  const toggleDarkMode = () => {
     setIsDarkMode(!isDarkMode);
   };
 
@@ -137,12 +147,12 @@ const TestPageUI = () => {
   const handlePreviousQuestion = () => {
     if (currentQuestionIndex > 0) {
       if (!selectedChoice) {
-        setUnansweredQuestions(prev => [...prev, questions[currentQuestionIndex].id]);
+        setUnansweredQuestions((prev) => [...prev, questions[currentQuestionIndex].id]);
       } else {
-        setUnansweredQuestions(prev => prev.filter(id => id !== questions[currentQuestionIndex].id));
+        setUnansweredQuestions((prev) => prev.filter((id) => id !== questions[currentQuestionIndex].id));
       }
       setCurrentQuestionIndex(currentQuestionIndex - 1);
-      setSelectedChoice(localUserAnswers.find((answer) => answer.question === questions[currentQuestionIndex - 1].id)?.selected_option || null);
+      setSelectedChoice(localUserAnswers.find((answer) => answer.question === questions[currentQuestionIndex - 1]?.id)?.selected_option || null);
     }
   };
 
@@ -154,7 +164,7 @@ const TestPageUI = () => {
         setUnansweredQuestions((prev) => prev.filter((id) => id !== questions[currentQuestionIndex].id));
       }
       setCurrentQuestionIndex(currentQuestionIndex + 1);
-      setSelectedChoice(localUserAnswers.find((answer) => answer.question === questions[currentQuestionIndex + 1].id)?.selected_option || null);
+      setSelectedChoice(localUserAnswers.find((answer) => answer.question === questions[currentQuestionIndex + 1]?.id)?.selected_option || null);
     }
   };
 
@@ -185,32 +195,36 @@ const TestPageUI = () => {
       selectedChoice: answer.selected_option,
     }));
 
-    await submitAnswers(user!.uid, Number(moduleId), formattedAnswers, navigate);
-    setShowModal(true);
-    setTimeout(() => {
-      setShowModal(false);
-      navigate('/demo');
-    }, 4000);
-    // Clear answers from Redux state after submission
-    if (moduleId) {
-      dispatch(saveUserAnswers({ moduleId, answers: [] }));
+    try {
+      await submitAnswers(user!.uid, Number(moduleId), formattedAnswers, navigate);
+      setShowModal(true);
+      setTimeout(() => {
+        setShowModal(false);
+        navigate('/demo');
+      }, 4000);
+      // Clear answers from Redux state after submission
+      if (moduleId) {
+        dispatch(saveUserAnswers({ moduleId, answers: [] }));
+      }
+    } catch (error) {
+      console.error('Error submitting answers:', error);
     }
   };
 
   const handleParagraphSplit = (context: string) => {
-    const sections = context.split('\n');
+    const sections = context?.split('\n');
     return (
-      <div className=''>
-        {sections.map((section, index) => (
+      <div className="">
+        {sections?.map((section, index) => (
           <p key={index} className={index === 0 ? '' : 'mt-2'}>
             {section}
           </p>
         ))}
       </div>
-    )
-  }
+    );
+  };
 
-  const currentQuestion = questions[currentQuestionIndex];
+  const currentQuestion = questions[currentQuestionIndex] || { query: '', option_A: '', option_B: '', option_C: '', option_D: '' };
   const answerChoices = [
     { label: 'A', content: currentQuestion.option_A },
     { label: 'B', content: currentQuestion.option_B },
@@ -226,37 +240,37 @@ const TestPageUI = () => {
   return (
     <div className={`w-full h-screen flex flex-col ${darkModeClass}`}>
       {showModal && <Modal message={'Submission Successful. Please visit Analytics page on Dashboard to review the test results!'} />}
-      <div className='flex p-5 justify-between items-center'>
-        <div className='mx-5 flex gap-10 items-center'>
-          <p className='text-bold font-ubuntu text-2xl'>{currentModule?.title}</p>
+      <div className="flex p-5 justify-between items-center">
+        <div className="mx-5 flex gap-10 items-center">
+          <p className="text-bold font-ubuntu text-2xl">{currentModule?.title}</p>
           <button onClick={toggleDarkMode} className="text-lg p-3 border-2 rounded-2xl hover:bg-[#00df9a] hover:border-blue-500">
             <BsMoon />
           </button>
         </div>
-        <div className='flex justify-end items-center gap-5'>
-          <p className='font-semibold text-lg'>13:04</p>
-          <button onClick={handleExit} className='py-2 px-6 border-2 rounded-xl hover:bg-[#00df9a] hover:border-blue-500 hover:text-white font-semibold text-lg'>Exit</button>
+        <div className="flex justify-end items-center gap-5">
+          <p className="font-semibold text-lg">13:04</p>
+          <button onClick={handleExit} className="py-2 px-6 border-2 rounded-xl hover:bg-[#00df9a] hover:border-blue-500 hover:text-white font-semibold text-lg">Exit</button>
         </div>
       </div>
       <hr className="border-gray-300 border-[1px]" />
-      <div className='flex flex-grow'>
-        <div className='w-[50%] border-r-2'>
+      <div className="flex flex-grow">
+        <div className="w-[50%] border-r-2">
           <div className="p-14">
-            <p className='font-medium text-lg'>
+            <p className="font-medium text-lg">
               {handleParagraphSplit(currentQuestion.context)}
             </p>
           </div>
         </div>
-        <div className='w-[50%]'>
-          <div className='p-14'>
-            <div className='flex gap-2 items-center'>
+        <div className="w-[50%]">
+          <div className="p-14">
+            <div className="flex gap-2 items-center">
               <p className={`font-bold text-lg ${isCurrentQuestionUnanswered ? 'text-red-500' : ''}`}>{`Question ${currentQuestionIndex + 1} of ${questions.length}`}</p>
               <span>
                 <PiFlagThin size={30} className={`${isCurrentQuestionUnanswered ? 'text-red-500' : 'text-green-500'}`} />
               </span>
             </div>
-            <p className='font-medium text-lg mt-3'>{currentQuestion.query}</p>
-            <div className='flex flex-col mt-7 gap-5'>
+            <p className="font-medium text-lg mt-3">{currentQuestion.query}</p>
+            <div className="flex flex-col mt-7 gap-5">
               {answerChoices.map((choice, index) => (
                 <button
                   key={index}
