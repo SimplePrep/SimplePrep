@@ -110,26 +110,21 @@ const TestPageUI = () => {
   useEffect(() => {
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
       const confirmationMessage = 'You have unsaved changes. Are you sure you want to leave?';
-      e.returnValue = confirmationMessage; // Gecko, Trident, Chrome 34+
-      return confirmationMessage; // Gecko, WebKit, Chrome <34
-    };
 
-    const handleUnload = () => {
-      // Clear user answers only when the page is closed, not when it is reloaded
       if (moduleId) {
-        dispatch(clearUserAnswers(moduleId));
-        sessionStorage.removeItem(`userAnswers-${moduleId}`);
+        sessionStorage.setItem(`userAnswers-${moduleId}`, JSON.stringify(localUserAnswers));
       }
+
+      return confirmationMessage;
     };
 
     window.addEventListener('beforeunload', handleBeforeUnload);
-    window.addEventListener('unload', handleUnload);
 
     return () => {
       window.removeEventListener('beforeunload', handleBeforeUnload);
-      window.removeEventListener('unload', handleUnload);
     };
-  }, [moduleId, dispatch]);
+  }, [moduleId, localUserAnswers]);
+
 
   if (isLoading) {
     return (
@@ -185,7 +180,7 @@ const TestPageUI = () => {
     }
 
     setLocalUserAnswers(updatedAnswers);
-    saveAnswers(updatedAnswers); // Save answers to Redux state and session storage
+    saveAnswers(updatedAnswers); 
   };
 
   const handleSubmit = async () => {
@@ -242,6 +237,10 @@ const TestPageUI = () => {
   const isCurrentQuestionUnanswered = unansweredQuestions.includes(currentQuestion.id);
 
   const handleExit = () => {
+    if (moduleId) {
+      dispatch(clearUserAnswers(moduleId));
+      sessionStorage.removeItem(`userAnswers-${moduleId}`);
+    }
     navigate('/demo');
   };
 
