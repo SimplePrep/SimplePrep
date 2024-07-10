@@ -6,7 +6,7 @@ import FloatingLabelInput from './FloatingLabelInput';
 import Loader from './Modal';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../components/store';
-import { SendResetPasswordEmail } from '../../components/auth_utils/actions/authActions';
+import { SendResetPasswordEmail } from '../../components/auth_utils/actions/Actions';
 
 const ResetPassword = (): React.ReactElement => {
   const dispatch = useDispatch<AppDispatch>();

@@ -5,7 +5,7 @@ import { SideBarLinks } from './NavBarElements';
 import { BsMoon, BsChevronDown, BsChevronUp } from 'react-icons/bs';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../store';
-import { SignOut } from '../auth_utils/actions/authActions';
+import { SignOut } from '../auth_utils/actions/Actions';
 import { auth } from '../auth_utils/firebaseConfig';
 import { motion } from 'framer-motion';
 

@@ -6,7 +6,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import FloatingLabelInput from './FloatingLabelInput';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState, AppDispatch } from '../../components/store';
-import { GoogleSignIn, SignIn, clearAuthError } from '../../components/auth_utils/actions/authActions';
+import { GoogleSignIn, SignIn, clearAuthError } from '../../components/auth_utils/actions/Actions';
 import { LoginFormValues } from '../../components/auth_utils/types';
 
 const Login = (): React.ReactElement => {

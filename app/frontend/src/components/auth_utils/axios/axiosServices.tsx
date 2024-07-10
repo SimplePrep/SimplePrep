@@ -1,6 +1,5 @@
 import axiosInstance from './axiosInterceptor';
-import { TestResult, Question, UserAnswer, TestReport, DetailedTestResult, Reply, Post } from '../../Dashboard/types';
-import { Chapter, Module, Section, Tutorial } from '../types';
+import { Chapter, Module, Post, Question, Reply, Section, TestReport, TestResult, Tutorial, UserAnswer } from '../types';
 
 // Example function to get tests
 export const getTests = async () => {
