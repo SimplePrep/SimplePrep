@@ -12,7 +12,6 @@ import { Module, Question, UserAnswer } from '../../../auth_utils/types';
 import { checkAuthenticated, loadUser } from '../../../auth_utils/actions/Actions';
 import { clearModules, clearQuestions, clearUserAnswers, saveUserAnswers, setModules, setQuestions } from '../../../auth_utils/reducers/dataReducer';
 
-
 const TestPageUI = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { questions, modules, userAnswers } = useSelector((state: RootState) => state.data);
@@ -27,7 +26,7 @@ const TestPageUI = () => {
   const [unansweredQuestions, setUnansweredQuestions] = useState<number[]>([]);
   const [showModal, setShowModal] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const [localUserAnswers, setLocalUserAnswers] = useState<UserAnswer[]>([]); // Local state to manage user answers
+  const [localUserAnswers, setLocalUserAnswers] = useState<UserAnswer[]>([]);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -87,14 +86,18 @@ const TestPageUI = () => {
 
   useEffect(() => {
     if (moduleId) {
-      const savedAnswers = sessionStorage.getItem(`userAnswers-${moduleId}`);
-      if (savedAnswers) {
-        setLocalUserAnswers(JSON.parse(savedAnswers));
-      } else if (userAnswers[moduleId]) {
+      if (userAnswers[moduleId]) {
         setLocalUserAnswers(userAnswers[moduleId]);
+      } else {
+        const savedAnswers = sessionStorage.getItem(`userAnswers-${moduleId}`);
+        if (savedAnswers) {
+          const parsedAnswers = JSON.parse(savedAnswers);
+          setLocalUserAnswers(parsedAnswers);
+          dispatch(saveUserAnswers({ moduleId, answers: parsedAnswers }));
+        }
       }
     }
-  }, [moduleId, userAnswers]);
+  }, [moduleId, userAnswers, dispatch]);
 
   const saveAnswers = (answers: UserAnswer[]) => {
     if (moduleId) {
@@ -110,6 +113,7 @@ const TestPageUI = () => {
   useEffect(() => {
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
       const confirmationMessage = 'You have unsaved changes. Are you sure you want to leave?';
+      e.returnValue = confirmationMessage;
 
       if (moduleId) {
         sessionStorage.setItem(`userAnswers-${moduleId}`, JSON.stringify(localUserAnswers));
@@ -124,7 +128,6 @@ const TestPageUI = () => {
       window.removeEventListener('beforeunload', handleBeforeUnload);
     };
   }, [moduleId, localUserAnswers]);
-
 
   if (isLoading) {
     return (
@@ -180,7 +183,7 @@ const TestPageUI = () => {
     }
 
     setLocalUserAnswers(updatedAnswers);
-    saveAnswers(updatedAnswers); 
+    saveAnswers(updatedAnswers);
   };
 
   const handleSubmit = async () => {
@@ -202,7 +205,6 @@ const TestPageUI = () => {
         setShowModal(false);
         navigate('/demo');
       }, 4000);
-      // Clear questions, modules, and user answers from Redux state and session storage after submission
       if (moduleId && testId) {
         dispatch(clearQuestions(moduleId));
         dispatch(clearModules(testId));
