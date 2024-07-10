@@ -107,22 +107,27 @@ const TestPageUI = () => {
     setIsLoading(false);
   };
 
-  const handleBeforeUnload = (e: BeforeUnloadEvent) => {
-    // Clear user answers when the user closes the page
-    if (moduleId) {
-      dispatch(clearUserAnswers(moduleId));
-      sessionStorage.removeItem(`userAnswers-${moduleId}`);
-    }
-    // Standard way to show the confirmation dialog
-    const confirmationMessage = 'You have unsaved changes. Are you sure you want to leave?';
-    e.returnValue = confirmationMessage; // Gecko, Trident, Chrome 34+
-    return confirmationMessage; // Gecko, WebKit, Chrome <34
-  };
-
   useEffect(() => {
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      const confirmationMessage = 'You have unsaved changes. Are you sure you want to leave?';
+      e.returnValue = confirmationMessage; // Gecko, Trident, Chrome 34+
+      return confirmationMessage; // Gecko, WebKit, Chrome <34
+    };
+
+    const handleUnload = () => {
+      // Clear user answers only when the page is closed, not when it is reloaded
+      if (moduleId) {
+        dispatch(clearUserAnswers(moduleId));
+        sessionStorage.removeItem(`userAnswers-${moduleId}`);
+      }
+    };
+
     window.addEventListener('beforeunload', handleBeforeUnload);
+    window.addEventListener('unload', handleUnload);
+
     return () => {
       window.removeEventListener('beforeunload', handleBeforeUnload);
+      window.removeEventListener('unload', handleUnload);
     };
   }, [moduleId, dispatch]);
 
