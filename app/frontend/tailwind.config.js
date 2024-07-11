@@ -10,6 +10,7 @@ module.exports = {
         'montserrat': ["Montserrat", 'sans-serif'],
         'opensans': ["Open Sans", 'sans-serif'],
         'roboto': ['Roboto', 'sans-serif'],
+        'nunito': ['Nunito', 'sans-serif'],
       },
       keyframes: {
         fadeIn: {

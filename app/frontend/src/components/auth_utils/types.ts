@@ -72,7 +72,7 @@ export interface Question {
   title: string;
   context: string;
   query: string;
-  graph_img?: string;
+  graph_img: string;
   option_A: string;
   option_B: string;
   option_C: string;
