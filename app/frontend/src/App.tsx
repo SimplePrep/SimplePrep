@@ -32,7 +32,7 @@ const App = () => {
   }, [theme]);
 
   const toggleDarkMode = () => {
-    const newTheme = theme === 'dark' ? 'dark' : 'light';
+    const newTheme = theme === 'dark' ? 'light' : 'dark';
     dispatch(setTheme(newTheme));
   };
 
