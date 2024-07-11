@@ -40,17 +40,6 @@ const DashboardPage: React.FC<DashboardPageProps> = ({
     setIsLoading(false);
   };
 
-  useEffect(() => {
-    // Set the initial theme based on the persisted value in Redux state
-    if (theme) {
-      if (theme === 'dark') {
-        document.documentElement.classList.add('dark');
-      } else {
-        document.documentElement.classList.remove('dark');
-      }
-    }
-  }, [theme]);
-
   const handleToggleDarkMode = () => {
     const newTheme = theme === 'dark' ? 'light' : 'dark';
     dispatch(setTheme(newTheme));
