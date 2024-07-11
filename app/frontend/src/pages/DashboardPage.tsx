@@ -5,7 +5,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { AppDispatch, RootState } from '../components/store';
 import { checkAuthenticated, loadUser } from '../components/auth_utils/actions/Actions';
 import LoaderWrapper from '../components/Dashboard/utils/tools/LoaderWrapper';
-
+import { setTheme } from '../components/auth_utils/reducers/authReducer';
 
 interface DashboardPageProps {
   toggleDarkMode: () => void;
@@ -17,7 +17,7 @@ const DashboardPage: React.FC<DashboardPageProps> = ({
   isDarkMode,
 }) => {
   const dispatch = useDispatch<AppDispatch>();
-  const { isAuthenticated, loading } = useSelector((state: RootState) => state.auth);
+  const { isAuthenticated, loading, theme } = useSelector((state: RootState) => state.auth);
   const [isLoading, setIsLoading] = useState(true);
   const darkModeClass = isDarkMode ? 'dark-background' : 'light-background';
   const navigate = useNavigate();
@@ -40,6 +40,23 @@ const DashboardPage: React.FC<DashboardPageProps> = ({
     setIsLoading(false);
   };
 
+  useEffect(() => {
+    // Set the initial theme based on the persisted value in Redux state
+    if (theme) {
+      if (theme === 'dark') {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+    }
+  }, [theme]);
+
+  const handleToggleDarkMode = () => {
+    const newTheme = theme === 'dark' ? 'light' : 'dark';
+    dispatch(setTheme(newTheme));
+    toggleDarkMode(); // This updates the local state in the App component
+  };
+
   if (isLoading) {
     return (
       <LoaderWrapper
@@ -54,7 +71,7 @@ const DashboardPage: React.FC<DashboardPageProps> = ({
 
   return (
     <div className={`w-full h-full ${darkModeClass} font-opensans`}>
-      <NavBarDash toggleDarkMode={toggleDarkMode} isDarkMode={isDarkMode} />
+      <NavBarDash toggleDarkMode={handleToggleDarkMode} isDarkMode={isDarkMode} />
       <Outlet />
     </div>
   );

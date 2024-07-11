@@ -8,31 +8,31 @@ import { motion } from 'framer-motion';
 
 const basePath = "/demo/tutorials";
 
-
-
 interface TutorialCardProps {
   tutorial: Tutorial;
+  isDarkMode: boolean;
 }
+
 const SkeletonTutorialCard = () => (
-  <div className="bg-teal-200 rounded w-[300px]">
-    <div className="m-1 rounded overflow-hidden shadow-lg bg-white h-[500px] flex flex-col animate-pulse">
-      <div className="h-56 bg-gray-300"></div>
+  <div className="bg-teal-200 dark:bg-teal-700 rounded w-[300px]">
+    <div className="m-1 rounded overflow-hidden shadow-lg bg-white dark:bg-gray-800 h-[500px] flex flex-col animate-pulse">
+      <div className="h-56 bg-gray-300 dark:bg-gray-700"></div>
       <div className="px-6 py-4 flex-grow">
-        <div className="h-6 bg-gray-300 rounded w-3/4 mb-4"></div>
+        <div className="h-6 bg-gray-300 dark:bg-gray-700 rounded w-3/4 mb-4"></div>
         <div className="space-y-2">
           {[...Array(5)].map((_, i) => (
-            <div key={i} className="h-4 bg-gray-300 rounded w-full"></div>
+            <div key={i} className="h-4 bg-gray-300 dark:bg-gray-700 rounded w-full"></div>
           ))}
         </div>
       </div>
       <div className='flex justify-center p-4'>
-        <div className="h-10 w-32 bg-gray-300 rounded"></div>
+        <div className="h-10 w-32 bg-gray-300 dark:bg-gray-700 rounded"></div>
       </div>
     </div>
   </div>
 );
 
-const TutorialCard: React.FC<TutorialCardProps> = ({ tutorial }) => {
+const TutorialCard: React.FC<TutorialCardProps> = ({ tutorial, isDarkMode }) => {
   const [chapters, setChapters] = useState<Chapter[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -66,16 +66,16 @@ const TutorialCard: React.FC<TutorialCardProps> = ({ tutorial }) => {
 
   return (
     <motion.div
-      className="bg-teal-200 rounded w-[300px]"
+      className={`bg-teal-200 dark:bg-teal-700 rounded w-[300px] ${isDarkMode ? 'bg-gray-800 text-white' : 'bg-white text-gray-800'}`}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, ease: 'easeOut' }}
     >
-      <div className="m-1 rounded overflow-hidden shadow-lg bg-white h-[500px] flex flex-col">
-        <img className="h-56 w-full object-cover shadow-2xl shadow-teal-100" src={tutorialImage} alt={`${tutorial.title} icon`} />
+      <div className="m-1 rounded overflow-hidden shadow-lg flex flex-col">
+        <img className="h-56 w-full object-cover shadow-2xl" src={tutorialImage} alt={`${tutorial.title} icon`} />
         <div className="px-6 py-4 flex-grow overflow-y-auto">
           <p className="font-bold text-xl mb-2">{tutorial.title}</p>
-          <ul className='text-gray-700 text-base'>
+          <ul className='text-base'>
             {chapters.map((chapter, index) => <li key={index}>{chapter.title}</li>)}
           </ul>
         </div>
@@ -89,7 +89,7 @@ const TutorialCard: React.FC<TutorialCardProps> = ({ tutorial }) => {
   );
 };
 
-const Tutorials = () => {
+const Tutorials: React.FC<{ isDarkMode: boolean }> = ({ isDarkMode }) => {
   const [tutorials, setTutorials] = useState<Tutorial[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -110,13 +110,13 @@ const Tutorials = () => {
   }, []);
 
   return (
-    <div className='h-full max-w-[1200px] mx-auto px-20 py-40'>
-      <h1 className='text-blue-900 text-3xl font-roboto font-medium'>Welcome to Tutorials</h1>
+    <div className={`h-full max-w-[1200px] mx-auto px-20 py-40 ${isDarkMode ? 'bg-gray-900 text-white' : 'bg-white text-gray-900'}`}>
+      <h1 className='text-blue-900 dark:text-blue-300 text-3xl font-roboto font-medium'>Welcome to Tutorials</h1>
       <div className='my-20 flex flex-row items-center justify-evenly'>
         {isLoading
           ? [...Array(2)].map((_, index) => <SkeletonTutorialCard key={index} />)
           : tutorials.map((tutorial) => (
-              <TutorialCard key={tutorial.id} tutorial={tutorial} />
+              <TutorialCard key={tutorial.id} tutorial={tutorial} isDarkMode={isDarkMode} />
             ))
         }
       </div>
