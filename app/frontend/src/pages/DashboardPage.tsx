@@ -53,7 +53,7 @@ const DashboardPage: React.FC<DashboardPageProps> = ({
         minLoadTime={2000}
         onLoadComplete={handleLoadComplete}
         text="Loading Dashboard..."
-        isDarkMode={isDarkMode}
+        isDarkMode={!isDarkMode}
       />
     );
   }
