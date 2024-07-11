@@ -32,7 +32,7 @@ const App = () => {
   }, [theme]);
 
   const toggleDarkMode = () => {
-    const newTheme = theme === 'dark' ? 'light' : 'dark';
+    const newTheme = theme === 'dark' ? 'dark' : 'light';
     dispatch(setTheme(newTheme));
   };
 
@@ -50,7 +50,7 @@ const App = () => {
         >
           <Route index element={<Contents isDarkMode={theme === 'dark'} />} />
           <Route path="dashboard" element={<Contents isDarkMode={theme === 'dark'} />} />
-          <Route path="tutorials" element={<Tutorials isDarkMode={theme === 'dark'} />} />
+          <Route path="tutorials" element={<Tutorials />} />
           <Route path="tutorials/:tutorialId" element={<TutorialPage isDarkMode={theme === 'dark'} />}>
             <Route path=":chapterId/:sectionSlug" element={<SectionContent isDarkMode={theme === 'dark'} />} />
           </Route>
