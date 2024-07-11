@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, Outlet, useParams, useLocation, useNavigate } from 'react-router-dom';
-import { motion, Variants } from 'framer-motion';
+import { motion, Variants, useSpring } from 'framer-motion';
 import { Chapter, Section, Tutorial } from '../auth_utils/types';
 import { getChapters, getSections, getTutorial } from '../auth_utils/axios/axiosServices';
 import { MdOutlineKeyboardArrowUp, MdOutlineKeyboardArrowDown } from "react-icons/md";

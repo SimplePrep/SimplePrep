@@ -7,29 +7,29 @@ import { AppDispatch, RootState } from '../../../store';
 import LoaderWrapper from '../tools/LoaderWrapper';
 import { Question, UserAnswer, Module } from '../../../auth_utils/types';
 import { clearModules, clearQuestions, clearUserAnswers, saveUserAnswers, setModules, setQuestions } from '../../../auth_utils/reducers/dataReducer';
-import QuestionListModal from './QuestionListModal'; 
+import QuestionListModal from './QuestionListModal'; // Import the new component
 import { getModules, getQuestionsByModuleId, submitAnswers } from '../../../auth_utils/axios/axiosServices';
 import { HiOutlineSave } from "react-icons/hi";
 import { checkAuthenticated, loadUser } from '../../../auth_utils/actions/Actions';
 import { auth } from '../../../auth_utils/firebaseConfig';
-import { setTheme } from '../../../auth_utils/reducers/authReducer';
 
 const TestPageUI = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { questions, modules, userAnswers } = useSelector((state: RootState) => state.data);
   const user = auth.currentUser;
-  const { isAuthenticated, loading, theme } = useSelector((state: RootState) => state.auth);
+  const { isAuthenticated, loading } = useSelector((state: RootState) => state.auth);
   const { testId, moduleId } = useParams<{ testId: string; moduleId: string }>();
   const [localQuestions, setLocalQuestions] = useState<Question[]>([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedChoice, setSelectedChoice] = useState<string | null>(null);
+  const [isDarkMode, setIsDarkMode] = useState(false);
   const [currentModule, setCurrentModule] = useState<Module | null>(null);
   const [unansweredQuestions, setUnansweredQuestions] = useState<number[]>([]);
   const [showModal, setShowModal] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [localUserAnswers, setLocalUserAnswers] = useState<UserAnswer[]>([]);
   const navigate = useNavigate();
-  const [isVisible, setIsVisible] = useState(false); 
+  const [isVisible, setIsVisible] = useState(false); // Modified: default is false (modal hidden)
   const [remarkedQuestions, setRemarkedQuestions] = useState<number[]>([]);
 
   useEffect(() => {
@@ -157,11 +157,15 @@ const TestPageUI = () => {
         size='35px'
         minLoadTime={2000}
         text="Loading Test Module..."
-        isDarkMode={theme === 'dark'}
+        isDarkMode={isDarkMode}
         onLoadComplete={handleLoadComplete}
       />
     );
   }
+
+  const toggleDarkMode = () => {
+    setIsDarkMode(!isDarkMode);
+  };
 
   const handlePreviousQuestion = () => {
     if (currentQuestionIndex > 0) {
@@ -281,7 +285,7 @@ const TestPageUI = () => {
     navigate('/demo');
   };
 
-  const darkModeClass = theme === 'dark' ? 'bg-gray-900 text-white' : 'bg-white text-gray-900'
+  const darkModeClass = isDarkMode ? 'bg-gray-900 text-white' : 'bg-white text-gray-900'
 
   const handleTogglePreview = () => {
     setIsVisible(!isVisible);
@@ -291,10 +295,6 @@ const TestPageUI = () => {
     setCurrentQuestionIndex(index);
     setIsVisible(false);
   };
-  const toggleDarkMode = () => {
-    const newTheme = theme === 'dark' ? 'light' : 'dark';
-    dispatch(setTheme(newTheme));
-  };
 
   return (
     <div className={`w-full min-h-screen flex flex-col ${darkModeClass}`}>
@@ -303,7 +303,7 @@ const TestPageUI = () => {
         <div className="mx-5 flex gap-3 items-center">
           <p className="text-bold font-ubuntu text-2xl">{currentModule?.title}</p>
           <button onClick={toggleDarkMode} className="text-lg p-3 border-2 rounded-full hover:bg-[#00df9a] hover:text-white hover:border-blue-800">
-            {theme === 'dark' ? <BsSun /> : <BsMoon />}
+            {isDarkMode ? <BsSun /> : <BsMoon />}
           </button>
         </div>
         <div className="absolute left-1/2 transform -translate-x-1/2 flex flex-col items-center">
@@ -316,11 +316,11 @@ const TestPageUI = () => {
           <button onClick={handleExit} className="py-2 px-6 border-2 rounded-full hover:bg-[#00df9a] hover:text-white font-semibold text-lg hover:border-blue-800">Exit</button>
         </div>
       </div>
-      <hr className={`border-[1.5px] ${theme === 'dark' ? 'border-white' : 'border-gray-300'}`} />
+      <hr className={`border-[1.5px] ${isDarkMode ? 'border-white' : 'border-gray-300'}`} />
       <div className="flex h-full flex-grow">
-        <div className={`w-[50%] border-r-2 ${theme === 'dark' ? 'border-gray-200' : 'border-white'}`}>
-          <div className={`h-full p-5 ${theme === 'dark' ? 'bg-gray-700' : 'bg-gray-200'}`}>
-            <div className={`h-full p-10 rounded-2xl overflow-auto ${theme === 'dark' ? 'bg-gray-900' : 'bg-white'}`}>
+        <div className={`w-[50%] border-r-2 ${isDarkMode ? 'border-gray-200' : 'border-white'}`}>
+          <div className={`h-full p-5 ${isDarkMode ? 'bg-gray-700' : 'bg-gray-200'}`}>
+            <div className={`h-full p-10 rounded-2xl overflow-auto ${isDarkMode ? 'bg-gray-900' : 'bg-white'}`}>
               <p className="font-medium text-lg">
                 {handleParagraphSplit(currentQuestion.context)}
               </p>
@@ -328,8 +328,8 @@ const TestPageUI = () => {
           </div>
         </div>
         <div className="w-[50%]">
-          <div className={`p-5 h-full flex flex-col ${theme === 'dark' ? 'bg-gray-700' : 'bg-gray-200'}`}>
-            <div className={`p-10 rounded-2xl overflow-auto h-full ${theme === 'dark' ? 'bg-gray-900' : 'bg-white'}`}>
+          <div className={`p-5 h-full flex flex-col ${isDarkMode ? 'bg-gray-700' : 'bg-gray-200'}`}>
+            <div className={`p-10 rounded-2xl overflow-auto h-full ${isDarkMode ? 'bg-gray-900' : 'bg-white'}`}>
               <div className="flex gap-2 items-center">
                 <p className={`font-bold text-lg ${isCurrentQuestionUnanswered ? 'text-red-500' : ''}`}>{`Question ${currentQuestionIndex + 1} of ${localQuestions.length}`}</p>
                 <button onClick={handleMarkQuestion} className={`flex flex-row gap-2 p-2 rounded-lg ${remarkedQuestions.includes(currentQuestion.id) ? 'bg-yellow-400 text-white' : 'hover:bg-yellow-400 hover:text-white'}`}>
@@ -354,7 +354,7 @@ const TestPageUI = () => {
           </div>
         </div>
       </div>
-      <div className={` flex justify-between p-5 border-t-[3px] ${theme === 'dark' ? 'border-white' : 'border-gray-300'}`}>
+      <div className={` flex justify-between p-5 border-t-[3px] ${isDarkMode ? 'border-white' : 'border-gray-300'}`}>
         <button
           onClick={handlePreviousQuestion}
           className="py-2 px-6 border-2 rounded-full hover:bg-[#00df9a] hover:text-white dark:hover:bg-[#00df9a] font-semibold text-lg hover:border-blue-800"

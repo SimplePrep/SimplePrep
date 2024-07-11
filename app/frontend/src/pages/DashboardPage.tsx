@@ -3,8 +3,8 @@ import { Outlet, useNavigate } from 'react-router-dom';
 import NavBarDash from '../components/Dashboard/NavBarDash';
 import { useSelector, useDispatch } from 'react-redux';
 import { AppDispatch, RootState } from '../components/store';
-import { checkAuthenticated, loadUser } from '../components/auth_utils/actions/Actions';
 import LoaderWrapper from '../components/Dashboard/utils/tools/LoaderWrapper';
+import { checkAuthenticated, loadUser } from '../components/auth_utils/actions/Actions';
 import { setTheme } from '../components/auth_utils/reducers/authReducer';
 
 interface DashboardPageProps {
