@@ -157,7 +157,7 @@ const TestPageUI = () => {
         size='35px'
         minLoadTime={2000}
         text="Loading Test Module..."
-        isDarkMode={isDarkMode}
+        isDarkMode={!isDarkMode}
         onLoadComplete={handleLoadComplete}
       />
     );
