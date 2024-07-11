@@ -26,7 +26,6 @@ const authSlice = createSlice({
       state.isAuthenticated = true;
       state.loading = false;
       state.error = null;
-      state.theme = 'light';
     },
     authError(state, action: PayloadAction<string>) {
       state.error = action.payload;
@@ -47,5 +46,5 @@ const authSlice = createSlice({
   },
 });
 
-export const { authLoading, authSuccess, authError, signOut, clearError, setTheme} = authSlice.actions;
+export const { authLoading, authSuccess, authError, signOut, clearError, setTheme } = authSlice.actions;
 export default authSlice.reducer;
