@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import './App.css';
 import { Route, Routes, BrowserRouter as Router } from 'react-router-dom';
 import DashboardPage from './pages/DashboardPage';
@@ -22,14 +22,6 @@ import { setTheme } from './components/auth_utils/reducers/authReducer';
 const App = () => {
   const { theme } = useSelector((state: RootState) => state.auth);
   const dispatch = useDispatch<AppDispatch>();
-
-  useEffect(() => {
-    if (theme === 'dark') {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-  }, [theme]);
 
   const toggleDarkMode = () => {
     const newTheme = theme === 'dark' ? 'light' : 'dark';
