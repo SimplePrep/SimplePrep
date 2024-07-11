@@ -45,7 +45,7 @@ const LoaderWrapper: React.FC<LoaderWrapperProps> = ({
         text={text}
         background="linear-gradient(135deg, #6066FA, #4645F6)"
         shadowColor={isDarkMode ? "rgba(52, 73, 94, 0.28)" : "rgba(41, 128, 185, 0.28)"}
-        textColor={isDarkMode ? "#2c3e50" : "#ecf0f1"}
+        textColor={isDarkMode ? "#2c3e50" : "#2c3e50"}
         duration={`${minLoadTime / 1000}s`}
       />
     </div>
