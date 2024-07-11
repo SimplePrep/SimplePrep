@@ -39,7 +39,7 @@ const SideBar: React.FC<SideBarProps> = ({ toggleDarkMode, isDarkMode }): React.
           initial={{ height: 0, opacity: 0 }}
           animate={{ height: isVisible ? 'auto' : 0, opacity: isVisible ? 1 : 0 }}
           transition={{ type: 'spring', stiffness: 300, damping: 24 }}
-          className={`p-3 overflow-hidden shadow-xl max-w-[1300px] mx-auto shadow-blue-300 bg-white rounded-full ${darkModeClass} border-[3px] border-white items-center`}
+          className={`p-3 overflow-hidden shadow-xl max-w-[1300px] mx-auto bg-white rounded-full ${darkModeClass} border-[3px] border-white items-center`}
         >
           <div className='flex gap-5  justify-center items-center'>
             <img className='w-[200px]' src={Logo} alt="" />
