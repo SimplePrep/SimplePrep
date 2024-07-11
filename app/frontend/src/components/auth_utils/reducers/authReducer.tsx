@@ -4,12 +4,14 @@ interface AuthState {
   isAuthenticated: boolean;
   loading: boolean;
   error: string | null;
+  theme: 'dark' | 'light';
 }
 
 const initialState: AuthState = {
   isAuthenticated: false,
   loading: false,
   error: null,
+  theme: (localStorage.getItem('theme') as 'dark' | 'light') || 'light',
 };
 
 const authSlice = createSlice({
@@ -24,6 +26,7 @@ const authSlice = createSlice({
       state.isAuthenticated = true;
       state.loading = false;
       state.error = null;
+      state.theme = 'light';
     },
     authError(state, action: PayloadAction<string>) {
       state.error = action.payload;
@@ -37,8 +40,12 @@ const authSlice = createSlice({
     clearError(state) {
       state.error = null;
     },
+    setTheme(state, action: PayloadAction<'dark' | 'light'>) {
+      state.theme = action.payload;
+      localStorage.setItem('theme', action.payload);
+    },
   },
 });
 
-export const { authLoading, authSuccess, authError, signOut, clearError} = authSlice.actions;
+export const { authLoading, authSuccess, authError, signOut, clearError, setTheme} = authSlice.actions;
 export default authSlice.reducer;

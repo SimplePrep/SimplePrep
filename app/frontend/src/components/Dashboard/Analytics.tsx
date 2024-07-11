@@ -163,24 +163,24 @@ const Analytics: React.FC<AnalyticsProps> = ({ isDarkMode }) => {
   return (
     <div className={`max-w-[1200px] mx-auto px-6 py-12 ${Mode}`}>
       {testData.length === 0 ? (
-        <div className="min-h-screen  flex items-center justify-center px-4">
-        <div className="max-w-md w-full bg-white rounded-lg shadow-md p-8 text-center">
-          <h1 className="text-3xl font-bold text-gray-800 mb-4">
-            Welcome to Your Performance Dashboard
-          </h1>
-          <p className="text-gray-600 mb-6">
-            This page is designed to help you track your progress, view your test scores, and identify areas for improvement.
-          </p>
-          <p className="text-gray-600 mb-8">
-            To get started, please go to the dashboard and take a test. Once you've completed a test, come back to this page to see your results and analysis.
-          </p>
-          <button className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-md transition duration-300 ease-in-out">
-            <Link to='/demo/dashboard'>
-              Go to Dashboard
-            </Link>
-          </button>
+        <div className="min-h-screen flex items-center justify-center px-4">
+          <div className="max-w-md w-full bg-white rounded-lg shadow-md p-8 text-center">
+            <h1 className="text-3xl font-bold text-gray-800 mb-4">
+              Welcome to Your Performance Dashboard
+            </h1>
+            <p className="text-gray-600 mb-6">
+              This page is designed to help you track your progress, view your test scores, and identify areas for improvement.
+            </p>
+            <p className="text-gray-600 mb-8">
+              To get started, please go to the dashboard and take a test. Once you've completed a test, come back to this page to see your results and analysis.
+            </p>
+            <button className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-md transition duration-300 ease-in-out">
+              <Link to='/demo/dashboard'>
+                Go to Dashboard
+              </Link>
+            </button>
+          </div>
         </div>
-      </div>
       ) : (
         <>
           <div className="py-28 max-w-[1200px] mx-auto mb-8 flex flex-col justify-center items-center text-center">

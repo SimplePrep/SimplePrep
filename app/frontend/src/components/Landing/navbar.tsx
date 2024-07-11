@@ -10,7 +10,6 @@ const NavLinks = [
   { title: 'Our Vision', path: 'our-vision' },
   { title: 'Customers', path: 'testimonials' },
   { title: 'Blog', path: '/blogs' },
-  { title: 'Demo', path: '/demo' }
 ];
 
 interface NavbarProps {

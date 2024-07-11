@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Logo from '../assets/logo4.png';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { SideBarLinks } from './NavBarElements';
-import { BsMoon, BsChevronDown, BsChevronUp } from 'react-icons/bs';
+import { BsMoon, BsChevronDown, BsChevronUp, BsSun } from 'react-icons/bs';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../store';
 import { SignOut } from '../auth_utils/actions/Actions';
@@ -59,9 +59,9 @@ const SideBar: React.FC<SideBarProps> = ({ toggleDarkMode, isDarkMode }): React.
                 </div>
               </NavLink>
             ))}
-            <button onClick={toggleDarkMode} className={`text-xl p-3 border-2 rounded-2xl hover:border-blue-700 ${isDarkMode}? 'text-white hover:bg-black': 'text-black hover:bg-white'`}>
-              <BsMoon />
-            </button>
+            <button onClick={toggleDarkMode} className="text-lg p-3 border-2 rounded-full hover:bg-[#00df9a] hover:text-white hover:border-blue-800">
+            {isDarkMode ? <BsSun /> : <BsMoon />}
+          </button>
             <button onClick={handleSignOut} className='text-xl font-medium p-3 border-2 rounded-2xl hover:bg-white hover:border-blue-500 hover:text-black'>
               Logout
             </button>
