@@ -43,7 +43,7 @@ const Login = (): React.ReactElement => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-100 to-indigo-200 flex items-center justify-center px-4 py-12">
+    <div className="h-screen bg-gradient-to-br from-blue-100 to-indigo-200 flex items-center justify-center px-4 py-12">
       <div className="max-w-md w-full space-y-8 bg-white p-6 md:p-10 rounded-xl shadow-2xl">
         <div className="text-center">
           <div className="mx-auto h-12 md:h-16 w-12 md:w-16 text-indigo-600">
@@ -61,7 +61,7 @@ const Login = (): React.ReactElement => {
           <div className="flex flex-col gap-3 rounded-md shadow-sm -space-y-px">
             <FloatingLabelInput
               id="email"
-              label="Email address"
+              label="Email"
               type="email"
               value={email}
               setValue={setEmail}
