@@ -1,23 +1,19 @@
 import React, { useEffect, useState } from 'react';
-import banner from '../../components/assets/signInPic1.jpg';
 import { LiaFastForwardSolid } from 'react-icons/lia';
 import { useNavigate } from 'react-router-dom';
 import FloatingLabelInput from './FloatingLabelInput';
 import Loader from './Modal';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../components/store';
-import { SendResetPasswordEmail } from '../../components/auth_utils/actions/Actions';
+import { SendResetPasswordEmail, clearAuthError } from '../../components/auth_utils/actions/Actions';
+import Logo from '../../components/assets/logo-icon.png';
 
 const ResetPassword = (): React.ReactElement => {
   const dispatch = useDispatch<AppDispatch>();
   const { error, loading } = useSelector((state: RootState) => state.auth);
   const [email, setEmail] = useState('');
-  const [requestSent, setRequestSent] = useState(false);
   const [showModal, setShowModal] = useState(false);
 
-  const backgroundImageStyle = {
-    backgroundImage: `url(${banner})`,
-  };
   const navigate = useNavigate();
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -33,49 +29,53 @@ const ResetPassword = (): React.ReactElement => {
   };
 
   useEffect(() => {
+    dispatch(clearAuthError());
+  }, [dispatch]);
+
+  useEffect(() => {
     if (error) {
       console.error('Reset password error:', error);
     }
   }, [error]);
 
   return (
-    <div className='flex w-full h-screen bg-gray-300 p-5'>
+    <div className="min-h-screen bg-gradient-to-br from-blue-100 to-indigo-200 flex items-center justify-center px-4 py-12">
       {showModal && <Loader message="If your email is registered with us, you will receive a password reset link to your email shortly." />}
-      <div className='flex h-full max-w-[1450px] mx-auto flex-row p-5 rounded-2xl justify-center border-4 border-white' style={backgroundImageStyle}>
-        <div className='w-[50%]'>
-          <div className='h-full p-9 flex flex-col gap-5 bg-transparent justify-center'>
-            <div className='flex flex-row items-center'>
-              <LiaFastForwardSolid size={60} color='white' />
-              <h1 className='font-bold text-5xl text-white'>Digital</h1>
-            </div>
-            <h1 className='font-bold text-5xl text-white'>platform</h1>
-            <h1 className='font-bold text-5xl text-white'>for SAT</h1>
-            <h1 className='font-bold text-5xl'>learning and practicing.</h1>
-            <h2 className='font-bold text-xl text-white'>You will never know everything.</h2>
-            <h2 className='font-bold text-xl text-white'>But with us, you will learn more.</h2>
+      <div className="max-w-md w-full space-y-8 bg-white p-6 md:p-10 rounded-xl shadow-2xl">
+        <div className="text-center">
+          <div className="mx-auto h-12 md:h-16 w-12 md:w-16 text-indigo-600">
+            <img src={Logo} alt="Logo Icon" />
           </div>
+          <h2 className="mt-4 text-3xl md:text-4xl font-extrabold text-gray-900">Request Password Reset</h2>
+          <p className="mt-2 text-sm text-gray-600">
+            Don't have an account?{' '}
+            <a href="/signup" className="font-medium text-indigo-600 hover:text-indigo-500">
+              Sign up
+            </a>
+          </p>
         </div>
-        <div className='w-[50%] bg-white shadow-lg rounded-2xl flex flex-col p-10 justify-center'>
-          <div className='max-w-xs'>
-            <h1 className='font-bold text-3xl text-black'>Hello, Welcome back</h1>
-            <p className='mt-5 text-xl text-slate-500'>Don't you have an account? <a className='text-blue-500 font-bold' href="/signup">Sign up</a></p>
-            <form onSubmit={onSubmit}>
-              <div className='w-full flex mt-10 flex-col gap-5'>
-                <h1 className="text-2xl font-bold">Request Password Reset</h1>
-                <p className='text-slate-600'>If your email is registered with us, you will receive a password reset link to your email.</p>
-                <FloatingLabelInput id="email" label='Email' type='email' value={email} setValue={setEmail} />
-                {error && (
-                  <p className="mt-2 text-red-500">
-                    {error}
-                  </p>
-                )}
-                <button type='submit' className="mt-5 w-full bg-blue-500 border-2 border-gray-200 hover:border-blue-400 text-white py-3 rounded-2xl hover:bg-blue-600">
-                  {loading ? 'Sending...' : 'Reset Password'}
-                </button>
-              </div>
-            </form>
+        <form className="mt-8 space-y-6" onSubmit={onSubmit}>
+          <div className="flex flex-col gap-3 rounded-md shadow-sm -space-y-px">
+            <FloatingLabelInput
+              id="email"
+              label="Email address"
+              type="email"
+              value={email}
+              setValue={setEmail}
+            />
           </div>
-        </div>
+
+          {error && <div className="text-red-500 text-sm text-center">{error}</div>}
+
+          <div>
+            <button
+              type="submit"
+              className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            >
+              {loading ? 'Sending...' : 'Reset Password'}
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   );

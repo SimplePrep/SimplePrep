@@ -1,16 +1,16 @@
-import React, {useEffect, useState,  useContext} from 'react';
-import banner from '../../components/assets/signInPic1.jpg';
-import {FcGoogle} from 'react-icons/fc';
-import {LiaFastForwardSolid} from 'react-icons/lia';
-import { useNavigate} from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { FcGoogle } from 'react-icons/fc';
+import { LiaFastForwardSolid } from 'react-icons/lia';
+import { Link, useNavigate } from 'react-router-dom';
 import FloatingLabelInput from './FloatingLabelInput';
 import Modal from './Modal';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../components/store';
 import { SignUp, GoogleSignIn, clearAuthError } from '../../components/auth_utils/actions/Actions';
+import Logo from '../../components/assets/logo-icon.png';
 
-const SignUpComponent = ():  React.ReactElement =>  {
-    const dispatch = useDispatch<AppDispatch>();
+const SignUpComponent = (): React.ReactElement => {
+  const dispatch = useDispatch<AppDispatch>();
   const { error, loading } = useSelector((state: RootState) => state.auth);
   const [accountCreated, setAccountCreated] = useState(false);
   const [firstName, setFirstName] = useState('');
@@ -22,9 +22,6 @@ const SignUpComponent = ():  React.ReactElement =>  {
   const [pageError, setPageError] = useState('');
   const [modalMessage, setModalMessage] = useState('');
 
-  const backgroundImageStyle = {
-    backgroundImage: `url(${banner})`,
-  };
   const navigate = useNavigate();
 
   const handleGoogleSignIn = async () => {
@@ -88,64 +85,67 @@ const SignUpComponent = ():  React.ReactElement =>  {
   }, [error]);
 
   return (
-    <div className='flex w-full h-screen  bg-gray-300 p-5'>
-        {accountCreated && showModal && <Modal message={modalMessage} />}
-        <div className='flex  h-full max-w-[1450px] mx-auto flex-row  p-5 rounded-2xl justify-center border-4 border-white'style={backgroundImageStyle}>
-            <div className='w-[50%]'>
-                <div className= 'p-10  flex flex-col gap-5 bg-transparent'>
-                    <div className='flex flex-row items-center'>
-                        <LiaFastForwardSolid size={60} color='white'/>
-                        <h1 className='font-bold text-5xl text-white'>Digital</h1>
-                    </div>
-                    <h1 className='font-bold text-5xl text-white'>platform</h1>
-                    <h1 className='font-bold text-5xl text-white'>for SAT</h1>
-                    <h1 className='font-bold text-5xl'>learning and practicing.</h1>
-                    <h2 className='font-bold text-xl text-white'>You will never know everything.</h2>
-                    <h2 className='font-bold text-xl text-white'>But with us, you will learn more.</h2>
-                </div>
-            </div>
-            <div className='bg-white shadow-lg w-[50%] flex flex-col py-12 items-center  rounded-2xl border-4 border-slate-100'>
-                <div className='max-w-lg'>
-                <h1 className='font-normal text-xl text-black '>Create your account!</h1>
-                    <p className='mt-2 text-md text-slate-500'>Already have an account? <a className='text-blue-500 font-bold' href="/login">Login</a></p>
-                    <form onSubmit={e=> onSubmit(e)}>
-                        <div className='flex mt-3 flex-col gap-3'>
-                            <h1 className="text-2xl font-bold">Sign Up</h1>
-                            <div className='flex flex-row gap-5'>
-                                <FloatingLabelInput id="firstName" label='First Name' type='firstName' value={firstName} setValue={setFirstName} />
-                                <FloatingLabelInput id="lastName" label='Last Name' type='lastName' value={lastName} setValue={setLastName} />
-                            </div>
-                            <FloatingLabelInput id="email" label='Email' type='email' value={email} setValue={setEmail} />
-                            <FloatingLabelInput id="password" label="Password" type='password' value={password} setValue={(value) => { setPassword(value); setPageError(''); }}/>
-                            <FloatingLabelInput id="re_password" label="Confirm Password" type='password' value={rePassword} setValue={(value) => { setRePassword(value); setPageError(''); }}/>
-                            <div className="relative">
-                                    <p
-                                        className={`text-red-500 absolute inset-0 ${
-                                        pageError ? 'visible' : 'invisible'
-                                        }`}
-                                    >
-                                        {pageError || 'Placeholder'}
-                                    </p>
-                            </div>  
-                            <div className='mt-7 flex items-center justify-center'>
-                                <button type='submit' className="w-full bg-blue-500 text-white py-3 rounded-2xl border-2 border-gray-200 hover:border-blue-400 hover:bg-blue-600">Register</button>
-                            </div>                         
-                        </div>
-                    </form>
-                    <div className="flex mt-5 justify-center items-center text-gray-600">
-                        <span className="border-t w-1/2 border-2"></span>
-                        <span className="px-2 text-slate-500">or</span>
-                        <span className="border-t w-1/2 border-2"></span>
-                    </div>
-                    <button onClick={handleGoogleSignIn} className="w-full  flex items-center justify-center bg-gray-100 mt-2 border-2 font-medium py-2 rounded-2xl hover:bg-gray-300 hover:border-green-800">
-                        <FcGoogle className="mr-2" size={30}/>
-                        <p className="text-center">Continue with Google</p>
-                    </button>
-                </div>
-            </div>
+    <div className="h-screen bg-gradient-to-br from-blue-100 to-indigo-200 flex items-center justify-center px-4 py-12">
+      {accountCreated && showModal && <Modal message={modalMessage} />}
+      <div className="max-w-md w-full space-y-8 bg-white p-6 md:p-10 rounded-xl shadow-2xl">
+        <div className="text-center">
+          <div className="mx-auto h-12 md:h-16 w-12 md:w-16 text-indigo-600">
+            <img src={Logo} alt="Logo Icon" />
+          </div>
+          <h2 className="mt-4 text-3xl md:text-4xl font-extrabold text-gray-900">Create your account</h2>
+          <p className="mt-2 text-sm text-gray-600">
+            Already have an account?{' '}
+            <Link to="/login" className="font-medium text-indigo-600 hover:text-indigo-500">
+              Login
+            </Link>
+          </p>
         </div>
+        <form className="mt-8 space-y-6" onSubmit={onSubmit}>
+          <div className="flex flex-col gap-3 rounded-md shadow-sm -space-y-px">
+            <div className="flex flex-row gap-5">
+              <FloatingLabelInput id="firstName" label="First Name" type="text" value={firstName} setValue={setFirstName} />
+              <FloatingLabelInput id="lastName" label="Last Name" type="text" value={lastName} setValue={setLastName} />
+            </div>
+            <FloatingLabelInput id="email" label="Email" type="email" value={email} setValue={setEmail} />
+            <FloatingLabelInput id="password" label="Password" type="password" value={password} setValue={(value) => { setPassword(value); setPageError(''); }} />
+            <FloatingLabelInput id="re_password" label="Confirm Password" type="password" value={rePassword} setValue={(value) => { setRePassword(value); setPageError(''); }} />
+          </div>
+
+          {pageError && <div className="text-red-500 text-sm text-center">{pageError}</div>}
+
+          <div>
+            <button
+              type="submit"
+              className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            >
+              {loading ? 'Registering...' : 'Register'}
+            </button>
+          </div>
+
+          <div className="mt-6">
+            <div className="relative">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-gray-300"></div>
+              </div>
+              <div className="relative flex justify-center text-sm">
+                <span className="px-2 bg-white text-gray-500">Or continue with</span>
+              </div>
+            </div>
+
+            <div className="mt-4">
+              <button
+                onClick={handleGoogleSignIn}
+                className="w-full flex items-center justify-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
+              >
+                <FcGoogle className="mr-2" size={20} />
+                Continue with Google
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
     </div>
-  )
-}
+  );
+};
 
 export default SignUpComponent;
