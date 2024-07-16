@@ -39,7 +39,7 @@ const SideBar: React.FC<SideBarProps> = ({ toggleDarkMode, isDarkMode }): React.
           initial={{ height: 0, opacity: 0 }}
           animate={{ height: isVisible ? 'auto' : 0, opacity: isVisible ? 1 : 0 }}
           transition={{ type: 'spring', stiffness: 300, damping: 24 }}
-          className={`p-3 overflow-hidden shadow-xl max-w-[1300px] mx-auto bg-white rounded-full ${darkModeClass} border-[3px] border-white items-center`}
+          className={`p-3 overflow-hidden shadow-xl max-w-[1300px] mx-auto bg-white rounded-full  ${darkModeClass} border-[2px] border-white items-center`}
         >
           <div className='flex gap-5  justify-center items-center'>
             <img className='w-[200px]' src={Logo} alt="" />
@@ -49,8 +49,8 @@ const SideBar: React.FC<SideBarProps> = ({ toggleDarkMode, isDarkMode }): React.
                 key={link.title}
                 className={({ isActive }) =>
                   isActive
-                    ? "text-xl text-black font-medium leading-tight border-2 border-blue-700 hover:border-gray-200 bg-white p-4  rounded-3xl cursor-pointer"
-                    : "text-xl font-medium leading-tight hover:bg-white border-2 hover:border-blue-700 hover:text-black hover:rounded-3xl p-4  rounded-3xl cursor-pointer"
+                    ? "text-xl text-black font-medium leading-tight border-2   border-blue-700 hover:border-gray-200 bg-white p-4  rounded-3xl cursor-pointer"
+                    : "text-xl font-medium leading-tight hover:bg-white border-2 border-transparent hover:border-blue-700 hover:text-black hover:rounded-3xl p-4  rounded-3xl cursor-pointer"
                 }
               >
                 <div className='flex flex-row justify-center items-center gap-2'>
@@ -59,10 +59,10 @@ const SideBar: React.FC<SideBarProps> = ({ toggleDarkMode, isDarkMode }): React.
                 </div>
               </NavLink>
             ))}
-            <button onClick={toggleDarkMode} className="text-lg p-3 border-2 rounded-full hover:bg-[#00df9a] hover:text-white hover:border-blue-800">
+            <button onClick={toggleDarkMode} className="text-lg p-3 border-2 rounded-full border-transparent hover:bg-[#00df9a] hover:text-white hover:border-blue-800">
             {isDarkMode ? <BsSun /> : <BsMoon />}
           </button>
-            <button onClick={handleSignOut} className='text-xl font-medium p-3 border-2 rounded-2xl hover:bg-white hover:border-blue-500 hover:text-black'>
+            <button onClick={handleSignOut} className='text-xl font-medium p-3 border-2 rounded-full border-transparent hover:bg-white hover:border-blue-500 hover:text-black'>
               Logout
             </button>
             <div className='flex items-center justify-center h-12 w-12 rounded-full bg-slate-300 text-xl font-medium text-gray-700 cursor-pointer'>
