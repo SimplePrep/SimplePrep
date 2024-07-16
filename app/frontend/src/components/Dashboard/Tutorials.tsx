@@ -13,12 +13,12 @@ interface TutorialCardProps {
 }
 
 const SkeletonTutorialCard = () => (
-  <div className="w-[350px]">
+  <div className="w-full sm:w-[350px]">
     <div className="m-1 rounded-xl overflow-hidden shadow-lg bg-white h-[500px] flex flex-col animate-pulse">
       <div className="p-3">
-        <div className="rounded-xl h-56 w-full bg-gray-300"></div>
+        <div className="rounded-xl h-48 sm:h-56 w-full bg-gray-300"></div>
       </div>
-      <div className="px-6 py-4 flex-grow overflow-y-auto">
+      <div className="px-4 sm:px-6 py-4 flex-grow overflow-y-auto">
         <div className="h-6 bg-gray-300 rounded w-3/4 mb-4"></div>
         <div className="space-y-2">
           {[...Array(5)].map((_, i) => (
@@ -67,27 +67,27 @@ const TutorialCard: React.FC<TutorialCardProps> = ({ tutorial }) => {
 
   return (
     <motion.div
-      className="w-[350px]"
+      className="w-full sm:w-[350px]"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, ease: 'easeOut' }}>
       <div className="m-1 rounded-xl overflow-hidden shadow-lg bg-white h-[500px] flex flex-col">
         <div className="p-3">
           <img 
-            className="rounded-xl h-56 w-full object-cover"
+            className="rounded-xl h-48 sm:h-56 w-full object-cover"
             src={tutorialImage} 
             alt={`${tutorial.title} icon`} />
         </div>
-        <div className="px-6 py-4 flex-grow overflow-y-auto">
-          <p className="font-bold text-xl mb-2">{tutorial.title}</p>
-          <ul className='ml-2 text-gray-500 text-base'>
+        <div className="px-4 sm:px-6 py-4 flex-grow overflow-y-auto">
+          <p className="font-bold text-lg sm:text-xl mb-2">{tutorial.title}</p>
+          <ul className='ml-2 text-gray-500 text-sm sm:text-base'>
             {chapters.map((chapter, index) => <li key={index}>{chapter.title}</li>)}
           </ul>
         </div>
         <div className='flex justify-center p-4'>
           <NavLink
             to={pathname}
-            className="mx-auto py-3 px-6 bg-gradient-to-r from-blue-500 to-purple-600 text-white text-lg font-semibold rounded-full hover:from-blue-600 hover:to-purple-700 transition-all duration-300 ease-in-out shadow-md hover:shadow-lg transform hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+            className="mx-auto py-2 sm:py-3 px-4 sm:px-6 bg-gradient-to-r from-blue-500 to-purple-600 text-white text-base sm:text-lg font-semibold rounded-full hover:from-blue-600 hover:to-purple-700 transition-all duration-300 ease-in-out shadow-md hover:shadow-lg transform hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
               Start Reading
           </NavLink>
         </div>
@@ -117,9 +117,9 @@ const Tutorials = () => {
   }, []);
 
   return (
-    <div className='h-full max-w-[1200px] mx-auto px-20 py-40'>
-      <h1 className='text-blue-900 text-3xl font-roboto font-medium'>Welcome to Tutorials</h1>
-      <div className='my-20 flex flex-row items-center justify-evenly'>
+    <div className='h-full max-w-[1200px] mx-auto px-4 sm:px-6 md:px-8 py-20 sm:py-40'>
+      <h1 className='text-blue-900 text-2xl sm:text-3xl font-roboto font-medium'>Welcome to Tutorials</h1>
+      <div className='my-10 sm:my-20 flex flex-col sm:flex-row items-center justify-evenly gap-8'>
         {isLoading
           ? [...Array(2)].map((_, index) => <SkeletonTutorialCard key={index} />)
           : tutorials.map((tutorial) => (
