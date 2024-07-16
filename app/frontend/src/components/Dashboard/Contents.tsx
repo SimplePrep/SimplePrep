@@ -19,32 +19,32 @@ interface Module {
 }
 
 const SkeletonCard = () => (
-    <div className="p-6 bg-gray-100 rounded-lg border-2 border-gray-200 shadow-lg overflow-hidden relative">
-      <div className="animate-pulse">
-        <div className="flex justify-between items-center mb-6">
-          <div className="h-6 w-8 bg-gray-300 rounded"></div>
-        </div>
-        <div className="h-7 w-3/4 bg-gray-300 rounded mb-2"></div>
-        <div className="h-4 w-full bg-gray-300 rounded mb-4"></div>
-        <div className="flex flex-row gap-5 justify-between items-center">
-          <div className="h-10 w-28 bg-gray-300 rounded"></div>
-          <div className="h-10 w-28 bg-gray-300 rounded"></div>
-        </div>
+  <div className="p-6 bg-gray-100 rounded-lg border-2 border-gray-200 shadow-lg overflow-hidden relative">
+    <div className="animate-pulse">
+      <div className="flex justify-between items-center mb-6">
+        <div className="h-6 w-8 bg-gray-300 rounded"></div>
       </div>
-      <div className="absolute inset-0 -translate-x-full animate-[shimmer_1s_infinite] bg-gradient-to-r from-transparent via-gray-200 to-transparent"></div>
+      <div className="h-7 w-3/4 bg-gray-300 rounded mb-2"></div>
+      <div className="h-4 w-full bg-gray-300 rounded mb-4"></div>
+      <div className="flex flex-row gap-5 justify-between items-center">
+        <div className="h-10 w-28 bg-gray-300 rounded"></div>
+        <div className="h-10 w-28 bg-gray-300 rounded"></div>
+      </div>
     </div>
-  );
+    <div className="absolute inset-0 -translate-x-full animate-[shimmer_1s_infinite] bg-gradient-to-r from-transparent via-gray-200 to-transparent"></div>
+  </div>
+);
 
   interface ContentsProps {
     isDarkMode: boolean
   }
 
-const Contents:React.FC<ContentsProps> = ({isDarkMode}) => {
+  const Contents: React.FC<ContentsProps> = ({ isDarkMode }) => {
 
     const [tests, setTests] = useState<Test[]>([]);
     const [modules, setModules] = useState<{ [key: number]: Module[] }>({});
     const [isLoading, setIsLoading] = useState<boolean>(false);
-    const [error, setError] = useState<string | null>('');
+    const [error, setError] = useState<string | null>(null);
     const navigate = useNavigate();
     const Mode = isDarkMode ? 'text-white' : 'text-gray-800';
 
@@ -92,7 +92,7 @@ const Contents:React.FC<ContentsProps> = ({isDarkMode}) => {
             {tests.map((test, index) => {
               const borderColorClass = borderColorClasses[index % borderColorClasses.length];
               const testModules = modules[test.id] || [];
-              return(
+              return (
                 <div key={test.id} className={`p-6 bg-black rounded-lg border-2 ${borderColorClass} border-white shadow-lg`}>
                   <div className="flex justify-between items-center mb-6">
                     <div className="text-xl text-purple-500">{test.id}</div>
@@ -101,7 +101,7 @@ const Contents:React.FC<ContentsProps> = ({isDarkMode}) => {
                   <p className="text-gray-400 text-base mb-4">
                     Test your skills with this practice test.
                   </p>
-                  <div className='flex flex-row gap-5 justify-between items-center'>
+                  <div className='flex flex-row gap-5 flex-wrap justify-between items-center'>
                     {testModules.map((module, moduleIndex) => (
                       <button
                         key={module.id}
@@ -113,55 +113,43 @@ const Contents:React.FC<ContentsProps> = ({isDarkMode}) => {
                     ))}
                   </div>
                 </div>
-              )
+              );
             })}
           </div>
         );
       };
 
-    
-      const borderColorClasses = [
-        'shadow-red-500', 
-        'shadow-green-500', 
-        'shadow-blue-500', 
-        'shadow-yellow-500', 
-        'shadow-pink-500', 
-        'shadow-purple-500', 
-        'shadow-indigo-500', 
-        'shadow-orange-500', 
-        'shadow-teal-500', 
+    const borderColorClasses = [
+        'shadow-red-500',
+        'shadow-green-500',
+        'shadow-blue-500',
+        'shadow-yellow-500',
+        'shadow-pink-500',
+        'shadow-purple-500',
+        'shadow-indigo-500',
+        'shadow-orange-500',
+        'shadow-teal-500',
         'shadow-gray-500',
         'shadow-cyan-500',
         'shadow-lime-500',
-      ];
+    ];
 
-      const handleModuleClick = (testId: number, moduleId: number) => {
-        console.log('clicked module')
+    const handleModuleClick = (testId: number, moduleId: number) => {
         navigate(`/test/${testId}/module/${moduleId}`);
-        console.log('something went wrong')
-      };
+    };
 
-  return (
-    <div className='max-w-[1200px] h-full mx-auto'>
-        <div className='py-40  rounded-2xl'>
-            <p className={`p-10 font-medium text-xl ${Mode} `}>Freemium English and Writing Practice tests</p>
-            <div className='max-w-[1000px] mx-auto'>
-                <div className="flex justify-center items-center space-x-4">
-                {renderContent()}
+    return (
+        <div className='max-w-[1200px] h-full mx-auto'>
+            <div className='py-40 rounded-2xl'>
+                <p className={`p-10 font-medium text-xl ${Mode}`}>Freemium English and Writing Practice tests</p>
+                <div className='max-w-[1000px] mx-auto'>
+                    <div className="flex flex-col md:flex-row justify-center items-center space-y-4 md:space-y-0 md:space-x-4">
+                        {renderContent()}
+                    </div>
                 </div>
             </div>
         </div>
-        {/* <div className='rounded-2xl h-full pb-20'>
-            <p className='p-10 font-medium text-xl text-slate-600'>Premium English and Writing Practice tests</p>
-            <div className='max-w-[1000px] mx-auto shadow-xl shadow-teal-300 overflow-visible rounded-3xl'>
-                <video className='pointer-events-none rounded-3xl' autoPlay muted loop playsInline={true} key={comingsoon}>
-                    <source src={comingsoon} type='video/mp4' />
-                </video>
-            </div>
-        </div> */}
-    </div>
-    
-  )
+    );
 }
 
 export default Contents;
