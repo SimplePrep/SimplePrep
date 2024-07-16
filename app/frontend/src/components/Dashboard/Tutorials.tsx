@@ -1,23 +1,24 @@
 import React, { useEffect, useState } from 'react';
 import { useResolvedPath, NavLink } from 'react-router-dom';
 import { Tutorial, Chapter } from '../auth_utils/types';
-import tutorial1Image from '../assets/tutorials/tutorial1.jpg';
-import tutorial2Image from '../assets/tutorials/tutorial2.jpg';
+import tutorial1Image from '../assets/tutorials/readingCard.jpeg';
+import tutorial2Image from '../assets/tutorials/WritingCard.jpeg';
 import { getChapters, getTutorials } from '../auth_utils/axios/axiosServices';
 import { motion } from 'framer-motion';
 
 const basePath = "/demo/tutorials";
 
-
-
 interface TutorialCardProps {
   tutorial: Tutorial;
 }
+
 const SkeletonTutorialCard = () => (
-  <div className="bg-teal-200 rounded w-[300px]">
-    <div className="m-1 rounded overflow-hidden shadow-lg bg-white h-[500px] flex flex-col animate-pulse">
-      <div className="h-56 bg-gray-300"></div>
-      <div className="px-6 py-4 flex-grow">
+  <div className="w-[350px]">
+    <div className="m-1 rounded-xl overflow-hidden shadow-lg bg-white h-[500px] flex flex-col animate-pulse">
+      <div className="p-3">
+        <div className="rounded-xl h-56 w-full bg-gray-300"></div>
+      </div>
+      <div className="px-6 py-4 flex-grow overflow-y-auto">
         <div className="h-6 bg-gray-300 rounded w-3/4 mb-4"></div>
         <div className="space-y-2">
           {[...Array(5)].map((_, i) => (
@@ -66,22 +67,28 @@ const TutorialCard: React.FC<TutorialCardProps> = ({ tutorial }) => {
 
   return (
     <motion.div
-      className="bg-teal-200 rounded w-[300px]"
+      className="w-[350px]"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, ease: 'easeOut' }}
-    >
-      <div className="m-1 rounded overflow-hidden shadow-lg bg-white h-[500px] flex flex-col">
-        <img className="h-56 w-full object-cover shadow-2xl shadow-teal-100" src={tutorialImage} alt={`${tutorial.title} icon`} />
+      transition={{ duration: 0.5, ease: 'easeOut' }}>
+      <div className="m-1 rounded-xl overflow-hidden shadow-lg bg-white h-[500px] flex flex-col">
+        <div className="p-3">
+          <img 
+            className="rounded-xl h-56 w-full object-cover"
+            src={tutorialImage} 
+            alt={`${tutorial.title} icon`} />
+        </div>
         <div className="px-6 py-4 flex-grow overflow-y-auto">
           <p className="font-bold text-xl mb-2">{tutorial.title}</p>
-          <ul className='text-gray-700 text-base'>
+          <ul className='ml-2 text-gray-500 text-base'>
             {chapters.map((chapter, index) => <li key={index}>{chapter.title}</li>)}
           </ul>
         </div>
         <div className='flex justify-center p-4'>
-          <NavLink to={pathname} className="mx-auto py-2 px-4 bg-blue-500 text-white text-lg rounded hover:bg-blue-600 transition-colors duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-opacity-50">
-            Start Reading
+          <NavLink
+            to={pathname}
+            className="mx-auto py-3 px-6 bg-gradient-to-r from-blue-500 to-purple-600 text-white text-lg font-semibold rounded-full hover:from-blue-600 hover:to-purple-700 transition-all duration-300 ease-in-out shadow-md hover:shadow-lg transform hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+              Start Reading
           </NavLink>
         </div>
       </div>
