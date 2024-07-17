@@ -114,7 +114,7 @@ const SectionContent: React.FC<{ isDarkMode: boolean }> = ({ isDarkMode }) => {
             <motion.button
               onClick={handlePreviousClick}
               disabled={currentSectionIndex === 0}
-              className={`py-2 px-6 border-2 rounded-xl hover:bg-blue-500 hover:text-white font-semibold text-lg disabled:opacity-50 ${isDarkMode ? 'hover:bg-white hover:text-[#001a72]' :  'hover:bg-[#001a72] hover:text-white'}`}
+              className={`py-2 px-6 border-2 rounded-xl  font-semibold text-lg disabled:opacity-50 ${isDarkMode ? 'hover:bg-white hover:text-[#001a72]' :  'hover:bg-[#001a72] hover:text-white'}`}
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
             >
@@ -123,7 +123,7 @@ const SectionContent: React.FC<{ isDarkMode: boolean }> = ({ isDarkMode }) => {
             <motion.button
               onClick={handleNextClick}
               disabled={currentSectionIndex === sections.length - 1}
-              className={`py-2 px-6 border-2 rounded-xl hover:bg-blue-500 hover:text-white font-semibold text-lg disabled:opacity-50 ${isDarkMode ? 'hover:bg-white hover:text-[#001a72]' :  'hover:bg-[#001a72] hover:text-white'}`}
+              className={`py-2 px-6 border-2 rounded-xl font-semibold text-lg disabled:opacity-50 ${isDarkMode ? 'hover:bg-white hover:text-[#001a72]' :  'hover:bg-[#001a72] hover:text-white'}`}
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
             >
