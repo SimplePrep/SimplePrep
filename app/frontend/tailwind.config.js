@@ -11,6 +11,7 @@ module.exports = {
         'opensans': ["Open Sans", 'sans-serif'],
         'roboto': ['Roboto', 'sans-serif'],
         'nunito': ['Nunito', 'sans-serif'],
+        'space-grotesk': ['"Space Grotesk"', 'sans-serif'],
       },
       keyframes: {
         fadeIn: {

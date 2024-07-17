@@ -114,8 +114,8 @@ const TutorialPage: React.FC<TutorialPageProps> = ({ isDarkMode }) => {
   };
 
   return (
-    <div className="w-[1300px] mx-auto py-44 gap-10">
-      <div className='flex justify-between'>
+    <div className="w-[1300px] mx-auto py-44 font-space-grotesk">
+      <div className='flex justify-between gap-5'>
         <div className={`w-96 h-full py-4 sticky top-28 rounded-2xl ${styles.mode}`}>
           <p className='text-3xl font-bold p-5'>{tutorial?.title}</p>
           <ul className='space-y-2'>
