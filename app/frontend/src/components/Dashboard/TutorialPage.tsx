@@ -1,9 +1,27 @@
 import React, { useState, useEffect } from 'react';
 import { Link, Outlet, useParams, useLocation, useNavigate } from 'react-router-dom';
-import { motion, Variants, useSpring } from 'framer-motion';
-import { Chapter, Section, Tutorial } from '../auth_utils/types';
-import { getChapters, getSections, getTutorial } from '../auth_utils/axios/axiosServices';
+import { motion, Variants } from 'framer-motion';
 import { MdOutlineKeyboardArrowUp, MdOutlineKeyboardArrowDown } from "react-icons/md";
+import { getChapters, getSections, getTutorial } from '../auth_utils/axios/axiosServices';
+
+interface Chapter {
+  id: number;
+  title: string;
+  order: number;
+  tutorial: number;
+}
+
+interface Section {
+  id: number;
+  title: string;
+  slug: string;
+  chapter: number;
+}
+
+interface Tutorial {
+  id: number;
+  title: string;
+}
 
 interface TutorialPageProps {
   isDarkMode: boolean;
@@ -15,7 +33,7 @@ const itemVariants: Variants = {
     y: 0,
     transition: { type: "spring", stiffness: 300, damping: 24 }
   },
-  closed: { opacity: 0, y: 20, transition: { duration: 0.2 } }
+  closed: { opacity: 0, y: -10, transition: { duration: 0.2 } }
 };
 
 const TutorialPage: React.FC<TutorialPageProps> = ({ isDarkMode }) => {
@@ -27,9 +45,27 @@ const TutorialPage: React.FC<TutorialPageProps> = ({ isDarkMode }) => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const Mode = isDarkMode ? 'bg-gray-900 text-white' : 'bg-white text-gray-900';
-  const linkHoverClass = isDarkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-100';
-  const activeSectionClass = isDarkMode ? 'bg-gray-700' : 'bg-gray-200';
+  const darkModeStyles = {
+    mode: 'text-white transition-colors duration-300',
+    linkHover: 'hover:text-white',
+    activeSection: 'text-blue-500 text-md transition-colors duration-300',
+    lineColor: 'bg-gray-500 transition-colors duration-300',
+    dotHover: 'bg-gray-400 group-hover:bg-white transition-colors duration-300',
+    activeChapter: 'font-bold text-white transition-colors duration-300',
+    activeDot: 'bg-sky-600 transition-colors duration-300',
+  };
+
+  const lightModeStyles = {
+    mode: 'text-[#001a72] transition-colors duration-300',
+    linkHover: 'hover:text-[#001a72]',
+    activeSection: 'text-[#001a72] text-md transition-colors duration-300',
+    lineColor: 'bg-gray-300 transition-colors duration-300',
+    dotHover: 'bg-gray-400 group-hover:bg-blue-700 transition-colors duration-300',
+    activeChapter: 'font-bold text-[#001a72]  transition-colors duration-300',
+    activeDot: 'bg-sky-600 transition-colors duration-300',
+  };
+
+  const styles = isDarkMode ? darkModeStyles : lightModeStyles;
 
   useEffect(() => {
     const fetchTutorialData = async () => {
@@ -78,20 +114,21 @@ const TutorialPage: React.FC<TutorialPageProps> = ({ isDarkMode }) => {
   };
 
   return (
-    <div className="w-full py-20 gap-10">
+    <div className="w-[1300px] mx-auto py-44 gap-10">
       <div className='flex justify-between'>
-        <div className={`w-96 h-full py-4 sticky top-28 rounded-2xl shadow-lg ${Mode}`}>
-          <p className='mx-10 text-4xl font-bold p-5'>{tutorial?.title}</p>
-          <hr className='border-gray-300' />
-          <ul className='space-y-2 mt-4'>
+        <div className={`w-96 h-full py-4 sticky top-28 rounded-2xl ${styles.mode}`}>
+          <p className='text-3xl font-bold p-5'>{tutorial?.title}</p>
+          <ul className='space-y-2'>
             {chapters.map((chapter) => (
               <li key={chapter.id} className='flex flex-col'>
                 <motion.button
                   whileTap={{ scale: 0.97 }}
                   onClick={() => toggleChapter(chapter)}
-                  className={`py-4 text-xl font-medium px-5 flex items-center ${activeChapter?.id === chapter.id ? 'text-blue-600' : ''} ${linkHoverClass}`}
+                  className={`py-4 text-md font-medium px-5 flex items-center justify-between ${activeChapter?.id === chapter.id ? styles.activeChapter : 'text-gray-500'} ${styles.linkHover}`}
                 >
-                  {chapter.title}
+                  <div className="flex items-center">
+                    {chapter.title}
+                  </div>
                   <motion.div
                     variants={{
                       open: { rotate: 180 },
@@ -102,9 +139,9 @@ const TutorialPage: React.FC<TutorialPageProps> = ({ isDarkMode }) => {
                     style={{ originY: 0.55 }}
                   >
                     {activeChapter?.id === chapter.id ? (
-                      <MdOutlineKeyboardArrowUp className="ml-auto" />
+                      <MdOutlineKeyboardArrowUp />
                     ) : (
-                      <MdOutlineKeyboardArrowDown className="ml-auto" />
+                      <MdOutlineKeyboardArrowDown />
                     )}
                   </motion.div>
                 </motion.button>
@@ -113,17 +150,17 @@ const TutorialPage: React.FC<TutorialPageProps> = ({ isDarkMode }) => {
                   animate={activeChapter?.id === chapter.id ? "open" : "closed"}
                   variants={{
                     open: {
-                      clipPath: "inset(0% 0% 0% 0% round 10px)",
+                      clipPath: "inset(0% 0% 0% 0%)",
                       transition: {
                         type: "spring",
                         bounce: 0,
                         duration: 0.7,
-                        delayChildren: 0.3,
+                        delayChildren: 0.1,
                         staggerChildren: 0.05
                       }
                     },
                     closed: {
-                      clipPath: "inset(10% 50% 90% 50% round 10px)",
+                      clipPath: "inset(0% 0% 100% 0%)",
                       transition: {
                         type: "spring",
                         bounce: 0,
@@ -132,18 +169,32 @@ const TutorialPage: React.FC<TutorialPageProps> = ({ isDarkMode }) => {
                     }
                   }}
                   style={{ pointerEvents: activeChapter?.id === chapter.id ? "auto" : "none" }}
+                  className="relative pl-6 ml-3 overflow-hidden"
                 >
-                  {activeChapter?.id === chapter.id && sections.map((section) => (
+                  {activeChapter?.id === chapter.id && sections.map((section, index) => (
                     <motion.li
                       key={section.id}
                       variants={itemVariants}
-                      className={`pl-12 pr-3 py-4 flex items-center ${
-                        section.slug === location.pathname.split('/').pop() ? activeSectionClass : linkHoverClass
-                      }`}
+                      className={`group py-3 text-lg flex items-center relative ${section.slug === location.pathname.split('/').pop() ? styles.activeSection : 'text-gray-400'} ${styles.linkHover}`}
                     >
-                      <Link to={`/demo/tutorials/${tutorialId}/${chapter.id}/${section.slug}`} className="w-full">
-                        {section.title}
-                      </Link>
+                      <div className='flex flex-row items-center gap-5'>
+                        <div className='relative flex flex-col items-center'>
+                          <span className={`h-2 w-2 rounded-full transition-colors duration-300 ${
+                              section.slug === location.pathname.split('/').pop() 
+                                ? styles.activeDot 
+                                : 'bg-gray-400'
+                            } ${styles.dotHover}`}></span>
+                          {index < sections.length - 1 && (
+                            <div className={`absolute top-2 w-[2px] h-9 ${styles.lineColor}`} />
+                          )}
+                        </div>
+                        <Link 
+                          to={`/demo/tutorials/${tutorialId}/${chapter.id}/${section.slug}`} 
+                          className={`w-full flex justify-start ${section.slug === location.pathname.split('/').pop() ? 'text-sky-600 font-medium' : ''} ${styles.linkHover} ${isDarkMode ? 'text-[#adb6c8]' : ' text-[#506195]'}`}
+                        >
+                          {section.title}
+                        </Link>
+                      </div>
                     </motion.li>
                   ))}
                 </motion.ul>

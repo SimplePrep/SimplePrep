@@ -19,7 +19,7 @@ const DashboardPage: React.FC<DashboardPageProps> = ({
   const dispatch = useDispatch<AppDispatch>();
   const { isAuthenticated, loading, theme } = useSelector((state: RootState) => state.auth);
   const [isLoading, setIsLoading] = useState(true);
-  const darkModeClass = isDarkMode ? 'dark-background' : 'light-background';
+  const darkModeClass = isDarkMode ? 'dark-background transition-colors duration-300' : 'light-background transition-colors duration-300';
   const navigate = useNavigate();
 
   useEffect(() => {

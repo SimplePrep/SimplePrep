@@ -19,7 +19,7 @@ const SideBar: React.FC<SideBarProps> = ({ toggleDarkMode, isDarkMode }): React.
   const navigate = useNavigate();
   const user = auth.currentUser;
   const userInitial = user?.displayName?.charAt(0) || 'A';
-  const darkModeClass = isDarkMode ? 'dark text-color-dark' : 'light text-color-light';
+  const darkModeClass = isDarkMode ? 'dark text-color-dark transition-colors duration-300' : 'light text-color-light transition-colors duration-300';
   const [isVisible, setIsVisible] = useState(true);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
