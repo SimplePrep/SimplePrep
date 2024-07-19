@@ -3,6 +3,7 @@ import { Link, Outlet, useParams, useLocation, useNavigate } from 'react-router-
 import { motion, Variants } from 'framer-motion';
 import { MdOutlineKeyboardArrowUp, MdOutlineKeyboardArrowDown, MdOutlineKeyboardArrowRight, MdOutlineKeyboardArrowLeft } from "react-icons/md";
 import axios from 'axios';
+import { getChapters, getSections, getTutorial } from '../auth_utils/axios/axiosServices';
 
 interface Chapter {
   id: number;
@@ -292,35 +293,34 @@ const TutorialPage: React.FC<TutorialPageProps> = ({ isDarkMode }) => {
   useEffect(() => {
     const fetchTutorialData = async () => {
       try {
-        const tutorialResponse = await axios.get(`/api/tutorials/${tutorialId}`);
-        setTutorial(tutorialResponse.data);
+        const tutorialData = await getTutorial(Number(tutorialId));
+        setTutorial(tutorialData);
+        const chaptersData = await getChapters(Number(tutorialId));
+        setChapters(chaptersData);
 
-        const chaptersResponse = await axios.get(`/api/tutorials/${tutorialId}/chapters`);
-        setChapters(chaptersResponse.data);
-
-        if (chaptersResponse.data.length > 0) {
+        if (chaptersData.length > 0) {
           const targetChapter = urlChapterId 
-            ? chaptersResponse.data.find((chapter: Chapter) => chapter.id === Number(urlChapterId)) 
-            : chaptersResponse.data[0];
+            ? chaptersData.find(chapter => chapter.id === Number(urlChapterId)) 
+            : chaptersData[0];
           
           if (targetChapter) {
             setActiveChapter(targetChapter);
-            const sectionsResponse = await axios.get(`/api/chapters/${targetChapter.id}/sections`);
-            setSections(sectionsResponse.data);
+            const sectionsData = await getSections(targetChapter.id);
+            setSections(sectionsData);
 
-            if (!sectionSlug && sectionsResponse.data.length > 0) {
-              const firstSection = sectionsResponse.data[0];
+            if (!sectionSlug && sectionsData.length > 0) {
+              const firstSection = sectionsData[0];
               navigate(`/demo/tutorials/${tutorialId}/${targetChapter.id}/${firstSection.slug}`, { replace: true });
             }
           }
         }
       } catch (error) {
-        console.error('Error fetching tutorial data:', error);
+        console.error('Error fetching tutorial or chapters:', error);
       }
     };
-
     fetchTutorialData();
   }, [tutorialId, urlChapterId, sectionSlug, navigate]);
+
 
   const toggleChapter = async (chapter: Chapter) => {
     if (activeChapter?.id === chapter.id) {

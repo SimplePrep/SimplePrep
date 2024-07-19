@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { BsFillArrowLeftCircleFill, BsFillArrowRightCircleFill } from 'react-icons/bs';
 import { motion, useScroll, useSpring, AnimatePresence } from "framer-motion";
 import axios from 'axios';
+import { getSection, getSections } from "../auth_utils/axios/axiosServices";
 
 interface Section {
   id: number;
@@ -43,23 +44,29 @@ const SectionContent: React.FC<{ isDarkMode: boolean }> = ({ isDarkMode }) => {
   });
 
   useEffect(() => {
-    const fetchSections = async () => {
-      try {
-        const response = await axios.get(`/api/chapters/${chapterId}/sections`);
-        setSections(response.data);
-
-        const sectionData = response.data.find((section: Section) => section.slug === sectionSlug);
-        setSection(sectionData || null);
-        setCurrentSectionIndex(response.data.findIndex((sec: Section) => sec.slug === sectionSlug));
-      } catch (error) {
-        setError('Failed to fetch section data');
-      } finally {
-        setLoading(false);
+    const fetchSectionAndSections = async () => {
+      if (sectionSlug && chapterId) {
+        setLoading(true);
+        setError(null);
+        try {
+          const [sectionData, sectionsData] = await Promise.all([
+            getSection(sectionSlug),
+            getSections(parseInt(chapterId))
+          ]);
+          setSection(sectionData);
+          setSections(sectionsData);
+          setCurrentSectionIndex(sectionsData.findIndex(sec => sec.slug === sectionSlug));
+        } catch (error) {
+          console.error('Error fetching data:', error);
+          setError('Failed to load content. Please try again.');
+        } finally {
+          setLoading(false);
+        }
       }
     };
 
-    fetchSections();
-  }, [chapterId, sectionSlug]);
+    fetchSectionAndSections();
+  }, [sectionSlug, chapterId]);
 
   const navigateToSection = (chapterId: string, index: number) => {
     const targetSection = sections[index];
