@@ -96,7 +96,11 @@ const TutorialCard: React.FC<TutorialCardProps> = ({ tutorial }) => {
   );
 };
 
-const Tutorials = () => {
+interface TutorialsProps {
+  isDarkMode : boolean;
+}
+
+const Tutorials: React.FC<TutorialsProps>= ({isDarkMode}) => {
   const [tutorials, setTutorials] = useState<Tutorial[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -118,7 +122,7 @@ const Tutorials = () => {
 
   return (
     <div className='h-full max-w-[1200px] mx-auto px-4 sm:px-6 md:px-8 py-20 sm:py-40'>
-      <h1 className='text-blue-900 text-2xl sm:text-3xl font-roboto font-medium'>Welcome to Tutorials</h1>
+      <h1 className={` text-2xl sm:text-3xl font-roboto font-medium ${isDarkMode ? 'text-white' : 'text-blue-900'}`}>Welcome to Tutorials</h1>
       <div className='my-10 sm:my-20 flex flex-col sm:flex-row items-center justify-evenly gap-8'>
         {isLoading
           ? [...Array(2)].map((_, index) => <SkeletonTutorialCard key={index} />)
