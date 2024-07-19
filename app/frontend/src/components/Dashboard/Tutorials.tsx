@@ -1,12 +1,23 @@
 import React, { useEffect, useState } from 'react';
 import { useResolvedPath, NavLink } from 'react-router-dom';
-import { Tutorial, Chapter } from '../auth_utils/types';
+import { motion } from 'framer-motion';
+import axios from 'axios';
 import tutorial1Image from '../assets/tutorials/readingCard.jpeg';
 import tutorial2Image from '../assets/tutorials/WritingCard.jpeg';
-import { getChapters, getTutorials } from '../auth_utils/axios/axiosServices';
-import { motion } from 'framer-motion';
 
 const basePath = "/demo/tutorials";
+
+interface Tutorial {
+  id: number;
+  title: string;
+}
+
+interface Chapter {
+  id: number;
+  title: string;
+  order: number;
+  tutorial: number;
+}
 
 interface TutorialCardProps {
   tutorial: Tutorial;
@@ -39,16 +50,16 @@ const TutorialCard: React.FC<TutorialCardProps> = ({ tutorial }) => {
 
   useEffect(() => {
     const fetchChapters = async () => {
-      setIsLoading(true);
       try {
-        const data = await getChapters(tutorial.id);
-        setChapters(data);
+        const response = await axios.get(`/api/tutorials/${tutorial.id}/chapters`);
+        setChapters(response.data);
       } catch (error) {
-        console.error('Error fetching chapters in TutorialCard:', error);
+        console.error('Failed to fetch chapters', error);
       } finally {
         setIsLoading(false);
       }
     };
+
     fetchChapters();
   }, [tutorial.id]);
 
@@ -102,12 +113,11 @@ const Tutorials = () => {
 
   useEffect(() => {
     const fetchTutorials = async () => {
-      setIsLoading(true);
       try {
-        const data = await getTutorials();
-        setTutorials(data);
+        const response = await axios.get('/api/tutorials');
+        setTutorials(response.data);
       } catch (error) {
-        console.error('Error fetching tutorials:', error);
+        console.error('Failed to fetch tutorials', error);
       } finally {
         setIsLoading(false);
       }
