@@ -233,7 +233,7 @@ const MobileSidebar: React.FC<MobileSidebarProps> = ({ isDarkMode, tutorial, cha
                       className={`group py-2 text-sm flex items-center relative ${section.slug === location.pathname.split('/').pop() ? styles.activeSection : 'text-gray-400'} ${styles.linkHover}`}
                     >
                       <div className='flex flex-row items-center gap-5'>
-                        <div className='relative flex flex-col  items-center'>
+                        <div className='relative flex flex-col items-center'>
                           <span className={`h-2 w-2 rounded-full transition-colors duration-300 ${section.slug === location.pathname.split('/').pop() ? styles.activeDot : 'bg-gray-400'}`}></span>
                           {index < sections.length - 1 && (
                             <div className={`absolute top-2 w-[2px] h-9 ${styles.lineColor}`} />
@@ -329,11 +329,11 @@ const TutorialPage: React.FC<TutorialPageProps> = ({ isDarkMode }) => {
     } else {
       setActiveChapter(chapter);
       try {
-        const sectionsResponse = await axios.get(`/api/chapters/${chapter.id}/sections`);
-        setSections(sectionsResponse.data);
+        const sectionsResponse = await getSections(chapter.id);
+        setSections(sectionsResponse);
 
-        if (sectionsResponse.data.length > 0) {
-          navigate(`/demo/tutorials/${tutorialId}/${chapter.id}/${sectionsResponse.data[0].slug}`);
+        if (sectionsResponse.length > 0) {
+          navigate(`/demo/tutorials/${tutorialId}/${chapter.id}/${sectionsResponse[0].slug}`);
           window.scrollTo(0, 0); // Add smooth scrolling effect
         }
       } catch (error) {
