@@ -155,3 +155,25 @@ code {
   background-position: right center; /* Change the direction of the gradient */
   color: #fff; /* Change the text color */
 }
+
+@media (min-width: 640px) {
+  .desktop-only {
+    display: block;
+  }
+  .mobile-only {
+    display: none;
+  }
+}
+
+@media (max-width: 639px) {
+  .desktop-only {
+    display: none;
+  }
+  .mobile-only {
+    display: block;
+  }
+}
+
+.fixed-sidebar-bg {
+  background-color: rgba(0, 0, 0, 0.75);
+}
