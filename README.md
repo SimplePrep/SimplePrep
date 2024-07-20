@@ -1,7 +1,3 @@
-Sure! Here’s a draft for your SimplePrep project’s README file:
-
----
-
 # SimplePrep
 
 SimplePrep is a comprehensive platform designed to help students prepare for the SAT exams. It includes practice features, analytics for visualizing student progress, and adapts to the new digital SAT format, which has shorter passages and fewer questions in the Reading and Writing sections.
