@@ -46,13 +46,13 @@ SimplePrep is a comprehensive platform designed to help students prepare for the
 
 2. **Set up environment variables**: Create a `.env` file in the project root and add the following:
     ```env
-    DB_NAME=dbname
-    DB_USER=rootuser
-    DB_PASS=changeme
-    DJANGO_SECRET_KEY=changeme
-    DJANGO_ALLOWED_HOSTS=127.0.0.1
-    ACME_DEFAULT_EMAIL=email@example.com
-    DOMAIN=beta-simpleprep.com
+    DB_NAME=
+    DB_USER=
+    DB_PASS=
+    DJANGO_SECRET_KEY=
+    DJANGO_ALLOWED_HOSTS=
+    ACME_DEFAULT_EMAIL=
+    DOMAIN=
     ```
 
 3. **Build and run the Docker containers**:
