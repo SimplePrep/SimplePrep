@@ -27,7 +27,7 @@ const Layout = () => {
   return (
     <>
       <Navbar isAuthenticated={isAuthenticated} />
-      <Outlet />
+      <Outlet/>
       <Footer/>
     </>
   );

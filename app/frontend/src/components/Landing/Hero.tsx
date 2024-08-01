@@ -7,7 +7,6 @@ import laptopImg from '../assets/laptopImg.png';
 import contentIcon from '../assets/contents.png';
 import blogImg from '../assets/blogbackground.png';
 import blogIcon from '../assets/blogicon.png';
-import chatbotImg from '../assets/chatbotImg.png';
 import studentImg from '../assets/student_discussion.jpg';
 import { Link } from 'react-router-dom';
 
@@ -96,50 +95,50 @@ const Hero = () => {
   }, [controls1, controls2, controls3, controls4, controls5, controls6, inView1, inView2, inView3, inView4, inView5, inView6]);
 
   return (
-    <motion.div id='our-vision' className="w-full block py-20 mx-auto">
-      <WaveSVG />
-      <div className="bg-slate-100 rounded-b-[3rem] font-ubuntu">
+    <motion.div id='our-vision' className="w-full block py-10 md:py-20 mx-auto overflow-x-hidden">
+      <WaveSVG className="w-full" />
+      <div className="bg-slate-100 rounded-b-[3rem] font-ubuntu px-4 md:px-6 lg:px-10">
         <motion.div
           style={divStyle}
-          className="max-w-[1400px] flex flex-col lg:flex-row flex-1 h-[500px] mx-auto rounded-2xl shadow-2xl shadow-teal-100 border-2 border-white"
+          className="w-full max-w-[1400px] flex flex-col lg:flex-row flex-1 h-[400px] md:h-[500px] mx-auto rounded-2xl shadow-2xl shadow-teal-100 border-2 border-white"
           variants={imageVariants}
           ref={ref1}
           initial="hidden"
           animate={controls1}
         >
-          <motion.div className="p-10 ml-0 lg:ml-20 flex flex-col gap-5 justify-center" variants={itemVariants}>
-            <h1 className="md:text-3xl sm:text-2xl text-xl font-bold text-blue-600">Personal online learning</h1>
-            <p className="md:text-lg font-medium text-slate-700">Learn online - from anywhere.</p>
-            <p className="md:text-lg font-medium text-slate-700">The right match for you is never limited by location or schedule.</p>
+          <motion.div className="p-6 md:p-10 lg:ml-20 flex flex-col gap-3 md:gap-5 justify-center  rounded-2xl m-4" variants={itemVariants}>
+            <h1 className="text-xl md:text-2xl lg:text-3xl font-bold text-blue-600">Personal online learning</h1>
+            <p className="text-base md:text-lg font-medium text-slate-700">Learn online - from anywhere.</p>
+            <p className="text-base md:text-lg font-medium text-slate-700">The right match for you is never limited by location or schedule.</p>
           </motion.div>
         </motion.div>
-        <div className="max-w-[1400px] mt-10 flex flex-col lg:flex-row gap-10 mx-auto">
+        <div className="max-w-[1400px] mt-10 flex flex-col lg:flex-row gap-6 md:gap-10 mx-auto">
           <motion.div
             style={bg_purple}
-            className="p-10 lg:p-14 flex-1 flex-col rounded-2xl items-center shadow-2xl shadow-teal-100 border-2 border-white"
+            className="p-6 md:p-10 lg:p-14 flex-1 flex-col rounded-2xl items-center shadow-2xl shadow-teal-100 border-2 border-white"
             variants={itemVariants}
             ref={ref2}
             initial="hidden"
             animate={controls2}
           >
-            <p className="text-center font-semibold text-xl lg:text-2xl text-blue-600">The Platform you can trust</p>
-            <p className="text-center text-md lg:text-lg">Our proven test-taking strategies and customizable study plans provide the key to exam confidence.</p>
+            <p className="text-center font-semibold text-lg md:text-xl lg:text-2xl text-blue-600">The Platform you can trust</p>
+            <p className="text-center text-sm md:text-base lg:text-lg mt-2">Our proven test-taking strategies and customizable study plans provide the key to exam confidence.</p>
           </motion.div>
           <motion.div
             style={bg_green}
-            className="p-10 lg:p-14 flex-1 flex-col rounded-2xl items-center shadow-2xl shadow-teal-100 border-2 border-white"
+            className="p-6 md:p-10 lg:p-14 flex-1 flex-col rounded-2xl items-center shadow-2xl shadow-teal-100 border-2 border-white"
             variants={itemVariants}
             ref={ref3}
             initial="hidden"
             animate={controls3}
           >
-            <p className="text-center font-semibold text-xl lg:text-2xl text-blue-600">Level up your SAT game</p>
-            <p className="text-center text-md lg:text-lg">Our adaptive drills sharpen skills in context for realistic practice while expert instructors guide you every step of the way.</p>
+            <p className="text-center font-semibold text-lg md:text-xl lg:text-2xl text-blue-600">Level up your SAT game</p>
+            <p className="text-center text-sm md:text-base lg:text-lg mt-2">Our adaptive drills sharpen skills in context for realistic practice while expert instructors guide you every step of the way.</p>
           </motion.div>
         </div>
-        <div className="max-w-[1800px] mx-auto my-24 flex flex-col lg:flex-row gap-10 lg:gap-0">
+        <div className="max-w-[1800px] mx-auto my-16 md:my-24 flex flex-col lg:flex-row gap-6 md:gap-10 lg:gap-0">
           <motion.img
-            className="w-full lg:w-[60%] h-auto lg:h-[50%]"
+            className="w-full lg:w-[60%] h-auto lg:h-[50%] object-contain"
             src={laptopImg}
             alt="Laptop"
             variants={imageVariants}
@@ -147,21 +146,21 @@ const Hero = () => {
             initial="hidden"
             animate={controls4}
           />
-          <motion.div className="flex p-10 lg:p-20 flex-col justify-center" variants={itemVariants} ref={ref4} initial="hidden" animate={controls4}>
-            <h1 className="text-center md:text-3xl sm:text-2xl text-xl font-bold text-blue-600">How does SimplePrep work?</h1>
-            <p className="md:text-lg my-10 font-medium text-slate-500">
+          <motion.div className="flex p-6 md:p-10 lg:p-20 flex-col justify-center" variants={itemVariants} ref={ref4} initial="hidden" animate={controls4}>
+            <h1 className="text-center text-xl md:text-2xl lg:text-3xl font-bold text-blue-600">How does SimplePrep work?</h1>
+            <p className="text-base md:text-lg my-6 md:my-10 font-medium text-slate-500">
               Feeling a bit lost about conquering the digital SAT exam? No worries - we're here to help you out! Let's kickstart your journey to success right here. Crack the Digital SAT: Ace Your Online Exam Journey!
             </p>
           </motion.div>
         </div>
-        <h1 id='product' className="text-center text-3xl lg:text-4xl font-bold">What we offer</h1>
-        <div className="mt-10 lg:mt-20 max-w-[1400px] my-24 mx-auto grid gap-20 lg:gap-40 md:grid-cols-2">
+        <h1 id='product' className="text-center text-2xl md:text-3xl lg:text-4xl font-bold">What we offer</h1>
+        <div className="mt-10 lg:mt-20 max-w-[1400px] my-16 md:my-24 mx-auto grid gap-10 md:gap-20 lg:gap-40 md:grid-cols-2">
             <motion.div className="flex flex-col justify-center" variants={itemVariants} ref={ref5} initial="hidden" animate={controls5}>
-                <div className="flex flex-row items-center gap-5">
+                <div className="flex flex-row items-center gap-3 md:gap-5">
                 <img src={contentIcon} className="w-[40px] h-[40px] lg:w-[80px] lg:h-[80px] bg-green-200 rounded-2xl" alt="Content Icon" />
-                <h1 className="md:text-2xl text-lg lg:text-3xl sm:text-2xl font-bold">Full Length Practice Tests and Topic-based questions</h1>
+                <h1 className="text-lg md:text-2xl lg:text-3xl font-bold">Full Length Practice Tests and Topic-based questions</h1>
                 </div>
-                <p className="p-2 md:text-lg my-10 font-medium text-slate-500">
+                <p className="p-2 text-base md:text-lg my-6 md:my-10 font-medium text-slate-500">
                 Discover a modern approach to SAT prep on our platform. Dive into topic-based questions (from English to Math), adaptive practice, and more. Let's make your digital SAT practice effective and exciting, all in one place!
                 </p>
             </motion.div>
@@ -172,12 +171,12 @@ const Hero = () => {
                 initial="hidden"
                 animate={controls5}
             >
-                <img className="p-3 md:w-[400px] mx-auto my-4 rounded-3xl lg:w-[400px] lg:h-[400px] w-[300px] h-[300px] rotate-6" src={pic3} alt="Pic1" />
+                <img className="p-3 w-[300px] md:w-[400px] mx-auto my-4 rounded-3xl lg:w-[400px] lg:h-[400px] h-[300px] rotate-6 object-cover" src={pic3} alt="Pic1" />
             </motion.div>
         </div>
-        <div className="mt-10 lg:mt-20 max-w-[1400px] my-24 mx-auto grid gap-20 lg:gap-40 md:grid-cols-2">
+        <div className="mt-10 lg:mt-20 max-w-[1400px] my-16 md:my-24 mx-auto grid gap-10 md:gap-20 lg:gap-40 md:grid-cols-2">
           <motion.img
-            className="rounded-3xl w-full lg:w-[800px] lg:h-[400px]"
+            className="rounded-3xl w-full lg:w-[800px] lg:h-[400px] object-cover"
             src={blogImg}
             alt="Pic1"
             variants={imageVariants}
@@ -186,16 +185,16 @@ const Hero = () => {
             animate={controls6}
           />
           <motion.div className="flex flex-col justify-center p-2" variants={itemVariants} ref={ref6} initial="hidden" animate={controls6}>
-            <div className="flex flex-row items-center gap-5">
+            <div className="flex flex-row items-center gap-3 md:gap-5">
               <img src={blogIcon} className="w-[40px] h-[40px] lg:w-[80px] lg:h-[80px] bg-green-200 rounded-2xl" alt="Content Icon" />
-              <h1 className="md:text-2xl text-lg lg:text-3xl sm:text-2xl font-bold">Keep Climbing the Ladder with Our Weekly Success Stories!</h1>
+              <h1 className="text-lg md:text-2xl lg:text-3xl font-bold">Keep Climbing the Ladder with Our Weekly Success Stories!</h1>
             </div>
-            <p className="md:text-lg my-10 font-medium text-slate-500">
+            <p className="text-base md:text-lg my-6 md:my-10 font-medium text-slate-500">
               Elevate your motivation! Our weekly success stories highlight the journeys of students who have reached new heights and conquered challenges. Join this inspiring ascent and pave the way for your own success story.
             </p>
           </motion.div>
         </div>
-        <div className="p-2 mt-10 lg:mt-20 max-w-[1400px] my-24 mx-auto grid gap-20 lg:gap-40 md:grid-cols-2">
+        <div className="p-2 mt-10 lg:mt-20 max-w-[1400px] my-16 md:my-24 mx-auto grid gap-10 md:gap-20 lg:gap-40 md:grid-cols-2">
           <motion.div
             className="flex flex-col justify-center items-center"
             variants={itemVariants}
@@ -203,20 +202,20 @@ const Hero = () => {
             initial="hidden"
             animate={controls6}
           >
-            <h1 className="md:text-2xl sm:text-xl text-lg lg:text-3xl text-center font-bold">Curious to Learn More?</h1>
-            <p className="md:text-lg my-10 font-medium text-slate-500">
+            <h1 className="text-lg md:text-2xl lg:text-3xl text-center font-bold">Curious to Learn More?</h1>
+            <p className="text-base md:text-lg my-6 md:my-10 font-medium text-slate-500 text-center">
               Join the Conversation in Our Discussion Channels! Connect with fellow students in our dedicated Discord and Slack channels, where you can discuss upcoming exams and get valuable insights.
             </p>
-            <div className=" items-center justify-center">
-              <button className="p-3 bg-[#00df9a] sm:p-1 rounded-lg items-center justify-center">
-                <Link to="/login" className="p-5 text-lg sm:text-xl font-medium text-white">
+            <div className="items-center justify-center">
+              <button className="p-3 bg-[#00df9a] rounded-lg items-center justify-center">
+                <Link to="/login" className="p-3 md:p-5 text-base md:text-lg font-medium text-white">
                   Join Us
                 </Link>
               </button>
             </div>
           </motion.div>
           <motion.div className="bg-white rounded-[2rem] -rotate-6 mb-20" variants={imageVariants} ref={ref6} initial="hidden" animate={controls6}>
-            <img className="p-10 rounded-[4rem] rotate-1" src={studentImg} alt="Pic1" />
+            <img className="p-6 md:p-10 rounded-[4rem] rotate-1 w-full h-full object-cover" src={studentImg} alt="Pic1" />
           </motion.div>
         </div>
       </div>
