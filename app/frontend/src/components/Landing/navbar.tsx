@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
 import Logo from '../assets/logo4.png';
 import { Link, useNavigate } from 'react-router-dom';
-import { AiOutlineClose, AiOutlineMenu } from 'react-icons/ai';
 import { motion } from 'framer-motion';
 import { scrollToSection } from './smoothScroll';
+import { MdKeyboardArrowRight } from 'react-icons/md';
+import { RxCross1 } from "react-icons/rx";
+import { RiMenuFoldFill } from "react-icons/ri";
 
 const NavLinks = [
   { title: 'Product', path: 'product' },
@@ -30,6 +32,17 @@ const Navbar: React.FC<NavbarProps> = ({ isAuthenticated }) => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+  useEffect(() => {
+    if (nav) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'auto';
+    }
+    return () => {
+      document.body.style.overflow = 'auto';
+    };
+  }, [nav]);
+
   const handleNav = () => setNav(!nav);
 
   const handleLoginClick = () => {
@@ -46,9 +59,9 @@ const Navbar: React.FC<NavbarProps> = ({ isAuthenticated }) => {
     } else {
       scrollToSection(path);
     }
-    setNav(false);
+    setNav(false); // Close the mobile menu after navigation
   };
-  
+
   const navVariants = {
     hidden: { opacity: 0, y: -20 },
     visible: {
@@ -85,24 +98,24 @@ const Navbar: React.FC<NavbarProps> = ({ isAuthenticated }) => {
 
   return (
     <motion.div
-      className="sticky top-0 bg-white font-ubuntu z-20 px-10"
+      className="fixed w-full top-0 bg-white font-ubuntu z-20 px-6 md:px-10"
       variants={navVariants}
       initial="hidden"
       animate="visible"
     >
-      <div className='flex  lg:max-w-[1200px] xl:max-w-[1500px] mx-auto justify-between items-center p-4'>
+      <div className='flex lg:max-w-[1200px] xl:max-w-[1500px] mx-auto justify-between items-center p-4'>
         <motion.div
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.5 }}
         >
-          <Link to="/"><img className='w-[200px]' src={Logo} alt="Simple Prep Logo" /></Link>
+          <Link to="/"><img className='w-[160px] md:w-[200px]' src={Logo} alt="Simple Prep Logo" /></Link>
         </motion.div>
 
         <motion.div className='hidden md:flex gap-5 items-center' variants={linkVariants}>
           {NavLinks.map((link, index) => (
             <div className='group transition' key={index}>
-              <button onClick={() => handleScroll(link.path)} className='p-3 text-xl font-medium hover:text-blue-900'>
+              <button onClick={() => handleScroll(link.path)} className='p-2 md:p-3 text-lg md:text-xl font-medium hover:text-blue-900'>
                 {link.title}
               </button>
               <span className="block h-1 rounded bg-blue-900 transform translate-y-3 max-w-0 group-hover:max-w-full transition-all duration-300"></span>
@@ -129,37 +142,40 @@ const Navbar: React.FC<NavbarProps> = ({ isAuthenticated }) => {
               mass: 0.1,
             },
           }}
-          className="hidden md:block px-6 py-3 relative hover:bg-blue-900 rounded-3xl hover:text-white"
+          className="hidden md:block px-4 py-2 md:px-6 md:py-3 relative hover:bg-blue-900 rounded-3xl hover:text-white"
           onClick={handleLoginClick}
         >
           <span className="block absolute inset-0 rounded-3xl hover:bg-blue-900 border-[2px] border-blue-900 p-px linear-overlay" />
-          <span className='text-xl font-medium tracking-wide h-full w-full block relative linear-mask'>
+          <span className='text-lg md:text-xl font-medium tracking-wide h-full w-full block relative linear-mask'>
             {isAuthenticated ? 'Go to Demo' : 'Login'} →
           </span>
         </motion.button>
 
         {/* Mobile Menu Icon */}
         <div onClick={handleNav} className='block md:hidden'>
-          {nav ? <AiOutlineClose size={25} /> : <AiOutlineMenu size={25} />}
+          {nav ? <RxCross1 size={25}/> : <RiMenuFoldFill size={25} />}
         </div>
       </div>
 
       {/* Mobile Menu */}
       <motion.div
-        className='fixed left-0 top-24 w-full h-full border-r border-r-gray-900 bg-white ease-in-out duration-500 md:hidden'
+        className={`fixed top-18 left-0 w-full h-full bg-white md:hidden z-10 transition-transform duration-300 ${nav ? 'translate-x-0' : '-translate-x-full'}`}
         variants={mobileMenuVariants}
         initial="hidden"
         animate={nav ? "visible" : "hidden"}
       >
-        <ul className='flex flex-col p-3 gap-4 text-md max-w-sm'>
+        <ul className='flex flex-col items-center py-10 h-full gap-8 text-xl'>
           {NavLinks.map((link, index) => (
-            <Link className='p-2 border-b border-gray-600 text-lg' to={link.path} key={index} onClick={() => setNav(false)}>
-              {link.title}
-            </Link>
+            <li key={index} onClick={() => handleScroll(link.path)} className="flex flex-row items-center justify-between w-3/4">
+              <span>{link.title}</span>
+              <MdKeyboardArrowRight size={30}/>
+            </li>
           ))}
-          <button onClick={() => { handleLoginClick(); setNav(false); }} className='p-2 max-w-sm text-lg font-medium bg-gray-100 rounded-lg'>
-            {isAuthenticated ? 'Go to Demo' : 'Login'}
-          </button>
+          <li>
+            <button onClick={() => { handleLoginClick(); setNav(false); }} className='p-3 bg-blue-600 text-xl text-white rounded-md '>
+              {isAuthenticated ? 'Go to Demo' : 'Login'}
+            </button>
+          </li>
         </ul>
       </motion.div>
     </motion.div>

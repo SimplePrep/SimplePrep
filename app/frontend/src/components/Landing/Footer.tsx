@@ -1,23 +1,36 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFacebook, faTwitter, faInstagram, faLinkedin } from '@fortawesome/free-brands-svg-icons';
-import { faEnvelope } from '@fortawesome/free-solid-svg-icons';
-import { scrollToSection } from './smoothScroll';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
-const Footer = () => {
+const Footer: React.FC = () => {
   const navigate = useNavigate();
+  const [isSticky, setIsSticky] = useState(false);
 
   const handleScroll = (path: string) => {
     if (path.startsWith('/')) {
       navigate(path);
     } else {
-      scrollToSection(path);
+      // Add your smoothScroll function or logic here
     }
   };
 
+  useEffect(() => {
+    const handleFooterPosition = () => {
+      if (document.body.scrollHeight <= window.innerHeight) {
+        setIsSticky(true);
+      } else {
+        setIsSticky(false);
+      }
+    };
+
+    handleFooterPosition();
+    window.addEventListener('resize', handleFooterPosition);
+    return () => window.removeEventListener('resize', handleFooterPosition);
+  }, []);
+
   return (
-    <div className="bg-gray-800 text-white py-8">
+    <footer className={`bg-gray-800 text-white py-8 ${isSticky ? 'fixed bottom-0 left-0 w-full' : 'relative'}`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div>
@@ -28,23 +41,29 @@ const Footer = () => {
             <h3 className="text-lg font-semibold mb-4">Useful Links</h3>
             <ul className="text-gray-400">
               <li className="mb-2">
-                <button onClick={() => handleScroll('product')} className="hover:underline">
+                <button onClick={() => handleScroll('/product')} className="hover:underline">
                   Product
                 </button>
               </li>
               <li className="mb-2">
-                <Link to="/our-vision" className="hover:underline">Our Vision</Link>
+                <button onClick={() => handleScroll('/our-vision')} className="hover:underline">
+                  Our Vision
+                </button>
               </li>
               <li className="mb-2">
-                <button onClick={() => handleScroll('testimonials')} className="hover:underline">
+                <button onClick={() => handleScroll('/testimonials')} className="hover:underline">
                   Customers
                 </button>
               </li>
               <li className="mb-2">
-                <Link to="/blogs" className="hover:underline">Blog</Link>
+                <button onClick={() => handleScroll('/blogs')} className="hover:underline">
+                  Blog
+                </button>
               </li>
               <li className="mb-2">
-                <Link to="/demo" className="hover:underline">Demo</Link>
+                <button onClick={() => handleScroll('/demo')} className="hover:underline">
+                  Demo
+                </button>
               </li>
             </ul>
           </div>
@@ -84,7 +103,7 @@ const Footer = () => {
           &copy; {new Date().getFullYear()} Simple Prep. All rights reserved.
         </div>
       </div>
-    </div>
+    </footer>
   );
 };
 
