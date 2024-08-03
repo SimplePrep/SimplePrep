@@ -1,13 +1,51 @@
-import React, { useState } from 'react';
-import Logo from '../assets/logo4.png';
+import React, { useState, useEffect } from 'react';
+import { format } from 'date-fns';
 import { NavLink, useNavigate } from 'react-router-dom';
-import { SideBarLinks } from './NavBarElements';
-import { BsMoon, BsChevronDown, BsChevronUp, BsSun, BsList } from 'react-icons/bs';
 import { useDispatch } from 'react-redux';
+import { motion, AnimatePresence } from 'framer-motion';
+import { FaFire } from 'react-icons/fa';
+import { IoClose, IoNotificationsOutline } from 'react-icons/io5';
+import { BsMoon, BsSun, BsList } from 'react-icons/bs';
 import { AppDispatch } from '../store';
 import { SignOut } from '../auth_utils/actions/Actions';
 import { auth } from '../auth_utils/firebaseConfig';
-import { motion, AnimatePresence } from 'framer-motion';
+import Logo from '../assets/logo-original.png';
+import LogoWhite from '../assets/logo-white-bg.png';
+import { SideBarLinks } from './NavBarElements';
+import CalendarStreak from './utils/tools/CalendarStreak';
+
+type Notification = {
+  id: string;
+  type: 'info' | 'warning' | 'error';
+  message: string;
+  timestamp: Date;
+  read: boolean;
+};
+
+const dummyNotifications: Notification[] = [
+  {
+    id: '1',
+    type: 'info',
+    message: 'New feature available: Dark mode!',
+    timestamp: new Date(Date.now() - 3600000), // 1 hour ago
+    read: false,
+  },
+  {
+    id: '2',
+    type: 'warning',
+    message: 'Your subscription will expire in 3 days.',
+    timestamp: new Date(Date.now() - 86400000), // 1 day ago
+    read: false,
+  },
+  {
+    id: '3',
+    type: 'error',
+    message: 'Failed to sync data. Please try again.',
+    timestamp: new Date(Date.now() - 172800000), // 2 days ago
+    read: true,
+  },
+  // More dummy notifications...
+];
 
 interface SideBarProps {
   toggleDarkMode: () => void;
@@ -19,9 +57,53 @@ const SideBar: React.FC<SideBarProps> = ({ toggleDarkMode, isDarkMode }): React.
   const navigate = useNavigate();
   const user = auth.currentUser;
   const userInitial = user?.displayName?.charAt(0) || 'A';
-  const darkModeClass = isDarkMode ? 'dark text-color-dark transition-colors duration-300' : 'light text-color-light transition-colors duration-300';
-  const [isVisible, setIsVisible] = useState(true);
+  const darkModeClass = isDarkMode ? 'bg-[#1d263b] text-color-dark transition-colors duration-300 border-slate-600' : 'text-color-light transition-colors duration-300 border-slate-300';
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [showNotifications, setShowNotifications] = useState(false);
+  const [notifications, setNotifications] = useState<Notification[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const notificationsPerPage = 5;
+  const [isCalendarVisible, setIsCalendarVisible] = useState(false);
+  const [streak, setStreak] = useState(0);
+
+  useEffect(() => {
+    const calculateStreak = () => {
+      // This is a placeholder. In a real app, you'd calculate the streak based on user activity
+      const today = new Date();
+      const startDate = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 1); // 2 days ago
+      const diffTime = Math.abs(today.getTime() - startDate.getTime());
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+      setStreak(diffDays);
+    };
+
+    calculateStreak();
+  }, []);
+
+  useEffect(() => {
+    const fetchNotifications = async () => {
+      // Simulate network delay
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      setNotifications(dummyNotifications);
+    };
+
+    fetchNotifications();
+  }, []);
+
+  const unreadCount = notifications.filter(n => !n.read).length;
+
+  const markAsRead = (id: string) => {
+    setNotifications(prevNotifications =>
+      prevNotifications.map(notif =>
+        notif.id === id ? { ...notif, read: true } : notif
+      )
+    );
+  };
+
+  const markAllAsRead = () => {
+    setNotifications(prevNotifications =>
+      prevNotifications.map(notif => ({ ...notif, read: true }))
+    );
+  };
 
   const handleSignOut = () => {
     dispatch(SignOut()).then(() => {
@@ -29,12 +111,20 @@ const SideBar: React.FC<SideBarProps> = ({ toggleDarkMode, isDarkMode }): React.
     });
   };
 
-  const toggleVisibility = () => {
-    setIsVisible(!isVisible);
-  };
-
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
+  };
+
+  const toggleNotifications = () => {
+    setShowNotifications(!showNotifications);
+  };
+
+  const handlePageChange = (newPage: number) => {
+    setCurrentPage(newPage);
+  };
+
+  const toggleCalendar = () => {
+    setIsCalendarVisible(!isCalendarVisible);
   };
 
   const menuVariants = {
@@ -61,104 +151,366 @@ const SideBar: React.FC<SideBarProps> = ({ toggleDarkMode, isDarkMode }): React.
     open: { opacity: 1, y: 0 }
   };
 
+  // Pagination logic
+  const indexOfLastNotification = currentPage * notificationsPerPage;
+  const indexOfFirstNotification = indexOfLastNotification - notificationsPerPage;
+  const currentNotifications = notifications.slice(indexOfFirstNotification, indexOfLastNotification);
+  const totalPages = Math.ceil(notifications.length / notificationsPerPage);
+
   return (
-    <div className={`fixed top-5 left-0 w-full z-40`}>
+    <div className={`fixed left-0 w-full z-40 font-nunito`}>
       {/* Desktop version */}
       <div className='hidden md:block'>
-        <div className='flex flex-row'>
-          <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: isVisible ? 'auto' : 0, opacity: isVisible ? 1 : 0 }}
-            transition={{ type: 'spring', stiffness: 300, damping: 24 }}
-            className={`p-3 overflow-hidden shadow-xl max-w-[1300px] mx-auto bg-white rounded-full ${darkModeClass} border-[2px] border-white items-center`}
-          >
+        <div className='w-full flex flex-row'>
+          <div className={`w-full px-5 flex ${darkModeClass} items-center justify-between border-b-[0.5px]`}>
             <div className='flex gap-5 justify-center items-center'>
-              <img className='w-[200px]' src={Logo} alt="" />
+              {isDarkMode ? <img className='w-[200px]' src={LogoWhite} alt="SimplePrep Logo" /> : <img className='w-[200px]' src={Logo} alt="" />}
+            </div>
+            <div className='flex gap-5 justify-center items-center'>
               {SideBarLinks.map((link) => (
                 <NavLink
                   to={link.path}
                   key={link.title}
-                  className={({ isActive }) =>
-                    isActive
-                      ? "text-xl text-black font-medium leading-tight border-2 border-blue-700 hover:border-gray-200 bg-white p-4 rounded-3xl cursor-pointer"
-                      : "text-xl font-medium leading-tight hover:bg-white border-2 border-transparent hover:border-blue-700 hover:text-black hover:rounded-3xl p-4 rounded-3xl cursor-pointer"
-                  }
+                  className={({ isActive }) => {
+                    const activeClass = isActive
+                      ? `text-lg font-bold leading-tight border-b-[2.5px] border-blue-600 px-4 py-5 cursor-pointer ${isDarkMode ? 'text-white' : 'text-[#001a72]'}`
+                      : `text-lg font-bold leading-tight border-b-[2.5px] border-transparent px-4 py-5 cursor-pointer ${isDarkMode ? 'text-slate-300 hover:text-white' : 'text-slate-600 hover:text-[#001a72]'}`
+                    return activeClass;
+                  }}
                 >
-                  <div className='flex flex-row justify-center items-center gap-2'>
-                    {link.icon}
-                    {link.title}
-                  </div>
+                  {({ isActive }) => (
+                    <div className='flex flex-row justify-center items-center gap-2'>
+                      <span style={{ color: isDarkMode ? (isActive ? 'white' : '#cbd5e1') : (isActive ? '#001a72' : '#1161fb') }}>
+                        {link.icon}
+                      </span>
+                      {link.title}
+                    </div>
+                  )}
                 </NavLink>
               ))}
-              <button onClick={toggleDarkMode} className="text-lg p-3 border-2 rounded-full border-transparent hover:bg-[#00df9a] hover:text-white hover:border-blue-800">
+            </div>
+            <div className='flex flex-row gap-3 items-center'>
+              <div className='relative'>
+                <button
+                  className={`flex flex-row gap-1 p-2 border-[1px] rounded-md transition-colors duration-200 ${
+                    isCalendarVisible
+                      ? isDarkMode
+                        ? 'bg-slate-500 border-white text-white'
+                        : 'bg-slate-200 border-slate-400'
+                      : 'border-transparent'
+                  } ${
+                    !isCalendarVisible && (
+                      isDarkMode
+                        ? 'hover:bg-slate-500 hover:border-white hover:text-white'
+                        : 'hover:bg-slate-200 hover:border-slate-400'
+                    )
+                  }`}
+                  onClick={toggleCalendar}
+                >
+                  <FaFire size={20} color={'#ffb800'} />
+                  {streak} days
+                </button>
+
+                {isCalendarVisible && (
+                  <div className={`absolute right-0 mt-4 border-[1px] ${
+                    isDarkMode
+                      ? 'bg-[#2a3447] text-white border-white'
+                      : 'bg-white text-gray-700 border-slate-300'
+                  } shadow-lg rounded-lg `}>
+                    <CalendarStreak streak={streak} isDarkMode={isDarkMode} />
+                  </div>
+                )}
+              </div>
+              <div className="relative">
+                <button
+                  className={`p-2 border-[1px] rounded-md transition-colors duration-200 ${
+                    showNotifications
+                      ? isDarkMode
+                        ? 'bg-slate-500 border-white text-white'
+                        : 'bg-slate-200 border-slate-400'
+                      : 'border-transparent'
+                  } ${
+                    !showNotifications && (
+                      isDarkMode
+                        ? 'hover:bg-slate-500 hover:border-white hover:text-white'
+                        : 'hover:bg-slate-200 hover:border-slate-400'
+                    )
+                  }`}
+                  onClick={toggleNotifications}
+                >
+                  <IoNotificationsOutline size={25} />
+                  {unreadCount > 0 && (
+                    <span className="absolute top-2 right-2 h-3 w-3 rounded-full bg-red-600 text-white text-xs font-bold flex items-center justify-center">
+                      {unreadCount}
+                    </span>
+                  )}
+                </button>
+                {showNotifications && (
+                  <div className={`absolute right-0 mt-4 w-80 border-[1px] ${
+                    isDarkMode
+                      ? 'bg-[#2a3447] text-white border-white'
+                      : 'bg-white text-gray-700 border-slate-300'
+                  } shadow-lg rounded-lg p-4 `}>
+                    <div className='flex items-center justify-between mb-4'>
+                      <h3 className="font-semibold">Notifications</h3>
+                      {unreadCount > 0 && (
+                        <button
+                          onClick={markAllAsRead}
+                          className="text-sm text-blue-500 hover:text-blue-600"
+                        >
+                          Mark all as read
+                        </button>
+                      )}
+                    </div>
+                    {notifications.length > 0 ? (
+                      <ul className="space-y-2">
+                        {currentNotifications.map(notification => (
+                          <li
+                            key={notification.id}
+                            className={`p-2 rounded flex items-start ${
+                              isDarkMode ? 'hover:bg-slate-600' : 'hover:bg-slate-100'
+                            } cursor-pointer`}
+                            onClick={() => markAsRead(notification.id)}
+                          >
+                            {!notification.read && (
+                              <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 mr-2 flex-shrink-0"></div>
+                            )}
+                            <div className={`flex-grow ${notification.read ? 'ml-4' : ''}`}>
+                              <p className={`font-medium ${
+                                notification.type === 'error' ? 'text-red-500' :
+                                  notification.type === 'warning' ? 'text-yellow-500' :
+                                    'text-blue-500'
+                              }`}>
+                                {notification.message}
+                              </p>
+                              <p className="text-xs mt-1 text-gray-500">
+                                {format(notification.timestamp, 'MMM d, yyyy h:mm aa')}
+                              </p>
+                            </div>
+                          </li>
+                        ))}
+                      </ul>
+                    ) : (
+                      <p className='text-center text-sm mt-1'>
+                        No notifications at the moment.
+                      </p>
+                    )}
+                    <div className="flex justify-between items-center mt-4">
+                      <button
+                        onClick={() => handlePageChange(currentPage - 1)}
+                        disabled={currentPage === 1}
+                        className={`px-2 py-1 text-sm rounded ${
+                          currentPage === 1 ? 'text-gray-400' : 'text-blue-500 hover:text-blue-600'
+                        }`}
+                      >
+                        Previous
+                      </button>
+                      <span className="text-sm">
+                        Page {currentPage} of {totalPages}
+                      </span>
+                      <button
+                        onClick={() => handlePageChange(currentPage + 1)}
+                        disabled={currentPage === totalPages}
+                        className={`px-2 py-1 text-sm rounded ${
+                          currentPage === totalPages ? 'text-gray-400' : 'text-blue-500 hover:text-blue-600'
+                        }`}
+                      >
+                        Next
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+              <button onClick={toggleDarkMode} className="text-lg p-2 border-2 rounded-full border-transparent hover:bg-[#00df9a] hover:text-white hover:border-blue-800">
                 {isDarkMode ? <BsSun /> : <BsMoon />}
               </button>
-              <button onClick={handleSignOut} className='text-xl font-medium p-3 border-2 rounded-full border-transparent hover:bg-white hover:border-blue-500 hover:text-black'>
-                Logout
-              </button>
-              <div className='flex items-center justify-center h-12 w-12 rounded-full bg-slate-300 text-xl font-medium text-gray-700 cursor-pointer'>
+              <div className='flex items-center justify-center h-8 w-8 rounded-full bg-slate-300 text-xl font-medium text-gray-700 cursor-pointer'>
                 {userInitial}
               </div>
             </div>
-          </motion.div>
-          <div className='flex items-center p-2'>
-            <button onClick={toggleVisibility} className={`text-xl p-2 border-[3px] rounded-full hover:border-blue-700 ${isDarkMode ? 'text-white' : 'text-black hover:bg-white'}`}>
-              {isVisible ? <BsChevronUp /> : <BsChevronDown />}
-            </button>
           </div>
         </div>
       </div>
 
       {/* Mobile version */}
       <div className='md:hidden'>
-        <div className='bg-white shadow-md'>
-          <div className='px-4 py-2 flex justify-between items-center'>
-            <img className='w-[150px]' src={Logo} alt="" />
-            <button onClick={toggleMobileMenu}>
-              <BsList size={24} />
-            </button>
-          </div>
+        <div className={`${isDarkMode ? 'bg-gray-800 text-white' : 'bg-white text-gray-800'} shadow-md flex justify-between items-center px-4 py-2`}>
+          <img className='w-[150px]' src={isDarkMode ? LogoWhite : Logo} alt="SimplePrep Logo" />
+          <button onClick={toggleMobileMenu} className={`p-2 rounded-full ${isDarkMode ? 'bg-gray-700' : 'bg-gray-200'}`}>
+            <BsList size={24} />
+          </button>
         </div>
         <AnimatePresence>
           {isMobileMenuOpen && (
             <motion.div
-              initial="closed"
-              animate="open"
-              exit="closed"
-              variants={menuVariants}
-              className='bg-white shadow-md overflow-hidden'
+              initial={{ opacity: 0, y: -50 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -50 }}
+              transition={{ duration: 0.3 }}
+              className={`fixed inset-0 z-50 ${isDarkMode ? 'bg-gray-900' : 'bg-white'}`}
             >
-              <div className='px-4 py-2'>
-                {SideBarLinks.map((link) => (
-                  <motion.div key={link.title} variants={itemVariants}>
+              <div className="flex flex-col h-full">
+                <div className="flex justify-between items-center p-4 border-b border-gray-200 dark:border-gray-700">
+                  <img className='w-[150px]' src={isDarkMode ? LogoWhite : Logo} alt="SimplePrep Logo" />
+                  <button onClick={toggleMobileMenu} className={`p-2 rounded-full ${isDarkMode ? 'bg-gray-700' : 'bg-gray-200'}`}>
+                    <IoClose size={24} />
+                  </button>
+                </div>
+                <div className="flex-grow overflow-y-auto">
+                  {SideBarLinks.map((link) => (
                     <NavLink
+                      key={link.title}
                       to={link.path}
                       className={({ isActive }) =>
-                        isActive
-                          ? "block text-sm font-medium text-black bg-gray-200 px-3 py-2 rounded-md my-1"
-                          : "block text-sm font-medium text-gray-600 hover:text-black px-3 py-2 my-1"
+                        `flex items-center p-4 ${isActive 
+                          ? (isDarkMode ? 'bg-blue-600 text-white' : 'bg-blue-100 text-blue-800') 
+                          : (isDarkMode ? 'text-gray-300 hover:bg-gray-700' : 'text-gray-600 hover:bg-gray-100')
+                        }`
                       }
                       onClick={() => setIsMobileMenuOpen(false)}
                     >
-                      <div className='flex items-center gap-2'>
-                        {link.icon}
-                        {link.title}
-                      </div>
+                      <span className="mr-3">{link.icon}</span>
+                      {link.title}
                     </NavLink>
-                  </motion.div>
-                ))}
-                <motion.div variants={itemVariants} className='flex items-center justify-between mt-2'>
-                  <button onClick={toggleDarkMode} className="p-2 rounded-full hover:bg-gray-200">
-                    {isDarkMode ? <BsSun /> : <BsMoon />}
-                  </button>
-                  <button onClick={handleSignOut} className='text-sm font-medium text-gray-600 hover:text-black px-3 py-2'>
-                    Logout
-                  </button>
-                  <div className='flex items-center justify-center h-8 w-8 rounded-full bg-slate-300 text-sm font-medium text-gray-700'>
-                    {userInitial}
+                  ))}
+                </div>
+                <div className={`p-4 border-t ${isDarkMode ? 'border-gray-700' : 'border-gray-200'}`}>
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="flex items-center">
+                      <div className={`flex items-center justify-center h-10 w-10 rounded-full ${isDarkMode ? 'bg-gray-700 text-white' : 'bg-gray-200 text-gray-700'} mr-3`}>
+                        {userInitial}
+                      </div>
+                      <span className={isDarkMode ? 'text-white' : 'text-gray-800'}>{user?.displayName || 'User'}</span>
+                    </div>
+                    <button
+                      onClick={toggleNotifications}
+                      className={`relative p-2 rounded-full ${
+                        isDarkMode ? 'bg-gray-700 text-white' : 'bg-gray-200 text-gray-800'
+                      }`}
+                    >
+                      <IoNotificationsOutline size={25} />
+                      {unreadCount > 0 && (
+                        <span className="absolute top-0 right-0 h-5 w-5 rounded-full bg-red-600 text-white text-xs font-bold flex items-center justify-center">
+                          {unreadCount}
+                        </span>
+                      )}
+                    </button>
+                    <button
+                      onClick={toggleDarkMode}
+                      className={`p-2 rounded-full ${isDarkMode ? 'bg-gray-700 text-yellow-400' : 'bg-gray-200 text-gray-600'}`}
+                    >
+                      {isDarkMode ? <BsSun size={20} /> : <BsMoon size={20} />}
+                    </button>
                   </div>
-                </motion.div>
+                  <div className="flex justify-between">
+                    <button
+                      onClick={toggleCalendar}
+                      className={`flex items-center justify-center p-2 rounded-full ${
+                        isDarkMode ? 'bg-gray-700 text-white' : 'bg-gray-200 text-gray-800'
+                      }`}
+                    >
+                      <FaFire size={20} color="#ffb800" className="mr-2" />
+                      <span>{streak} days</span>
+                    </button>
+                    <button
+                      onClick={handleSignOut}
+                      className={`py-2 px-4 rounded ${
+                        isDarkMode 
+                          ? 'bg-red-600 text-white hover:bg-red-700' 
+                          : 'bg-red-100 text-red-800 hover:bg-red-200'
+                      }`}
+                    >
+                      Sign Out
+                    </button>
+                  </div>
+                </div>
               </div>
+              {isCalendarVisible && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                  <div className={`${isDarkMode ? 'bg-gray-800 text-white' : 'bg-white text-gray-800'} rounded-lg p-4 w-11/12 max-w-md`}>
+                    <CalendarStreak streak={streak} isDarkMode={isDarkMode} />
+                    <button onClick={toggleCalendar} className="mt-4 w-full py-2 px-4 bg-blue-500 text-white rounded hover:bg-blue-600">
+                      Close
+                    </button>
+                  </div>
+                </div>
+              )}
+              {showNotifications && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                  <div className={`${isDarkMode ? 'bg-gray-800 text-white' : 'bg-white text-gray-800'} rounded-lg p-4 w-11/12 max-w-md`}>
+                    <div className='flex items-center justify-between mb-4'>
+                      <h3 className="font-semibold">Notifications</h3>
+                      {unreadCount > 0 && (
+                        <button
+                          onClick={markAllAsRead}
+                          className="text-sm text-blue-500 hover:text-blue-600"
+                        >
+                          Mark all as read
+                        </button>
+                      )}
+                    </div>
+                    {notifications.length > 0 ? (
+                      <ul className="space-y-2">
+                        {currentNotifications.map(notification => (
+                          <li
+                            key={notification.id}
+                            className={`p-2 rounded flex items-start ${
+                              isDarkMode ? 'hover:bg-slate-600' : 'hover:bg-slate-100'
+                            } cursor-pointer`}
+                            onClick={() => markAsRead(notification.id)}
+                          >
+                            {!notification.read && (
+                              <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 mr-2 flex-shrink-0"></div>
+                            )}
+                            <div className={`flex-grow ${notification.read ? 'ml-4' : ''}`}>
+                              <p className={`font-medium ${
+                                notification.type === 'error' ? 'text-red-500' :
+                                  notification.type === 'warning' ? 'text-yellow-500' :
+                                    'text-blue-500'
+                              }`}>
+                                {notification.message}
+                              </p>
+                              <p className="text-xs mt-1 text-gray-500">
+                                {format(notification.timestamp, 'MMM d, yyyy h:mm aa')}
+                              </p>
+                            </div>
+                          </li>
+                        ))}
+                      </ul>
+                    ) : (
+                      <p className='text-center text-sm mt-1'>
+                        No notifications at the moment.
+                      </p>
+                    )}
+                    <div className="flex justify-between items-center mt-4">
+                      <button
+                        onClick={() => handlePageChange(currentPage - 1)}
+                        disabled={currentPage === 1}
+                        className={`px-2 py-1 text-sm rounded ${
+                          currentPage === 1 ? 'text-gray-400' : 'text-blue-500 hover:text-blue-600'
+                        }`}
+                      >
+                        Previous
+                      </button>
+                      <span className="text-sm">
+                        Page {currentPage} of {totalPages}
+                      </span>
+                      <button
+                        onClick={() => handlePageChange(currentPage + 1)}
+                        disabled={currentPage === totalPages}
+                        className={`px-2 py-1 text-sm rounded ${
+                          currentPage === totalPages ? 'text-gray-400' : 'text-blue-500 hover:text-blue-600'
+                        }`}
+                      >
+                        Next
+                      </button>
+                    </div>
+                    <button onClick={toggleNotifications} className="mt-4 w-full py-2 px-4 bg-blue-500 text-white rounded hover:bg-blue-600">
+                      Close
+                    </button>
+                  </div>
+                </div>
+              )}
             </motion.div>
           )}
         </AnimatePresence>
