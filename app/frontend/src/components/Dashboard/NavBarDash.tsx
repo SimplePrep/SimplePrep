@@ -3,16 +3,20 @@ import { format } from 'date-fns';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FaFire } from 'react-icons/fa';
-import { IoClose, IoNotificationsOutline } from 'react-icons/io5';
-import { BsMoon, BsSun, BsList } from 'react-icons/bs';
+import { FaFire} from 'react-icons/fa';
+import { IoClose, IoNotificationsOutline, IoSettingsOutline } from 'react-icons/io5';
+import { BsMoon, BsSun, BsList, BsPatchQuestion, BsDiscord } from 'react-icons/bs';
 import { AppDispatch } from '../store';
 import { SignOut } from '../auth_utils/actions/Actions';
 import { auth } from '../auth_utils/firebaseConfig';
 import Logo from '../assets/logo-original.png';
 import LogoWhite from '../assets/logo-white-bg.png';
 import { SideBarLinks } from './NavBarElements';
-import CalendarStreak from './utils/tools/CalendarStreak';
+import CalendarStreak from './utils/tools/sidebar/CalendarStreak';
+import AccountSettingsPopup from './utils/tools/sidebar/AccountSettings';
+import { SlUser } from "react-icons/sl";
+import { LuLogOut } from "react-icons/lu";
+import ProfileDropdownItem from './utils/tools/sidebar/ProfileDropDown';
 
 type Notification = {
   id: string;
@@ -65,10 +69,11 @@ const SideBar: React.FC<SideBarProps> = ({ toggleDarkMode, isDarkMode }): React.
   const notificationsPerPage = 5;
   const [isCalendarVisible, setIsCalendarVisible] = useState(false);
   const [streak, setStreak] = useState(0);
+  const [isAccountSettingsVisible, setIsAccountSettingsVisible] = useState(false);
+  const [isUserDropdownVisible, setIsUserDropdownVisible] = useState(false);
 
   useEffect(() => {
     const calculateStreak = () => {
-      // This is a placeholder. In a real app, you'd calculate the streak based on user activity
       const today = new Date();
       const startDate = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 1); // 2 days ago
       const diffTime = Math.abs(today.getTime() - startDate.getTime());
@@ -81,7 +86,6 @@ const SideBar: React.FC<SideBarProps> = ({ toggleDarkMode, isDarkMode }): React.
 
   useEffect(() => {
     const fetchNotifications = async () => {
-      // Simulate network delay
       await new Promise(resolve => setTimeout(resolve, 1000));
       setNotifications(dummyNotifications);
     };
@@ -127,29 +131,17 @@ const SideBar: React.FC<SideBarProps> = ({ toggleDarkMode, isDarkMode }): React.
     setIsCalendarVisible(!isCalendarVisible);
   };
 
-  const menuVariants = {
-    closed: {
-      opacity: 0,
-      y: -20,
-      transition: {
-        staggerChildren: 0.05,
-        staggerDirection: -1
-      }
-    },
-    open: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        staggerChildren: 0.07,
-        delayChildren: 0.2
-      }
-    }
+  const toggleAccountSettings = () => {
+    setIsAccountSettingsVisible(!isAccountSettingsVisible);
   };
 
-  const itemVariants = {
-    closed: { opacity: 0, y: -10 },
-    open: { opacity: 1, y: 0 }
+  const toggleUserDropdown = () => {
+    setIsUserDropdownVisible(!isUserDropdownVisible);
   };
+
+  const handleDiscord = () => {
+    navigate('https://discord.gg/HgKAgAhZZq')
+  }
 
   // Pagination logic
   const indexOfLastNotification = currentPage * notificationsPerPage;
@@ -212,9 +204,9 @@ const SideBar: React.FC<SideBarProps> = ({ toggleDarkMode, isDarkMode }): React.
                 </button>
 
                 {isCalendarVisible && (
-                  <div className={`absolute right-0 mt-4 border-[1px] ${
+                  <div className={`absolute right-0 mt-5 border-[1px] ${
                     isDarkMode
-                      ? 'bg-[#2a3447] text-white border-white'
+                      ? 'bg-[#1d263b] text-white border-slate-400'
                       : 'bg-white text-gray-700 border-slate-300'
                   } shadow-lg rounded-lg `}>
                     <CalendarStreak streak={streak} isDarkMode={isDarkMode} />
@@ -246,10 +238,10 @@ const SideBar: React.FC<SideBarProps> = ({ toggleDarkMode, isDarkMode }): React.
                   )}
                 </button>
                 {showNotifications && (
-                  <div className={`absolute right-0 mt-4 w-80 border-[1px] ${
+                  <div className={`absolute right-0 mt-5 w-80 border-[1px] ${
                     isDarkMode
-                      ? 'bg-[#2a3447] text-white border-white'
-                      : 'bg-white text-gray-700 border-slate-300'
+                      ? 'bg-[#1d263b] text-white border-slate-400'
+                      : 'bg-slate-100 text-gray-700 border-slate-300'
                   } shadow-lg rounded-lg p-4 `}>
                     <div className='flex items-center justify-between mb-4'>
                       <h3 className="font-semibold">Notifications</h3>
@@ -324,8 +316,53 @@ const SideBar: React.FC<SideBarProps> = ({ toggleDarkMode, isDarkMode }): React.
               <button onClick={toggleDarkMode} className="text-lg p-2 border-2 rounded-full border-transparent hover:bg-[#00df9a] hover:text-white hover:border-blue-800">
                 {isDarkMode ? <BsSun /> : <BsMoon />}
               </button>
-              <div className='flex items-center justify-center h-8 w-8 rounded-full bg-slate-300 text-xl font-medium text-gray-700 cursor-pointer'>
-                {userInitial}
+              <div className='relative'>
+                <button onClick={toggleUserDropdown} className='flex items-center justify-center h-8 w-8 rounded-full bg-slate-300 text-xl font-medium text-gray-700 cursor-pointer'>
+                  {userInitial}
+                </button>
+                {isUserDropdownVisible && (
+                  <div className={`absolute right-0 mt-6 w-80 border-[1px] ${
+                    isDarkMode ? 'bg-[#1d263b] text-white border-slate-400' : 'bg-slate-100 text-gray-700 border-slate-300'
+                  } shadow-lg rounded-lg`}>
+                    <div className="mb-2 p-2">
+                      <p className="font-medium">{auth.currentUser?.email}</p>
+                      <p className="text-sm text-gray-500">{auth.currentUser?.displayName}</p>
+                    </div>
+                    <hr className="border-slate-500" />
+                    <div className="flex flex-col gap-3">
+                      <ProfileDropdownItem
+                        icon={<SlUser size={20} />}
+                        text="My profile"
+                        onClick={toggleAccountSettings}
+                        isDarkMode={isDarkMode}
+                      />
+                      <ProfileDropdownItem
+                        icon={<BsPatchQuestion size={20} />}
+                        text="Help & Support"
+                        onClick={toggleAccountSettings}
+                        isDarkMode={isDarkMode}
+                      />
+                      <ProfileDropdownItem
+                        icon={<IoSettingsOutline size={20} />}
+                        text="Personal Settings"
+                        onClick={toggleAccountSettings}
+                        isDarkMode={isDarkMode}
+                      />
+                      <ProfileDropdownItem 
+                        icon = {<BsDiscord size={20}/>}
+                        text="Discord"
+                        onClick={handleDiscord}
+                        isDarkMode={isDarkMode}
+                      />
+                      <ProfileDropdownItem
+                        icon={<LuLogOut size={20} />}
+                        text="Log out"
+                        onClick={handleSignOut}
+                        isDarkMode={isDarkMode}
+                      />
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -515,6 +552,12 @@ const SideBar: React.FC<SideBarProps> = ({ toggleDarkMode, isDarkMode }): React.
           )}
         </AnimatePresence>
       </div>
+      {/* Account Settings Popup */}
+      <AccountSettingsPopup
+        isVisible={isAccountSettingsVisible}
+        onClose={toggleAccountSettings}
+        isDarkMode={isDarkMode}
+      />
     </div>
   );
 };

@@ -16,11 +16,6 @@ export const SideBarLinks = [
         icon: <RiBookOpenFill  size={25}/>
     },
     {
-        title: "Discord",
-        path: 'https://discord.gg/HgKAgAhZZq',
-        icon: <BsDiscord size={25}/>
-    },
-    {
         title: "Analytics",
         path: 'analytics',
         icon: <SiProgress size={25} />
