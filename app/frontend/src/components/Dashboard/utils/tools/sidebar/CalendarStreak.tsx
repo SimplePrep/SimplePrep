@@ -1,6 +1,7 @@
 import React from 'react';
+import { motion } from 'framer-motion';
 import { FaFire } from 'react-icons/fa';
-import Nova from '../../../assets/nova_owl.png';
+import Nova from '../../../../assets/nova_owl.png';
 
 const CalendarStreak: React.FC<{ streak: number; isDarkMode: boolean }> = ({ streak, isDarkMode }) => {
   const currentDate = new Date();
@@ -69,7 +70,13 @@ const CalendarStreak: React.FC<{ streak: number; isDarkMode: boolean }> = ({ str
   };
 
   return (
-    <div className={`p-4 rounded-lg ${isDarkMode ? 'bg-gray-800 text-white' : 'bg-white text-gray-800'}`}>
+    <motion.div
+      initial={{ opacity: 0, scale: 0.8 }}
+      animate={{ opacity: 1, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.8 }}
+      transition={{ duration: 0.3 }}
+      className={`p-4 rounded-lg ${isDarkMode ? 'bg-[#1d263b] text-white' : 'bg-slate-100 text-gray-800'}`}
+    >
       <div className="flex justify-center items-center mb-4">
         <h2 className="text-xl font-bold">Streak Calendar</h2>
       </div>
@@ -82,8 +89,8 @@ const CalendarStreak: React.FC<{ streak: number; isDarkMode: boolean }> = ({ str
         <p>Wow, {streak}-day streak. Keep it going!</p>
       </div>
       <p className="mt-2 text-blue-500 text-center">1 freeze remaining</p>
-    </div>
+    </motion.div>
   );
 };
 
-export default CalendarStreak; 
+export default CalendarStreak;
