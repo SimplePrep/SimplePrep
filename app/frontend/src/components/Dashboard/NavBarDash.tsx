@@ -140,8 +140,8 @@ const SideBar: React.FC<SideBarProps> = ({ toggleDarkMode, isDarkMode }): React.
   };
 
   const handleDiscord = () => {
-    navigate('https://discord.gg/HgKAgAhZZq')
-  }
+    window.open('https://discord.gg/HgKAgAhZZq', '_blank');
+  };
 
   // Pagination logic
   const indexOfLastNotification = currentPage * notificationsPerPage;
