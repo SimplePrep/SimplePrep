@@ -16,7 +16,7 @@ interface AccountSettingsPopupProps {
 }
 
 const AccountSettingsPopup: React.FC<AccountSettingsPopupProps> = ({ isVisible, onClose, isDarkMode }) => {
-  const [userDetails, setUserDetails] = useState(null);
+  const [userDetails, setUserDetails] = useState<any>(null);
   const [displayName, setDisplayName] = useState(auth.currentUser?.displayName || '');
   const [memberSince, setMemberSince] = useState('');
   const [subscriptionPlan, setSubscriptionPlan] = useState('');
@@ -26,14 +26,24 @@ const AccountSettingsPopup: React.FC<AccountSettingsPopupProps> = ({ isVisible, 
       if (auth.currentUser) {
         try {
           const userData = await getUserDetails();
-          setUserDetails(userData);
-          const parsedDate = Date.parse(userData.created_at);
-          if (!isNaN(parsedDate)) {
-            setMemberSince(new Date(parsedDate).toLocaleDateString());
+          setUserDetails(userData.user);
+          const createdAt = userData.user?.created_at;
+          if (createdAt) {
+            const parsedDate = new Date(createdAt);
+            if (!isNaN(parsedDate.getTime())) {
+              const options: Intl.DateTimeFormatOptions = { 
+                year: 'numeric', 
+                month: 'short', 
+                day: 'numeric' 
+              };
+              setMemberSince(parsedDate.toLocaleDateString('en-US', options));
+            } else {
+              console.error('Invalid date format for created_at:', createdAt);
+            }
           } else {
-            console.error('Invalid date format for created_at:', userData.created_at);
+            console.error('created_at is missing from user data');
           }
-          setSubscriptionPlan(userData.subscription_type || 'Free');
+          setSubscriptionPlan(userData.user.subscription_type || 'Free');
         } catch (error) {
           console.error('Error fetching user details:', error);
         }
@@ -73,12 +83,12 @@ const AccountSettingsPopup: React.FC<AccountSettingsPopupProps> = ({ isVisible, 
   };
 
   const getSubscriptionIcon = (plan: string) => {
-    switch (plan) {
-      case 'Free':
+    switch (plan.toLowerCase()) {
+      case 'free':
         return Silver;
-      case 'Nova+':
+      case 'nova+':
         return Gold;
-      case 'Nova Pro':
+      case 'nova pro':
         return Platinum;
       default:
         return null;
@@ -126,8 +136,8 @@ const AccountSettingsPopup: React.FC<AccountSettingsPopupProps> = ({ isVisible, 
                 <h1 className='font-bold text-lg'>Subscription Details</h1>
                 <hr className='border-slate-400'/>
                 <div className="flex flex-col">
-                  <p className="text-sm font-medium mb-4">Subscription plan</p>
-                  <div className={`w-full p-2 border ${isDarkMode ? 'border-gray-700 bg-gray-900 text-white' : 'border-gray-300 bg-gray-100 text-gray-800'} rounded-lg`}>
+                  <p className="text-sm font-medium mb-2">Subscription plan</p>
+                  <div className={`w-full flex flex-row gap-3 items-center p-2 border ${isDarkMode ? 'border-gray-700 bg-gray-900 text-white' : 'border-gray-300 bg-gray-100 text-gray-800'} rounded-lg`}>
                     {subscriptionPlan && (
                       <img
                         src={getSubscriptionIcon(subscriptionPlan)}
@@ -137,9 +147,7 @@ const AccountSettingsPopup: React.FC<AccountSettingsPopupProps> = ({ isVisible, 
                     )}
                     {subscriptionPlan}
                   </div>
-                  
                 </div>
-
               </div>
             </div>
             <div className="flex flex-row justify-center gap-10 p-5">
