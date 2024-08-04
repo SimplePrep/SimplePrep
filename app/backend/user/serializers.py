@@ -6,7 +6,7 @@ User = get_user_model()
 
 
 class UserSerializer(serializers.ModelSerializer):
-    subscription_type = serializers.ChoiceField(choices=User.SubscriptionType.choices, default=User.SubscriptionType.FREEMIUM)
+    subscription_type = serializers.ChoiceField(choices=User.SubscriptionType.choices, default=User.SubscriptionType.Free)
     firebase_uid = serializers.CharField(required=True)
     
     class Meta:
