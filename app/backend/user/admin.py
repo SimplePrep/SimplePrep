@@ -7,13 +7,13 @@ from .models import TempUser
 User = get_user_model()
 class UserAdmin(admin.ModelAdmin):
 
-    list_display = ('id', 'first_name', 'last_name', 'email',)
+    list_display = ('id', 'first_name', 'last_name', 'email', 'created_at')
     list_display_links = ('id', 'first_name', 'last_name', 'email', )
     search_fields = ('first_name', 'last_name', 'email', )
     ordering = ['email']
     list_per_page = 25
     fieldsets = (
-        (None, {'fields': ('email', 'first_name', 'last_name', 'firebase_uid')}),
+        (None, {'fields': ('email', 'first_name', 'last_name', 'firebase_uid', 'created_at', 'updated_at')}),
         ('Permissions', {'fields': ('is_staff', 'is_superuser', 'groups', 'user_permissions')}),
         ('Important dates', {'fields': ('last_login',)}),
     )

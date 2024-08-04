@@ -69,7 +69,7 @@ class SignUpView(APIView):
                     email=email,
                     first_name=data['first_name'],
                     last_name=data['last_name'],
-                    subscription_type=data.get('subscription_type', User.SubscriptionType.FREEMIUM),
+                    subscription_type=data.get('subscription_type', User.SubscriptionType.Free),
                 )
                 logger.info(f"User account created successfully for email: {email}")
                 return Response({'success': "User account created successfully"}, status=status.HTTP_201_CREATED)

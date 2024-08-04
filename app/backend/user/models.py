@@ -8,7 +8,7 @@ class UserAccountManager(BaseUserManager):
         if not email:
             raise ValueError('User must have an email address')
         email = self.normalize_email(email)
-        extra_fields.setdefault('subscription_type', User.SubscriptionType.FREEMIUM)
+        extra_fields.setdefault('subscription_type', User.SubscriptionType.Free)
         user = self.model(email=email, first_name=first_name, last_name=last_name, **extra_fields)
         if password and not extra_fields.get('firebase_uid'):
             user.set_password(password)
@@ -24,14 +24,15 @@ class UserAccountManager(BaseUserManager):
 
 class User(AbstractBaseUser, PermissionsMixin):
     class SubscriptionType(models.TextChoices):
-        FREEMIUM = 'free'
-        PREMIUM = 'premium'
+        Free = 'free'
+        Nova = 'Nova+'
+        NovaPro = 'Nova Pro'
 
     firebase_uid = models.CharField(max_length=128, unique=True, null=True)
     email = models.EmailField(unique=True, max_length=255)
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
-    subscription_type = models.CharField(max_length=10, choices=SubscriptionType.choices, default=SubscriptionType.FREEMIUM)
+    subscription_type = models.CharField(max_length=10, choices=SubscriptionType.choices, default=SubscriptionType.Free)
     created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(auto_now=True)
     is_active = models.BooleanField(default=True)
