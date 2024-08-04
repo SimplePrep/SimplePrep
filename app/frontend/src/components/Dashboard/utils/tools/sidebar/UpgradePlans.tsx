@@ -8,45 +8,26 @@ import Gold from '../../../../assets/goldIcon.png';
 import Platinum from '../../../../assets/platinumIcon.png';
 import { IoMdCheckmark } from "react-icons/io";
 import Nova from '../../../../assets/nova_owl.png';
+import { getUserDetails, updateUserDetails } from '../../../../auth_utils/axios/axiosServices';
+import { AxiosError } from 'axios';
 
-// Mock function to fetch user's subscription plan
-const fetchUserSubscriptionPlan = async () => {
-  // Replace this with actual API call
-  return 'Nova Pro'; // Possible values: 'Free', 'Nova+', 'Nova Pro'
-};
-
-interface UpgradePlanProps {
-  isVisible: boolean;
-  onClose: () => void;
-  isDarkMode: boolean;
-}
-
-const UpgradePlan: React.FC<UpgradePlanProps> = ({ isVisible, onClose, isDarkMode }) => {
+const UpgradePlan: React.FC<{ isVisible: boolean; onClose: () => void; isDarkMode: boolean }> = ({ isVisible, onClose, isDarkMode }) => {
   const [displayName, setDisplayName] = useState(auth.currentUser?.displayName || '');
   const [subscriptionPlan, setSubscriptionPlan] = useState('');
 
   useEffect(() => {
-    const getSubscriptionPlan = async () => {
-      const plan = await fetchUserSubscriptionPlan();
-      setSubscriptionPlan(plan);
+    const fetchUserDetails = async () => {
+      try {
+        const userData = await getUserDetails();
+        setSubscriptionPlan(userData.user.subscription_type);
+      } catch (error) {
+        console.error('Error fetching user subscription plan:', error);
+      }
     };
 
-    getSubscriptionPlan();
+    fetchUserDetails();
   }, []);
 
-  const handleSave = () => {
-    const user = auth.currentUser;
-    if (user) {
-      updateProfile(user, { displayName })
-        .then(() => {
-          alert('Display name updated successfully');
-          onClose();
-        })
-        .catch((error) => {
-          alert('Error updating display name: ' + error.message);
-        });
-    }
-  };
 
   return (
     <AnimatePresence>
@@ -59,15 +40,15 @@ const UpgradePlan: React.FC<UpgradePlanProps> = ({ isVisible, onClose, isDarkMod
           className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 font-montserrat p-4"
         >
           <div className={`w-full max-w-[800px] rounded-lg ${isDarkMode ? 'bg-[#1d263b] text-white' : 'bg-white text-gray-800'} max-h-[90vh] overflow-y-auto`}>
-            <div className="px-4 py-3 rounded-t-lg flex justify-between items-center mb-4 bg-[#2d3855] sticky top-0 z-10">
+            <div className={`px-4 py-3 rounded-t-lg flex justify-between items-center mb-4 ${isDarkMode ? 'bg-[#2d3855]' : 'bg-gray-200'} sticky top-0 z-10`}>
               <h2 className="text-xl font-bold">Upgrade your plan</h2>
               <button onClick={onClose} className="p-2 rounded-full hover:bg-blue-500">
                 <IoClose size={24} />
               </button>
             </div>
-            <div className="mb-4 p-5 bg-[#1d263b] grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+            <div className={`mb-4 p-5 ${isDarkMode ? 'bg-[#1d263b]' : 'bg-gray-50'} grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5`}>
               {['Free', 'Nova+', 'Nova Pro'].map((plan) => (
-                <div key={plan} className={`p-4 rounded-lg ${subscriptionPlan === plan ? 'bg-[#2d3855]' : ''}`}>
+                <div key={plan} className={`p-4 rounded-lg ${subscriptionPlan === plan ? (isDarkMode ? 'bg-[#2d3855]' : 'bg-blue-100') : ''}`}>
                   <div className='flex flex-row gap-3 items-center'>
                     <img 
                       src={plan === 'Free' ? Silver : plan === 'Nova+' ? Gold : Platinum} 
@@ -79,7 +60,7 @@ const UpgradePlan: React.FC<UpgradePlanProps> = ({ isVisible, onClose, isDarkMod
                       {plan}
                     </h1>
                   </div>
-                  <p className='text-sm text-slate-400'>
+                  <p className={`text-sm ${isDarkMode ?  'text-slate-400' : 'text-slate-600'}`}>
                     {plan === 'Free' ? 'USD $0/month' : plan === 'Nova+' ? 'USD $12.99/month' : 'USD $24.99/month'}
                   </p>
                   {plan !== 'Free' && (
