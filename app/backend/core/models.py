@@ -1,11 +1,9 @@
 from django.db import models
 from django.contrib.auth import get_user_model
+
 User = get_user_model()
 
 class Test(models.Model):
-    """
-        Model fort Test
-    """
     title = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -14,25 +12,17 @@ class Test(models.Model):
         return self.title
 
 class TestModel(models.Model):
-    
-    """
-        Model for Test Modules
-    """
-    test = models.ForeignKey(Test, on_delete = models.CASCADE, related_name = 'testmodel' , null=True)
+    test = models.ForeignKey(Test, on_delete=models.CASCADE, related_name='testmodel', null=True)
     title = models.CharField(max_length=255, blank=False, null=False)
     description = models.TextField(blank=True, null=True)
     num_questions = models.IntegerField(default=27)
     created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now = True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.title
-    
 
 class Question(models.Model):
-    """
-        Model for Questions
-    """
     test = models.ForeignKey(TestModel, on_delete=models.CASCADE, related_name='questions')
     model = models.CharField(max_length=255)
     section = models.CharField(max_length=255)
@@ -48,18 +38,14 @@ class Question(models.Model):
     correct_answer = models.CharField(max_length=1, choices=[('A', 'Option A'), ('B', 'Option B'), ('C', 'Option C'), ('D', 'Option D')])
     likes = models.IntegerField(default=0)
     dislikes = models.IntegerField(default=0)
-    created_at = models.DateTimeField(auto_now_add = True)
-
+    created_at = models.DateTimeField(auto_now_add=True)
 
 class TestResult(models.Model):
-    """
-        Model for retrieving results for previous test attempts
-    """
     test_model = models.ForeignKey(TestModel, on_delete=models.CASCADE, related_name='test_results', null=True, blank=True)
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name ='test_results')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='test_results')
     score = models.IntegerField(default=0, help_text="User's score for this test attempt.")
     created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now = True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return f"{self.test_model.title} - {self.user.first_name}"
@@ -75,7 +61,6 @@ class UserAnswer(models.Model):
     def __str__(self):
         return f"{self.test_result.test_model.title} - {self.question.query} - Selected Option: {self.selected_option}"
 
-
 class TestReport(models.Model):
     test_result = models.OneToOneField(TestResult, on_delete=models.CASCADE, related_name='report')
     report_data = models.JSONField()
@@ -84,9 +69,9 @@ class TestReport(models.Model):
 
     def __str__(self):
         return f"Report for {self.test_result.test_model.title} - {self.test_result.user.first_name}"
-    
+
 class Post(models.Model):
-    test_module = models.ForeignKey(TestModel, on_delete=models.CASCADE, related_name="posts")
+    test_module = models.ForeignKey(TestModel, on_delete=models.CASCADE, related_name='posts')
     title = models.TextField(blank=False, null=False)
     content = models.TextField(blank=False, null=False)
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='posts')
