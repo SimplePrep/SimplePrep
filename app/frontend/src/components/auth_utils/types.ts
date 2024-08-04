@@ -1,5 +1,16 @@
 import { User } from 'firebase/auth';
 
+export interface UserDetails {
+  id: number;
+  email: string;
+  first_name: string;
+  last_name:string;
+  subscription_type: string;
+  firebase_uid: string;
+  created_at: string;
+  updated_at: string;
+}
+
 export interface LoginFormValues {
   email: string;
   password: string;

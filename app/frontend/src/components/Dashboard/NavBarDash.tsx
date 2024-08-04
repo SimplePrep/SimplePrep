@@ -339,8 +339,8 @@ const SideBar: React.FC<SideBarProps> = ({ toggleDarkMode, isDarkMode }): React.
                     isDarkMode ? 'bg-[#1d263b] text-white border-slate-400' : 'bg-slate-100 text-gray-700 border-slate-300'
                   } shadow-lg rounded-lg`}>
                     <div className="mb-2 p-2">
-                      <p className="font-medium">{auth.currentUser?.email}</p>
-                      <p className="text-sm text-gray-500">{auth.currentUser?.displayName}</p>
+                      <p className="font-medium">{auth.currentUser?.displayName}</p>
+                      <p className="text-sm text-gray-500">{auth.currentUser?.email}</p>
                     </div>
                     <hr className="border-slate-500" />
                     <div className="flex flex-col gap-3">

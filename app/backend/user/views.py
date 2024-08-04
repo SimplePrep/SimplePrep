@@ -8,10 +8,10 @@ from .serializers import UserSerializer, TempUserSerializer
 from firebase_admin import auth
 from .models import TempUser, User
 import logging
+
 User = get_user_model()
 # Configure logging
 logger = logging.getLogger(__name__)
-
 
 class RetrieveUserView(APIView):
     permission_classes = (IsAuthenticated,)
@@ -90,26 +90,44 @@ class CheckUserView(APIView):
         
         user_exists = User.objects.filter(email=email, firebase_uid=firebase_uid).exists()
         return Response({'exists': user_exists}, status=status.HTTP_200_OK)
-    
+
 class UpdateUserView(APIView):
-    permission_classes = (AllowAny,)
+    permission_classes = (IsAuthenticated,)
 
     def put(self, request):
-        email = request.data.get('email')
-        firebase_uid = request.data.get('firebase_uid')
-        first_name = request.data.get('first_name')
-        last_name = request.data.get('last_name')
-        subscription_type= request.data.get('subscription_type', User.SubscriptionType.FREEMIUM)
+        user = request.user
+        data = request.data
+        first_name = data.get('first_name')
+        last_name = data.get('last_name')
+        subscription_type = data.get('subscription_type', user.subscription_type)
 
-        if not email or not firebase_uid:
-            return Response({'error': 'Email and Firebase UID are required'}, status=status.HTTP_400_BAD_REQUEST)
+        if not first_name or not last_name:
+            return Response({'error': 'First name and last name are required'}, status=status.HTTP_400_BAD_REQUEST)
         
         try:
-            user = User.objects.get(email=email, firebase_uid=firebase_uid)
             user.first_name = first_name
             user.last_name = last_name
+            user.subscription_type = subscription_type
             user.save()
             return Response({'success': "User information updated successfully"}, status=status.HTTP_200_OK)
-        except User.DoesNotExist:
-            return Response({'error': "User not found"}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+
+class DeleteUserView(APIView):
+    permission_classes = (IsAuthenticated,)
+
+    def delete(self, request):
+        user = request.user
+        try:
+            # Delete from Firebase
+            firebase_auth.delete_user(user.firebase_uid)
+
+            # Delete from Django
+            user.delete()
+
+            logger.info(f"User account deleted successfully for email: {user.email}")
+            return Response({'success': "User account deleted successfully"}, status=status.HTTP_200_OK)
+        except Exception as e:
+            logger.error(f"Error deleting user: {e}")
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

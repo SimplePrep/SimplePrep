@@ -11,7 +11,7 @@ class UserSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = User
-        fields = ('id', 'email', 'first_name', 'last_name', 'subscription_type', 'firebase_uid')
+        fields = ('id', 'email', 'first_name', 'last_name', 'subscription_type', 'firebase_uid', 'created_at', 'updated_at')
         read_only_fields = ('id', 'firebase_uid')
 
     def validate_email(self, value):
