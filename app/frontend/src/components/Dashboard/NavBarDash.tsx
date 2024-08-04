@@ -17,7 +17,9 @@ import AccountSettingsPopup from './utils/tools/sidebar/AccountSettings';
 import { SlUser } from "react-icons/sl";
 import { LuLogOut } from "react-icons/lu";
 import ProfileDropdownItem from './utils/tools/sidebar/ProfileDropDown';
-
+import AiStar from '../assets/ai_star2.png';
+import { RiSparkling2Fill, RiSparklingFill } from 'react-icons/ri';
+import UpgradePlanProps from './utils/tools/sidebar/UpgradePlans';
 type Notification = {
   id: string;
   type: 'info' | 'warning' | 'error';
@@ -71,7 +73,7 @@ const SideBar: React.FC<SideBarProps> = ({ toggleDarkMode, isDarkMode }): React.
   const [streak, setStreak] = useState(0);
   const [isAccountSettingsVisible, setIsAccountSettingsVisible] = useState(false);
   const [isUserDropdownVisible, setIsUserDropdownVisible] = useState(false);
-
+  const [isUpgradePlanVisible, setIsUpgradePlanVisible] = useState(false);
   useEffect(() => {
     const calculateStreak = () => {
       const today = new Date();
@@ -114,6 +116,10 @@ const SideBar: React.FC<SideBarProps> = ({ toggleDarkMode, isDarkMode }): React.
       navigate('/');
     });
   };
+
+  const toggleUpgradePlan = () => {
+    setIsUpgradePlanVisible(!isUpgradePlanVisible);
+  }
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
@@ -182,18 +188,26 @@ const SideBar: React.FC<SideBarProps> = ({ toggleDarkMode, isDarkMode }): React.
               ))}
             </div>
             <div className='flex flex-row gap-3 items-center'>
+              <button className='flex flex-row items-center gap-3 bg-blue-600 p-2 rounded-md hover:bg-blue-700' onClick={toggleUpgradePlan}>
+                <RiSparkling2Fill 
+                  size={25} 
+                  className='animate-blink' 
+                  color='white'
+                />
+                <p className='text-white'>Upgrade</p>
+              </button>
               <div className='relative'>
                 <button
                   className={`flex flex-row gap-1 p-2 border-[1px] rounded-md transition-colors duration-200 ${
                     isCalendarVisible
                       ? isDarkMode
-                        ? 'bg-slate-500 border-white text-white'
+                        ? 'bg-slate-600 border-white text-white'
                         : 'bg-slate-200 border-slate-400'
                       : 'border-transparent'
                   } ${
                     !isCalendarVisible && (
                       isDarkMode
-                        ? 'hover:bg-slate-500 hover:border-white hover:text-white'
+                        ? 'hover:bg-slate-600 hover:border-white hover:text-white'
                         : 'hover:bg-slate-200 hover:border-slate-400'
                     )
                   }`}
@@ -218,13 +232,13 @@ const SideBar: React.FC<SideBarProps> = ({ toggleDarkMode, isDarkMode }): React.
                   className={`p-2 border-[1px] rounded-md transition-colors duration-200 ${
                     showNotifications
                       ? isDarkMode
-                        ? 'bg-slate-500 border-white text-white'
+                        ? 'bg-slate-600 border-white text-white'
                         : 'bg-slate-200 border-slate-400'
                       : 'border-transparent'
                   } ${
                     !showNotifications && (
                       isDarkMode
-                        ? 'hover:bg-slate-500 hover:border-white hover:text-white'
+                        ? 'hover:bg-slate-600 hover:border-white hover:text-white'
                         : 'hover:bg-slate-200 hover:border-slate-400'
                     )
                   }`}
@@ -389,9 +403,24 @@ const SideBar: React.FC<SideBarProps> = ({ toggleDarkMode, isDarkMode }): React.
               <div className="flex flex-col h-full">
                 <div className="flex justify-between items-center p-4 border-b border-gray-200 dark:border-gray-700">
                   <img className='w-[150px]' src={isDarkMode ? LogoWhite : Logo} alt="SimplePrep Logo" />
+                  <div className='flex flex-row gap-3'>
+                  <button
+                      onClick={toggleNotifications}
+                      className={`relative p-2 rounded-full ${
+                        isDarkMode ? 'bg-gray-700 text-white' : 'bg-gray-200 text-gray-800'
+                      }`}
+                    >
+                      <IoNotificationsOutline size={25} />
+                      {unreadCount > 0 && (
+                        <span className="absolute top-0 right-0 h-5 w-5 rounded-full bg-red-600 text-white text-xs font-bold flex items-center justify-center">
+                          {unreadCount}
+                        </span>
+                      )}
+                    </button>
                   <button onClick={toggleMobileMenu} className={`p-2 rounded-full ${isDarkMode ? 'bg-gray-700' : 'bg-gray-200'}`}>
                     <IoClose size={24} />
                   </button>
+                  </div>
                 </div>
                 <div className="flex-grow overflow-y-auto">
                   {SideBarLinks.map((link) => (
@@ -410,6 +439,14 @@ const SideBar: React.FC<SideBarProps> = ({ toggleDarkMode, isDarkMode }): React.
                       {link.title}
                     </NavLink>
                   ))}
+                    <button className={`flex flex-row items-center gap-3  p-4 rounded-md hover:bg-blue-700 ${isDarkMode ? 'text-gray-300 hover:bg-gray-700' : 'text-gray-600 hover:bg-gray-100'}`} onClick={toggleUpgradePlan}>
+                      <RiSparkling2Fill 
+                        size={25} 
+                        className='animate-blink' 
+                        color=''
+                      />
+                      <p className=''>Upgrade</p>
+                    </button>
                 </div>
                 <div className={`p-4 border-t ${isDarkMode ? 'border-gray-700' : 'border-gray-200'}`}>
                   <div className="flex items-center justify-between mb-4">
@@ -419,19 +456,7 @@ const SideBar: React.FC<SideBarProps> = ({ toggleDarkMode, isDarkMode }): React.
                       </div>
                       <span className={isDarkMode ? 'text-white' : 'text-gray-800'}>{user?.displayName || 'User'}</span>
                     </div>
-                    <button
-                      onClick={toggleNotifications}
-                      className={`relative p-2 rounded-full ${
-                        isDarkMode ? 'bg-gray-700 text-white' : 'bg-gray-200 text-gray-800'
-                      }`}
-                    >
-                      <IoNotificationsOutline size={25} />
-                      {unreadCount > 0 && (
-                        <span className="absolute top-0 right-0 h-5 w-5 rounded-full bg-red-600 text-white text-xs font-bold flex items-center justify-center">
-                          {unreadCount}
-                        </span>
-                      )}
-                    </button>
+                    
                     <button
                       onClick={toggleDarkMode}
                       className={`p-2 rounded-full ${isDarkMode ? 'bg-gray-700 text-yellow-400' : 'bg-gray-200 text-gray-600'}`}
@@ -439,7 +464,7 @@ const SideBar: React.FC<SideBarProps> = ({ toggleDarkMode, isDarkMode }): React.
                       {isDarkMode ? <BsSun size={20} /> : <BsMoon size={20} />}
                     </button>
                   </div>
-                  <div className="flex justify-between">
+                  <div className="flex justify-between items-center">
                     <button
                       onClick={toggleCalendar}
                       className={`flex items-center justify-center p-2 rounded-full ${
@@ -556,6 +581,11 @@ const SideBar: React.FC<SideBarProps> = ({ toggleDarkMode, isDarkMode }): React.
       <AccountSettingsPopup
         isVisible={isAccountSettingsVisible}
         onClose={toggleAccountSettings}
+        isDarkMode={isDarkMode}
+      />
+      <UpgradePlanProps 
+        isVisible={isUpgradePlanVisible}
+        onClose={toggleUpgradePlan}
         isDarkMode={isDarkMode}
       />
     </div>
