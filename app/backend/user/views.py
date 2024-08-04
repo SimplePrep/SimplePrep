@@ -108,9 +108,10 @@ class UpdateUserView(APIView):
             user.first_name = first_name
             user.last_name = last_name
             user.subscription_type = subscription_type
-            user.save()
+            user.save(update_fields=['first_name', 'last_name', 'subscription_type', 'updated_at'])
             return Response({'success': "User information updated successfully"}, status=status.HTTP_200_OK)
         except Exception as e:
+            logger.error(f"Error updating user: {e}")
             return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 

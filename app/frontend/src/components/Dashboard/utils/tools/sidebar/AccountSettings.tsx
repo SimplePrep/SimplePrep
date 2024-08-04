@@ -57,13 +57,17 @@ const AccountSettingsPopup: React.FC<AccountSettingsPopupProps> = ({ isVisible, 
     const user = auth.currentUser;
     if (user) {
       try {
+        // Update display name in Firebase Auth
         await updateProfile(user, { displayName });
+        
         // Update backend database
         const [firstName, lastName] = displayName.split(' ');
         await updateUserDetails({ first_name: firstName, last_name: lastName, updated_at: new Date().toISOString() });
+        
         alert('Display name updated successfully');
         onClose();
       } catch (error) {
+        // Handle the error appropriately
         alert('Error updating display name: ' + (error as Error).message);
       }
     }
