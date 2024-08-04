@@ -7,7 +7,7 @@ from .models import TempUser
 User = get_user_model()
 class UserAdmin(admin.ModelAdmin):
 
-    list_display = ('id', 'first_name', 'last_name', 'email', 'created_at')
+    list_display = ('id', 'first_name', 'last_name', 'email', 'created_at', 'updated_at')
     list_display_links = ('id', 'first_name', 'last_name', 'email', )
     search_fields = ('first_name', 'last_name', 'email', )
     ordering = ['email']
