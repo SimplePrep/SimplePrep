@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { IoClose, IoTrashOutline } from 'react-icons/io5';
-import { auth, db } from '../../../../auth_utils/firebaseConfig';
+import { auth } from '../../../../auth_utils/firebaseConfig';
 import { updateProfile, deleteUser } from 'firebase/auth';
-import { getUserDetails, updateUserDetails } from '../../../../auth_utils/axios/axiosServices';
 import Silver from '../../../../assets/silverIcon.png';
 import Gold from '../../../../assets/goldIcon.png';
 import Platinum from '../../../../assets/platinumIcon.png';
 import { MdDataSaverOff } from 'react-icons/md';
-import axios, { AxiosError } from 'axios';
+import { getUserDetails, updateUserDetails } from '../../../../auth_utils/axios/axiosServices';
 
 interface AccountSettingsPopupProps {
   isVisible: boolean;
@@ -24,13 +23,20 @@ const AccountSettingsPopup: React.FC<AccountSettingsPopupProps> = ({ isVisible, 
 
   useEffect(() => {
     const fetchUserDetails = async () => {
-      try {
-        const userData = await getUserDetails();
-        setUserDetails(userData);
-        setMemberSince(new Date(userData.created_at).toLocaleDateString());
-        setSubscriptionPlan(userData.subscription_type);
-      } catch (error) {
-        console.error('Error fetching user details:', error);
+      if (auth.currentUser) {
+        try {
+          const userData = await getUserDetails();
+          setUserDetails(userData);
+          const parsedDate = Date.parse(userData.created_at);
+          if (!isNaN(parsedDate)) {
+            setMemberSince(new Date(parsedDate).toLocaleDateString());
+          } else {
+            console.error('Invalid date format for created_at:', userData.created_at);
+          }
+          setSubscriptionPlan(userData.subscription_type || 'Free');
+        } catch (error) {
+          console.error('Error fetching user details:', error);
+        }
       }
     };
 
@@ -42,37 +48,27 @@ const AccountSettingsPopup: React.FC<AccountSettingsPopupProps> = ({ isVisible, 
     if (user) {
       try {
         await updateProfile(user, { displayName });
+        // Update backend database
         const [firstName, lastName] = displayName.split(' ');
-        await updateUserDetails({
-          first_name: firstName,
-          last_name: lastName,
-          updated_at: new Date().toISOString(),
-        });
+        await updateUserDetails({ first_name: firstName, last_name: lastName, updated_at: new Date().toISOString() });
         alert('Display name updated successfully');
         onClose();
       } catch (error) {
-        if (axios.isAxiosError(error)) {
-          console.error('Error updating display name:', error.response?.data || error.message);
-          alert('Error updating display name: ' + (error.response?.data?.message || error.message));
-        } else {
-          console.error('Unexpected error:', error);
-          alert('An unexpected error occurred');
-        }
+        alert('Error updating display name: ' + (error as Error).message);
       }
     }
   };
 
-  const handleDeleteAccount = async () => {
+  const handleDeleteAccount = () => {
     if (auth.currentUser) {
-      try {
-        await deleteUser(auth.currentUser);
-        alert('Account deleted successfully');
-        onClose();
-      } catch (error) {
-        if (error instanceof AxiosError){
+      deleteUser(auth.currentUser)
+        .then(() => {
+          alert('Account deleted successfully');
+          onClose();
+        })
+        .catch((error) => {
           alert('Error deleting account: ' + error.message);
-        }
-      }
+        });
     }
   };
 
@@ -120,22 +116,30 @@ const AccountSettingsPopup: React.FC<AccountSettingsPopupProps> = ({ isVisible, 
                   />
                 </div>
                 <div className="mb-4">
-                  <p className="text-sm font-medium">Member since: {memberSince}</p>
+                  <p className="text-sm font-medium">Member since</p>
+                  <p className={`w-full p-2 border ${isDarkMode ? 'border-gray-700 bg-gray-900 text-white' : 'border-gray-300 bg-gray-100 text-gray-800'} rounded-lg`}>
+                    {memberSince}
+                  </p>
                 </div>
               </div>
               <div className='w-1/2 flex flex-col gap-3'>
                 <h1 className='font-bold text-lg'>Subscription Details</h1>
                 <hr className='border-slate-400'/>
-                <div className="mb-4 flex items-center">
-                  <p className="text-sm font-medium">Subscription plan: {subscriptionPlan}</p>
-                  {subscriptionPlan && (
-                    <img
-                      src={getSubscriptionIcon(subscriptionPlan)}
-                      alt={`${subscriptionPlan} icon`}
-                      className="w-8 h-8 ml-2"
-                    />
-                  )}
+                <div className="flex flex-col">
+                  <p className="text-sm font-medium mb-4">Subscription plan</p>
+                  <div className={`w-full p-2 border ${isDarkMode ? 'border-gray-700 bg-gray-900 text-white' : 'border-gray-300 bg-gray-100 text-gray-800'} rounded-lg`}>
+                    {subscriptionPlan && (
+                      <img
+                        src={getSubscriptionIcon(subscriptionPlan)}
+                        alt={`${subscriptionPlan} icon`}
+                        className="w-8 h-8 ml-2"
+                      />
+                    )}
+                    {subscriptionPlan}
+                  </div>
+                  
                 </div>
+
               </div>
             </div>
             <div className="flex flex-row justify-center gap-10 p-5">
@@ -151,7 +155,7 @@ const AccountSettingsPopup: React.FC<AccountSettingsPopupProps> = ({ isVisible, 
                 className={`flex flex-row gap-1 items-center py-2 px-4 rounded ${isDarkMode ? 'bg-blue-500 text-white' : 'bg-blue-600 text-white'} hover:bg-blue-700`}
               >
                 <MdDataSaverOff size={20} />
-                Save Change
+                Save Changes
               </button>
             </div>
           </div>
