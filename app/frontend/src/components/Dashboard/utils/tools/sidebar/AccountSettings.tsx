@@ -6,7 +6,7 @@ import { updateProfile, deleteUser } from 'firebase/auth';
 import Silver from '../../../../assets/silverIcon.png';
 import Gold from '../../../../assets/goldIcon.png';
 import Platinum from '../../../../assets/platinumIcon.png';
-import { MdDataSaverOff } from 'react-icons/md';
+import { MdDataSaverOff, MdErrorOutline } from 'react-icons/md';
 import { getUserDetails, updateUserDetails } from '../../../../auth_utils/axios/axiosServices';
 
 interface AccountSettingsPopupProps {
@@ -20,6 +20,7 @@ const AccountSettingsPopup: React.FC<AccountSettingsPopupProps> = ({ isVisible, 
   const [displayName, setDisplayName] = useState(auth.currentUser?.displayName || '');
   const [memberSince, setMemberSince] = useState('');
   const [subscriptionPlan, setSubscriptionPlan] = useState('');
+  const [notification, setNotification] = useState('');
 
   useEffect(() => {
     const fetchUserDetails = async () => {
@@ -54,6 +55,11 @@ const AccountSettingsPopup: React.FC<AccountSettingsPopupProps> = ({ isVisible, 
   }, []);
 
   const handleSave = async () => {
+    if (!displayName.trim()) {
+      setNotification('Profile Name cannot be empty');
+      return;
+    }
+
     const user = auth.currentUser;
     if (user) {
       try {
@@ -116,6 +122,20 @@ const AccountSettingsPopup: React.FC<AccountSettingsPopupProps> = ({ isVisible, 
                 <IoClose size={24} />
               </button>
             </div>
+            <AnimatePresence>
+              {notification && (
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{ duration: 0.3 }}
+                  className="flex flex-row items-center justify-center gap-3 max-w-xs mx-auto bg-slate-500 text-white p-2 mb-4 rounded"
+                >
+                  <MdErrorOutline size={20} />
+                  {notification}
+                </motion.div>
+              )}
+            </AnimatePresence>
             <div className='flex flex-row gap-10 p-4'>
               <div className='w-1/2 flex flex-col gap-3'>
                 <h1 className='font-bold text-lg'>Personal Information</h1>
