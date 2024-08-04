@@ -1,7 +1,6 @@
 import axiosInstance from './axiosInterceptor';
-import { Chapter, Module, Post, Question, Reply, Section, TestReport, TestResult, Tutorial, UserAnswer } from '../types';
+import { Chapter, Module, Post, Question, Reply, Section, TestReport, TestResult, Tutorial, UserAnswer, UserDetails } from '../types';
 
-// Example function to get tests
 export const getTests = async () => {
   try {
     const response = await axiosInstance.get('api/core/tests');
@@ -239,3 +238,33 @@ interface TestModuleDetails {
       throw error;
     }
   }
+
+  
+  export const getUserDetails = async () => {
+    try{
+      const response = await axiosInstance.get(`/auth/user/user-details`)
+      return response.data;
+    } catch(error){
+      console.error('Error fetching section: ', error);
+      throw error;
+    }
+  }
+
+  export const updateUserDetails = async (userDetails: Partial<UserDetails>): Promise<UserDetails> => {
+    try {
+      const response = await axiosInstance.put('/auth/user/update-details/', userDetails);
+      return response.data;
+    } catch (error) {
+      console.error('Error updating user details:', error);
+      throw error;
+    }
+  };
+
+  export const deleteUserProfile = async (): Promise<void> => {
+    try {
+      await axiosInstance.delete('/auth/user/delete-account');
+    } catch (error) {
+      console.error('Error deleting user profile: ', error);
+      throw error;
+    }
+  };
