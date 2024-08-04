@@ -252,7 +252,7 @@ interface TestModuleDetails {
 
   export const updateUserDetails = async (userDetails: Partial<UserDetails>): Promise<UserDetails> => {
     try {
-      const response = await axiosInstance.put('/auth/user/update-details/', userDetails);
+      const response = await axiosInstance.put('/auth/user/update-user/', userDetails);
       return response.data;
     } catch (error) {
       console.error('Error updating user details:', error);
