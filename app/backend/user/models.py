@@ -24,7 +24,7 @@ class UserAccountManager(BaseUserManager):
 
 class User(AbstractBaseUser, PermissionsMixin):
     class SubscriptionType(models.TextChoices):
-        Free = 'free'
+        Free = 'Free'
         Nova = 'Nova+'
         NovaPro = 'Nova Pro'
 
