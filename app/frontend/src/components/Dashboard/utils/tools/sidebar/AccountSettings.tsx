@@ -115,8 +115,8 @@ const AccountSettingsPopup: React.FC<AccountSettingsPopupProps> = ({ isVisible, 
           transition={{ duration: 0.3 }}
           className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
         >
-          <div className={`rounded-lg w-[800px] ${isDarkMode ? 'bg-gray-800 text-white' : 'bg-white text-gray-800'}`}>
-            <div className="flex justify-between items-center mb-4 bg-[#2d3855] p-3 rounded-t-lg">
+          <div className={`rounded-lg w-[800px] ${isDarkMode ? 'bg-[#1d263b] text-white' : 'bg-slate-200 text-gray-800'}`}>
+            <div className={`flex justify-between items-center mb-4  p-3 rounded-t-lg border-b-[1px] border-slate-400`}>
               <h2 className="text-2xl font-bold">Account Settings</h2>
               <button onClick={onClose} className="p-2 rounded-full hover:bg-blue-500">
                 <IoClose size={24} />
