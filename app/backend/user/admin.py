@@ -13,7 +13,7 @@ class UserAdmin(admin.ModelAdmin):
     ordering = ['email']
     list_per_page = 25
     fieldsets = (
-        (None, {'fields': ('email', 'first_name', 'last_name', 'firebase_uid', 'created_at', 'updated_at')}),
+        (None, {'fields': ('email', 'first_name', 'last_name', 'firebase_uid',)}),
         ('Permissions', {'fields': ('is_staff', 'is_superuser', 'groups', 'user_permissions')}),
         ('Important dates', {'fields': ('last_login',)}),
     )
