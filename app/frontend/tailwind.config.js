@@ -13,6 +13,7 @@ module.exports = {
         'nunito': ['Nunito', 'sans-serif'],
         'space-grotesk': ['"Space Grotesk"', 'sans-serif'],
       },
+
       keyframes: {
         fadeIn: {
           '0%': { opacity: '0' },
@@ -22,11 +23,17 @@ module.exports = {
           '100%': {
             transform: 'translateX(100%)',
           },
+        blink: {
+          '0%, 50%, 100%': { opacity: 1 },
+          '25%, 75%': { opacity: 0 },
+        },
         },
       },
       animation: {
         fadeIn: 'fadeIn 0.5s ease-out forwards',
         shimmer: 'shimmer 1.5s infinite',
+        blink: 'blink 10s ease-in-out infinite',
+
       },
     },
   },
