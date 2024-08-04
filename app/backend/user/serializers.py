@@ -1,9 +1,8 @@
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
-from django.contrib.auth.password_validation import validate_password
 from .models import TempUser
-User = get_user_model()
 
+User = get_user_model()
 
 class UserSerializer(serializers.ModelSerializer):
     subscription_type = serializers.ChoiceField(choices=User.SubscriptionType.choices, default=User.SubscriptionType.Free)
@@ -12,7 +11,7 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('id', 'email', 'first_name', 'last_name', 'subscription_type', 'firebase_uid', 'created_at', 'updated_at')
-        read_only_fields = ('id', 'firebase_uid')
+        read_only_fields = ('id', 'firebase_uid', 'created_at')
 
     def validate_email(self, value):
         value = User.objects.normalize_email(value)
