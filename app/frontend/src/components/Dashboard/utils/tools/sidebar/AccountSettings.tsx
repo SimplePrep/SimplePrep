@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { IoClose, IoTrashOutline } from 'react-icons/io5';
 import { auth } from '../../../../auth_utils/firebaseConfig';
@@ -8,7 +9,7 @@ import Gold from '../../../../assets/goldIcon.png';
 import Platinum from '../../../../assets/platinumIcon.png';
 import { MdDataSaverOff, MdErrorOutline } from 'react-icons/md';
 import { getUserDetails, updateUserDetails, deleteUserProfile } from '../../../../auth_utils/axios/axiosServices';
-import { useNavigate } from 'react-router-dom';
+import { AxiosError } from 'axios';
 
 interface AccountSettingsPopupProps {
   isVisible: boolean;
@@ -17,6 +18,7 @@ interface AccountSettingsPopupProps {
 }
 
 const AccountSettingsPopup: React.FC<AccountSettingsPopupProps> = ({ isVisible, onClose, isDarkMode }) => {
+  const navigate = useNavigate();
   const [userDetails, setUserDetails] = useState<any>(null);
   const [displayName, setDisplayName] = useState(auth.currentUser?.displayName || '');
   const [memberSince, setMemberSince] = useState('');
@@ -25,7 +27,6 @@ const AccountSettingsPopup: React.FC<AccountSettingsPopupProps> = ({ isVisible, 
   const [isDeleteConfirmVisible, setIsDeleteConfirmVisible] = useState(false);
   const [isSuccessPopupVisible, setIsSuccessPopupVisible] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
-  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchUserDetails = async () => {
@@ -100,20 +101,25 @@ const AccountSettingsPopup: React.FC<AccountSettingsPopupProps> = ({ isVisible, 
     if (auth.currentUser) {
       try {
         const response = await deleteUserProfile();
-        if (response.status === 200) {
+        console.log('Delete profile response:', response);
+        
+        if (response && response.status === 200 && response.data.success) {
           // Show success popup
-          setSuccessMessage('Account deleted successfully');
+          setSuccessMessage(response.data.success);
           setIsSuccessPopupVisible(true);
           setTimeout(() => {
             setIsSuccessPopupVisible(false);
             onClose();
-            navigate('/');
+            navigate('/'); // Navigate to home page
           }, 3000);
         } else {
           throw new Error('Failed to delete user profile');
         }
       } catch (error) {
-        if (error instanceof Error) {
+        console.error('Error in handleDeleteAccount:', error);
+        if (error instanceof AxiosError && error.response && error.response.data && error.response.data.error) {
+          alert('Error deleting profile: ' + error.response.data.error);
+        } else if (error instanceof Error) {
           alert('Error deleting profile: ' + error.message);
         } else {
           alert('An unexpected error occurred');
@@ -295,7 +301,7 @@ const AccountSettingsPopup: React.FC<AccountSettingsPopupProps> = ({ isVisible, 
                   Got it
                 </button>
                 <button
-                  onClick={() => { setIsSuccessPopupVisible(false); onClose(); }}
+                  onClick={() => { setIsSuccessPopupVisible(false); onClose()}}
                   className={`py-2 px-4 rounded ${isDarkMode ? 'bg-blue-500 text-white' : 'bg-blue-600 text-white'} hover:bg-blue-700`}
                 >
                   Go home
