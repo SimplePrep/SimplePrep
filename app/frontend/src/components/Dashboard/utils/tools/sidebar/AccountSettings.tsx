@@ -98,7 +98,7 @@ const AccountSettingsPopup: React.FC<AccountSettingsPopupProps> = ({ isVisible, 
     if (auth.currentUser) {
       try {
         const response = await deleteUserProfile();
-        if (response.status === 204) {
+        if (response.status === 200) {
           // Show success popup
           setSuccessMessage('Account deleted successfully');
           setIsSuccessPopupVisible(true);
