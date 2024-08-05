@@ -15,6 +15,16 @@ const DashboardPage: React.FC<DashboardPageProps> = ({
   const [isLoading, setIsLoading] = useState(true);
   const darkModeClass = isDarkMode ? 'dark-background transition-colors duration-300' : 'light-background transition-colors duration-300';
 
+  useEffect(() => {
+    // Simulate a loading delay (e.g., fetching user data or other async operations)
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 2000);
+
+    // Cleanup the timer if the component unmounts before the timer completes
+    return () => clearTimeout(timer);
+  }, []);
+
   const handleLoadComplete = () => {
     setIsLoading(false);
   };
@@ -26,7 +36,7 @@ const DashboardPage: React.FC<DashboardPageProps> = ({
         minLoadTime={2000}
         onLoadComplete={handleLoadComplete}
         text="Loading Dashboard..."
-        isDarkMode={!isDarkMode}
+        isDarkMode={isDarkMode}
       />
     );
   }

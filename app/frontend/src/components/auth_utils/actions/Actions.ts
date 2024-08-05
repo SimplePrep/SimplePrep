@@ -174,23 +174,19 @@ export const SendResetPasswordEmail = (email: string) => async (dispatch: Dispat
   }
 };
 
-export const checkAuthenticated = (): AppThunk => async (dispatch) => {
+export const checkAuthenticated = () => async (dispatch: Dispatch) => {
   dispatch(authLoading());
 
   try {
-    const user = auth.currentUser;
-
-    if (user && user.emailVerified) {
-      dispatch(authSuccess());
-    } else {
-      dispatch(signOutAction());
-    }
+    onAuthStateChanged(auth, (user) => {
+      if (user && user.emailVerified) {
+        dispatch(authSuccess());
+      } else {
+        dispatch(signOutAction());
+      }
+    });
   } catch (error) {
-    if (error instanceof Error) {
-      dispatch(authError(error.message));
-    } else {
-      dispatch(authError('An unexpected error occurred.'));
-    }
+    dispatch(authError('Failed to check authentication status.'));
   }
 };
 
