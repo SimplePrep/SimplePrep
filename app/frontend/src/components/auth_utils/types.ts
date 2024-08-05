@@ -1,4 +1,10 @@
 import { User } from 'firebase/auth';
+import { ThunkAction } from 'redux-thunk';
+import { Action } from 'redux';
+import { RootState } from '../store';
+
+// Define ThunkAction type
+export type AppThunk = ThunkAction<void, RootState, unknown, Action<string>>;
 
 export interface UserDetails {
   id: number;
