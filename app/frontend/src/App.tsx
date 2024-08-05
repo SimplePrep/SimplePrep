@@ -18,6 +18,7 @@ import NotFoundPage from './pages/404NotFoundPage';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from './components/store';
 import { setTheme } from './components/auth_utils/reducers/authReducer';
+import AuthenticatedComponent from './components/auth_utils/AuthenticatedComponent';
 
 const App = () => {
   const { theme } = useSelector((state: RootState) => state.auth);
@@ -38,7 +39,11 @@ const App = () => {
         </Route>
         <Route
           path="demo"
-          element={<DashboardPage toggleDarkMode={toggleDarkMode} isDarkMode={theme === 'dark'} />}
+          element={
+            <AuthenticatedComponent>
+              <DashboardPage toggleDarkMode={toggleDarkMode} isDarkMode={theme === 'dark'} />
+            </AuthenticatedComponent>
+        }
         >
           <Route index element={<Contents isDarkMode={theme === 'dark'} />} />
           <Route path="dashboard" element={<Contents isDarkMode={theme === 'dark'} />} />

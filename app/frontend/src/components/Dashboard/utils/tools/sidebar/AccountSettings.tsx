@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 import { motion, AnimatePresence } from 'framer-motion';
 import { IoClose, IoTrashOutline } from 'react-icons/io5';
 import { auth } from '../../../../auth_utils/firebaseConfig';
@@ -10,6 +11,7 @@ import Platinum from '../../../../assets/platinumIcon.png';
 import { MdDataSaverOff, MdErrorOutline } from 'react-icons/md';
 import { getUserDetails, updateUserDetails, deleteUserProfile } from '../../../../auth_utils/axios/axiosServices';
 import { AxiosError } from 'axios';
+import { resetState } from '../../../../auth_utils/reducers/authReducer';
 
 interface AccountSettingsPopupProps {
   isVisible: boolean;
@@ -18,6 +20,7 @@ interface AccountSettingsPopupProps {
 }
 
 const AccountSettingsPopup: React.FC<AccountSettingsPopupProps> = ({ isVisible, onClose, isDarkMode }) => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const [userDetails, setUserDetails] = useState<any>(null);
   const [displayName, setDisplayName] = useState(auth.currentUser?.displayName || '');
@@ -108,6 +111,7 @@ const AccountSettingsPopup: React.FC<AccountSettingsPopupProps> = ({ isVisible, 
           setSuccessMessage(response.data.success);
           setIsSuccessPopupVisible(true);
           setTimeout(() => {
+            dispatch(resetState()); // Clear Redux state
             setIsSuccessPopupVisible(false);
             onClose();
             navigate('/'); // Navigate to home page
@@ -301,7 +305,7 @@ const AccountSettingsPopup: React.FC<AccountSettingsPopupProps> = ({ isVisible, 
                   Got it
                 </button>
                 <button
-                  onClick={() => { setIsSuccessPopupVisible(false); onClose()}}
+                  onClick={() => { setIsSuccessPopupVisible(false); onClose(); dispatch(resetState()); navigate('/')}}
                   className={`py-2 px-4 rounded ${isDarkMode ? 'bg-blue-500 text-white' : 'bg-blue-600 text-white'} hover:bg-blue-700`}
                 >
                   Go home

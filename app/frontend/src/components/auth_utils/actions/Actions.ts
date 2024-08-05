@@ -11,7 +11,7 @@ import {
 } from 'firebase/auth';
 import { signOut as firebaseSignOut } from 'firebase/auth';
 import axios from 'axios';
-import { LoginFormValues, UserFormValues } from '../types';
+import { AppThunk, LoginFormValues, UserFormValues } from '../types';
 import { authLoading, authSuccess, authError, signOut as signOutAction, clearError } from '../reducers/authReducer';
 
 // Error mapping function
@@ -174,7 +174,7 @@ export const SendResetPasswordEmail = (email: string) => async (dispatch: Dispat
   }
 };
 
-export const checkAuthenticated = () => async (dispatch: Dispatch) => {
+export const checkAuthenticated = (): AppThunk => async (dispatch) => {
   dispatch(authLoading());
 
   try {
@@ -187,8 +187,7 @@ export const checkAuthenticated = () => async (dispatch: Dispatch) => {
     }
   } catch (error) {
     if (error instanceof Error) {
-      const errorMessage = getErrorMessage(error.message);
-      dispatch(authError(errorMessage));
+      dispatch(authError(error.message));
     } else {
       dispatch(authError('An unexpected error occurred.'));
     }
@@ -210,4 +209,3 @@ export const loadUser = () => (dispatch: Dispatch) => {
 export const clearAuthError = () => (dispatch: Dispatch) => {
   dispatch(clearError());
 };
-

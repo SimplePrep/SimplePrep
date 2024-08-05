@@ -43,8 +43,11 @@ const authSlice = createSlice({
       state.theme = action.payload;
       localStorage.setItem('theme', action.payload);
     },
+    resetState(state) {
+      return initialState;
+    },
   },
 });
 
-export const { authLoading, authSuccess, authError, signOut, clearError, setTheme } = authSlice.actions;
+export const { authLoading, authSuccess, authError, signOut, clearError, setTheme, resetState } = authSlice.actions;
 export default authSlice.reducer;
