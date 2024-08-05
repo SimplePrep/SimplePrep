@@ -2,12 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { IoClose, IoTrashOutline } from 'react-icons/io5';
 import { auth } from '../../../../auth_utils/firebaseConfig';
-import { updateProfile, deleteUser } from 'firebase/auth';
+import { updateProfile } from 'firebase/auth';
 import Silver from '../../../../assets/silverIcon.png';
 import Gold from '../../../../assets/goldIcon.png';
 import Platinum from '../../../../assets/platinumIcon.png';
 import { MdDataSaverOff, MdErrorOutline } from 'react-icons/md';
-import { getUserDetails, updateUserDetails } from '../../../../auth_utils/axios/axiosServices';
+import { getUserDetails, updateUserDetails, deleteUserProfile } from '../../../../auth_utils/axios/axiosServices';
 
 interface AccountSettingsPopupProps {
   isVisible: boolean;
@@ -21,6 +21,8 @@ const AccountSettingsPopup: React.FC<AccountSettingsPopupProps> = ({ isVisible, 
   const [memberSince, setMemberSince] = useState('');
   const [subscriptionPlan, setSubscriptionPlan] = useState('');
   const [notification, setNotification] = useState('');
+  const [isDeleteConfirmVisible, setIsDeleteConfirmVisible] = useState(false);
+  const [isSuccessPopupVisible, setIsSuccessPopupVisible] = useState(false);
 
   useEffect(() => {
     const fetchUserDetails = async () => {
@@ -70,8 +72,12 @@ const AccountSettingsPopup: React.FC<AccountSettingsPopupProps> = ({ isVisible, 
         const [firstName, lastName] = displayName.split(' ');
         await updateUserDetails({ first_name: firstName, last_name: lastName, updated_at: new Date().toISOString() });
         
-        alert('Display name updated successfully');
-        onClose();
+        // Show success popup
+        setIsSuccessPopupVisible(true);
+        setTimeout(() => {
+          setIsSuccessPopupVisible(false);
+          onClose();
+        }, 3000);
       } catch (error) {
         // Handle the error appropriately
         alert('Error updating display name: ' + (error as Error).message);
@@ -79,16 +85,19 @@ const AccountSettingsPopup: React.FC<AccountSettingsPopupProps> = ({ isVisible, 
     }
   };
 
-  const handleDeleteAccount = () => {
+  const handleDeleteAccount = async () => {
     if (auth.currentUser) {
-      deleteUser(auth.currentUser)
-        .then(() => {
-          alert('Account deleted successfully');
-          onClose();
-        })
-        .catch((error) => {
-          alert('Error deleting account: ' + error.message);
-        });
+      try {
+        await deleteUserProfile();
+        alert('Account deleted successfully');
+        onClose();
+      } catch (error) {
+        if (error instanceof Error) {
+          alert('Error deleting profile: ' + error.message);
+        } else {
+          alert('An unexpected error occurred');
+        }
+      }
     }
   };
 
@@ -103,6 +112,19 @@ const AccountSettingsPopup: React.FC<AccountSettingsPopupProps> = ({ isVisible, 
       default:
         return null;
     }
+  };
+
+  const showDeleteConfirmation = () => {
+    setIsDeleteConfirmVisible(true);
+  };
+
+  const hideDeleteConfirmation = () => {
+    setIsDeleteConfirmVisible(false);
+  };
+
+  const confirmDeleteAccount = () => {
+    hideDeleteConfirmation();
+    handleDeleteAccount();
   };
 
   return (
@@ -176,7 +198,7 @@ const AccountSettingsPopup: React.FC<AccountSettingsPopupProps> = ({ isVisible, 
             </div>
             <div className="flex flex-row justify-center gap-10 p-5">
               <button
-                onClick={handleDeleteAccount}
+                onClick={showDeleteConfirmation}
                 className={`flex flex-row gap-1 items-center py-2 px-4 rounded ${isDarkMode ? 'bg-red-500 text-white' : 'bg-red-500 text-white'} hover:bg-red-600`}
               >
                 <IoTrashOutline size={20} />
@@ -189,6 +211,75 @@ const AccountSettingsPopup: React.FC<AccountSettingsPopupProps> = ({ isVisible, 
                 <MdDataSaverOff size={20} />
                 Save Changes
               </button>
+            </div>
+          </div>
+        </motion.div>
+      )}
+
+      {isDeleteConfirmVisible && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.3 }}
+          className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+        >
+          <div className={`rounded-lg w-[400px] ${isDarkMode ? 'bg-[#1d263b] text-white' : 'bg-slate-200 text-gray-800'}`}>
+            <div className="p-4">
+              <h2 className="text-xl font-bold mb-4">Confirm Deletion</h2>
+              <p className="mb-6">Are you sure you want to delete your account? This action cannot be undone.</p>
+              <div className="flex justify-end gap-4">
+                <button
+                  onClick={confirmDeleteAccount}
+                  className={`py-2 px-4 rounded ${isDarkMode ? 'bg-red-500 text-white' : 'bg-red-500 text-white'} hover:bg-red-600 `}
+                >
+                  Delete Account
+                </button>
+                <button
+                  onClick={hideDeleteConfirmation}
+                  className={`py-2 px-4 rounded ${isDarkMode ? 'bg-gray-600 text-white' : 'bg-gray-300 text-gray-800'} hover:bg-gray-500`}
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        </motion.div>
+      )}
+
+      {isSuccessPopupVisible && (
+        <motion.div
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.8 }}
+          transition={{ duration: 0.3 }}
+          className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+        >
+          <div className={`rounded-lg w-[400px] ${isDarkMode ? 'bg-[#1d263b] text-white' : 'bg-slate-200 text-gray-800'}`}>
+            <div className="p-4 text-center">
+              <div className="flex justify-center mb-4">
+                <div className="bg-green-500 rounded-full p-2">
+                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                  </svg>
+                </div>
+              </div>
+              <h2 className="text-xl font-bold mb-2">Congratulations</h2>
+              <p className="mb-6">Profile has been updated successfully!</p>
+              <div className="flex justify-center gap-4">
+                <button
+                  onClick={() => setIsSuccessPopupVisible(false)}
+                  className={`py-2 px-4 rounded ${isDarkMode ? 'bg-gray-600 text-white' : 'bg-gray-300 text-gray-800'} hover:bg-gray-700`}
+                >
+                  Got it
+                </button>
+                <button
+                  onClick={onClose}
+                  className={`py-2 px-4 rounded ${isDarkMode ? 'bg-blue-500 text-white' : 'bg-blue-600 text-white'} hover:bg-blue-700`}
+                >
+                  Go home
+                </button>
+              </div>
             </div>
           </div>
         </motion.div>
