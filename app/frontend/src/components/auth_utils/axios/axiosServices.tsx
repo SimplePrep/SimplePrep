@@ -260,12 +260,12 @@ interface TestModuleDetails {
     }
   };
 
-  export const deleteUserProfile = async () => {
+  export const deleteUserProfile = async (): Promise<any> => {
     try {
-      const response = await axiosInstance.delete('/auth/user/delete-account');
+      const response = await axiosInstance.delete('/auth/user/delete-user');
       return response;
     } catch (error) {
-      console.error('Error deleting user profile: ', error);
+      console.error('Error deleting user profile:', error);
       throw error;
     }
   };
