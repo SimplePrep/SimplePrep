@@ -155,7 +155,7 @@ const TestPageUI = () => {
   if (isLoading) {
     return (
       <LoaderWrapper
-        size='35px'
+        size='250px'
         minLoadTime={2000}
         text="Loading Test Module..."
         isDarkMode={theme === 'dark'}
