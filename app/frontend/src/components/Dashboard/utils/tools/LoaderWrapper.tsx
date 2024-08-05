@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import Lottie from 'lottie-react';
-import bookLoader from '../../../assets/bookLoader2.json'; // Adjust the path as needed
+import React, { useState, useEffect, useRef } from 'react';
+import Lottie, { LottieRefCurrentProps } from 'lottie-react';
+import bookLoader from '../../../assets/bookLoader.json'; // Adjust the path as needed
 
 interface LoaderWrapperProps {
   minLoadTime?: number;
@@ -8,16 +8,19 @@ interface LoaderWrapperProps {
   size?: string;
   text?: string;
   isDarkMode?: boolean;
+  speed?: number;
 }
 
 const LoaderWrapper: React.FC<LoaderWrapperProps> = ({
-  minLoadTime = 2000,
+  minLoadTime = 3000,
   onLoadComplete,
   size = "64px",
   text = "Loading...",
   isDarkMode = false,
+  speed = 1.5, // Default speed is 1
 }) => {
   const [showLoader, setShowLoader] = useState(true);
+  const lottieRef = useRef<LottieRefCurrentProps>(null);
 
   useEffect(() => {
     const startTime = Date.now();
@@ -35,13 +38,23 @@ const LoaderWrapper: React.FC<LoaderWrapperProps> = ({
     return () => clearTimeout(timer);
   }, [minLoadTime, onLoadComplete]);
 
+  useEffect(() => {
+    if (lottieRef.current) {
+      lottieRef.current.setSpeed(speed);
+    }
+  }, [speed]);
+
   if (!showLoader) {
     return null;
   }
 
   return (
     <div className="w-full h-screen flex flex-col items-center justify-center">
-      <Lottie animationData={bookLoader} style={{ width: size, height: size }} />
+      <Lottie
+        lottieRef={lottieRef}
+        animationData={bookLoader}
+        style={{ width: size, height: size }}
+      />
       <span className={`mt-4 ${isDarkMode ? 'text-white' : 'text-black'}`}>{text}</span>
     </div>
   );
