@@ -23,6 +23,7 @@ const AccountSettingsPopup: React.FC<AccountSettingsPopupProps> = ({ isVisible, 
   const [notification, setNotification] = useState('');
   const [isDeleteConfirmVisible, setIsDeleteConfirmVisible] = useState(false);
   const [isSuccessPopupVisible, setIsSuccessPopupVisible] = useState(false);
+  const [successMessage, setSuccessMessage] = useState('');
 
   useEffect(() => {
     const fetchUserDetails = async () => {
@@ -67,20 +68,29 @@ const AccountSettingsPopup: React.FC<AccountSettingsPopupProps> = ({ isVisible, 
       try {
         // Update display name in Firebase Auth
         await updateProfile(user, { displayName });
-        
+
         // Update backend database
         const [firstName, lastName] = displayName.split(' ');
-        await updateUserDetails({ first_name: firstName, last_name: lastName, updated_at: new Date().toISOString() });
-        
-        // Show success popup
-        setIsSuccessPopupVisible(true);
-        setTimeout(() => {
-          setIsSuccessPopupVisible(false);
-          onClose();
-        }, 3000);
+        const response = await updateUserDetails({ first_name: firstName, last_name: lastName, updated_at: new Date().toISOString() });
+
+        // Check the response status and show appropriate message
+        if (response && response.status === 200) {
+          // Show success popup
+          setSuccessMessage('Profile has been updated successfully!');
+          setIsSuccessPopupVisible(true);
+          setTimeout(() => {
+            setIsSuccessPopupVisible(false);
+            onClose();
+          }, 3000);
+        } else {
+          throw new Error('Failed to update user details');
+        }
       } catch (error) {
-        // Handle the error appropriately
-        alert('Error updating display name: ' + (error as Error).message);
+        if (error instanceof Error) {
+          alert('Error updating display name: ' + error.message);
+        } else {
+          alert('An unexpected error occurred');
+        }
       }
     }
   };
@@ -88,9 +98,18 @@ const AccountSettingsPopup: React.FC<AccountSettingsPopupProps> = ({ isVisible, 
   const handleDeleteAccount = async () => {
     if (auth.currentUser) {
       try {
-        await deleteUserProfile();
-        alert('Account deleted successfully');
-        onClose();
+        const response = await deleteUserProfile();
+        if (response.status === 204) {
+          // Show success popup
+          setSuccessMessage('Account deleted successfully');
+          setIsSuccessPopupVisible(true);
+          setTimeout(() => {
+            setIsSuccessPopupVisible(false);
+            onClose();
+          }, 3000);
+        } else {
+          throw new Error('Failed to delete user profile');
+        }
       } catch (error) {
         if (error instanceof Error) {
           alert('Error deleting profile: ' + error.message);
@@ -265,7 +284,7 @@ const AccountSettingsPopup: React.FC<AccountSettingsPopupProps> = ({ isVisible, 
                 </div>
               </div>
               <h2 className="text-xl font-bold mb-2">Congratulations</h2>
-              <p className="mb-6">Profile has been updated successfully!</p>
+              <p className="mb-6">{successMessage}</p>
               <div className="flex justify-center gap-4">
                 <button
                   onClick={() => setIsSuccessPopupVisible(false)}
@@ -289,3 +308,4 @@ const AccountSettingsPopup: React.FC<AccountSettingsPopupProps> = ({ isVisible, 
 };
 
 export default AccountSettingsPopup;
+ 

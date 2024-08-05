@@ -250,19 +250,20 @@ interface TestModuleDetails {
     }
   }
 
-  export const updateUserDetails = async (userDetails: Partial<UserDetails>): Promise<UserDetails> => {
+  export const updateUserDetails = async (userDetails: Partial<UserDetails>): Promise<any> => {
     try {
       const response = await axiosInstance.put('/auth/user/update-user', userDetails);
-      return response.data;
+      return response;
     } catch (error) {
       console.error('Error updating user details:', error);
       throw error;
     }
   };
 
-  export const deleteUserProfile = async (): Promise<void> => {
+  export const deleteUserProfile = async () => {
     try {
-      await axiosInstance.delete('/auth/user/delete-account');
+      const response = await axiosInstance.delete('/auth/user/delete-account');
+      return response;
     } catch (error) {
       console.error('Error deleting user profile: ', error);
       throw error;
