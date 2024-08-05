@@ -12,6 +12,7 @@ import { MdDataSaverOff, MdErrorOutline } from 'react-icons/md';
 import { getUserDetails, updateUserDetails, deleteUserProfile } from '../../../../auth_utils/axios/axiosServices';
 import { AxiosError } from 'axios';
 import { resetState } from '../../../../auth_utils/reducers/authReducer';
+import successAnimation from '../../../../assets/successLoad.webm'; // Adjust the path accordingly
 
 interface AccountSettingsPopupProps {
   isVisible: boolean;
@@ -290,11 +291,10 @@ const AccountSettingsPopup: React.FC<AccountSettingsPopupProps> = ({ isVisible, 
           <div className={`rounded-lg w-[400px] ${isDarkMode ? 'bg-[#1d263b] text-white' : 'bg-slate-200 text-gray-800'}`}>
             <div className="p-4 text-center">
               <div className="flex justify-center mb-4">
-                <div className="bg-green-500 rounded-full p-2">
-                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                  </svg>
-                </div>
+                <video width="64" height="64" autoPlay loop muted>
+                  <source src={successAnimation} type="video/webm" />
+                  Your browser does not support the video tag.
+                </video>
               </div>
               <h2 className="text-xl font-bold mb-2">Profile Update</h2>
               <p className="mb-6">{successMessage}</p>
