@@ -262,7 +262,7 @@ interface TestModuleDetails {
 
   export const deleteUserProfile = async (): Promise<any> => {
     try {
-      const response = await axiosInstance.delete('/auth/user/delete-user');
+      const response = await axiosInstance.delete('/auth/user/delete-account');
       return response;
     } catch (error) {
       console.error('Error deleting user profile:', error);
