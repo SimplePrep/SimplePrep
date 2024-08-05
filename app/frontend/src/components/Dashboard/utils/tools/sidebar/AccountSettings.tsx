@@ -8,6 +8,7 @@ import Gold from '../../../../assets/goldIcon.png';
 import Platinum from '../../../../assets/platinumIcon.png';
 import { MdDataSaverOff, MdErrorOutline } from 'react-icons/md';
 import { getUserDetails, updateUserDetails, deleteUserProfile } from '../../../../auth_utils/axios/axiosServices';
+import { useNavigate } from 'react-router-dom';
 
 interface AccountSettingsPopupProps {
   isVisible: boolean;
@@ -24,6 +25,7 @@ const AccountSettingsPopup: React.FC<AccountSettingsPopupProps> = ({ isVisible, 
   const [isDeleteConfirmVisible, setIsDeleteConfirmVisible] = useState(false);
   const [isSuccessPopupVisible, setIsSuccessPopupVisible] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchUserDetails = async () => {
@@ -105,6 +107,7 @@ const AccountSettingsPopup: React.FC<AccountSettingsPopupProps> = ({ isVisible, 
           setTimeout(() => {
             setIsSuccessPopupVisible(false);
             onClose();
+            navigate('/');
           }, 3000);
         } else {
           throw new Error('Failed to delete user profile');
