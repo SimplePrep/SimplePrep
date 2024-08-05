@@ -32,7 +32,7 @@ const AuthenticatedComponent: React.FC<AuthenticatedComponentProps> = ({ childre
   }, [loading, isAuthenticated, isInitialLoad, navigate]);
 
   if (loading || isInitialLoad) {
-    return <LoaderWrapper minLoadTime={2000} onLoadComplete={() => {}} text="Checking authentication..." />;
+    return <LoaderWrapper size='35px'  minLoadTime={2000} onLoadComplete={() => {}} text="Checking authentication..." />;
   }
 
   return <>{isAuthenticated && children}</>;
