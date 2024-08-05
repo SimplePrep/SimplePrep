@@ -80,7 +80,6 @@ const AccountSettingsPopup: React.FC<AccountSettingsPopupProps> = ({ isVisible, 
           setIsSuccessPopupVisible(true);
           setTimeout(() => {
             setIsSuccessPopupVisible(false);
-            onClose();
           }, 3000);
         } else {
           throw new Error('Failed to update user details');
@@ -252,13 +251,13 @@ const AccountSettingsPopup: React.FC<AccountSettingsPopupProps> = ({ isVisible, 
                   onClick={confirmDeleteAccount}
                   className={`py-2 px-4 rounded ${isDarkMode ? 'bg-red-500 text-white' : 'bg-red-500 text-white'} hover:bg-red-600 `}
                 >
-                  Delete Account
+                  Yes, I'm sure
                 </button>
                 <button
                   onClick={hideDeleteConfirmation}
                   className={`py-2 px-4 rounded ${isDarkMode ? 'bg-gray-600 text-white' : 'bg-gray-300 text-gray-800'} hover:bg-gray-500`}
                 >
-                  Cancel
+                  No, take me back
                 </button>
               </div>
             </div>
@@ -293,7 +292,7 @@ const AccountSettingsPopup: React.FC<AccountSettingsPopupProps> = ({ isVisible, 
                   Got it
                 </button>
                 <button
-                  onClick={onClose}
+                  onClick={() => { setIsSuccessPopupVisible(false); onClose(); }}
                   className={`py-2 px-4 rounded ${isDarkMode ? 'bg-blue-500 text-white' : 'bg-blue-600 text-white'} hover:bg-blue-700`}
                 >
                   Go home
@@ -308,4 +307,3 @@ const AccountSettingsPopup: React.FC<AccountSettingsPopupProps> = ({ isVisible, 
 };
 
 export default AccountSettingsPopup;
- 
