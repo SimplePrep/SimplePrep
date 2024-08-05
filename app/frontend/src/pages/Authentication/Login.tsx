@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { FcGoogle } from 'react-icons/fc';
-import { LiaFastForwardSolid } from 'react-icons/lia';
 import { Link, useNavigate } from 'react-router-dom';
 import FloatingLabelInput from './FloatingLabelInput';
 import { useSelector, useDispatch } from 'react-redux';
@@ -8,6 +7,7 @@ import { RootState, AppDispatch } from '../../components/store';
 import { GoogleSignIn, SignIn, clearAuthError } from '../../components/auth_utils/actions/Actions';
 import { LoginFormValues } from '../../components/auth_utils/types';
 import Logo from '../../components/assets/logo-icon.png'
+
 const Login = (): React.ReactElement => {
   const dispatch = useDispatch<AppDispatch>();
   const { isAuthenticated, error: loginError, loading } = useSelector((state: RootState) => state.auth);

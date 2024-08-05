@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import BookLoader from './bookLoader';
+import Lottie from 'lottie-react';
+import bookLoader from '../../../assets/bookLoader2.json'; // Adjust the path as needed
 
 interface LoaderWrapperProps {
   minLoadTime?: number;
@@ -39,15 +40,9 @@ const LoaderWrapper: React.FC<LoaderWrapperProps> = ({
   }
 
   return (
-    <div className="w-full h-screen flex items-center justify-center">
-      <BookLoader
-        size={size}
-        text={text}
-        background="linear-gradient(135deg, #6066FA, #4645F6)"
-        shadowColor={isDarkMode ? "rgba(52, 73, 94, 0.28)" : "rgba(41, 128, 185, 0.28)"}
-        textColor={isDarkMode ? "#2c3e50" : "#2c3e50"}
-        duration={`${minLoadTime / 1000}s`}
-      />
+    <div className="w-full h-screen flex flex-col items-center justify-center">
+      <Lottie animationData={bookLoader} style={{ width: size, height: size }} />
+      <span className={`mt-4 ${isDarkMode ? 'text-white' : 'text-black'}`}>{text}</span>
     </div>
   );
 };
