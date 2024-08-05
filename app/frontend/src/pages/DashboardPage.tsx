@@ -32,11 +32,11 @@ const DashboardPage: React.FC<DashboardPageProps> = ({
   if (isLoading) {
     return (
       <LoaderWrapper
-        size='35px'
-        minLoadTime={2000}
+        size='200px'
+        minLoadTime={3000}
         onLoadComplete={handleLoadComplete}
         text="Loading Dashboard..."
-        isDarkMode={isDarkMode}
+        isDarkMode={false}
       />
     );
   }

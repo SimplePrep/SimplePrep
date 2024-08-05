@@ -291,9 +291,9 @@ const AccountSettingsPopup: React.FC<AccountSettingsPopupProps> = ({ isVisible, 
           <div className={`rounded-lg w-[400px] ${isDarkMode ? 'bg-[#1d263b] text-white' : 'bg-slate-200 text-gray-800'}`}>
             <div className="p-4 text-center">
               <div className="flex justify-center mb-4">
-                <video width="64" height="64" autoPlay loop muted>
-                  <source src={successAnimation} type="video/webm" />
-                  Your browser does not support the video tag.
+                <video width="96" height="96" autoPlay loop muted>
+                    <source src={successAnimation} type="video/webm" />
+                    Your browser does not support the video tag.
                 </video>
               </div>
               <h2 className="text-xl font-bold mb-2">Profile Update</h2>
