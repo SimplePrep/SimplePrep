@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { IoClose, IoSendSharp } from 'react-icons/io5';
 import { FaUser, FaEnvelope, FaPaperPlane, FaFileUpload, FaEye, FaEyeSlash } from 'react-icons/fa';
-import axios from 'axios';
 import { getUserDetails } from '../../../../auth_utils/axios/axiosServices';
+import { sendSupportEmail } from '../../../../auth_utils/axios/axiosServices';
 
 interface SupportFormProps {
   isVisible: boolean;
@@ -58,37 +58,21 @@ const SupportForm: React.FC<SupportFormProps> = ({ isVisible, onClose, isDarkMod
     });
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit =  async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    const formData = new FormData();
-    formData.append('name', formState.name);
-    formData.append('email', formState.email);
-    formData.append('message', formState.message);
-    if (selectedFiles) {
-      Array.from(selectedFiles).forEach((file, index) => {
-        formData.append(`file${index + 1}`, file);
-      });
-    }
-
     try {
-      await axios.post('/send-support-email/', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-
-      setIsSubmitting(false);
-      setShowNotification(true);
-      setTimeout(() => {
-        setShowNotification(false);
-        onClose();
-      }, 3000);
+        await sendSupportEmail({ ...formState, files: selectedFiles });
+        setIsSubmitting(false);
+        setShowNotification(true);
+        setTimeout(() => {
+            setShowNotification(false);
+            onClose();
+        }, 3000);
     } catch (error) {
-      console.error('Error sending support email:', error);
-      setIsSubmitting(false);
-      // Handle error notification
+        setIsSubmitting(false);
+        alert('Failed to send support email.');
     }
   };
 
@@ -274,7 +258,6 @@ const SupportForm: React.FC<SupportFormProps> = ({ isVisible, onClose, isDarkMod
                 By submitting this form, you agree to our <a href="#" className="underline">Privacy Policy</a> and <a href="#" className="underline">Terms of Service</a>.
               </p>
             </div>
-
             {showNotification && (
               <motion.div
                 initial={{ y: -50, opacity: 0 }}
