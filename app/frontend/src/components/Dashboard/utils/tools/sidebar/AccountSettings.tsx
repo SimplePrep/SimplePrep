@@ -13,6 +13,8 @@ import { getUserDetails, updateUserDetails, deleteUserProfile } from '../../../.
 import { AxiosError } from 'axios';
 import { resetState } from '../../../../auth_utils/reducers/authReducer';
 import successAnimation from '../../../../assets/successLoad.webm'; // Adjust the path accordingly
+import successLoader from '../../../../assets/successLoader.json';
+import Lottie from 'lottie-react';
 
 interface AccountSettingsPopupProps {
   isVisible: boolean;
@@ -88,7 +90,7 @@ const AccountSettingsPopup: React.FC<AccountSettingsPopupProps> = ({ isVisible, 
           setIsProfileUpdateSuccessPopupVisible(true);
           setTimeout(() => {
             setIsProfileUpdateSuccessPopupVisible(false);
-          }, 3000);
+          }, 4000);
         } else {
           throw new Error('Failed to update user details');
         }
@@ -282,39 +284,44 @@ const AccountSettingsPopup: React.FC<AccountSettingsPopupProps> = ({ isVisible, 
 
       {isProfileUpdateSuccessPopupVisible && (
         <motion.div
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0, scale: 0.8 }}
-          transition={{ duration: 0.3 }}
-          className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
-        >
-          <div className={`rounded-lg w-[400px] ${isDarkMode ? 'bg-[#1d263b] text-white' : 'bg-slate-200 text-gray-800'}`}>
-            <div className="p-4 text-center">
-              <div className="flex justify-center mb-4">
-                <video width="96" height="96" autoPlay loop muted>
-                    <source src={successAnimation} type="video/webm" />
-                    Your browser does not support the video tag.
-                </video>
-              </div>
-              <h2 className="text-xl font-bold mb-2">Profile Update</h2>
-              <p className="mb-6">{successMessage}</p>
-              <div className="flex justify-center gap-4">
-                <button
-                  onClick={() => setIsProfileUpdateSuccessPopupVisible(false)}
-                  className={`py-2 px-4 rounded ${isDarkMode ? 'bg-gray-600 text-white' : 'bg-gray-300 text-gray-800'} hover:bg-gray-700`}
-                >
-                  Got it
-                </button>
-                <button
-                  onClick={() => { setIsProfileUpdateSuccessPopupVisible(false); onClose(); }}
-                  className={`py-2 px-4 rounded ${isDarkMode ? 'bg-blue-500 text-white' : 'bg-blue-600 text-white'} hover:bg-blue-700`}
-                >
-                  Go home
-                </button>
-              </div>
+        initial={{ opacity: 0, scale: 0.8 }}
+        animate={{ opacity: 1, scale: 1 }}
+        exit={{ opacity: 0, scale: 0.8 }}
+        transition={{ duration: 0.3 }}
+        className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+      >
+        <div className={`rounded-3xl w-[350px] ${isDarkMode ? 'bg-[#1d263b] text-white' : 'bg-slate-50 text-gray-800'}`}>
+          <div className="py-6 text-center">
+            <div className="flex justify-center mb-4">
+            <Lottie
+                animationData={successLoader}
+                style={{ width: 80, height: 80 }}
+                loop={false}
+              />
             </div>
+            <div className='flex flex-col px-14 gap-3'>
+              <h1 className='text-2xl font-extrabold'>Congratulations</h1>
+              <h2 className={`text-base mb-2 ${isDarkMode ? 'text-slate-400': 'text-slate-500'}`}>Profile has been updated successfully!</h2>
+            </div>
+            <p className="">{successMessage}</p>
           </div>
-        </motion.div>
+          <hr className='border-slate-400' />
+          <div className="flex flex-row justify-between">
+              <button
+                onClick={() => setIsProfileUpdateSuccessPopupVisible(false)}
+                className={`h-full w-1/2 py-5 font-bold rounded-bl-3xl ${isDarkMode ? ' text-white ' : ' text-blue-400 hover:text-white '} hover:bg-blue-600 border-r-[1px] border-r-slate-400`}
+              >
+                Got it
+              </button>
+              <button
+                onClick={() => { setIsProfileUpdateSuccessPopupVisible(false); onClose(); }}
+                className={`h-full w-1/2 py-5  font-bold rounded-br-3xl ${isDarkMode ? ' text-white ' : ' text-blue-400 hover:text-white'} hover:bg-blue-600`}
+              >
+                Go home
+              </button>
+          </div>
+        </div>
+      </motion.div>
       )}
 
       {isDeleteSuccessPopupVisible && (
@@ -354,6 +361,7 @@ const AccountSettingsPopup: React.FC<AccountSettingsPopupProps> = ({ isVisible, 
           </div>
         </motion.div>
       )}
+      
     </AnimatePresence>
   );
 };
