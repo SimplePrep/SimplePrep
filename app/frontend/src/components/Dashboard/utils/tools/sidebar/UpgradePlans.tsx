@@ -9,7 +9,6 @@ import Platinum from '../../../../assets/platinumIcon.png';
 import { IoMdCheckmark } from "react-icons/io";
 import Nova from '../../../../assets/nova_owl.png';
 import { getUserDetails, updateUserDetails } from '../../../../auth_utils/axios/axiosServices';
-import { AxiosError } from 'axios';
 
 const UpgradePlan: React.FC<{ isVisible: boolean; onClose: () => void; isDarkMode: boolean }> = ({ isVisible, onClose, isDarkMode }) => {
   const [displayName, setDisplayName] = useState(auth.currentUser?.displayName || '');
