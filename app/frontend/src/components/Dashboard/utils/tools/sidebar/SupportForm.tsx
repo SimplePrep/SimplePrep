@@ -20,11 +20,13 @@ const SupportForm: React.FC<SupportFormProps> = ({ isVisible, onClose, isDarkMod
     const fetchUserDetails = async () => {
       try {
         const userDetails = await getUserDetails();
+        console.log('User Details: ', userDetails)
         setFormState({
           name: userDetails.name || '',
           email: userDetails.email || '',
           message: ''
         });
+        console.log('Form State: ', formState);
       } catch (error) {
         console.error('Error fetching user details:', error);
       }
