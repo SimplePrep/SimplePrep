@@ -20,6 +20,7 @@ import ProfileDropdownItem from './utils/tools/sidebar/ProfileDropDown';
 import AiStar from '../assets/ai_star2.png';
 import { RiSparkling2Fill, RiSparklingFill } from 'react-icons/ri';
 import UpgradePlanProps from './utils/tools/sidebar/UpgradePlans';
+import SupportForm from './utils/tools/sidebar/SupportForm';
 type Notification = {
   id: string;
   type: 'info' | 'warning' | 'error';
@@ -74,6 +75,8 @@ const SideBar: React.FC<SideBarProps> = ({ toggleDarkMode, isDarkMode }): React.
   const [isAccountSettingsVisible, setIsAccountSettingsVisible] = useState(false);
   const [isUserDropdownVisible, setIsUserDropdownVisible] = useState(false);
   const [isUpgradePlanVisible, setIsUpgradePlanVisible] = useState(false);
+  const [isSupportFormVisible, setIsSupportFormVisible] = useState(false);
+
   useEffect(() => {
     const calculateStreak = () => {
       const today = new Date();
@@ -140,6 +143,10 @@ const SideBar: React.FC<SideBarProps> = ({ toggleDarkMode, isDarkMode }): React.
   const toggleAccountSettings = () => {
     setIsAccountSettingsVisible(!isAccountSettingsVisible);
   };
+
+  const toggleSupportForm = () => {
+    setIsSupportFormVisible(!isSupportFormVisible);
+  }
 
   const toggleUserDropdown = () => {
     setIsUserDropdownVisible(!isUserDropdownVisible);
@@ -353,7 +360,7 @@ const SideBar: React.FC<SideBarProps> = ({ toggleDarkMode, isDarkMode }): React.
                       <ProfileDropdownItem
                         icon={<BsPatchQuestion size={20} />}
                         text="Help & Support"
-                        onClick={toggleAccountSettings}
+                        onClick={toggleSupportForm}
                         isDarkMode={isDarkMode}
                       />
                       <ProfileDropdownItem
@@ -581,6 +588,11 @@ const SideBar: React.FC<SideBarProps> = ({ toggleDarkMode, isDarkMode }): React.
       <AccountSettingsPopup
         isVisible={isAccountSettingsVisible}
         onClose={toggleAccountSettings}
+        isDarkMode={isDarkMode}
+      />
+      <SupportForm 
+        isVisible={isSupportFormVisible}
+        onClose={toggleSupportForm}
         isDarkMode={isDarkMode}
       />
       <UpgradePlanProps 

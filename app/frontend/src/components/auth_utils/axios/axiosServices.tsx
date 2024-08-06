@@ -241,11 +241,15 @@ interface TestModuleDetails {
 
   
   export const getUserDetails = async () => {
-    try{
-      const response = await axiosInstance.get(`/auth/user/user-details`)
-      return response.data;
-    } catch(error){
-      console.error('Error fetching section: ', error);
+    try {
+      const response = await axiosInstance.get('/path-to-your-api/user-details');
+      if (response.status === 200 && response.data) {
+        return response.data;
+      } else {
+        throw new Error('Unexpected response structure');
+      }
+    } catch (error) {
+      console.error('Error fetching user details:', error);
       throw error;
     }
   }
