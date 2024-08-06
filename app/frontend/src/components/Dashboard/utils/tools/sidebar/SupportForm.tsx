@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { IoClose, IoSendSharp } from 'react-icons/io5';
-import { FaUser, FaEnvelope, FaPaperPlane, FaFileUpload, FaEye, FaEyeSlash } from 'react-icons/fa';
+import { FaUser, FaEnvelope, FaPaperPlane, FaFileUpload, FaEye, FaEyeSlash, FaTimesCircle } from 'react-icons/fa';
 import { getUserDetails, sendSupportEmail } from '../../../../auth_utils/axios/axiosServices';
 
 interface SupportFormData {
   name: string;
   email: string;
   message: string;
-  files?: FileList | null;
+  files?: File[];
 }
 
 interface SupportFormProps {
@@ -18,7 +18,7 @@ interface SupportFormProps {
 }
 
 const SupportForm: React.FC<SupportFormProps> = ({ isVisible, onClose, isDarkMode }) => {
-  const [formState, setFormState] = useState<SupportFormData>({ name: '', email: '', message: '', files: null });
+  const [formState, setFormState] = useState<SupportFormData>({ name: '', email: '', message: '', files: [] });
   const [filePreviews, setFilePreviews] = useState<string[]>([]);
   const [showPreviews, setShowPreviews] = useState<boolean[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -32,7 +32,7 @@ const SupportForm: React.FC<SupportFormProps> = ({ isVisible, onClose, isDarkMod
           name: `${userDetails.user.first_name} ${userDetails.user.last_name}` || '',
           email: userDetails.user.email || '',
           message: '',
-          files: null,
+          files: [],
         });
       } catch (error) {
         console.error('Error fetching user details:', error);
@@ -49,10 +49,14 @@ const SupportForm: React.FC<SupportFormProps> = ({ isVisible, onClose, isDarkMod
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (files) {
-      setFormState({ ...formState, files: files });
-      const previews = Array.from(files).map(file => URL.createObjectURL(file));
-      setFilePreviews(previews);
-      setShowPreviews(new Array(files.length).fill(false));
+      const newFiles = Array.from(files);
+      setFormState(prevState => ({
+        ...prevState,
+        files: prevState.files ? [...prevState.files, ...newFiles] : newFiles
+      }));
+      const previews = newFiles.map(file => URL.createObjectURL(file));
+      setFilePreviews(prevState => [...prevState, ...previews]);
+      setShowPreviews(prevState => [...prevState, ...new Array(newFiles.length).fill(false)]);
     }
   };
 
@@ -64,6 +68,15 @@ const SupportForm: React.FC<SupportFormProps> = ({ isVisible, onClose, isDarkMod
     });
   };
 
+  const handleRemoveFile = (index: number) => {
+    setFormState(prevState => {
+      const newFiles = prevState.files ? prevState.files.filter((_, i) => i !== index) : [];
+      return { ...prevState, files: newFiles };
+    });
+    setFilePreviews(prevState => prevState.filter((_, i) => i !== index));
+    setShowPreviews(prevState => prevState.filter((_, i) => i !== index));
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -73,7 +86,7 @@ const SupportForm: React.FC<SupportFormProps> = ({ isVisible, onClose, isDarkMod
     formData.append('email', formState.email);
     formData.append('message', formState.message);
     if (formState.files) {
-      Array.from(formState.files).forEach(file => {
+      formState.files.forEach(file => {
         formData.append('files', file, file.name);
       });
     }
@@ -81,6 +94,7 @@ const SupportForm: React.FC<SupportFormProps> = ({ isVisible, onClose, isDarkMod
     try {
       await sendSupportEmail(formData);
       setShowNotification(true);
+      resetFormState();
       setTimeout(() => {
         setShowNotification(false);
         onClose();
@@ -92,14 +106,58 @@ const SupportForm: React.FC<SupportFormProps> = ({ isVisible, onClose, isDarkMod
     }
   };
 
+  const resetFormState = () => {
+    setFormState({
+      name: '',
+      email: '',
+      message: '',
+      files: []
+    });
+    setFilePreviews([]);
+    setShowPreviews([]);
+  };
+
+  const handleFormClose = () => {
+    resetFormState();
+    onClose();
+  };
+
   const renderFilePreview = (file: File, index: number) => {
     const fileType = file.type.split('/')[0];
-    if (fileType === 'image') {
-      return <img src={filePreviews[index]} alt={file.name} className="w-full h-full bg-white object-cover rounded-lg" />;
-    } else if (fileType === 'video') {
-      return <video src={filePreviews[index]} controls className="w-full h-full rounded-lg" />;
-    } else {
-      return <span className="truncate">{file.name}</span>;
+    switch (fileType) {
+      case 'image':
+        return (
+          <img 
+            src={filePreviews[index]} 
+            alt={file.name} 
+            className="w-full h-auto max-h-96 object-contain bg-white rounded-lg" 
+          />
+        );
+      case 'video':
+        return (
+          <video 
+            src={filePreviews[index]} 
+            controls 
+            className="w-full h-auto max-h-48 rounded-lg" 
+          />
+        );
+      case 'audio':
+        return (
+          <audio 
+            src={filePreviews[index]} 
+            controls 
+            className="w-full" 
+          />
+        );
+      default:
+        return (
+          <div className={`p-4 rounded-lg ${isDarkMode ? 'bg-gray-700' : 'bg-gray-100'}`}>
+            <p>File type not supported for preview.</p>
+            <p>Filename: {file.name}</p>
+            <p>File type: {file.type || 'Unknown'}</p>
+            <p>File size: {(file.size / 1024).toFixed(2)} KB</p>
+          </div>
+        );
     }
   };
 
@@ -126,7 +184,7 @@ const SupportForm: React.FC<SupportFormProps> = ({ isVisible, onClose, isDarkMod
               <h2 className="text-2xl font-bold bg-gradient-to-r from-blue-500 to-purple-600 bg-clip-text text-transparent">
                 We're Here to Help
               </h2>
-              <button onClick={onClose} className={`p-2 rounded-full transition-colors duration-200 ${isDarkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-200'}`}>
+              <button onClick={handleFormClose} className={`p-2 rounded-full transition-colors duration-200 ${isDarkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-200'}`}>
                 <IoClose size={24} />
               </button>
             </div>
@@ -159,23 +217,33 @@ const SupportForm: React.FC<SupportFormProps> = ({ isVisible, onClose, isDarkMod
                   </div>
 
                   {formState.files && (
-                    <div className="space-y-2">
-                      {Array.from(formState.files).map((file, index) => (
-                        <div key={index} className={`flex items-center justify-between p-2 rounded-lg ${isDarkMode ? 'bg-gray-800 text-white' : 'bg-white text-gray-900'}`}>
-                          <span className="truncate">{file.name}</span>
-                          <button type="button" onClick={() => togglePreview(index)} className={`ml-2 p-1 rounded-full transition-colors duration-200 ${isDarkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-200'}`}>
-                            {showPreviews[index] ? <FaEyeSlash /> : <FaEye />}
-                          </button>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-
-                  {formState.files && (
                     <div className="space-y-4">
-                      {Array.from(formState.files).map((file, index) => showPreviews[index] && (
-                        <div key={`preview-${index}`} className="border rounded-lg p-2">
-                          {renderFilePreview(file, index)}
+                      {Array.from(formState.files).map((file, index) => (
+                        <div key={index} className={`rounded-lg overflow-hidden ${isDarkMode ? 'bg-gray-800 text-white' : 'bg-white text-gray-900'}`}>
+                          <div className={`flex items-center justify-between p-2 ${isDarkMode ? 'border-b border-gray-700' : 'border-b border-gray-200'}`}>
+                            <span className="truncate">{file.name}</span>
+                            <div className="flex items-center">
+                              <button
+                                type="button"
+                                onClick={() => togglePreview(index)}
+                                className={`ml-2 p-1 rounded-full transition-colors duration-200 ${isDarkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-200'}`}
+                              >
+                                {showPreviews[index] ? <FaEyeSlash /> : <FaEye />}
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => handleRemoveFile(index)}
+                                className={`ml-2 p-1 rounded-full transition-colors duration-200 ${isDarkMode ? 'hover:bg-gray-700 text-red-500' : 'hover:bg-gray-200 text-red-600'}`}
+                              >
+                                <FaTimesCircle />
+                              </button>
+                            </div>
+                          </div>
+                          {showPreviews[index] && (
+                            <div className="p-2">
+                              {renderFilePreview(file, index)}
+                            </div>
+                          )}
                         </div>
                       ))}
                     </div>
