@@ -135,7 +135,6 @@ class DeleteUserView(APIView):
             logger.error(f"Error deleting user: {e}")
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-
 class SupportEmailHandle(APIView):
     permission_classes = (IsAuthenticated, )
 
@@ -168,4 +167,3 @@ class SupportEmailHandle(APIView):
             return Response({'success': True, 'message': 'Email sent successfully'})
         except Exception as e:
             return Response({'error': str(e)}, status=500)
-
