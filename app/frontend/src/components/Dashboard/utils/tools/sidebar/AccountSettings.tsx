@@ -88,9 +88,6 @@ const AccountSettingsPopup: React.FC<AccountSettingsPopupProps> = ({ isVisible, 
           // Show success popup
           setSuccessMessage('Profile has been updated successfully!');
           setIsProfileUpdateSuccessPopupVisible(true);
-          setTimeout(() => {
-            setIsProfileUpdateSuccessPopupVisible(false);
-          }, 4000);
         } else {
           throw new Error('Failed to update user details');
         }
@@ -303,7 +300,6 @@ const AccountSettingsPopup: React.FC<AccountSettingsPopupProps> = ({ isVisible, 
               <h1 className='text-2xl font-extrabold'>Congratulations</h1>
               <h2 className={`text-base mb-2 ${isDarkMode ? 'text-slate-400': 'text-slate-500'}`}>Profile has been updated successfully!</h2>
             </div>
-            <p className="">{successMessage}</p>
           </div>
           <hr className='border-slate-400' />
           <div className="flex flex-row justify-between">
