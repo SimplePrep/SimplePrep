@@ -272,7 +272,7 @@ interface TestModuleDetails {
 
   export const sendSupportEmail = async (formData: FormData) => {
     try {
-      const response = await axiosInstance.post('/api/send-support-email/', formData, {
+      const response = await axiosInstance.post('/auth/user/send-support-email', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
