@@ -270,27 +270,15 @@ interface TestModuleDetails {
     }
   };
 
-  export const sendSupportEmail = async (data: SupportFormData) => {
-    const formData = new FormData();
-    formData.append('name', data.name);
-    formData.append('email', data.email);
-    formData.append('message', data.message);
-  
-    if (data.files) {
-      Array.from(data.files).forEach((file, index) => {
-        formData.append(`file${index + 1}`, file);
-      });
-    }
-  
+  export const sendSupportEmail = async (formData: FormData) => {
     try {
-      const response = await axiosInstance.post('/auth/user/send-support-email', formData, {
+      const response = await axiosInstance.post('/api/send-support-email/', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
       });
       return response.data;
     } catch (error) {
-      console.error('Error sending support email:', error);
       throw error;
     }
-  };
+};
