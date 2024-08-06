@@ -22,7 +22,7 @@ const SupportForm: React.FC<SupportFormProps> = ({ isVisible, onClose, isDarkMod
         const userDetails = await getUserDetails();
         console.log('User Details: ', userDetails)
         setFormState({
-          name: userDetails.name || '',
+          name: userDetails.first_name + ' ' + userDetails.last_name || '',
           email: userDetails.email || '',
           message: ''
         });
