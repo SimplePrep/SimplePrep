@@ -14,7 +14,9 @@ const SupportForm: React.FC<SupportFormProps> = ({ isVisible, onClose, isDarkMod
   const [formState, setFormState] = useState({ name: '', email: '', message: '' });
   const [selectedFiles, setSelectedFiles] = useState<FileList | null>(null);
   const [filePreviews, setFilePreviews] = useState<string[]>([]);
-  const [showPreviews, setShowPreviews] = useState(false);
+  const [showPreviews, setShowPreviews] = useState<boolean[]>([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showNotification, setShowNotification] = useState(false);
 
   useEffect(() => {
     const fetchUserDetails = async () => {
@@ -43,12 +45,22 @@ const SupportForm: React.FC<SupportFormProps> = ({ isVisible, onClose, isDarkMod
       setSelectedFiles(files);
       const previews = Array.from(files).map(file => URL.createObjectURL(file));
       setFilePreviews(previews);
+      setShowPreviews(new Array(files.length).fill(false));
     }
+  };
+
+  const togglePreview = (index: number) => {
+    setShowPreviews(prev => {
+      const newPreviews = [...prev];
+      newPreviews[index] = !newPreviews[index];
+      return newPreviews;
+    });
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Form submitted:', formState, selectedFiles);
+    setIsSubmitting(true);
+
     const formData = new FormData();
     formData.append('name', formState.name);
     formData.append('email', formState.email);
@@ -58,12 +70,22 @@ const SupportForm: React.FC<SupportFormProps> = ({ isVisible, onClose, isDarkMod
         formData.append(`file${index + 1}`, file);
       });
     }
+
+    // Simulate form submission
+    setTimeout(() => {
+      setIsSubmitting(false);
+      setShowNotification(true);
+      setTimeout(() => {
+        setShowNotification(false);
+        onClose();
+      }, 3000);
+    }, 2000);
   };
 
   const renderFilePreview = (file: File, index: number) => {
     const fileType = file.type.split('/')[0];
     if (fileType === 'image') {
-      return <img src={filePreviews[index]} alt={file.name} className="w-full h-full object-cover rounded-lg" />;
+      return <img src={filePreviews[index]} alt={file.name} className="w-full h-full bg-white object-cover rounded-lg" />;
     } else if (fileType === 'video') {
       return <video src={filePreviews[index]} controls className="w-full h-full rounded-lg" />;
     } else {
@@ -87,10 +109,10 @@ const SupportForm: React.FC<SupportFormProps> = ({ isVisible, onClose, isDarkMod
             exit={{ x: '100%', opacity: 0 }}
             transition={{ type: 'spring', stiffness: 300, damping: 30 }}
             className={`fixed top-0 right-0 w-1/2 h-full ${
-              isDarkMode ? 'bg-gray-900 text-gray-100' : 'bg-gray-100 text-gray-900'
+              isDarkMode ? 'bg-gray-900 text-gray-100' : 'bg-gray-200 text-gray-900'
             } shadow-2xl z-50 overflow-hidden flex flex-col`}
           >
-            <div className={`flex justify-between items-center p-6 ${isDarkMode ? 'bg-gray-800' : 'bg-white'} shadow-md`}>
+            <div className={`flex justify-between items-center p-4 ${isDarkMode ? 'bg-gray-800' : 'bg-white'} shadow-md`}>
               <h2 className="text-2xl font-bold bg-gradient-to-r from-blue-500 to-purple-600 bg-clip-text text-transparent">
                 We're Here to Help
               </h2>
@@ -162,64 +184,78 @@ const SupportForm: React.FC<SupportFormProps> = ({ isVisible, onClose, isDarkMod
                   ></textarea>
                 </div>
 
-                <div className="relative">
-                  <FaFileUpload className={`absolute top-4 left-3 ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`} />
-                  <input
-                    type="file"
-                    name="files"
-                    multiple
-                    onChange={handleFileChange}
-                    className={`w-full pl-10 pr-4 py-3 rounded-lg focus:outline-none focus:ring-2 transition-shadow duration-200 ${
-                      isDarkMode
-                        ? 'bg-gray-800 text-white border-gray-700 focus:ring-blue-500'
-                        : 'bg-white text-gray-900 border-gray-300 focus:ring-purple-500'
-                    }`}
-                  />
+                <div className="space-y-4">
+                  <div className="relative">
+                    <FaFileUpload className={`absolute top-4 left-3 ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`} />
+                    <input
+                      type="file"
+                      name="files"
+                      multiple
+                      onChange={handleFileChange}
+                      className={`w-full pl-10 pr-4 py-3 rounded-lg focus:outline-none focus:ring-2 transition-shadow duration-200 ${
+                        isDarkMode
+                          ? 'bg-gray-800 text-white border-gray-700 focus:ring-blue-500'
+                          : 'bg-white text-gray-900 border-gray-300 focus:ring-purple-500'
+                      }`}
+                    />
+                  </div>
+
+                  {selectedFiles && (
+                    <div className="space-y-2">
+                      {Array.from(selectedFiles).map((file, index) => (
+                        <div key={index} className={`flex items-center justify-between p-2 rounded-lg ${
+                          isDarkMode ? 'bg-gray-800 text-white' : 'bg-white text-gray-900'
+                        }`}>
+                          <span className="truncate">{file.name}</span>
+                          <button
+                            type="button"
+                            onClick={() => togglePreview(index)}
+                            className={`ml-2 p-1 rounded-full transition-colors duration-200 ${
+                              isDarkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-200'
+                            }`}
+                          >
+                            {showPreviews[index] ? <FaEyeSlash /> : <FaEye />}
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {selectedFiles && (
+                    <div className="space-y-4">
+                      {Array.from(selectedFiles).map((file, index) => (
+                        showPreviews[index] && (
+                          <div key={`preview-${index}`} className="border rounded-lg p-2">
+                            {renderFilePreview(file, index)}
+                          </div>
+                        )
+                      ))}
+                    </div>
+                  )}
                 </div>
 
-                <button
-                  type="button"
-                  onClick={() => setShowPreviews(!showPreviews)}
-                  className={`w-full py-3 px-4 rounded-lg text-white font-semibold transition-colors duration-200 flex items-center justify-center ${
-                    isDarkMode
-                      ? 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700'
-                      : 'bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600'
-                  }`}
-                >
-                  {showPreviews ? (
-                    <>
-                      <span>Hide Previews</span>
-                      <FaEyeSlash className="ml-2" />
-                    </>
-                  ) : (
-                    <>
-                      <span>Show Previews</span>
-                      <FaEye className="ml-2" />
-                    </>
-                  )}
-                </button>
-
-                {showPreviews && selectedFiles && (
-                  <div className="space-y-4">
-                    {Array.from(selectedFiles).map((file, index) => (
-                      <div key={index} className="border rounded-lg p-2 flex items-center space-x-4">
-                        {renderFilePreview(file, index)}
-                      </div>
-                    ))}
-                  </div>
-                )}
-
-                <button
-                  type="submit"
-                  className={`w-full py-3 px-4 rounded-lg text-white font-semibold transition-colors duration-200 flex items-center justify-center ${
-                    isDarkMode
-                      ? 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700'
-                      : 'bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600'
-                  }`}
-                >
-                  <span>Send Message</span>
-                  <IoSendSharp className="ml-2" />
-                </button>
+                <div className="w-full">
+                  <motion.button
+                    type="submit"
+                    className={`w-full flex flex-row py-3 px-4 rounded-lg text-white font-semibold transition-colors duration-200 items-center justify-end ${
+                      isDarkMode
+                        ? 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700'
+                        : 'bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600'
+                    }`}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    disabled={isSubmitting}
+                  >
+                    <span className=''>Send Message</span>
+                    <motion.div
+                      className="w-1/2 justify-end"
+                      animate={isSubmitting ? { x: '120%', scale: 1.6 } : {}}
+                      transition={{ duration: 1.0 }}
+                    >
+                      <IoSendSharp className="ml-2" />
+                    </motion.div>
+                  </motion.button>
+                </div>
               </form>
             </div>
 
@@ -228,6 +264,18 @@ const SupportForm: React.FC<SupportFormProps> = ({ isVisible, onClose, isDarkMod
                 By submitting this form, you agree to our <a href="#" className="underline">Privacy Policy</a> and <a href="#" className="underline">Terms of Service</a>.
               </p>
             </div>
+
+            {showNotification && (
+              <motion.div
+                initial={{ y: -50, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                exit={{ y: -50, opacity: 0 }}
+                transition={{ duration: 0.3 }}
+                className="fixed top-4 left-1/2 transform -translate-x-1/2 bg-green-500 text-white py-2 px-4 rounded-lg shadow-lg"
+              >
+                Form submitted successfully!
+              </motion.div>
+            )}
           </motion.div>
         </motion.div>
       )}
