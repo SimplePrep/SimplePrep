@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { IoClose, IoSendSharp } from 'react-icons/io5';
 import { FaUser, FaEnvelope, FaPaperPlane, FaFileUpload, FaEye, FaEyeSlash } from 'react-icons/fa';
-import { getUserDetails, sendSupportEmail } from '../../../../auth_utils/axios/axiosServices';
+import axios from 'axios';
+import { getUserDetails } from '../../../../auth_utils/axios/axiosServices';
 
 interface SupportFormProps {
   isVisible: boolean;
@@ -16,13 +17,14 @@ const SupportForm: React.FC<SupportFormProps> = ({ isVisible, onClose, isDarkMod
   const [filePreviews, setFilePreviews] = useState<string[]>([]);
   const [showPreviews, setShowPreviews] = useState<boolean[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showNotification, setShowNotification] = useState(false);
 
   useEffect(() => {
     const fetchUserDetails = async () => {
       try {
         const userDetails = await getUserDetails();
         setFormState({
-          name: `${userDetails.user.first_name} ${userDetails.user.last_name}` || '',
+          name: userDetails.user.first_name + ' ' + userDetails.user.last_name || '',
           email: userDetails.user.email || '',
           message: ''
         });
@@ -59,21 +61,41 @@ const SupportForm: React.FC<SupportFormProps> = ({ isVisible, onClose, isDarkMod
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
+
+    const formData = new FormData();
+    formData.append('name', formState.name);
+    formData.append('email', formState.email);
+    formData.append('message', formState.message);
+    if (selectedFiles) {
+      Array.from(selectedFiles).forEach((file, index) => {
+        formData.append(`file${index + 1}`, file);
+      });
+    }
+
     try {
-      await sendSupportEmail({ ...formState, files: selectedFiles });
-      alert('Support email sent successfully!');
-    } catch (error) {
-      alert('Failed to send support email.');
-    } finally {
+      await axios.post('/send-support-email/', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
       setIsSubmitting(false);
-      onClose();
+      setShowNotification(true);
+      setTimeout(() => {
+        setShowNotification(false);
+        onClose();
+      }, 3000);
+    } catch (error) {
+      console.error('Error sending support email:', error);
+      setIsSubmitting(false);
+      // Handle error notification
     }
   };
 
   const renderFilePreview = (file: File, index: number) => {
     const fileType = file.type.split('/')[0];
     if (fileType === 'image') {
-      return <img src={filePreviews[index]} alt={file.name} className="w-full h-full object-cover rounded-lg" />;
+      return <img src={filePreviews[index]} alt={file.name} className="w-full h-full bg-white object-cover rounded-lg" />;
     } else if (fileType === 'video') {
       return <video src={filePreviews[index]} controls className="w-full h-full rounded-lg" />;
     } else {
@@ -97,10 +119,10 @@ const SupportForm: React.FC<SupportFormProps> = ({ isVisible, onClose, isDarkMod
             exit={{ x: '100%', opacity: 0 }}
             transition={{ type: 'spring', stiffness: 300, damping: 30 }}
             className={`fixed top-0 right-0 w-1/2 h-full ${
-              isDarkMode ? 'bg-gray-900 text-gray-100' : 'bg-gray-100 text-gray-900'
+              isDarkMode ? 'bg-gray-900 text-gray-100' : 'bg-gray-200 text-gray-900'
             } shadow-2xl z-50 overflow-hidden flex flex-col`}
           >
-            <div className={`flex justify-between items-center p-6 ${isDarkMode ? 'bg-gray-800' : 'bg-white'} shadow-md`}>
+            <div className={`flex justify-between items-center p-4 ${isDarkMode ? 'bg-gray-800' : 'bg-white'} shadow-md`}>
               <h2 className="text-2xl font-bold bg-gradient-to-r from-blue-500 to-purple-600 bg-clip-text text-transparent">
                 We're Here to Help
               </h2>
@@ -192,7 +214,7 @@ const SupportForm: React.FC<SupportFormProps> = ({ isVisible, onClose, isDarkMod
                     <div className="space-y-2">
                       {Array.from(selectedFiles).map((file, index) => (
                         <div key={index} className={`flex items-center justify-between p-2 rounded-lg ${
-                          isDarkMode ? 'bg-gray-800 text-white' : 'bg-gray-100 text-gray-900'
+                          isDarkMode ? 'bg-gray-800 text-white' : 'bg-white text-gray-900'
                         }`}>
                           <span className="truncate">{file.name}</span>
                           <button
@@ -222,10 +244,10 @@ const SupportForm: React.FC<SupportFormProps> = ({ isVisible, onClose, isDarkMod
                   )}
                 </div>
 
-                <div className="relative">
+                <div className="w-full">
                   <motion.button
                     type="submit"
-                    className={`w-full py-3 px-4 rounded-lg text-white font-semibold transition-colors duration-200 flex items-center justify-center ${
+                    className={`w-full flex flex-row py-3 px-4 rounded-lg text-white font-semibold transition-colors duration-200 items-center justify-end ${
                       isDarkMode
                         ? 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700'
                         : 'bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600'
@@ -234,10 +256,11 @@ const SupportForm: React.FC<SupportFormProps> = ({ isVisible, onClose, isDarkMod
                     whileTap={{ scale: 0.95 }}
                     disabled={isSubmitting}
                   >
-                    <span>Send Message</span>
+                    <span className=''>Send Message</span>
                     <motion.div
-                      animate={isSubmitting ? { x: '90%', scale: 1.5 } : {}}
-                      transition={{ duration: 0.5 }}
+                      className="w-1/2 justify-end"
+                      animate={isSubmitting ? { x: '120%', scale: 1.6 } : {}}
+                      transition={{ duration: 1.0 }}
                     >
                       <IoSendSharp className="ml-2" />
                     </motion.div>
@@ -251,6 +274,18 @@ const SupportForm: React.FC<SupportFormProps> = ({ isVisible, onClose, isDarkMod
                 By submitting this form, you agree to our <a href="#" className="underline">Privacy Policy</a> and <a href="#" className="underline">Terms of Service</a>.
               </p>
             </div>
+
+            {showNotification && (
+              <motion.div
+                initial={{ y: -50, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                exit={{ y: -50, opacity: 0 }}
+                transition={{ duration: 0.3 }}
+                className="fixed top-4 left-1/2 transform -translate-x-1/2 bg-green-500 text-white py-2 px-4 rounded-lg shadow-lg"
+              >
+                Form submitted successfully!
+              </motion.div>
+            )}
           </motion.div>
         </motion.div>
       )}
