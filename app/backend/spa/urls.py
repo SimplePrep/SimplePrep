@@ -33,6 +33,7 @@ urlpatterns = [
     path("auth/user/", include('user.urls')),
     path("api/core/", include('core.urls')),
     path("api/core2/", include('core2.urls')),
+
 ]
 
 if settings.DEBUG:

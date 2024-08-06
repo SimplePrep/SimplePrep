@@ -8,6 +8,8 @@ from .serializers import UserSerializer, TempUserSerializer
 from firebase_admin import auth
 from .models import TempUser, User
 import logging
+from django.core.mail import EmailMessage
+from django.conf import settings
 
 User = get_user_model()
 # Configure logging
@@ -132,3 +134,38 @@ class DeleteUserView(APIView):
         except Exception as e:
             logger.error(f"Error deleting user: {e}")
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+class SupportEmailHandle(APIView):
+    permission_classes = (IsAuthenticated, )
+
+    def post(self, request):
+        # Get form data from the request
+        name = request.data.get('name')
+        email = request.data.get('email')
+        message = request.data.get('message')
+        files = request.FILES.getlist('files')
+        
+        # Validate form data
+        if not name or not email or not message:
+            return Response({'error': 'Name, email, and message are required.'}, status=400)
+        
+        # Create email message
+        email_message = EmailMessage(
+            subject='New Support Form Submission',
+            body=f"Name: {name}\nEmail: {email}\nMessage: {message}",
+            from_email=settings.EMAIL_HOST_USER,
+            to=[settings.SUPPORT_EMAIL]  # Use a support email address defined in settings
+        )
+
+        # Attach files to the email
+        for file in files:
+            email_message.attach(file.name, file.read(), file.content_type)
+        
+        # Send the email
+        try:
+            email_message.send()
+            return Response({'success': True, 'message': 'Email sent successfully'})
+        except Exception as e:
+            return Response({'error': str(e)}, status=500)
+

@@ -191,3 +191,10 @@ created_at: string;
 updated_at: string;
 replies: Reply[];
 }
+
+export interface SupportFormData {
+  name: string;
+  email: string;
+  message: string;
+  files?: FileList | null;
+}

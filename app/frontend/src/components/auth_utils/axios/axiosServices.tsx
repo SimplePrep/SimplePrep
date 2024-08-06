@@ -1,5 +1,5 @@
 import axiosInstance from './axiosInterceptor';
-import { Chapter, Module, Post, Question, Reply, Section, TestReport, TestResult, Tutorial, UserAnswer, UserDetails } from '../types';
+import { Chapter, Module, Post, Question, Reply, Section, SupportFormData, TestReport, TestResult, Tutorial, UserAnswer, UserDetails } from '../types';
 
 export const getTests = async () => {
   try {
@@ -266,6 +266,31 @@ interface TestModuleDetails {
       return response;
     } catch (error) {
       console.error('Error deleting user profile:', error);
+      throw error;
+    }
+  };
+
+  export const sendSupportEmail = async (data: SupportFormData) => {
+    const formData = new FormData();
+    formData.append('name', data.name);
+    formData.append('email', data.email);
+    formData.append('message', data.message);
+  
+    if (data.files) {
+      Array.from(data.files).forEach((file, index) => {
+        formData.append(`file${index + 1}`, file);
+      });
+    }
+  
+    try {
+      const response = await axiosInstance.post('/auth/user/send-support-email', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Error sending support email:', error);
       throw error;
     }
   };

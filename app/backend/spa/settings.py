@@ -154,6 +154,7 @@ REST_FRAMEWORK = {
 
 # # URL to redirect to after a successful login
 # LOGIN_REDIRECT_URL = '/my-django-admin/'
+SUPPORT_EMAIL = os.environ.get('SUPPORT_EMAIL')
 
 EMAIL_BACKEND = os.environ.get('EMAIL_BACKEND')
 EMAIL_HOST = os.environ.get('EMAIL_HOST')
