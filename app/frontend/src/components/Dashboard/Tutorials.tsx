@@ -167,7 +167,6 @@ const Tutorials: React.FC<TutorialsProps> = ({ isDarkMode }) => {
           Explore Our Tutorials
         </h1>
         <div className="flex flex-row flex-wrap gap-10 justify-center">
-          {isLoading && [...Array(2)].map((_, index) => <SkeletonTutorialCard key={index} />)}
           {!isLoading && tutorialsList.map(tutorial => (
                 <TutorialCard 
                   key={tutorial.id} 
