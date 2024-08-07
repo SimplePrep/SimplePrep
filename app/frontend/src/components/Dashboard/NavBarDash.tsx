@@ -163,7 +163,7 @@ const SideBar: React.FC<SideBarProps> = ({ toggleDarkMode, isDarkMode }): React.
   const totalPages = Math.ceil(notifications.length / notificationsPerPage);
 
   return (
-    <div className={`fixed left-0 w-full z-40 font-nunito`}>
+    <div className={`fixed left-0 w-full z-40 font-nunito bg-inherit`}>
       {/* Desktop version */}
       <div className='hidden md:block'>
         <div className='w-full flex flex-row'>

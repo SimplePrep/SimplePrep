@@ -13,7 +13,7 @@ const DashboardPage: React.FC<DashboardPageProps> = ({
   isDarkMode,
 }) => {
   const [isLoading, setIsLoading] = useState(true);
-  const darkModeClass = isDarkMode ? 'dark-background transition-colors duration-300' : 'light-background transition-colors duration-300';
+  const darkModeClass = isDarkMode ? 'dark-background transition-colors duration-300' : 'bg-gray-100 transition-colors duration-300';
 
   useEffect(() => {
     // Simulate a loading delay (e.g., fetching user data or other async operations)
@@ -42,7 +42,7 @@ const DashboardPage: React.FC<DashboardPageProps> = ({
   }
 
   return (
-    <div className={`w-full h-full ${darkModeClass} font-opensans`}>
+    <div className={`w-full h-full ${darkModeClass} font-opensans `}>
       <NavBarDash toggleDarkMode={toggleDarkMode} isDarkMode={isDarkMode} />
       <Outlet />
     </div>

@@ -57,16 +57,23 @@ export interface Section {
   content: string;
   chapter: number;
 }
+export interface Tutorial {
+  id: number;
+  title: string;
+  description: string;
+  duration: string;
+  skillLevel: 'Beginner' | 'Intermediate' | 'Advanced';
+  tags: string[];
+}
+
 export interface Chapter {
   id: number;
   title: string;
   order: number;
   tutorial: number;
-}
-
-export interface Tutorial {
-  id: number;
-  title: string;
+  description: string;
+  estimatedTime: string;
+  keyTopics: string[];
 }
 
 export interface Module {
