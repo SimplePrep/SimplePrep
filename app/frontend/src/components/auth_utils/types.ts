@@ -55,8 +55,9 @@ export interface Section {
   title: string;
   description: string;
   content: string;
-  chapter: number;
+  chapter: number; // References the Chapter ID that this section belongs to
 }
+
 export interface Tutorial {
   id: number;
   title: string;
@@ -72,10 +73,12 @@ export interface Chapter {
   order: number;
   tutorial: number;
   description: string;
-  estimatedTime: string;
-  keyTopics: string[];
+  lessons: number;
+  practices: number;
+  difficulty: string;
+  image_path: string;
+  requiredSubscription: 'free' | 'nova+' | 'novaPro'; // Subscription level required to access the chapter
 }
-
 export interface Module {
     id: number;
     test: number;
