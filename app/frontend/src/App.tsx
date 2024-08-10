@@ -20,6 +20,8 @@ import { setTheme } from './components/auth_utils/reducers/authReducer';
 import AuthenticatedComponent from './components/auth_utils/AuthenticatedComponent';
 import TutorialPath from './components/Dashboard/TutorialPath';
 import Layout, { LandingPage } from './pages/LandingPage';
+import LearningSectionSpace from './components/Dashboard/utils/learningspace/LearningSectionSpace';
+import LearningLayout from './components/Dashboard/utils/learningspace/LearningSpaceLayout';
 
 const App = () => {
   const { theme } = useSelector((state: RootState) => state.auth);
@@ -55,6 +57,17 @@ const App = () => {
           </Route> */}
           <Route path="analytics" element={<Analytics isDarkMode={theme === 'dark'} />} />
         </Route>
+        <Route
+        path="tutorials/section-space"
+        element={
+          <AuthenticatedComponent>
+            <LearningLayout isDarkMode={theme === 'dark'} />
+          </AuthenticatedComponent>
+        }
+      >
+        <Route path=":sectionSlug" element={<LearningSectionSpace />} />
+      </Route>
+
         {/* Authentication Routes */}
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUpComponent />} />

@@ -52,6 +52,7 @@ export interface UserDetails {
 export interface Section {
   id: number;
   slug: string;
+  order: number;
   title: string;
   description: string;
   content: string;
@@ -77,8 +78,9 @@ export interface Chapter {
   practices: number;
   difficulty: string;
   image_path: string;
-  requiredSubscription: 'free' | 'nova+' | 'novaPro'; // Subscription level required to access the chapter
+  requiredSubscription: 'free' | 'nova+' | 'nova pro';
 }
+
 export interface Module {
     id: number;
     test: number;
