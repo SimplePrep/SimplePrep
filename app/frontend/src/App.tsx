@@ -20,8 +20,10 @@ import { setTheme } from './components/auth_utils/reducers/authReducer';
 import AuthenticatedComponent from './components/auth_utils/AuthenticatedComponent';
 import TutorialPath from './components/Dashboard/TutorialPath';
 import Layout, { LandingPage } from './pages/LandingPage';
-import LearningSectionSpace from './components/Dashboard/utils/learningspace/LearningSectionSpace';
+import LearningSectionSpace from './components/Dashboard/utils/learningspace/NovaSpace';
 import LearningLayout from './components/Dashboard/utils/learningspace/LearningSpaceLayout';
+import NovaSpace from './components/Dashboard/utils/learningspace/NovaSpace';
+import LearningSpaceBody from './components/Dashboard/utils/learningspace/LearningSpaceBody';
 
 const App = () => {
   const { theme } = useSelector((state: RootState) => state.auth);
@@ -61,11 +63,12 @@ const App = () => {
               <LearningLayout 
                 isDarkMode={theme === 'dark'} 
                 toggleDarkMode={toggleDarkMode} 
+                userSubscription='nova pro'
               />
             </AuthenticatedComponent>
           }
         >
-          <Route path=":sectionSlug" element={<LearningSectionSpace />} />
+          <Route path=":sectionSlug" element={<LearningSpaceBody isDarkMode={theme === 'dark'} />} />
         </Route>
         {/* Authentication Routes */}
         <Route path="/login" element={<Login />} />

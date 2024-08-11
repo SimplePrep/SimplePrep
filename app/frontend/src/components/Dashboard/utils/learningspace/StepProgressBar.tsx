@@ -8,12 +8,12 @@ interface StepProgressBarProps {
 
 const StepProgressBar: React.FC<StepProgressBarProps> = ({ steps, currentStep }) => {
   return (
-    <div className="flex items-center justify-between w-full max-w-md mx-auto">
+    <div className='hidden md:flex items-center justify-between w-full max-w-md mx-auto'>
       {Array.from({ length: steps }, (_, index) => (
         <React.Fragment key={index}>
           <div className="relative">
             <div
-              className={`w-7 h-7 rounded-full flex items-center justify-center ${
+              className={`w-8 h-8 rounded-full flex items-center justify-center ${
                 index < currentStep
                   ? 'bg-indigo-600'
                   : index === currentStep
@@ -22,7 +22,7 @@ const StepProgressBar: React.FC<StepProgressBarProps> = ({ steps, currentStep })
               }`}
             >
               {index < currentStep ? (
-                <FaCheck className="w-5 h-5 text-white" />
+                <FaCheck className="w-4 h-4 text-white" />
               ) : (
                 <span className={`text-sm font-medium ${
                   index === currentStep ? 'text-white' : 'text-gray-700'
@@ -34,7 +34,7 @@ const StepProgressBar: React.FC<StepProgressBarProps> = ({ steps, currentStep })
           </div>
           {index < steps - 1 && (
             <div
-              className={`flex-1 h-0.5 ${
+              className={`flex-1 h-1 ${
                 index < currentStep ? 'bg-indigo-600' : 'bg-gray-200'
               }`}
             />
