@@ -52,22 +52,21 @@ const App = () => {
           <Route path="dashboard" element={<Contents isDarkMode={theme === 'dark'} />} />
           <Route path="tutorials" element={<Tutorials isDarkMode={theme === 'dark'} />} />
           <Route path="tutorials/course-paths/:tutorialId" element={<TutorialPath isDarkMode={theme === 'dark'} userId={1} userSubscription='free'/>}/>
-          {/* <Route path="tutorials/:tutorialId" element={<TutorialPage isDarkMode={theme === 'dark'} />}>
-            <Route path=":chapterId/:sectionSlug" element={<SectionContent isDarkMode={theme === 'dark'} />} />
-          </Route> */}
           <Route path="analytics" element={<Analytics isDarkMode={theme === 'dark'} />} />
         </Route>
         <Route
-        path="tutorials/section-space"
-        element={
-          <AuthenticatedComponent>
-            <LearningLayout isDarkMode={theme === 'dark'} />
-          </AuthenticatedComponent>
-        }
-      >
-        <Route path=":sectionSlug" element={<LearningSectionSpace />} />
-      </Route>
-
+          path="learning-space/:tutorialId"
+          element={
+            <AuthenticatedComponent>
+              <LearningLayout 
+                isDarkMode={theme === 'dark'} 
+                toggleDarkMode={toggleDarkMode} 
+              />
+            </AuthenticatedComponent>
+          }
+        >
+          <Route path=":sectionSlug" element={<LearningSectionSpace />} />
+        </Route>
         {/* Authentication Routes */}
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUpComponent />} />

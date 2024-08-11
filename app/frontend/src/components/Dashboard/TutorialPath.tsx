@@ -12,7 +12,8 @@ const getUserCompletionData = (userId: number): number[] => {
 };
 
 const TutorialPath: React.FC<{ isDarkMode: boolean; userSubscription: 'free' | 'nova+' | 'nova pro'; userId: number }> = ({ isDarkMode, userSubscription, userId }) => {
-  const { tutorialID } = useParams<{ tutorialID: string }>();
+  const { tutorialId } = useParams<{ tutorialId: string }>();
+  console.log('tutorialID:', tutorialId);
   const [chapters, setChapters] = useState<Chapter[]>([]);
   const [activeChapterId, setActiveChapterId] = useState<number | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -48,7 +49,7 @@ const TutorialPath: React.FC<{ isDarkMode: boolean; userSubscription: 'free' | '
     ];
 
     setChapters(dummyChapters);
-  }, [tutorialID]);
+  }, [tutorialId]);
 
   const userCompletedSections = getUserCompletionData(userId);
 
@@ -186,7 +187,7 @@ const TutorialPath: React.FC<{ isDarkMode: boolean; userSubscription: 'free' | '
                       isComplete={isComplete}
                       section={section}
                       position={getPosition(index)}
-                      verticalPosition={index * 250 + 50}
+                      tutorialId={tutorialId!}
                     />
                   );
                 })}
