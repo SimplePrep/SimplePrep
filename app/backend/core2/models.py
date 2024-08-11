@@ -13,10 +13,24 @@ class Chapter(models.Model):
     """
     Model for chapters in Tutorial Modules
     """
+    BEGINNER = 'beginner'
+    INTERMEDIATE = 'intermediate'
+    ADVANCED = 'advanced'
+
+    DIFFICULTY_CHOICES = [
+        (BEGINNER, 'Beginner'),
+        (INTERMEDIATE, 'Intermediate'),
+        (ADVANCED, 'Advanced'),
+    ]
+
     tutorial = models.ForeignKey(Tutorial, on_delete=models.CASCADE, related_name='chapters')
     title = models.CharField(max_length=255)
     order = models.PositiveIntegerField()
-
+    description = models.TextField(default='')
+    lessons = models.PositiveIntegerField(default=0)
+    practices = models.PositiveIntegerField(default=0)
+    difficulty = models.CharField(max_length=20, choices=DIFFICULTY_CHOICES, default=BEGINNER)
+    img_path = models.CharField(max_length=255, default='')
     def __str__(self):
         return f"{self.tutorial.title} -> {self.title}"
     

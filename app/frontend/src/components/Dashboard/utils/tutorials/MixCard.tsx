@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaClipboardList, FaGgCircle } from 'react-icons/fa';
 import { BsFillPatchCheckFill } from 'react-icons/bs';
@@ -16,7 +16,9 @@ interface MixCardProps {
 }
 
 const MixCard: React.FC<MixCardProps> = ({ isDarkMode, isComplete, isActive, position, verticalPosition, index, section }) => {
-    const navigate = useNavigate(); // Use useNavigate for redirection
+    const navigate = useNavigate();
+    const [isVisible, setIsVisible] = useState(false);
+
     const justifyStyle = position === 'left' ? 'justify-start' : position === 'right' ? 'justify-end' : 'justify-center';
     const boxShadowStyle = isActive ? (isDarkMode ? '0 4px 236px 0 rgba(16, 98, 251, .7)' : '0 4px 6px -1px rgba(59, 130, 246, 0.5), 0 2px 4px -1px rgba(59, 130, 246, 0.06)') : 'none';
 
@@ -24,8 +26,18 @@ const MixCard: React.FC<MixCardProps> = ({ isDarkMode, isComplete, isActive, pos
         navigate(`/tutorials/section-space/${section.slug}`);
     };
 
+    // Set the visibility to true to trigger the animation after the component mounts
+    useEffect(() => {
+        setTimeout(() => {
+            setIsVisible(true);
+        }, index * 100); // Delay each card based on its index
+    }, [index]);
+
     return (
-        <div className={`flex ${justifyStyle} mb-12`} style={{ position: 'relative', zIndex: 1 }}>
+        <div 
+            className={`flex ${justifyStyle} mb-12 transition-all duration-500 ease-in-out transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`} 
+            style={{ position: 'relative', zIndex: 1 }}
+        >
             <div 
                 className={`MixCard w-72 md:w-80 max-w-sm border-4 ${isComplete ? (isDarkMode ? 'border-green-500' : 'border-green-500') : (isDarkMode ? 'border-blue-500' : 'border-blue-500')} rounded-3xl`}
                 style={{
@@ -43,12 +55,12 @@ const MixCard: React.FC<MixCardProps> = ({ isDarkMode, isComplete, isActive, pos
                     </div>
                     <p className={`text-center ${isDarkMode ? 'text-white' : 'text-gray-800'} font-semibold text-sm md:text-md`}>{section.title}</p>
                     <button
-                        onClick={handleClick} // Attach the handleClick function to the button's onClick event
+                        onClick={handleClick}
                         className={`
                             m-3 py-3 px-4 rounded-xl
                             font-semibold transition-all duration-300
                             ${isComplete
-                                ? `${isDarkMode ? 'bg-green-600 hover:bg-green-800' : 'bg-green-500 hover:bg-green-400'} text-white`
+                                ? `${isDarkMode ? 'bg-green-600 hover:bg-green-700' : 'bg-green-500 hover:bg-green-400'} text-white`
                                 : `${isDarkMode 
                                     ? 'bg-gray-700 text-white hover:bg-gray-600' 
                                     : 'bg-gray-200 text-gray-900 hover:bg-gray-300'
@@ -60,7 +72,10 @@ const MixCard: React.FC<MixCardProps> = ({ isDarkMode, isComplete, isActive, pos
                         {isComplete ? (
                             <div className='flex flex-row gap-2 items-center justify-center group'>
                                 <p>Review</p>
-                                <VscDebugRestart size={25} className="transition-transform duration-300 group-hover:rotate-[-360deg]" />
+                                <VscDebugRestart 
+                                    size={25} 
+                                    className="group-hover:rotate-[-360deg] group-hover:transition-transform group-hover:duration-500"
+                                />
                             </div>
                         ) : (
                             <p>Start</p>

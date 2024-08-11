@@ -76,7 +76,7 @@ export interface Chapter {
   description: string;
   lessons: number;
   practices: number;
-  difficulty: string;
+  difficulty: 'Beginner' | 'Intermediate' | 'Advanced';
   image_path: string;
   requiredSubscription: 'free' | 'nova+' | 'nova pro';
 }
