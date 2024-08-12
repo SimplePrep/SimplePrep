@@ -10,7 +10,7 @@ class ChapterAdmin(admin.ModelAdmin):
     list_filter = ('tutorial', )
 
 class SectionAdmin(admin.ModelAdmin):
-    list_display = ('chapter', 'title', 'slug', 'order', 'description', 'content')
+    list_display = ('chapter', 'title', 'slug', 'order')
     list_filter = ('chapter', )
 
 class PracticeQuestionAdmin(admin.ModelAdmin):
