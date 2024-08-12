@@ -24,7 +24,7 @@ const ChapterCard: React.FC<ChapterCardProps> = ({
   userCompletedSections,
 }) => {
   const navigate = useNavigate();
-  const imagePath = require(`../../../assets/${chapter.image_path}`);
+  const imagePath = require(`../../../assets/${chapter.img_path}`);
   const hasAccess = userSubscription === 'Nova Pro' || userSubscription === 'Nova+' || chapter.requiredSubscription === 'Free';
 
   // Find the first incomplete section in the chapter
