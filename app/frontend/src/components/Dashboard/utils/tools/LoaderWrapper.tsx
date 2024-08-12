@@ -49,7 +49,7 @@ const LoaderWrapper: React.FC<LoaderWrapperProps> = ({
   }
 
   return (
-    <div className="w-full h-screen flex flex-col items-center justify-center">
+    <div className="w-full h-screen flex flex-col items-center justify-center bg-gray-200">
       <Lottie
         lottieRef={lottieRef}
         animationData={bookLoader}

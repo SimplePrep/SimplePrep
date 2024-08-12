@@ -13,10 +13,35 @@ class Chapter(models.Model):
     """
     Model for chapters in Tutorial Modules
     """
+    BEGINNER = 'Beginner'
+    INTERMEDIATE = 'Intermediate'
+    ADVANCED = 'Advanced'
+
+    DIFFICULTY_CHOICES = [
+        (BEGINNER, 'Beginner'),
+        (INTERMEDIATE, 'Intermediate'),
+        (ADVANCED, 'Advanced'),
+    ]
+
+    FREE = 'Free'
+    NOVA_PLUS = 'Nova+'
+    NOVA_PRO = 'Nova Pro'
+
+    SUBSCRIPTION_CHOICES = [
+        (FREE, 'Free'),
+        (NOVA_PLUS, 'Nova+'),
+        (NOVA_PRO, 'Nova Pro')
+    ]
+
     tutorial = models.ForeignKey(Tutorial, on_delete=models.CASCADE, related_name='chapters')
     title = models.CharField(max_length=255)
     order = models.PositiveIntegerField()
-
+    description = models.TextField(default='')
+    lessons = models.PositiveIntegerField(default=0)
+    practices = models.PositiveIntegerField(default=0)
+    difficulty = models.CharField(max_length=20, choices=DIFFICULTY_CHOICES, default=BEGINNER)
+    img_path = models.CharField(max_length=255, default='')
+    requiredSubscription = models.CharField(max_length=20, choices=SUBSCRIPTION_CHOICES, default=FREE)
     def __str__(self):
         return f"{self.tutorial.title} -> {self.title}"
     
@@ -26,6 +51,7 @@ class Section(models.Model):
     """
     chapter = models.ForeignKey(Chapter, on_delete=models.CASCADE, related_name='sections')
     slug = models.SlugField(unique=True)
+    order = models.IntegerField(default=0)
     title = models.CharField(max_length=255)
     description = models.TextField(blank=True, null=True)
     content = models.TextField()

@@ -52,11 +52,13 @@ export interface UserDetails {
 export interface Section {
   id: number;
   slug: string;
+  order: number
   title: string;
   description: string;
   content: string;
-  chapter: number;
+  chapter: number; 
 }
+
 export interface Tutorial {
   id: number;
   title: string;
@@ -72,8 +74,11 @@ export interface Chapter {
   order: number;
   tutorial: number;
   description: string;
-  estimatedTime: string;
-  keyTopics: string[];
+  lessons: number;
+  practices: number;
+  difficulty: 'Beginner' | 'Intermediate' | 'Advanced';
+  image_path: string;
+  requiredSubscription: 'Free' | 'Nova+' | 'Nova Pro';
 }
 
 export interface Module {
