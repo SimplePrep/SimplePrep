@@ -4,7 +4,7 @@ import MixCard from './utils/tutorials/MixCard';
 import CurvedLine from './utils/tutorials/CurvedLine';
 import { Chapter, Section } from '../auth_utils/types';
 import ChapterCard from './utils/tutorials/ChapterCard';
-
+import { getChapters, getSections } from '../auth_utils/axios/axiosServices';
 
 const getUserCompletionData = (userId: number): number[] => {
   // Replace this with actual logic to determine if the section is complete for the current user.
@@ -13,42 +13,32 @@ const getUserCompletionData = (userId: number): number[] => {
 
 const TutorialPath: React.FC<{ isDarkMode: boolean; userSubscription: 'Free' | 'Nova+' | 'Nova Pro'; userId: number }> = ({ isDarkMode, userSubscription, userId }) => {
   const { tutorialId } = useParams<{ tutorialId: string }>();
-  console.log('tutorialID:', tutorialId);
   const [chapters, setChapters] = useState<Chapter[]>([]);
+  const [sections, setSections] = useState<Section[]>([]);
   const [activeChapterId, setActiveChapterId] = useState<number | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [cardPositions, setCardPositions] = useState<{ x: number, y: number }[]>([]);
   const [chapterCardPosition, setChapterCardPosition] = useState<{ x: number, y: number } | null>(null);
 
   useEffect(() => {
-    const dummyChapters: Chapter[] = [
-      {
-        id: 1,
-        title: "Introduction to SAT Reading",
-        order: 1,
-        tutorial: 1,
-        description: "This chapter introduces the basics of SAT Reading, covering the structure and types of passages.",
-        lessons: 5,
-        practices: 10,
-        difficulty: "Intermediate",
-        image_path: "tutorials/img1.jpg",
-        requiredSubscription: 'Free',
-      },
-      {
-        id: 2,
-        title: "Advanced Passage Analysis",
-        order: 2,
-        tutorial: 1,
-        description: "This chapter delves into advanced strategies for analyzing SAT Reading passages.",
-        lessons: 6,
-        practices: 12,
-        difficulty: "Advanced",
-        image_path: "tutorials/img2.jpg",
-        requiredSubscription: 'Nova+',
-      },
-    ];
+    const fetchChaptersAndSections = async () => {
+      try {
+        const chaptersResponse = await getChapters(Number(tutorialId));
+        setChapters(chaptersResponse);
 
-    setChapters(dummyChapters);
+        // Fetch sections for each chapter
+        const allSections: Section[] = [];
+        for (const chapter of chaptersResponse) {
+          const chapterSections = await getSections(chapter.id);
+          allSections.push(...chapterSections);
+        }
+        setSections(allSections);
+      } catch (error) {
+        console.error('Error fetching tutorial or chapters:', error);
+      }
+    };
+
+    fetchChaptersAndSections();
   }, [tutorialId]);
 
   const userCompletedSections = getUserCompletionData(userId);
@@ -59,13 +49,12 @@ const TutorialPath: React.FC<{ isDarkMode: boolean; userSubscription: 'Free' | '
     return (completedSections / totalSections) * 100;
   };
 
-  // Set the first incomplete chapter as the active chapter on initial render
   useEffect(() => {
     const firstIncompleteChapter = chapters.find(chapter => calculateChapterCompletion(chapter.id) < 100);
     if (firstIncompleteChapter) {
       setActiveChapterId(firstIncompleteChapter.id);
     }
-  }, [chapters]);
+  }, [chapters, sections]);
 
   const toggleChapterActive = (chapterId: number) => {
     setActiveChapterId(prevChapterId => (prevChapterId === chapterId ? null : chapterId));
@@ -99,16 +88,7 @@ const TutorialPath: React.FC<{ isDarkMode: boolean; userSubscription: 'Free' | '
     updatePositions();
     window.addEventListener('resize', updatePositions);
     return () => window.removeEventListener('resize', updatePositions);
-  }, [chapters, activeChapterId, updatePositions]);
-
-  const sections: Section[] = [
-    { id: 1, title: "Introduction to Reading 1", slug: 'slug-1', order: 1, chapter: 1, content: "This section covers the basics of SAT Reading.", description: 'abc' },
-    { id: 2, title: "Introduction to Reading 2", slug: 'slug-2', order: 1, chapter: 1, content: "This section covers the basics of SAT Reading.", description: 'abc' },
-    { id: 3, title: "Introduction to Reading 3", slug: 'slug-3', order: 1, chapter: 1, content: "This section covers the basics of SAT Reading.", description: 'abc' },
-    { id: 4, title: "Introduction to Reading 4", slug: 'slug-4', order: 1, chapter: 1, content: "This section covers the basics of SAT Reading.", description: 'abc' },
-    { id: 5, title: "Analyzing Passages", slug: 'slug-2', order: 2, chapter: 1, content: "In this section, you'll learn how to analyze passages effectively.", description: 'abc' },
-    { id: 6, title: "Understanding Question Types", slug: 'slug-3', order: 3, chapter: 2, content: "This section explains the different types of questions in SAT Reading.", description: 'abc' },
-  ];
+  }, [chapters, sections, activeChapterId, updatePositions]);
 
   const getPosition = (index: number) => {
     switch (index % 4) {
