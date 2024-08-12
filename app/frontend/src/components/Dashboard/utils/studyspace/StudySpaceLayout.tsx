@@ -1,16 +1,16 @@
 import React from 'react';
-import LearningSpaceNavbar from './LearningSpaceNavbar';
+import LearningSpaceNavbar from './StudySpaceNavbar';
 import NovaSpace from './NovaSpace';
-import LearningSpaceBody from './LearningSpaceBody';
+import LearningSpaceBody from './StudySpaceBody';
 import SwitchToLaptopModal from './SwitchToLaptopModal';
 
-interface LearningLayoutProps {
+interface StudySpaceLayoutProps {
   isDarkMode: boolean;
   toggleDarkMode: () => void;
   userSubscription: 'free' | 'nova+' | 'nova pro';
 }
 
-const LearningLayout: React.FC<LearningLayoutProps> = ({
+const StudySpaceLayout: React.FC<StudySpaceLayoutProps> = ({
   isDarkMode,
   toggleDarkMode,
   userSubscription
@@ -31,4 +31,4 @@ const LearningLayout: React.FC<LearningLayoutProps> = ({
   );
 };
 
-export default LearningLayout;
+export default StudySpaceLayout;

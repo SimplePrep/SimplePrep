@@ -6,12 +6,12 @@ import Logo from '../../../assets/logo-icon.png';
 import StepProgressBar from './StepProgressBar';
 import { RxExit } from "react-icons/rx";
 
-interface LearningSpaceNavbarProps {
+interface StudySpaceNavbarProps {
   toggleDarkMode: () => void;
   isDarkMode: boolean;
 }
 
-const LearningSpaceNavbar: React.FC<LearningSpaceNavbarProps> = ({ toggleDarkMode, isDarkMode }): React.ReactElement => {
+const StudySpaceNavbar: React.FC<StudySpaceNavbarProps> = ({ toggleDarkMode, isDarkMode }): React.ReactElement => {
   const navigate = useNavigate();
   const { tutorialId } = useParams<{ tutorialId: string }>();  // Get the tutorialId from the URL
   const [progress, setProgress] = useState(0);
@@ -96,4 +96,4 @@ const LearningSpaceNavbar: React.FC<LearningSpaceNavbarProps> = ({ toggleDarkMod
   );
 };
 
-export default LearningSpaceNavbar;
+export default StudySpaceNavbar;

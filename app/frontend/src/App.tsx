@@ -9,7 +9,6 @@ import Blogs from './components/Landing/Blogs';
 import TestPageUI from './components/Dashboard/utils/test_components/TestPageUI';
 import ResetPassword from './pages/Authentication/ResetPassword';
 import Contents from './components/Dashboard/Contents';
-import SectionContent from './components/Dashboard/SectionContent';
 import Analytics from './components/Dashboard/Analytics';
 import SignUpComponent from './pages/Authentication/SignUp';
 import Tutorials from './components/Dashboard/Tutorials';
@@ -20,10 +19,8 @@ import { setTheme } from './components/auth_utils/reducers/authReducer';
 import AuthenticatedComponent from './components/auth_utils/AuthenticatedComponent';
 import TutorialPath from './components/Dashboard/TutorialPath';
 import Layout, { LandingPage } from './pages/LandingPage';
-import LearningSectionSpace from './components/Dashboard/utils/learningspace/NovaSpace';
-import LearningLayout from './components/Dashboard/utils/learningspace/LearningSpaceLayout';
-import NovaSpace from './components/Dashboard/utils/learningspace/NovaSpace';
-import LearningSpaceBody from './components/Dashboard/utils/learningspace/LearningSpaceBody';
+import StudySpaceBody from './components/Dashboard/utils/studyspace/StudySpaceBody';
+import StudySpaceLayout from './components/Dashboard/utils/studyspace/StudySpaceLayout';
 
 const App = () => {
   const { theme } = useSelector((state: RootState) => state.auth);
@@ -57,10 +54,10 @@ const App = () => {
           <Route path="analytics" element={<Analytics isDarkMode={theme === 'dark'} />} />
         </Route>
         <Route
-          path="learning-space/:tutorialId"
+          path="study-space/:tutorialId"
           element={
             <AuthenticatedComponent>
-              <LearningLayout 
+              <StudySpaceLayout
                 isDarkMode={theme === 'dark'} 
                 toggleDarkMode={toggleDarkMode} 
                 userSubscription='nova pro'
@@ -68,7 +65,7 @@ const App = () => {
             </AuthenticatedComponent>
           }
         >
-          <Route path=":sectionSlug" element={<LearningSpaceBody isDarkMode={theme === 'dark'} />} />
+          <Route path=":sectionSlug" element={<StudySpaceBody isDarkMode={theme === 'dark'} />} />
         </Route>
         {/* Authentication Routes */}
         <Route path="/login" element={<Login />} />
