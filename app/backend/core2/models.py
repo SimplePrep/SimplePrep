@@ -51,7 +51,7 @@ class Section(models.Model):
     """
     chapter = models.ForeignKey(Chapter, on_delete=models.CASCADE, related_name='sections')
     slug = models.SlugField(unique=True)
-    order = models.IntegerField()
+    order = models.IntegerField(default=0)
     title = models.CharField(max_length=255)
     description = models.TextField(blank=True, null=True)
     content = models.TextField()
