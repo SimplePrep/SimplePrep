@@ -1,42 +1,66 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate, useParams } from 'react-router-dom';
+import { getSection } from '../../../auth_utils/axios/axiosServices';
 
-interface LearningSpaceBodyProps {
+interface Section {
+  id: number;
+  slug: string;
+  title: string;
+  description: string;
+  content: string;
+  chapter: number;
+}
+
+interface StudySpaceBodyProps {
   isDarkMode: boolean;
 }
 
-const exampleContent = [
-  "Section 1: Introduction",
-  "The SAT Reading Test presents a unique challenge in assessing a student's vocabulary knowledge and reading comprehension abilities. One question type that combines these skills is the vocabulary-in-context question.",
-  "In these questions, students are given a sentence with a blank, and they must choose the word or phrase that best fits the meaning and context of the sentence. Mastering this question type is crucial, as it not only demonstrates a student's proficiency with vocabulary but also their ability to analyze written passages and make logical inferences based on context clues.",
-  "To excel at vocabulary-in-context questions, students must possess a robust vocabulary foundation and the ability to interpret nuanced meanings, connotations, and tones effectively. Additionally, they must have strong reading comprehension skills to understand the sentence's context fully and identify the precise word or phrase that fits seamlessly into the given passage.",
-  "This tutorial will provide a comprehensive guide to tackling vocabulary-in-context questions successfully, breaking down the process into clear, actionable steps. We'll explore strategies for analyzing context, interpreting nuances, and making informed choices, all while offering numerous examples and practice opportunities to reinforce these essential skills.",
-  "By the end of this tutorial, students will have a thorough understanding of how to approach these questions systematically, enabling them to demonstrate their vocabulary knowledge and reading comprehension abilities effectively on the SAT Reading Test."
-  // Additional paragraphs...
-];
-const chunkSize = 1;
-const LearningSpaceBody: React.FC<LearningSpaceBodyProps> = ({ isDarkMode }) => {
+const chunkSize = 1; 
+
+const StudySpaceBody: React.FC<StudySpaceBodyProps> = ({ isDarkMode }) => {
+  const { sectionSlug } = useParams<{ sectionSlug: string }>();
   const navigate = useNavigate();
-  const { tutorialId } = useParams<{ tutorialId: string }>();
   const darkModeClass = isDarkMode ? 'text-slate-300 bg-gray-900' : 'bg-white text-gray-600';
+  const [section, setSection] = useState<Section | null>(null);
   const [visibleChunks, setVisibleChunks] = useState(1);
   const contentEndRef = useRef<HTMLDivElement>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchSectionData = async () => {
+      if (sectionSlug) {
+        setLoading(true);
+        setError(null);
+        try {
+          const sectionData = await getSection(sectionSlug);
+          setSection(sectionData);
+        } catch (error) {
+          console.error('Error fetching section data:', error);
+          setError('Failed to load content. Please try again.');
+        } finally {
+          setLoading(false);
+        }
+      }
+    };
+
+    fetchSectionData();
+  }, [sectionSlug]);
 
   const handleLoadMore = () => {
-    setVisibleChunks(prev => Math.min(prev + 1, Math.ceil(exampleContent.length / chunkSize)));
+    setVisibleChunks(prev => Math.min(prev + 1, Math.ceil(paragraphs.length / chunkSize)));
   };
 
   const handleFinish = () => {
-    if (tutorialId) {
-      navigate(`/demo/tutorials/course-paths/${tutorialId}`);
+    // Navigate back to the course path or wherever you'd like after finishing.
+    if (section?.chapter) {
+      navigate(`/demo/tutorials/course-paths/${section.chapter}`);
     } else {
       navigate('/demo/tutorials');
     }
   };
-
-  const currentContent = exampleContent.slice(0, visibleChunks * chunkSize);
 
   useEffect(() => {
     if (contentEndRef.current && scrollContainerRef.current) {
@@ -52,7 +76,14 @@ const LearningSpaceBody: React.FC<LearningSpaceBodyProps> = ({ isDarkMode }) => 
     }
   }, [visibleChunks]);
 
-  const isAllContentVisible = visibleChunks * chunkSize >= exampleContent.length;
+  if (loading) return <div className="text-center p-4">Loading...</div>;
+  if (error) return <div className="text-center p-4 text-red-500">{error}</div>;
+
+  // Split the section content into paragraphs
+  const paragraphs = section?.content.split('\n').filter(paragraph => paragraph.trim() !== '') || [];
+  const currentContent = paragraphs.slice(0, visibleChunks * chunkSize);
+
+  const isAllContentVisible = visibleChunks * chunkSize >= paragraphs.length;
 
   return (
     <div className={`fixed h-screen ml-[30%] w-[70%] ${darkModeClass} hidden md:block`}>
@@ -127,4 +158,4 @@ const SmallWavyDivider: React.FC<{ isDarkMode: boolean }> = ({ isDarkMode }) => 
   );
 };
 
-export default LearningSpaceBody;
+export default StudySpaceBody;
