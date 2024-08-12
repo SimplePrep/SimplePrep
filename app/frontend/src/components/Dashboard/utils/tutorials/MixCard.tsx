@@ -23,7 +23,7 @@ const MixCard: React.FC<MixCardProps> = ({ isDarkMode, isComplete, isActive, pos
     const boxShadowStyle = isActive ? (isDarkMode ? '0 4px 236px 0 rgba(16, 98, 251, .7)' : '0 4px 6px -1px rgba(59, 130, 246, 0.5), 0 2px 4px -1px rgba(59, 130, 246, 0.06)') : 'none';
 
     const handleClick = () => {
-        navigate(`/learning-space/${tutorialId}/${section.slug}`);
+        navigate(`/study-space/${tutorialId}/${section.slug}`);
     };
 
     // Set the visibility to true to trigger the animation after the component mounts
