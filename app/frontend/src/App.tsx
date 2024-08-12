@@ -53,7 +53,7 @@ const App = () => {
           <Route index element={<Contents isDarkMode={theme === 'dark'} />} />
           <Route path="dashboard" element={<Contents isDarkMode={theme === 'dark'} />} />
           <Route path="tutorials" element={<Tutorials isDarkMode={theme === 'dark'} />} />
-          <Route path="tutorials/course-paths/:tutorialId" element={<TutorialPath isDarkMode={theme === 'dark'} userId={1} userSubscription='Free'/>}/>
+          <Route path="tutorials/course-paths/:tutorialId" element={<TutorialPath isDarkMode={theme === 'dark'} userId={1} userSubscription='Nova Pro'/>}/>
           <Route path="analytics" element={<Analytics isDarkMode={theme === 'dark'} />} />
         </Route>
         <Route

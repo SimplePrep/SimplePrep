@@ -220,10 +220,8 @@ interface TestModuleDetails {
   export const getSections = async (chapterId: number): Promise<Section[]> => {
     try {
       const response = await axiosInstance.get<Section[]>(`/api/core2/chapters/${chapterId}/sections/`);
-      console.log('Full API response for sections:', response);
       return response.data;
     } catch (error) {
-      console.error('Error fetching sections:', error);
       throw error;
     }
   }
