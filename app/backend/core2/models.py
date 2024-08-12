@@ -41,7 +41,7 @@ class Chapter(models.Model):
     practices = models.PositiveIntegerField(default=0)
     difficulty = models.CharField(max_length=20, choices=DIFFICULTY_CHOICES, default=BEGINNER)
     img_path = models.CharField(max_length=255, default='')
-    requiredSubscription = models.CharField(max_length=20, choices=SUBSCRIPTION_CHOICES, default=FREE)
+    required_subscription = models.CharField(max_length=20, choices=SUBSCRIPTION_CHOICES, default=FREE)
     def __str__(self):
         return f"{self.tutorial.title} -> {self.title}"
     

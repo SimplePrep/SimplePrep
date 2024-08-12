@@ -6,7 +6,7 @@ class TutorialAdmin(admin.ModelAdmin):
     list_display = ('id', 'title')
 
 class ChapterAdmin(admin.ModelAdmin):
-    list_display = ('tutorial', 'title', 'order', 'description', 'lessons', 'practices', 'difficulty', 'img_path', 'requiredSubscription')
+    list_display = ('tutorial', 'title', 'order', 'description', 'lessons', 'practices', 'difficulty', 'img_path', 'required_subscription')
     list_filter = ('tutorial', )
 
 class SectionAdmin(admin.ModelAdmin):
