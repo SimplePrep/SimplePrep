@@ -15,17 +15,17 @@ const StepProgressBar: React.FC<StepProgressBarProps> = ({ steps, currentStep })
             <div
               className={`w-8 h-8 rounded-full flex items-center justify-center ${
                 index < currentStep
-                  ? 'bg-indigo-600'
+                  ? 'bg-blue-600'
                   : index === currentStep
-                  ? 'bg-indigo-600 ring-4 ring-indigo-200'
+                  ? 'bg-blue-600 ring-4 ring-indigo-200'
                   : 'bg-gray-300'
               }`}
             >
               {index < currentStep ? (
                 <FaCheck className="w-4 h-4 text-white" />
               ) : (
-                <span className={`text-sm font-medium ${
-                  index === currentStep ? 'text-white' : 'text-gray-700'
+                <span className={`text-sm font-semibold ${
+                  index === currentStep ? 'text-white' : 'text-gray-600'
                 }`}>
                   {index + 1}
                 </span>
@@ -35,7 +35,7 @@ const StepProgressBar: React.FC<StepProgressBarProps> = ({ steps, currentStep })
           {index < steps - 1 && (
             <div
               className={`flex-1 h-1 ${
-                index < currentStep ? 'bg-indigo-600' : 'bg-gray-200'
+                index < currentStep ? 'bg-blue-600' : 'bg-gray-200'
               }`}
             />
           )}

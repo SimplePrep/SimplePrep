@@ -9,7 +9,7 @@ interface ChapterCardProps {
   isDarkMode: boolean;
   isActive: boolean;
   onToggle: () => void;
-  userSubscription: 'free' | 'nova+' | 'nova pro';
+  userSubscription: 'Free' | 'Nova+' | 'Nova Pro';
   sections: Section[]; // Pass the sections associated with this chapter
   userCompletedSections: number[]; // Pass the completed sections' IDs
 }
@@ -25,7 +25,7 @@ const ChapterCard: React.FC<ChapterCardProps> = ({
 }) => {
   const navigate = useNavigate();
   const imagePath = require(`../../../assets/${chapter.image_path}`);
-  const hasAccess = userSubscription === 'nova pro' || userSubscription === 'nova+' || chapter.requiredSubscription === 'free';
+  const hasAccess = userSubscription === 'Nova Pro' || userSubscription === 'Nova+' || chapter.requiredSubscription === 'Free';
 
   // Find the first incomplete section in the chapter
   const firstIncompleteSection = sections.find(section => !userCompletedSections.includes(section.id));

@@ -117,9 +117,9 @@ const NovaSpace: React.FC<NovaSpaceProps> = ({ userSubscription, isDarkMode }) =
               className={`flex ${message.sender === 'nova' ? 'flex-row' : 'flex-row-reverse'} items-start gap-3`}
             >
               {message.sender === 'nova' ? (
-                <img src={NovaHeadshot} className='w-12 h-12 p-1 bg-indigo-600 rounded-3xl' alt="Nova" />
+                <img src={NovaHeadshot} className='w-12 h-12 p-1 bg-blue-600 rounded-3xl' alt="Nova" />
               ) : (
-                <div className="p-2 w-14 h-10 flex items-center justify-center bg-indigo-600 rounded-full text-white">
+                <div className="p-2 w-10 h-10 flex items-center justify-center bg-blue-600 rounded-full text-white">
                   <span className="text-sm font-semibold">You</span>
                 </div>
               )}
@@ -143,7 +143,7 @@ const NovaSpace: React.FC<NovaSpaceProps> = ({ userSubscription, isDarkMode }) =
           />
           <FaCircleArrowUp
             onClick={handleSendMessage}
-            className="absolute right-3 bottom-6 transform cursor-pointer hover:text-indigo-600 text-gray-400"
+            className="absolute right-3 bottom-6 transform cursor-pointer hover:text-blue-600 text-gray-400"
             size={25}
           />
         </div>

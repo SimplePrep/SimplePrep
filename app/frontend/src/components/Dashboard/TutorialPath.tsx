@@ -11,7 +11,7 @@ const getUserCompletionData = (userId: number): number[] => {
   return [1, 3, 5]; // Example: sections that are complete for this user.
 };
 
-const TutorialPath: React.FC<{ isDarkMode: boolean; userSubscription: 'free' | 'nova+' | 'nova pro'; userId: number }> = ({ isDarkMode, userSubscription, userId }) => {
+const TutorialPath: React.FC<{ isDarkMode: boolean; userSubscription: 'Free' | 'Nova+' | 'Nova Pro'; userId: number }> = ({ isDarkMode, userSubscription, userId }) => {
   const { tutorialId } = useParams<{ tutorialId: string }>();
   console.log('tutorialID:', tutorialId);
   const [chapters, setChapters] = useState<Chapter[]>([]);
@@ -32,7 +32,7 @@ const TutorialPath: React.FC<{ isDarkMode: boolean; userSubscription: 'free' | '
         practices: 10,
         difficulty: "Intermediate",
         image_path: "tutorials/img1.jpg",
-        requiredSubscription: 'free',
+        requiredSubscription: 'Free',
       },
       {
         id: 2,
@@ -44,7 +44,7 @@ const TutorialPath: React.FC<{ isDarkMode: boolean; userSubscription: 'free' | '
         practices: 12,
         difficulty: "Advanced",
         image_path: "tutorials/img2.jpg",
-        requiredSubscription: 'nova+',
+        requiredSubscription: 'Nova+',
       },
     ];
 

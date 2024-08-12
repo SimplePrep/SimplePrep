@@ -44,7 +44,7 @@ const LearningSpaceNavbar: React.FC<LearningSpaceNavbarProps> = ({ toggleDarkMod
       <div className='hidden md:block'>
         <div className={`w-full px-5 py-2 flex items-center justify-between ${darkModeClass} border-b-[0.5px]`}>
           <div className='flex flex-row gap-1 items-center'>
-            <img src={Logo} alt="SimplePrep Logo" className='w-12 h-10' />
+            <img src={Logo} alt="SimplePrep Logo" className='w-12 h-10 bg-white rounded-full' />
             <p className="text-lg font-semibold">Learning Space</p>
           </div>
           <div className='flex-1 flex items-center justify-center'>
