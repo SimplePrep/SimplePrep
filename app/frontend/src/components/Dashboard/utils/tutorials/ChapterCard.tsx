@@ -32,7 +32,7 @@ const ChapterCard: React.FC<ChapterCardProps> = ({
 
   const handleContinueClick = () => {
     if (firstIncompleteSection) {
-      navigate(`/tutorials/section-space/${firstIncompleteSection.slug}`);
+      navigate(`/tutorials/study-space/${firstIncompleteSection.slug}`);
     }
   };
 
