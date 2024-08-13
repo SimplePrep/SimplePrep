@@ -41,13 +41,12 @@ const NovaSpace: React.FC<NovaSpaceProps> = ({ userSubscription, isDarkMode }) =
   return cleanedText.trim();
 };
   
-  const parseResponseContent = (response: string): Array<{ type: string; value: string | string[] }> => {
-    // Split the cleaned response by the special marker, and add extra space between paragraphs
-    return response.split('<NEW_PARAGRAPH>').map(paragraph => ({
-      type: 'paragraph',
-      value: paragraph.trim(),
-    }));
-  };
+const parseResponseContent = (response: string): Array<{ type: string; value: string | string[] }> => {
+  return response.split('<NEW_PARAGRAPH>').map(paragraph => ({
+    type: 'paragraph',
+    value: paragraph.trim(),
+  })).filter(item => item.value !== ''); // Remove empty paragraphs
+};
   
   const renderContent = (content: Array<{ type: string; value: string | string[] }>) => {
     return content.map((item, index) => {
@@ -61,7 +60,7 @@ const NovaSpace: React.FC<NovaSpaceProps> = ({ userSubscription, isDarkMode }) =
   };
 
   const typeMessage = (content: Array<{ type: string; value: string | string[] }>): void => {
-    let fullMessage = content.filter(item => item.type === 'paragraph').map(item => item.value).join('\n\n');
+    let fullMessage = content.filter(item => item.type === 'paragraph').map(item => item.value).join('<NEW_PARAGRAPH>');
     let i = 0;
   
     const typing = setInterval(() => {
