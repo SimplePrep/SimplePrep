@@ -32,7 +32,7 @@ const NovaSpace: React.FC<NovaSpaceProps> = ({ userSubscription, isDarkMode }) =
   const cleanResponseText = (responseText: string): string => {
   let cleanedText = responseText
     .replace(/\[Tool Call:.*?\]/g, '')  // Remove tool call references
-    .replace(/Text\(annotations=\[\], value='(.*?)'\)/g, '')  // Remove the entire annotation
+    .replace(/Text\(annotations=\[\], value=["']?(.*?)["']?\)/g, '$1')
     .replace(/【\d+:\d+†source】/g, '')  // Remove source citations
     .replace(/\*\*/g, '')  // Remove markdown bold syntax
     .replace(/^\s+|\s+$/g, '')  // Trim spaces at the start and end
