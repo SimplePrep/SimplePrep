@@ -31,11 +31,11 @@ const NovaSpace: React.FC<NovaSpaceProps> = ({ userSubscription, isDarkMode }) =
 
   const cleanResponseText = (responseText: string): string => {
     let cleanedText = responseText
-      .replace(/Text\(annotations=\[\], value='(.*?)'\)/g, '$1')  // Remove unnecessary Text annotations
       .replace(/\[Tool Call:.*?\]/g, '')  // Remove tool call references
+      .replace(/Text\(annotations=\[\], value='(.*?)'\)/g, '')  // Remove the entire annotation
       .replace(/【\d+:\d+†source】/g, '')  // Remove source citations
       .replace(/\*\*/g, '')  // Remove markdown bold syntax
-      .replace(/(^Hi\s?Hi\s)/, 'Hi ')  // Replace "HiHi" with a single "Hi"
+      .replace(/^\s+|\s+$/g, '')  // Trim spaces at the start and end
       .replace(/\n\s*\n|<br\s*\/?>\s*<br\s*\/?>/g, '<NEW_PARAGRAPH>');  // Replace double newlines or <br><br> with a special marker
   
     return cleanedText.trim();
@@ -62,8 +62,10 @@ const NovaSpace: React.FC<NovaSpaceProps> = ({ userSubscription, isDarkMode }) =
 
   const typeMessage = (content: Array<{ type: string; value: string | string[] }>): void => {
     let i = 0;
-    const messageToType = content.find(item => item.type === 'paragraph')?.value as string;
-
+    const paragraphs = content.filter(item => item.type === 'paragraph');
+    let paragraphIndex = 0;
+    const messageToType = paragraphs[paragraphIndex]?.value as string;
+  
     const typing = setInterval(() => {
       setMessages((prevMessages) => {
         const newMessages = [...prevMessages];
@@ -77,18 +79,23 @@ const NovaSpace: React.FC<NovaSpaceProps> = ({ userSubscription, isDarkMode }) =
       });
       i++;
       if (i > (messageToType?.length || 0)) {
-        clearInterval(typing);
-        setMessages((prevMessages) => {
-          const newMessages = [...prevMessages];
-          const lastMessage = newMessages[newMessages.length - 1];
-          if (lastMessage && lastMessage.isTyping) {
-            lastMessage.isTyping = false;
-          }
-          return newMessages;
-        });
+        paragraphIndex++;
+        i = 0;
+        if (paragraphIndex >= paragraphs.length) {
+          clearInterval(typing);
+          setMessages((prevMessages) => {
+            const newMessages = [...prevMessages];
+            const lastMessage = newMessages[newMessages.length - 1];
+            if (lastMessage && lastMessage.isTyping) {
+              lastMessage.isTyping = false;
+            }
+            return newMessages;
+          });
+        }
       }
     }, 15);
   };
+  
 
   const handleSendMessage = async () => {
     if (inputValue.trim()) {
