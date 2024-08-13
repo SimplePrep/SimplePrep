@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { FaCircleArrowUp } from 'react-icons/fa6';
 import NovaHeadshot from '../../../assets/nova_headshot.png';
+import { NovaChatService } from '../../../auth_utils/axios/axiosServices';
 
 interface NovaSpaceProps {
   userSubscription: 'free' | 'nova+' | 'nova pro';
@@ -25,20 +26,7 @@ const NovaSpace: React.FC<NovaSpaceProps> = ({ userSubscription, isDarkMode }) =
   const textareaBgClass = isDarkMode ? 'bg-gray-800 text-white' : 'bg-gray-100 text-gray-900';
   const borderColor = isDarkMode ? 'border-gray-600' : 'border-gray-300';
 
-  const handleSendMessage = () => {
-    if (inputValue.trim()) {
-      setMessages(prevMessages => [...prevMessages, { text: inputValue, isTyping: false, sender: 'user' }]);
-      setInputValue('');
-      resetTextareaHeight();
-
-      setTimeout(() => {
-        const novaResponse = "I'm here to help you with that!";
-        setMessages(prevMessages => [...prevMessages, { text: novaResponse, isTyping: true, sender: 'nova' }]);
-        typeMessage(novaResponse);
-      }, 1000);
-    }
-  };
-
+  // Define the typeMessage function
   const typeMessage = (message: string) => {
     let i = 0;
     const typing = setInterval(() => {
@@ -63,6 +51,25 @@ const NovaSpace: React.FC<NovaSpaceProps> = ({ userSubscription, isDarkMode }) =
         });
       }
     }, 15);
+  };
+
+  const handleSendMessage = async () => {
+    if (inputValue.trim()) {
+      setMessages(prevMessages => [...prevMessages, { text: inputValue, isTyping: false, sender: 'user' }]);
+      setInputValue('');
+      resetTextareaHeight();
+
+      try {
+        const response = await NovaChatService(inputValue);
+        setMessages(prevMessages => [...prevMessages, { text: response.response, isTyping: false, sender: 'nova' }]);
+      } catch (error) {
+        console.error('Error communicating with Nova:', error);
+        setMessages(prevMessages => [
+          ...prevMessages, 
+          { text: "Sorry, something went wrong. Please try again.", isTyping: false, sender: 'nova' }
+        ]);
+      }
+    }
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -100,7 +107,7 @@ const NovaSpace: React.FC<NovaSpaceProps> = ({ userSubscription, isDarkMode }) =
   useEffect(() => {
     const welcomeMessage = `Welcome to "Advanced Algorithms in Python"! This course is designed to challenge your understanding and push your coding skills to new heights. I'm here to help you every step of the way. Let's get started on this exciting journey! 🚀`;
     setMessages([{ text: welcomeMessage, isTyping: true, sender: 'nova' }]);
-    typeMessage(welcomeMessage);
+    typeMessage(welcomeMessage);  // Call the typeMessage function
   }, []);
 
   useEffect(() => {
