@@ -53,7 +53,7 @@ const NovaSpace: React.FC<NovaSpaceProps> = ({ userSubscription, isDarkMode }) =
     return content.map((item, index) => {
       switch (item.type) {
         case 'paragraph':
-          return <p key={index} style={{ marginBottom: '1em' }}>{item.value}</p>;
+          return <p key={index} className="mb-4 last:mb-0">{item.value}</p>;
         default:
           return <p key={index}>{item.value}</p>;
       }
@@ -61,29 +61,21 @@ const NovaSpace: React.FC<NovaSpaceProps> = ({ userSubscription, isDarkMode }) =
   };
 
   const typeMessage = (content: Array<{ type: string; value: string | string[] }>): void => {
-    let paragraphIndex = 0;
-    let charIndex = 0;
+    let fullMessage = content.filter(item => item.type === 'paragraph').map(item => item.value).join('\n\n');
+    let i = 0;
+  
     const typing = setInterval(() => {
       setMessages((prevMessages) => {
         const newMessages = [...prevMessages];
         const lastMessage = newMessages[newMessages.length - 1];
         if (lastMessage && lastMessage.isTyping) {
-          const currentParagraph = content[paragraphIndex]?.value as string;
-          if (currentParagraph) {
-            lastMessage.content[paragraphIndex].value = currentParagraph.substring(0, charIndex);
-          }
+          const typedContent = fullMessage.substring(0, i);
+          lastMessage.content = parseResponseContent(typedContent);
         }
         return newMessages;
       });
-  
-      charIndex++;
-      const currentParagraphLength = (content[paragraphIndex]?.value as string)?.length || 0;
-      if (charIndex > currentParagraphLength) {
-        charIndex = 0;
-        paragraphIndex++;
-      }
-  
-      if (paragraphIndex >= content.length) {
+      i++;
+      if (i > fullMessage.length) {
         clearInterval(typing);
         setMessages((prevMessages) => {
           const newMessages = [...prevMessages];
@@ -96,7 +88,6 @@ const NovaSpace: React.FC<NovaSpaceProps> = ({ userSubscription, isDarkMode }) =
       }
     }, 15);
   };
-  
 
   const handleSendMessage = async () => {
     if (inputValue.trim()) {
