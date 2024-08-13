@@ -34,20 +34,30 @@ const NovaSpace: React.FC<NovaSpaceProps> = ({ userSubscription, isDarkMode }) =
       .replace(/Text\(annotations=\[\], value='(.*?)'\)/g, '$1')  // Remove unnecessary Text annotations
       .replace(/\[Tool Call:.*?\]/g, '')  // Remove tool call references
       .replace(/【\d+:\d+†source】/g, '')  // Remove source citations
-      .replace(/\*\*/g, '');  // Remove markdown bold syntax
-  
-    // Replace double line breaks or double <br> with a special marker
-    cleanedText = cleanedText.replace(/\n\s*\n|<br\s*\/?>\s*<br\s*\/?>/g, '<NEW_PARAGRAPH>');
+      .replace(/\*\*/g, '')  // Remove markdown bold syntax
+      .replace(/(^Hi\s?Hi\s)/, 'Hi ')  // Replace "HiHi" with a single "Hi"
+      .replace(/\n\s*\n|<br\s*\/?>\s*<br\s*\/?>/g, '<NEW_PARAGRAPH>');  // Replace double newlines or <br><br> with a special marker
   
     return cleanedText.trim();
   };
   
   const parseResponseContent = (response: string): Array<{ type: string; value: string | string[] }> => {
-    // Split the cleaned response by the special marker and convert each part to a paragraph
+    // Split the cleaned response by the special marker, and add extra space between paragraphs
     return response.split('<NEW_PARAGRAPH>').map(paragraph => ({
       type: 'paragraph',
       value: paragraph.trim(),
     }));
+  };
+  
+  const renderContent = (content: Array<{ type: string; value: string | string[] }>) => {
+    return content.map((item, index) => {
+      switch (item.type) {
+        case 'paragraph':
+          return <p key={index} style={{ marginBottom: '1em' }}>{item.value}</p>;
+        default:
+          return <p key={index}>{item.value}</p>;
+      }
+    });
   };
 
   const typeMessage = (content: Array<{ type: string; value: string | string[] }>): void => {
@@ -173,26 +183,6 @@ const NovaSpace: React.FC<NovaSpaceProps> = ({ userSubscription, isDarkMode }) =
     autoResizeTextarea();
   }, []);
 
-  const renderContent = (content: Array<{ type: string; value: string | string[] }>) => {
-    return content.map((item, index) => {
-      switch (item.type) {
-        case 'paragraph':
-          return <p key={index}>{item.value}</p>;
-        case 'list':
-          return (
-            <ul key={index}>
-              {(item.value as string[]).map((li, liIndex) => (
-                <li key={liIndex}>{li}</li>
-              ))}
-            </ul>
-          );
-        case 'header':
-          return <h2 key={index}>{item.value}</h2>;
-        default:
-          return <p key={index}>{item.value}</p>;
-      }
-    });
-  };
 
   return (
     <div className={`fixed w-[30%] h-screen ${darkModeClass} border-r-[0.5px] ${borderColor} px-5 py-10 hidden md:block`}>
