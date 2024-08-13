@@ -1,11 +1,11 @@
 # views/nova_assistant_views.py
-
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from openai import OpenAI
 import json
 import os
 from openai import AssistantEventHandler
+from typing_extensions import override
 
 class EventHandler(AssistantEventHandler):    
   @override
