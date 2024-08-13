@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { FaCircleArrowUp } from 'react-icons/fa6';
-import { useParams } from 'react-router-dom'; // Import useParams to get the sectionSlug from the URL
+import { useParams } from 'react-router-dom';
 import NovaHeadshot from '../../../assets/nova_headshot.png';
 import { NovaChatService, getSection } from '../../../auth_utils/axios/axiosServices';
 
@@ -16,7 +16,7 @@ interface NovaSpaceProps {
 }
 
 const NovaSpace: React.FC<NovaSpaceProps> = ({ userSubscription, isDarkMode }) => {
-  const { sectionSlug } = useParams<{ sectionSlug: string }>(); // Use useParams to get the sectionSlug from the URL
+  const { sectionSlug } = useParams<{ sectionSlug: string }>();
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState<string>('');
   const [sectionTitle, setSectionTitle] = useState<string>('');
@@ -78,16 +78,26 @@ const NovaSpace: React.FC<NovaSpaceProps> = ({ userSubscription, isDarkMode }) =
       setInputValue('');
       resetTextareaHeight();
 
+      // Show typing indicator immediately after user sends a message
+      setMessages((prevMessages) => [
+        ...prevMessages,
+        { content: [], isTyping: true, sender: 'nova' },
+      ]);
+
       try {
         const response = await NovaChatService(inputValue);
         const cleanedResponse = cleanResponseText(response.response);
         const parsedContent = parseResponseContent(cleanedResponse);
-        setMessages((prevMessages) => [...prevMessages, { content: parsedContent, isTyping: true, sender: 'nova' }]);
+        setMessages((prevMessages) => {
+          const updatedMessages = [...prevMessages];
+          updatedMessages[updatedMessages.length - 1] = { content: parsedContent, isTyping: true, sender: 'nova' };
+          return updatedMessages;
+        });
         typeMessage(parsedContent);
       } catch (error) {
         console.error('Error communicating with Nova:', error);
         setMessages((prevMessages) => [
-          ...prevMessages, 
+          ...prevMessages,
           { content: [{ type: 'paragraph', value: "Sorry, something went wrong. Please try again." }], isTyping: false, sender: 'nova' }
         ]);
       }
@@ -130,19 +140,17 @@ const NovaSpace: React.FC<NovaSpaceProps> = ({ userSubscription, isDarkMode }) =
       if (sectionSlug) {
         try {
           const sectionData = await getSection(sectionSlug);
-          setSectionTitle(sectionData.title); // Set the section title
+          setSectionTitle(sectionData.title);
           const welcomeMessage = [
-            { type: 'paragraph', value: `Welcome to "${sectionData.title}"!` },
+            { type: 'paragraph', value: `🌟 Welcome to "${sectionData.title}"! I'm Nova, your study companion. Whether you're gearing up for the Digital SAT or just sharpening your skills, I'm here to help you navigate through the complexities and make learning enjoyable. How can we get started today? 😊` },
           ];
-          setMessages([{ content: welcomeMessage, isTyping: true, sender: 'nova' }]);
-          typeMessage(welcomeMessage);
+          setMessages([{ content: welcomeMessage, isTyping: false, sender: 'nova' }]);
         } catch (error) {
           console.error('Error fetching section data:', error);
           const errorMessage = [
             { type: 'paragraph', value: 'Welcome! There was an error loading the section title.' },
           ];
-          setMessages([{ content: errorMessage, isTyping: true, sender: 'nova' }]);
-          typeMessage(errorMessage);
+          setMessages([{ content: errorMessage, isTyping: false, sender: 'nova' }]);
         }
       }
     };
@@ -188,7 +196,7 @@ const NovaSpace: React.FC<NovaSpaceProps> = ({ userSubscription, isDarkMode }) =
                 <>
                   <img src={NovaHeadshot} className='w-12 h-12 p-1 bg-blue-600 rounded-3xl' alt="Nova" />
                   {message.isTyping && (
-                    <div className="dots-container">
+                    <div className="dots-container flex space-x-1">
                       <div className="dot"></div>
                       <div className="dot"></div>
                       <div className="dot"></div>
