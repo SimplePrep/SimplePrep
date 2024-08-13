@@ -30,16 +30,16 @@ const NovaSpace: React.FC<NovaSpaceProps> = ({ userSubscription, isDarkMode }) =
   const borderColor = isDarkMode ? 'border-gray-600' : 'border-gray-300';
 
   const cleanResponseText = (responseText: string): string => {
-    let cleanedText = responseText
-      .replace(/\[Tool Call:.*?\]/g, '')  // Remove tool call references
-      .replace(/Text\(annotations=\[\], value='(.*?)'\)/g, '')  // Remove the entire annotation
-      .replace(/【\d+:\d+†source】/g, '')  // Remove source citations
-      .replace(/\*\*/g, '')  // Remove markdown bold syntax
-      .replace(/^\s+|\s+$/g, '')  // Trim spaces at the start and end
-      .replace(/\n\s*\n|<br\s*\/?>\s*<br\s*\/?>/g, '<NEW_PARAGRAPH>');  // Replace double newlines or <br><br> with a special marker
-  
-    return cleanedText.trim();
-  };
+  let cleanedText = responseText
+    .replace(/\[Tool Call:.*?\]/g, '')  // Remove tool call references
+    .replace(/Text\(annotations=\[\], value='(.*?)'\)/g, '')  // Remove the entire annotation
+    .replace(/【\d+:\d+†source】/g, '')  // Remove source citations
+    .replace(/\*\*/g, '')  // Remove markdown bold syntax
+    .replace(/^\s+|\s+$/g, '')  // Trim spaces at the start and end
+    .replace(/\n\s*\n|<br\s*\/?>\s*<br\s*\/?>/g, '<NEW_PARAGRAPH>');  // Replace double newlines or <br><br> with a special marker
+
+  return cleanedText.trim();
+};
   
   const parseResponseContent = (response: string): Array<{ type: string; value: string | string[] }> => {
     // Split the cleaned response by the special marker, and add extra space between paragraphs
@@ -61,27 +61,22 @@ const NovaSpace: React.FC<NovaSpaceProps> = ({ userSubscription, isDarkMode }) =
   };
 
   const typeMessage = (content: Array<{ type: string; value: string | string[] }>): void => {
-  let i = 0;
-  const paragraphs = content.filter(item => item.type === 'paragraph');
-  let paragraphIndex = 0;
-  const messageToType = paragraphs[paragraphIndex]?.value as string;
+    let i = 0;
+    const messageToType = content.find(item => item.type === 'paragraph')?.value as string;
 
-  const typing = setInterval(() => {
-    setMessages((prevMessages) => {
-      const newMessages = [...prevMessages];
-      const lastMessage = newMessages[newMessages.length - 1];
-      if (lastMessage && lastMessage.isTyping) {
-        if (typeof messageToType === 'string') {
-          lastMessage.content[0].value = messageToType.substring(0, i);
+    const typing = setInterval(() => {
+      setMessages((prevMessages) => {
+        const newMessages = [...prevMessages];
+        const lastMessage = newMessages[newMessages.length - 1];
+        if (lastMessage && lastMessage.isTyping) {
+          if (typeof messageToType === 'string') {
+            lastMessage.content[0].value = messageToType.substring(0, i);
+          }
         }
-      }
-      return newMessages;
-    });
-    i++;
-    if (i > (messageToType?.length || 0)) {
-      paragraphIndex++;
-      i = 0;
-      if (paragraphIndex >= paragraphs.length) {
+        return newMessages;
+      });
+      i++;
+      if (i > (messageToType?.length || 0)) {
         clearInterval(typing);
         setMessages((prevMessages) => {
           const newMessages = [...prevMessages];
@@ -92,10 +87,8 @@ const NovaSpace: React.FC<NovaSpaceProps> = ({ userSubscription, isDarkMode }) =
           return newMessages;
         });
       }
-    }
-  }, 15);
-};
-
+    }, 15);
+  };
 
   const handleSendMessage = async () => {
     if (inputValue.trim()) {
