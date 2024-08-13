@@ -9,19 +9,18 @@ from typing_extensions import override
 
 class EventHandler(AssistantEventHandler):    
     def __init__(self):
-        self.response_text = ""  # Initialize to accumulate response text
+        super().__init__()
+        self.response_text = ""
 
-    @override
     def on_text_created(self, text) -> None:
-        self.response_text += text  # Accumulate the initial text
-      
-    @override
+        self.response_text += text
+   
     def on_text_delta(self, delta, snapshot):
-        self.response_text += delta.value  # Accumulate text as it's received
-      
+        self.response_text += delta.value
+   
     def on_tool_call_created(self, tool_call):
-        self.response_text += f"\n[Tool Call: {tool_call.type}]\n"  # Accumulate tool calls
-  
+        self.response_text += f"\n[Tool Call: {tool_call.type}]\n"
+
     def on_tool_call_delta(self, delta, snapshot):
         if delta.type == 'code_interpreter':
             if delta.code_interpreter.input:
@@ -33,7 +32,7 @@ class EventHandler(AssistantEventHandler):
                         self.response_text += f"\n{output.logs}"
 
     def get_response(self):
-        return self.response_text  # Method to get the full accumulated response
+        return self.response_text
 
 # Initialize the OpenAI client
 client = OpenAI(api_key=os.environ.get('OPENAI_API_KEY'))
@@ -45,10 +44,11 @@ def nova_assistant(request):
         user_message = data.get('input')
 
         try:
+            # Create a new thread
             thread = client.beta.threads.create()
             
             # Send the user's message to OpenAI
-            message = client.beta.threads.messages.create(
+            client.beta.threads.messages.create(
                 thread_id=thread.id,
                 role="user",
                 content=user_message
