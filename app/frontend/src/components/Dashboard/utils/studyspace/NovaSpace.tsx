@@ -172,8 +172,10 @@ const NovaSpace: React.FC<NovaSpaceProps> = ({ userSubscription, isDarkMode }) =
   }, [messages]);
 
   useEffect(() => {
+    let isMounted = true;
+  
     const fetchSectionData = async () => {
-      if (sectionSlug) {
+      if (sectionSlug && isMounted) {
         try {
           const sectionData = await getSection(sectionSlug);
           setSectionTitle(sectionData.title);
@@ -191,9 +193,13 @@ const NovaSpace: React.FC<NovaSpaceProps> = ({ userSubscription, isDarkMode }) =
         }
       }
     };
-
+  
     fetchSectionData();
-  }, [sectionSlug]);
+  
+    return () => {
+      isMounted = false;
+    };
+  }, [sectionSlug]); 
 
   useEffect(() => {
     autoResizeTextarea();
