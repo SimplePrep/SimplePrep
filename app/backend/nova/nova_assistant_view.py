@@ -60,7 +60,7 @@ def nova_assistant(request):
             with client.beta.threads.runs.stream(
                 thread_id=thread.id,
                 assistant_id="asst_EF5u8T7eLblv9iUl980nmTAE",
-                instructions="You are helpful assistant in explaining topics to students interested in Digital SAT Reading topics. Whenever, user asks question, you should refer to instruction file provided to you.  Try to sound like tutor. Also, do not provide very long answer.",
+                instructions="You are helpful assistant in explaining topics to students interested in Digital SAT Reading topics. Whenever, user asks question, you should refer to instruction file provided to you.  Try to sound like tutor. Also, do not provide very long answer. Start the conversation in a friendly tone.",
                 event_handler=event_handler,
             ) as stream:
                 stream.until_done()
