@@ -13,10 +13,10 @@ class EventHandler(AssistantEventHandler):
         self.response_text = ""
 
     def on_text_created(self, text) -> None:
-        self.response_text += text
+        self.response_text += str(text)  # Ensure it's a string
    
     def on_text_delta(self, delta, snapshot):
-        self.response_text += delta.value
+        self.response_text += str(delta.value)  # Convert delta.value to string
    
     def on_tool_call_created(self, tool_call):
         self.response_text += f"\n[Tool Call: {tool_call.type}]\n"
@@ -24,12 +24,12 @@ class EventHandler(AssistantEventHandler):
     def on_tool_call_delta(self, delta, snapshot):
         if delta.type == 'code_interpreter':
             if delta.code_interpreter.input:
-                self.response_text += delta.code_interpreter.input
+                self.response_text += str(delta.code_interpreter.input)  # Convert input to string
             if delta.code_interpreter.outputs:
                 self.response_text += "\n\nOutput:\n"
                 for output in delta.code_interpreter.outputs:
                     if output.type == "logs":
-                        self.response_text += f"\n{output.logs}"
+                        self.response_text += str(output.logs)  # Convert logs to string
 
     def get_response(self):
         return self.response_text
