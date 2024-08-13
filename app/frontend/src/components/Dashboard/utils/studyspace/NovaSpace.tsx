@@ -3,22 +3,22 @@ import { FaCircleArrowUp } from 'react-icons/fa6';
 import NovaHeadshot from '../../../assets/nova_headshot.png';
 import { NovaChatService } from '../../../auth_utils/axios/axiosServices';
 
-interface NovaSpaceProps {
-  userSubscription: 'free' | 'nova+' | 'nova pro';
-  isDarkMode: boolean;
-}
-
 interface Message {
   text: string;
   isTyping: boolean;
   sender: 'nova' | 'user';
 }
 
+interface NovaSpaceProps {
+  userSubscription: 'free' | 'nova+' | 'nova pro';
+  isDarkMode: boolean;
+}
+
 const NovaSpace: React.FC<NovaSpaceProps> = ({ userSubscription, isDarkMode }) => {
   const [messages, setMessages] = useState<Message[]>([]);
-  const [inputValue, setInputValue] = useState('');
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const chatContainerRef = useRef<HTMLDivElement>(null);
+  const [inputValue, setInputValue] = useState<string>('');
+  const textareaRef = useRef<HTMLTextAreaElement | null>(null);
+  const chatContainerRef = useRef<HTMLDivElement | null>(null);
 
   const darkModeClass = isDarkMode ? 'bg-[#1d263b] text-white' : 'bg-gray-100 text-gray-900';
   const novaMessageClass = isDarkMode ? 'bg-gray-700' : 'bg-gray-200';
@@ -26,11 +26,15 @@ const NovaSpace: React.FC<NovaSpaceProps> = ({ userSubscription, isDarkMode }) =
   const textareaBgClass = isDarkMode ? 'bg-gray-800 text-white' : 'bg-gray-100 text-gray-900';
   const borderColor = isDarkMode ? 'border-gray-600' : 'border-gray-300';
 
-  // Define the typeMessage function
-  const typeMessage = (message: string) => {
+  const parseResponseText = (responseText: string): string => {
+    const formattedText = responseText.replace(/Text\(annotations=\[\], value='.*?'\)/, '').trim();
+    return formattedText;
+  };
+
+  const typeMessage = (message: string): void => {
     let i = 0;
     const typing = setInterval(() => {
-      setMessages(prevMessages => {
+      setMessages((prevMessages) => {
         const newMessages = [...prevMessages];
         const lastMessage = newMessages[newMessages.length - 1];
         if (lastMessage && lastMessage.isTyping) {
@@ -41,7 +45,7 @@ const NovaSpace: React.FC<NovaSpaceProps> = ({ userSubscription, isDarkMode }) =
       i++;
       if (i > message.length) {
         clearInterval(typing);
-        setMessages(prevMessages => {
+        setMessages((prevMessages) => {
           const newMessages = [...prevMessages];
           const lastMessage = newMessages[newMessages.length - 1];
           if (lastMessage && lastMessage.isTyping) {
@@ -55,27 +59,18 @@ const NovaSpace: React.FC<NovaSpaceProps> = ({ userSubscription, isDarkMode }) =
 
   const handleSendMessage = async () => {
     if (inputValue.trim()) {
-      setMessages(prevMessages => [...prevMessages, { text: inputValue, isTyping: false, sender: 'user' }]);
+      setMessages((prevMessages) => [...prevMessages, { text: inputValue, isTyping: false, sender: 'user' }]);
       setInputValue('');
       resetTextareaHeight();
-  
-      // Show Nova's typing indicator
-      setMessages(prevMessages => [...prevMessages, { text: '', isTyping: true, sender: 'nova' }]);
-  
+
       try {
         const response = await NovaChatService(inputValue);
-  
-        // Update the last message with Nova's actual response
-        setMessages(prevMessages => {
-          const newMessages = [...prevMessages];
-          const lastMessage = newMessages[newMessages.length - 1];
-          lastMessage.text = response.response;
-          lastMessage.isTyping = false;
-          return newMessages;
-        });
+        const parsedText = parseResponseText(response.response);
+        setMessages((prevMessages) => [...prevMessages, { text: '', isTyping: true, sender: 'nova' }]);
+        typeMessage(parsedText);
       } catch (error) {
         console.error('Error communicating with Nova:', error);
-        setMessages(prevMessages => [
+        setMessages((prevMessages) => [
           ...prevMessages, 
           { text: "Sorry, something went wrong. Please try again.", isTyping: false, sender: 'nova' }
         ]);
@@ -83,32 +78,31 @@ const NovaSpace: React.FC<NovaSpaceProps> = ({ userSubscription, isDarkMode }) =
     }
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>): void => {
     setInputValue(e.target.value);
     autoResizeTextarea();
   };
 
-  const handleKeyPress = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLTextAreaElement>): void => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       handleSendMessage();
     }
   };
 
-  const autoResizeTextarea = () => {
+  const autoResizeTextarea = (): void => {
     if (textareaRef.current) {
       textareaRef.current.style.height = 'auto';
       textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
     }
   };
 
-  const resetTextareaHeight = () => {
+  const resetTextareaHeight = (): void => {
     if (textareaRef.current) {
       textareaRef.current.style.height = 'auto';
     }
   };
 
-  // Scroll to the bottom of the chat when new messages are added
   useEffect(() => {
     if (chatContainerRef.current) {
       chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
@@ -118,7 +112,7 @@ const NovaSpace: React.FC<NovaSpaceProps> = ({ userSubscription, isDarkMode }) =
   useEffect(() => {
     const welcomeMessage = `Welcome to "Advanced Algorithms in Python"! This course is designed to challenge your understanding and push your coding skills to new heights. I'm here to help you every step of the way. Let's get started on this exciting journey! 🚀`;
     setMessages([{ text: welcomeMessage, isTyping: true, sender: 'nova' }]);
-    typeMessage(welcomeMessage);  // Call the typeMessage function
+    typeMessage(welcomeMessage);
   }, []);
 
   useEffect(() => {
@@ -168,6 +162,6 @@ const NovaSpace: React.FC<NovaSpaceProps> = ({ userSubscription, isDarkMode }) =
       </div>
     </div>
   );
-}
+};
 
 export default NovaSpace;
