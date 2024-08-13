@@ -30,10 +30,18 @@ const NovaSpace: React.FC<NovaSpaceProps> = ({ userSubscription, isDarkMode }) =
   const borderColor = isDarkMode ? 'border-gray-600' : 'border-gray-300';
 
   const cleanResponseText = (responseText: string): string => {
-    let cleanedText = responseText.replace(/\[Tool Call:.*?\]/g, '');
-    cleanedText = cleanedText.replace(/【\d+:\d+†source】/g, '');
+    let cleanedText = responseText
+      .replace(/Text\(annotations=\[\], value='(.*?)'\)/g, '$1')  // Remove unnecessary Text annotations
+      .replace(/\[Tool Call:.*?\]/g, '')  // Remove tool call references
+      .replace(/【\d+:\d+†source】/g, '')  // Remove source citations
+      .replace(/\*\*/g, '');  // Remove markdown bold syntax
+  
+    // Preserve newlines and formatting
+    cleanedText = cleanedText.replace(/\n/g, '<br>');
+  
     return cleanedText.trim();
   };
+  
 
   const parseResponseContent = (response: string): Array<{ type: string; value: string | string[] }> => {
     return [{ type: 'paragraph', value: response }];
@@ -78,7 +86,6 @@ const NovaSpace: React.FC<NovaSpaceProps> = ({ userSubscription, isDarkMode }) =
       setInputValue('');
       resetTextareaHeight();
 
-      // Show typing indicator immediately after user sends a message
       setMessages((prevMessages) => [
         ...prevMessages,
         { content: [], isTyping: true, sender: 'nova' },
@@ -144,7 +151,8 @@ const NovaSpace: React.FC<NovaSpaceProps> = ({ userSubscription, isDarkMode }) =
           const welcomeMessage = [
             { type: 'paragraph', value: `🌟 Welcome to "${sectionData.title}"! I'm Nova, your study companion. Whether you're gearing up for the Digital SAT or just sharpening your skills, I'm here to help you navigate through the complexities and make learning enjoyable. How can we get started today? 😊` },
           ];
-          setMessages([{ content: welcomeMessage, isTyping: false, sender: 'nova' }]);
+          setMessages([{ content: welcomeMessage, isTyping: true, sender: 'nova' }]);
+          typeMessage(welcomeMessage);
         } catch (error) {
           console.error('Error fetching section data:', error);
           const errorMessage = [
@@ -195,13 +203,6 @@ const NovaSpace: React.FC<NovaSpaceProps> = ({ userSubscription, isDarkMode }) =
               {message.sender === 'nova' ? (
                 <>
                   <img src={NovaHeadshot} className='w-12 h-12 p-1 bg-blue-600 rounded-3xl' alt="Nova" />
-                  {message.isTyping && (
-                    <div className="dots-container flex space-x-1">
-                      <div className="dot"></div>
-                      <div className="dot"></div>
-                      <div className="dot"></div>
-                    </div>
-                  )}
                 </>
               ) : (
                 <div className="p-2 w-10 h-10 flex items-center justify-center bg-blue-600 rounded-full text-white">
@@ -210,7 +211,13 @@ const NovaSpace: React.FC<NovaSpaceProps> = ({ userSubscription, isDarkMode }) =
               )}
               <div className={`p-4 rounded-lg ${message.sender === 'nova' ? novaMessageClass : userMessageClass}`}>
                 {renderContent(message.content)}
-                {message.isTyping && <span className="animate-pulse">|</span>}
+                {message.isTyping && (
+                  <div className="dots-container flex space-x-1">
+                    <div className="dot"></div>
+                    <div className="dot"></div>
+                    <div className="dot"></div>
+                  </div>
+                )}
               </div>
             </div>
           ))}
