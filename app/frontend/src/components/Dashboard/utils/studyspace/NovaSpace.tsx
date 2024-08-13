@@ -32,15 +32,16 @@ const NovaSpace: React.FC<NovaSpaceProps> = ({ userSubscription, isDarkMode }) =
   const cleanResponseText = (responseText: string): string => {
     let cleanedText = responseText
       .replace(/\[Tool Call:.*?\]/g, '')  // Remove tool call references
-      .replace(/Text\(annotations=\[\], value=["']?(.*?)["']?\)/g, '$1')  // Extract text within 'value' and remove annotation
+      .replace(/Text\(annotations=\[\], value=["']?(.*?)["']?\)\s*\1?/g, '$1')  // Remove annotations and handle potential duplicates
       .replace(/【\d+:\d+†source】/g, '')  // Remove source citations
       .replace(/\*\*/g, '')  // Remove markdown bold syntax
       .replace(/^\s+|\s+$/g, '')  // Trim spaces at the start and end
       .replace(/\n\s*\n|<br\s*\/?>\s*<br\s*\/?>/g, '<NEW_PARAGRAPH>')  // Replace double newlines or <br><br> with a special marker
-      .replace(/\b(\w+)\s+\1\b/g, '$1');  // Remove duplicate consecutive words
+      .replace(/\b(\w+)\b\s+\b\1\b/g, '$1');  // Remove duplicate consecutive words
   
     return cleanedText.trim();
   };
+  
   
 const parseResponseContent = (response: string): Array<{ type: string; value: string | string[] }> => {
   return response.split('<NEW_PARAGRAPH>').map(paragraph => ({
