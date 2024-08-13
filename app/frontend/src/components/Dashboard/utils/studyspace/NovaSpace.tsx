@@ -61,40 +61,49 @@ const NovaSpace: React.FC<NovaSpaceProps> = ({ userSubscription, isDarkMode }) =
   };
 
   const typeMessage = (content: Array<{ type: string; value: string | string[] }>): void => {
-    let i = 0;
-    const paragraphs = content.filter(item => item.type === 'paragraph');
     let paragraphIndex = 0;
-    const messageToType = paragraphs[paragraphIndex]?.value as string;
-  
+    let charIndex = 0;
+    
     const typing = setInterval(() => {
       setMessages((prevMessages) => {
         const newMessages = [...prevMessages];
         const lastMessage = newMessages[newMessages.length - 1];
+  
         if (lastMessage && lastMessage.isTyping) {
-          if (typeof messageToType === 'string') {
-            lastMessage.content[0].value = messageToType.substring(0, i);
+          // Append the current character to the last message content
+          if (typeof content[paragraphIndex].value === 'string') {
+            lastMessage.content[0].value += content[paragraphIndex].value[charIndex];
+          }
+  
+          charIndex++;
+  
+          // Check if the current paragraph is fully typed
+          if (charIndex >= (content[paragraphIndex].value as string).length) {
+            charIndex = 0;
+            paragraphIndex++;
+  
+            // Move to the next paragraph if any
+            if (paragraphIndex < content.length) {
+              newMessages.push({
+                content: [{ type: 'paragraph', value: '' }],
+                isTyping: true,
+                sender: 'nova',
+              });
+            }
+          }
+  
+          // Finalize typing when all paragraphs are done
+          if (paragraphIndex >= content.length) {
+            lastMessage.isTyping = false;
+            clearInterval(typing);
           }
         }
+        
         return newMessages;
       });
-      i++;
-      if (i > (messageToType?.length || 0)) {
-        paragraphIndex++;
-        i = 0;
-        if (paragraphIndex >= paragraphs.length) {
-          clearInterval(typing);
-          setMessages((prevMessages) => {
-            const newMessages = [...prevMessages];
-            const lastMessage = newMessages[newMessages.length - 1];
-            if (lastMessage && lastMessage.isTyping) {
-              lastMessage.isTyping = false;
-            }
-            return newMessages;
-          });
-        }
-      }
     }, 15);
   };
+  
   
 
   const handleSendMessage = async () => {
@@ -209,7 +218,7 @@ const NovaSpace: React.FC<NovaSpaceProps> = ({ userSubscription, isDarkMode }) =
                   <span className="text-sm font-semibold">You</span>
                 </div>
               )}
-              <div className={`p-4 rounded-lg ${message.sender === 'nova' ? novaMessageClass : userMessageClass}`}>
+              <div className={`p-2 rounded-lg ${message.sender === 'nova' ? novaMessageClass : userMessageClass}`}>
                 {renderContent(message.content)}
                 {message.isTyping && (
                   <div className="dots-container flex space-x-1">
