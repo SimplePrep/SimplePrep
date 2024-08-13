@@ -61,22 +61,29 @@ const NovaSpace: React.FC<NovaSpaceProps> = ({ userSubscription, isDarkMode }) =
   };
 
   const typeMessage = (content: Array<{ type: string; value: string | string[] }>): void => {
-    let i = 0;
-    const messageToType = content.find(item => item.type === 'paragraph')?.value as string;
-
+    let paragraphIndex = 0;
+    let charIndex = 0;
     const typing = setInterval(() => {
       setMessages((prevMessages) => {
         const newMessages = [...prevMessages];
         const lastMessage = newMessages[newMessages.length - 1];
         if (lastMessage && lastMessage.isTyping) {
-          if (typeof messageToType === 'string') {
-            lastMessage.content[0].value = messageToType.substring(0, i);
+          const currentParagraph = content[paragraphIndex]?.value as string;
+          if (currentParagraph) {
+            lastMessage.content[paragraphIndex].value = currentParagraph.substring(0, charIndex);
           }
         }
         return newMessages;
       });
-      i++;
-      if (i > (messageToType?.length || 0)) {
+  
+      charIndex++;
+      const currentParagraphLength = (content[paragraphIndex]?.value as string)?.length || 0;
+      if (charIndex > currentParagraphLength) {
+        charIndex = 0;
+        paragraphIndex++;
+      }
+  
+      if (paragraphIndex >= content.length) {
         clearInterval(typing);
         setMessages((prevMessages) => {
           const newMessages = [...prevMessages];
@@ -89,6 +96,7 @@ const NovaSpace: React.FC<NovaSpaceProps> = ({ userSubscription, isDarkMode }) =
       }
     }, 15);
   };
+  
 
   const handleSendMessage = async () => {
     if (inputValue.trim()) {
@@ -202,7 +210,7 @@ const NovaSpace: React.FC<NovaSpaceProps> = ({ userSubscription, isDarkMode }) =
                   <span className="text-sm font-semibold">You</span>
                 </div>
               )}
-              <div className={`p-4 rounded-lg ${message.sender === 'nova' ? novaMessageClass : userMessageClass}`}>
+              <div className={`p-2 rounded-lg ${message.sender === 'nova' ? novaMessageClass : userMessageClass}`}>
                 {renderContent(message.content)}
                 {message.isTyping && (
                   <div className="dots-container flex space-x-1">
