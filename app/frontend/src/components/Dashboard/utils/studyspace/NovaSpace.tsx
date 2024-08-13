@@ -58,10 +58,21 @@ const NovaSpace: React.FC<NovaSpaceProps> = ({ userSubscription, isDarkMode }) =
       setMessages(prevMessages => [...prevMessages, { text: inputValue, isTyping: false, sender: 'user' }]);
       setInputValue('');
       resetTextareaHeight();
-
+  
+      // Show Nova's typing indicator
+      setMessages(prevMessages => [...prevMessages, { text: '', isTyping: true, sender: 'nova' }]);
+  
       try {
         const response = await NovaChatService(inputValue);
-        setMessages(prevMessages => [...prevMessages, { text: response.response, isTyping: false, sender: 'nova' }]);
+  
+        // Update the last message with Nova's actual response
+        setMessages(prevMessages => {
+          const newMessages = [...prevMessages];
+          const lastMessage = newMessages[newMessages.length - 1];
+          lastMessage.text = response.response;
+          lastMessage.isTyping = false;
+          return newMessages;
+        });
       } catch (error) {
         console.error('Error communicating with Nova:', error);
         setMessages(prevMessages => [
