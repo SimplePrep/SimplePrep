@@ -20,7 +20,7 @@ from django.conf.urls.static import static
 from django.conf import settings
 from .admin import admin_site
 from django.contrib.auth import get_user_model
-
+from nova.nova_assistant_view import nova_assistant
 User = get_user_model()
 
 urlpatterns = [
@@ -33,7 +33,7 @@ urlpatterns = [
     path("auth/user/", include('user.urls')),
     path("api/core/", include('core.urls')),
     path("api/core2/", include('core2.urls')),
-
+    path("api/nova-assistant/", nova_assistant, name='nova_assistant'),
 ]
 
 if settings.DEBUG:

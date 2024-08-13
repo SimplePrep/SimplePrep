@@ -280,3 +280,13 @@ interface TestModuleDetails {
       throw error;
     }
 };
+
+export const NovaChatService = async (userInput: string) => {
+  try{
+    const response = await axiosInstance.post('/api/nova-assistant/', {input: userInput});
+    return response.data;
+  } catch (error) {
+    console.error('Error forwarding user query to OpenAI:', error);
+    throw error;
+}
+};

@@ -11,6 +11,7 @@ COPY ./backend/requirements.dev.txt /tmp/requirements.dev.txt
 RUN python -m venv /py && \
     /py/bin/pip install --upgrade pip && \
     /py/bin/pip install gunicorn && \
+    /py/bin/pip install openai && \
     apk add --update --no-cache postgresql-client libffi-dev && \
     apk add --update --no-cache --virtual .tmp-build-deps \
         build-base postgresql-dev musl-dev linux-headers && \
