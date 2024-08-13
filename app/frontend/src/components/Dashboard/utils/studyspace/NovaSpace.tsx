@@ -1,10 +1,11 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { FaCircleArrowUp } from 'react-icons/fa6';
+import { useParams } from 'react-router-dom'; // Import useParams to get the sectionSlug from the URL
 import NovaHeadshot from '../../../assets/nova_headshot.png';
-import { NovaChatService } from '../../../auth_utils/axios/axiosServices';
+import { NovaChatService, getSection } from '../../../auth_utils/axios/axiosServices';
 
 interface Message {
-  text: string;
+  content: Array<{ type: string; value: string | string[] }>;
   isTyping: boolean;
   sender: 'nova' | 'user';
 }
@@ -15,8 +16,10 @@ interface NovaSpaceProps {
 }
 
 const NovaSpace: React.FC<NovaSpaceProps> = ({ userSubscription, isDarkMode }) => {
+  const { sectionSlug } = useParams<{ sectionSlug: string }>(); // Use useParams to get the sectionSlug from the URL
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState<string>('');
+  const [sectionTitle, setSectionTitle] = useState<string>('');
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const chatContainerRef = useRef<HTMLDivElement | null>(null);
 
@@ -26,24 +29,33 @@ const NovaSpace: React.FC<NovaSpaceProps> = ({ userSubscription, isDarkMode }) =
   const textareaBgClass = isDarkMode ? 'bg-gray-800 text-white' : 'bg-gray-100 text-gray-900';
   const borderColor = isDarkMode ? 'border-gray-600' : 'border-gray-300';
 
-  const parseResponseText = (responseText: string): string => {
-    const formattedText = responseText.replace(/Text\(annotations=\[\], value='.*?'\)/, '').trim();
-    return formattedText;
+  const cleanResponseText = (responseText: string): string => {
+    let cleanedText = responseText.replace(/\[Tool Call:.*?\]/g, '');
+    cleanedText = cleanedText.replace(/【\d+:\d+†source】/g, '');
+    return cleanedText.trim();
   };
 
-  const typeMessage = (message: string): void => {
+  const parseResponseContent = (response: string): Array<{ type: string; value: string | string[] }> => {
+    return [{ type: 'paragraph', value: response }];
+  };
+
+  const typeMessage = (content: Array<{ type: string; value: string | string[] }>): void => {
     let i = 0;
+    const messageToType = content.find(item => item.type === 'paragraph')?.value as string;
+
     const typing = setInterval(() => {
       setMessages((prevMessages) => {
         const newMessages = [...prevMessages];
         const lastMessage = newMessages[newMessages.length - 1];
         if (lastMessage && lastMessage.isTyping) {
-          lastMessage.text = message.substring(0, i);
+          if (typeof messageToType === 'string') {
+            lastMessage.content[0].value = messageToType.substring(0, i);
+          }
         }
         return newMessages;
       });
       i++;
-      if (i > message.length) {
+      if (i > (messageToType?.length || 0)) {
         clearInterval(typing);
         setMessages((prevMessages) => {
           const newMessages = [...prevMessages];
@@ -59,20 +71,24 @@ const NovaSpace: React.FC<NovaSpaceProps> = ({ userSubscription, isDarkMode }) =
 
   const handleSendMessage = async () => {
     if (inputValue.trim()) {
-      setMessages((prevMessages) => [...prevMessages, { text: inputValue, isTyping: false, sender: 'user' }]);
+      setMessages((prevMessages) => [
+        ...prevMessages,
+        { content: [{ type: 'paragraph', value: inputValue }], isTyping: false, sender: 'user' },
+      ]);
       setInputValue('');
       resetTextareaHeight();
 
       try {
         const response = await NovaChatService(inputValue);
-        const parsedText = parseResponseText(response.response);
-        setMessages((prevMessages) => [...prevMessages, { text: '', isTyping: true, sender: 'nova' }]);
-        typeMessage(parsedText);
+        const cleanedResponse = cleanResponseText(response.response);
+        const parsedContent = parseResponseContent(cleanedResponse);
+        setMessages((prevMessages) => [...prevMessages, { content: parsedContent, isTyping: true, sender: 'nova' }]);
+        typeMessage(parsedContent);
       } catch (error) {
         console.error('Error communicating with Nova:', error);
         setMessages((prevMessages) => [
           ...prevMessages, 
-          { text: "Sorry, something went wrong. Please try again.", isTyping: false, sender: 'nova' }
+          { content: [{ type: 'paragraph', value: "Sorry, something went wrong. Please try again." }], isTyping: false, sender: 'nova' }
         ]);
       }
     }
@@ -110,14 +126,54 @@ const NovaSpace: React.FC<NovaSpaceProps> = ({ userSubscription, isDarkMode }) =
   }, [messages]);
 
   useEffect(() => {
-    const welcomeMessage = `Welcome to "Advanced Algorithms in Python"! This course is designed to challenge your understanding and push your coding skills to new heights. I'm here to help you every step of the way. Let's get started on this exciting journey! 🚀`;
-    setMessages([{ text: welcomeMessage, isTyping: true, sender: 'nova' }]);
-    typeMessage(welcomeMessage);
-  }, []);
+    const fetchSectionData = async () => {
+      if (sectionSlug) {
+        try {
+          const sectionData = await getSection(sectionSlug);
+          setSectionTitle(sectionData.title); // Set the section title
+          const welcomeMessage = [
+            { type: 'paragraph', value: `Welcome to "${sectionData.title}"!` },
+          ];
+          setMessages([{ content: welcomeMessage, isTyping: true, sender: 'nova' }]);
+          typeMessage(welcomeMessage);
+        } catch (error) {
+          console.error('Error fetching section data:', error);
+          const errorMessage = [
+            { type: 'paragraph', value: 'Welcome! There was an error loading the section title.' },
+          ];
+          setMessages([{ content: errorMessage, isTyping: true, sender: 'nova' }]);
+          typeMessage(errorMessage);
+        }
+      }
+    };
+
+    fetchSectionData();
+  }, [sectionSlug]);
 
   useEffect(() => {
     autoResizeTextarea();
   }, []);
+
+  const renderContent = (content: Array<{ type: string; value: string | string[] }>) => {
+    return content.map((item, index) => {
+      switch (item.type) {
+        case 'paragraph':
+          return <p key={index}>{item.value}</p>;
+        case 'list':
+          return (
+            <ul key={index}>
+              {(item.value as string[]).map((li, liIndex) => (
+                <li key={liIndex}>{li}</li>
+              ))}
+            </ul>
+          );
+        case 'header':
+          return <h2 key={index}>{item.value}</h2>;
+        default:
+          return <p key={index}>{item.value}</p>;
+      }
+    });
+  };
 
   return (
     <div className={`fixed w-[30%] h-screen ${darkModeClass} border-r-[0.5px] ${borderColor} px-5 py-10 hidden md:block`}>
@@ -129,14 +185,23 @@ const NovaSpace: React.FC<NovaSpaceProps> = ({ userSubscription, isDarkMode }) =
               className={`flex ${message.sender === 'nova' ? 'flex-row' : 'flex-row-reverse'} items-start gap-3`}
             >
               {message.sender === 'nova' ? (
-                <img src={NovaHeadshot} className='w-12 h-12 p-1 bg-blue-600 rounded-3xl' alt="Nova" />
+                <>
+                  <img src={NovaHeadshot} className='w-12 h-12 p-1 bg-blue-600 rounded-3xl' alt="Nova" />
+                  {message.isTyping && (
+                    <div className="dots-container">
+                      <div className="dot"></div>
+                      <div className="dot"></div>
+                      <div className="dot"></div>
+                    </div>
+                  )}
+                </>
               ) : (
                 <div className="p-2 w-10 h-10 flex items-center justify-center bg-blue-600 rounded-full text-white">
                   <span className="text-sm font-semibold">You</span>
                 </div>
               )}
               <div className={`p-4 rounded-lg ${message.sender === 'nova' ? novaMessageClass : userMessageClass}`}>
-                <p className="font-semibold">{message.text}</p>
+                {renderContent(message.content)}
                 {message.isTyping && <span className="animate-pulse">|</span>}
               </div>
             </div>
