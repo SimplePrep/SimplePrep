@@ -36,15 +36,18 @@ const NovaSpace: React.FC<NovaSpaceProps> = ({ userSubscription, isDarkMode }) =
       .replace(/【\d+:\d+†source】/g, '')  // Remove source citations
       .replace(/\*\*/g, '');  // Remove markdown bold syntax
   
-    // Preserve newlines and formatting
-    cleanedText = cleanedText.replace(/\n/g, '<br>');
+    // Replace double line breaks or double <br> with a special marker
+    cleanedText = cleanedText.replace(/\n\s*\n|<br\s*\/?>\s*<br\s*\/?>/g, '<NEW_PARAGRAPH>');
   
     return cleanedText.trim();
   };
   
-
   const parseResponseContent = (response: string): Array<{ type: string; value: string | string[] }> => {
-    return [{ type: 'paragraph', value: response }];
+    // Split the cleaned response by the special marker and convert each part to a paragraph
+    return response.split('<NEW_PARAGRAPH>').map(paragraph => ({
+      type: 'paragraph',
+      value: paragraph.trim(),
+    }));
   };
 
   const typeMessage = (content: Array<{ type: string; value: string | string[] }>): void => {
