@@ -60,7 +60,7 @@ const App = () => {
               <StudySpaceLayout
                 isDarkMode={theme === 'dark'} 
                 toggleDarkMode={toggleDarkMode} 
-                userSubscription='nova pro'
+                userSubscription='Nova Pro'
               />
             </AuthenticatedComponent>
           }

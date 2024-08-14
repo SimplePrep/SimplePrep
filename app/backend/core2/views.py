@@ -1,10 +1,13 @@
 from rest_framework import generics, status
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from .models import Tutorial, Chapter, Section, PracticeQuestion
-from .serializers import TutorialSerializer, ChapterSerializer, SectionSerializer, PracticeQuestionSerializer
+from .models import Tutorial, Chapter, Section, PracticeQuestion, UserProgress
+from .serializers import TutorialSerializer, ChapterSerializer, SectionSerializer, PracticeQuestionSerializer, UserProgressSerializer
+from rest_framework.views import APIView
 
 class TutorialListCreateView(generics.ListCreateAPIView):
     serializer_class = TutorialSerializer
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         return Tutorial.objects.all().order_by('id')
@@ -31,6 +34,7 @@ class TutorialDetailView(generics.RetrieveAPIView):
     queryset = Tutorial.objects.all()
     serializer_class = TutorialSerializer
     lookup_field = 'id'
+    permission_classes = [IsAuthenticated]
 
     def retrieve(self, request, *args, **kwargs):
         try:
@@ -43,6 +47,7 @@ class TutorialDetailView(generics.RetrieveAPIView):
 
 class ChapterListCreateView(generics.ListCreateAPIView):
     serializer_class = ChapterSerializer
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         tutorial_id = self.kwargs.get('tutorial_id')
@@ -75,6 +80,7 @@ class ChapterListCreateView(generics.ListCreateAPIView):
 
 class SectionListCreateView(generics.ListCreateAPIView):
     serializer_class = SectionSerializer
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         chapter_id = self.kwargs.get('chapter_id')
@@ -109,6 +115,7 @@ class SectionDetailView(generics.RetrieveAPIView):
     queryset = Section.objects.all()
     serializer_class = SectionSerializer
     lookup_field = 'slug'
+    permission_classes = [IsAuthenticated]
 
     def retrieve(self, request, *args, **kwargs):
         try:
@@ -121,6 +128,7 @@ class SectionDetailView(generics.RetrieveAPIView):
 
 class PracticeQuestionListCreateView(generics.ListCreateAPIView):
     serializer_class = PracticeQuestionSerializer
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         chapter_id = self.kwargs.get('chapter_id')
@@ -155,6 +163,7 @@ class PracticeQuestionDetailView(generics.RetrieveAPIView):
     queryset = PracticeQuestion.objects.all()
     serializer_class = PracticeQuestionSerializer
     lookup_field = 'id'
+    permission_classes = [IsAuthenticated]
 
     def retrieve(self, request, *args, **kwargs):
         try:
@@ -164,3 +173,29 @@ class PracticeQuestionDetailView(generics.RetrieveAPIView):
                 {'error': f"Something went wrong while fetching practice question: {e}"},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
+
+class TutorialProgressView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, *args, **kwargs):
+        user = request.user
+        tutorial_id = kwargs.get('tutorial_id')
+        progress_data = UserProgress.objects.filter(user=user, section__chapter__tutorial_id=tutorial_id)
+        serializer = UserProgressSerializer(progress_data, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def put(self, request, *args, **kwargs):
+        user = request.user
+        tutorial_id = kwargs.get('tutorial_id')
+        section_id = request.data.get('section_id')
+        is_completed = request.data.get('is_completed', False)
+
+        try:
+            progress_instance = UserProgress.objects.get(user=user, section__id=section_id)
+        except UserProgress.DoesNotExist:
+            return Response({'error': 'Progress entry not found.'}, status=status.HTTP_404_NOT_FOUND)
+
+        progress_instance.is_completed = is_completed
+        progress_instance.save()
+
+        return Response({'message': 'Progress updated successfully.'}, status=status.HTTP_200_OK)

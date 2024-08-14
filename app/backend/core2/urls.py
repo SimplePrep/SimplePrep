@@ -1,5 +1,14 @@
 from django.urls import path
-from .views import TutorialListCreateView, TutorialDetailView, ChapterListCreateView, SectionListCreateView, SectionDetailView, PracticeQuestionListCreateView, PracticeQuestionDetailView
+from .views import (
+    TutorialListCreateView, 
+    TutorialDetailView, 
+    ChapterListCreateView, 
+    SectionListCreateView, 
+    SectionDetailView, 
+    PracticeQuestionListCreateView, 
+    PracticeQuestionDetailView,
+    TutorialProgressView
+)
 
 urlpatterns = [
     path('tutorials/', TutorialListCreateView.as_view(), name='tutorial-list-create'),
@@ -9,4 +18,5 @@ urlpatterns = [
     path('sections/<slug:slug>/', SectionDetailView.as_view(), name='section-detail'),
     path('chapters/<int:chapter_id>/practice-questions/', PracticeQuestionListCreateView.as_view(), name='practice-question-list-create'),
     path('practice-questions/<int:id>/', PracticeQuestionDetailView.as_view(), name='practice-question-detail'),
+    path('tutorials/<int:tutorial_id>/progress/', TutorialProgressView.as_view(), name='tutorial-progress'),
 ]

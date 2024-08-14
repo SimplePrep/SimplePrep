@@ -1,4 +1,7 @@
 from django.db import models
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 class Tutorial(models.Model):
     """
@@ -80,4 +83,24 @@ class PracticeQuestion(models.Model):
 
     def __str__(self):
         return f"Question for {self.chapter.title}"
+
+
+class UserProgress(models.Model):
+    """
+        Model for keeping track of user progress on tutorial, chapter, and sections
+    """
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='progress')
+    chapter = models.ForeignKey(Chapter, on_delete=models.CASCADE, related_name='progress')
+    section = models.ForeignKey(Section, on_delete=models.CASCADE, related_name='progress')
+    completed = models.BooleanField(default=False)
+    progress = models.FloatField(default=0.0)
+    last_accessed = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        unique_together = ('user', 'section')
+        ordering = ['-last_accessed']
+
+    def __str__(self):
+        return f"{self.user.username} - {self.section.title} - Completed: {self.completed}"
+
 

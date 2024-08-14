@@ -7,7 +7,7 @@ import SwitchToLaptopModal from './SwitchToLaptopModal';
 interface StudySpaceLayoutProps {
   isDarkMode: boolean;
   toggleDarkMode: () => void;
-  userSubscription: 'free' | 'nova+' | 'nova pro';
+  userSubscription: 'Free' | 'Nova+' | 'Nova Pro';
 }
 
 const StudySpaceLayout: React.FC<StudySpaceLayoutProps> = ({
