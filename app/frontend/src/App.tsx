@@ -1,6 +1,6 @@
 import React from 'react';
 import './App.css';
-import { Route, Routes, BrowserRouter as Router } from 'react-router-dom';
+import { Route, Routes, BrowserRouter as Router, Navigate } from 'react-router-dom';
 import DashboardPage from './pages/DashboardPage';
 
 import Login from './pages/Authentication/Login';
@@ -47,7 +47,7 @@ const App = () => {
             </AuthenticatedComponent>
         }
         >
-          <Route index element={<Contents isDarkMode={theme === 'dark'} />} />
+          <Route index element={<Navigate to="dashboard" replace />} />
           <Route path="dashboard" element={<Contents isDarkMode={theme === 'dark'} />} />
           <Route path="tutorials" element={<Tutorials isDarkMode={theme === 'dark'} />} />
           <Route path="tutorials/course-paths/:tutorialId" element={<TutorialPath isDarkMode={theme === 'dark'} userId={1} userSubscription='Nova Pro'/>}/>
