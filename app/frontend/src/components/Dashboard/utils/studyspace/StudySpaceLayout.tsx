@@ -18,7 +18,7 @@ const StudySpaceLayout: React.FC<StudySpaceLayoutProps> = ({
   const darkModeClass = isDarkMode ? 'dark-background transition-colors duration-300' : 'bg-gray-100 transition-colors duration-300';
 
   return (
-    <div className={`w-full h-full ${darkModeClass} font-opensans font-montserrat`}>
+    <div className={`w-full h-full ${darkModeClass}  font-montserrat`}>
       <LearningSpaceNavbar isDarkMode={isDarkMode} toggleDarkMode={toggleDarkMode} />
       <div className='flex'> {/* Add padding-top equivalent to the navbar height */}
         <NovaSpace userSubscription={userSubscription} isDarkMode={isDarkMode} />
