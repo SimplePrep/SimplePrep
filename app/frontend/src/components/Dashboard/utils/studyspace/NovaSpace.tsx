@@ -202,7 +202,7 @@ const parseResponseContent = (response: string): Array<{ type: string; value: st
                   <span className="text-sm font-semibold">You</span>
                 </div>
               )}
-              <div className={`p-2 rounded-lg ${message.sender === 'nova' ? novaMessageClass : userMessageClass}`}>
+              <div className={`p-2 rounded-lg font-semibold ${message.sender === 'nova' ? novaMessageClass : userMessageClass}`}>
                 {renderContent(message.content)}
                 {message.isTyping && (
                   <div className="dots-container flex space-x-1">
