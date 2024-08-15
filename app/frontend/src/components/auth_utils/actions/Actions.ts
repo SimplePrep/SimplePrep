@@ -8,6 +8,7 @@ import {
   GoogleAuthProvider,
   onAuthStateChanged,
   sendEmailVerification,
+  getIdToken,
 } from 'firebase/auth';
 import { signOut as firebaseSignOut } from 'firebase/auth';
 import axios from 'axios';
@@ -73,6 +74,8 @@ export const GoogleSignIn = () => async (dispatch: Dispatch) => {
     const user = result.user;
 
     if (user) {
+      const token = await getIdToken(user);
+      console.log('Firebase Token:', token);
       const response = await axios.post('https://beta-simpleprep.com/auth/user/check-user', {
         firebase_uid: user.uid,
         email: user.email,

@@ -1,6 +1,6 @@
 from django.contrib import admin
 from spa.admin import admin_site
-from .models import Tutorial, Chapter, Section, PracticeQuestion
+from .models import Tutorial, Chapter, Section, PracticeQuestion, UserProgress
 
 class TutorialAdmin(admin.ModelAdmin):
     list_display = ('id', 'title')
@@ -18,7 +18,15 @@ class PracticeQuestionAdmin(admin.ModelAdmin):
     list_filter = ('chapter', 'correct_answer')
     search_fields = ('title', 'context', 'query')
 
+class UserProgressAdmin(admin.ModelAdmin):
+    list_display = ['user', 'section', 'is_completed', 'completed_on']
+    list_filter = ['is_completed', 'completed_on']
+    search_fields = ['user__username', 'section__title']
+
+
 admin_site.register(Tutorial, TutorialAdmin)
 admin_site.register(Chapter, ChapterAdmin)
 admin_site.register(Section, SectionAdmin)
 admin_site.register(PracticeQuestion, PracticeQuestionAdmin)
+admin_site.register(UserProgress, UserProgressAdmin)
+

@@ -11,7 +11,7 @@ interface Message {
 }
 
 interface NovaSpaceProps {
-  userSubscription: 'free' | 'nova+' | 'nova pro';
+  userSubscription: 'Free' | 'Nova+' | 'Nova Pro';
   isDarkMode: boolean;
 }
 
