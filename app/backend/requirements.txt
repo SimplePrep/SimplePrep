@@ -12,3 +12,4 @@ gunicorn
 django-cors-headers
 django-otp 
 qrcode 
+Pillow
