@@ -66,7 +66,7 @@ class PracticeQuestion(models.Model):
     """
     Model for practice questions in each chapter
     """
-    chapter = models.ForeignKey(Chapter, on_delete=models.CASCADE, related_name='practice_questions')
+    chapter = models.ForeignKey(Chapter, on_delete=models.CASCADE, related_name='practice_questions', default=1)
     title = models.CharField(max_length=255)
     context = models.TextField(blank=False, null=False)
     query = models.TextField(blank=False, null=False)
