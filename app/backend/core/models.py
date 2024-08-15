@@ -62,6 +62,7 @@ class UserAnswer(models.Model):
         return f"{self.test_result.test_model.title} - {self.question.query} - Selected Option: {self.selected_option}"
 
 class TestReport(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='report')
     test_result = models.OneToOneField(TestResult, on_delete=models.CASCADE, related_name='report')
     report_data = models.JSONField()
     created_at = models.DateTimeField(auto_now_add=True)
