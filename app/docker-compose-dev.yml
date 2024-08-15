@@ -3,29 +3,24 @@ version: '3.8'
 services:
   backend:
     build:
-      context: ./backend
-      dockerfile: Dockerfile
-    command: python manage.py runserver 0.0.0.0:8000
+      context: .
+      dockerfile: ./docker/backend/Dockerfile
     volumes:
-      - .:/app
-    ports:
-      - "8001:8000"
-    depends_on:
-      - db
+      - .:/app  # Mount the entire app for live code reloading
     environment:
-      POSTGRES_DB: mydatabase
-      POSTGRES_USER: myuser
-      POSTGRES_PASSWORD: mypassword
-
+      - DEV=true  # Set an environment variable to enable development settings
+    ports:
+      - "8001:8000"  # Expose the development server on port 8000
+    command: sh -c "python /app/backend/manage.py makemigrations && python /app/backend/manage.py migrate && python /app/backend/manage.py runserver 0.0.0.0:8000"
 
   db:
-    image: postgres:13
-    volumes:
-      - postgres_data:/var/lib/postgresql/data/
+    image: postgres:13-alpine
     environment:
-      POSTGRES_DB: mydatabase
-      POSTGRES_USER: myuser
-      POSTGRES_PASSWORD: mypassword
+      - POSTGRES_DB=dev_db
+      - POSTGRES_USER=dev_user
+      - POSTGRES_PASSWORD=dev_password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
 
 volumes:
-  postgres_data:
+  postgres_data: {}
