@@ -14,10 +14,12 @@ echo "Applying database migrations..."
     exit 1
 }
 
-/py/bin/python manage.py migrate --noinput || {
-    echo "Error: Failed to apply migrations."
-    exit 1
-}
+# Apply migrations
+until /py/bin/python manage.py migrate --noinput
+do
+    echo "Waiting for database to be ready..."
+    sleep 2
+done
 
 # Collect static files
 echo "Collecting static files..."
