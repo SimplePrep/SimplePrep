@@ -31,11 +31,6 @@ class TestReportAdmin(admin.ModelAdmin):
     search_fields = ('test_result__user__username', 'test_result__test_model__title')
     readonly_fields = ('created_at', 'updated_at')
 
-    def has_add_permission(self, request, obj=None):
-        return False
-
-    def has_delete_permission(self, request, obj=None):
-        return False
     
 class PostAdmin(admin.ModelAdmin):
     list_display = ('title', 'author', 'test_module', 'created_at', 'updated_at')
