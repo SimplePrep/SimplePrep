@@ -5,25 +5,15 @@ do
     echo "Waiting for server volume..."
 done
 
-# Remove existing migration files (use with caution)
-find . -path "*/migrations/*.py" -not -name "__init__.py" -delete
-find . -path "*/migrations/*.pyc"  -delete
-# Generate migrations
-until ./manage.py makemigrations 
-do
-    echo "Waiting for makemigrations to be ready..."
-    sleep 2
-done
-
 # Apply migrations
-until ./manage.py migrate
+until /py/bin/python manage.py migrate
 do
     echo "Waiting for db to be ready..."
     sleep 2
 done
 
 # Collect static files
-./manage.py collectstatic --noinput
+/py/bin/python manage.py collectstatic --noinput
 
 # Start Gunicorn server
 gunicorn spa.wsgi --bind 0.0.0.0:8000 --workers 4 --threads 4

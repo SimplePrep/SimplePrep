@@ -7,3 +7,6 @@ django-cors-headers
 python-dotenv==1.0.1
 uwsgi
 djangorestframework-simplejwt
+openai
+gunicorn
+django-cors-headers
