@@ -6,10 +6,6 @@ import django.db.models.deletion
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('core', '0004_auto_20240430_0355'),
-    ]
-
     operations = [
         migrations.CreateModel(
             name='Test',
