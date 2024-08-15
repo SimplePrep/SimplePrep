@@ -52,7 +52,7 @@ class Section(models.Model):
     """
         Model for sections in Tutorial Module
     """
-    chapter = models.ForeignKey(Chapter, on_delete=models.CASCADE, related_name='sections')
+    chapter = models.ForeignKey(Chapter, on_delete=models.CASCADE, related_name='sections', default=1)
     slug = models.SlugField(unique=True)
     order = models.IntegerField(default=0)
     title = models.CharField(max_length=255)
