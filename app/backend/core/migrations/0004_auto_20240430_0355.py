@@ -12,12 +12,6 @@ class Migration(migrations.Migration):
     operations = [
         migrations.AddField(
             model_name='question',
-            name='model',
-            field=models.CharField(default='', max_length=255),
-            preserve_default=False,
-        ),
-        migrations.AddField(
-            model_name='question',
             name='section',
             field=models.CharField(default='', max_length=255),
             preserve_default=False,
