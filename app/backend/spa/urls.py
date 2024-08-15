@@ -22,7 +22,7 @@ from .admin import admin_site
 from django.contrib.auth import get_user_model
 from nova.nova_assistant_view import nova_assistant
 User = get_user_model()
-
+admin.site.register(User)
 urlpatterns = [
     # path('auth/', include('djoser.urls')),
     # path('auth/', include('djoser.urls.jwt')),
