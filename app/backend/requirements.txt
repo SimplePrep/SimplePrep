@@ -10,3 +10,5 @@ djangorestframework-simplejwt
 openai
 gunicorn
 django-cors-headers
+django-otp 
+qrcode 
