@@ -67,7 +67,6 @@ class TestReport(models.Model):
     report_data = models.JSONField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    temp_val = models.PositiveIntegerField(default=0)
     def __str__(self):
         return f"Report for {self.test_result.test_model.title} - {self.test_result.user.first_name}"
 
