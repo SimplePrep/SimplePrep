@@ -7,6 +7,15 @@ yarn-error.log*
 firebase-debug.log*
 firebase-debug.*.log*
 
+
+# Ignore Certbot certificates
+app/docker/nginx/certbot/conf/archive/
+app/docker/nginx/certbot/conf/live/
+app/docker/nginx/certbot/conf/renewal/
+
+# Ignore all .pem files
+*.pem
+
 # Firebase cache
 .firebase/
 
