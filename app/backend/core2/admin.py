@@ -19,9 +19,9 @@ class PracticeQuestionAdmin(admin.ModelAdmin):
     search_fields = ('title', 'context', 'query')
 
 class UserProgressAdmin(admin.ModelAdmin):
-    list_display = ['user', 'section', 'is_completed', 'completed_on']
-    list_filter = ['is_completed', 'completed_on']
-    search_fields = ['user__username', 'section__title']
+    list_display = [ 'id', 'user', 'section', 'completed', 'progress']
+    list_filter = ['id', 'user']
+    search_fields = ['user', 'section__title']
 
 
 admin_site.register(Tutorial, TutorialAdmin)
