@@ -17,3 +17,6 @@ CREATE DATABASE devdb;
 \q
 
 psql -U devuser -h db -d devdb < /tmp/backup.sql
+
+
+docker-compose exec db psql -U alijonadmin -d simpleprepdb

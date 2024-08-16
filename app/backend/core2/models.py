@@ -39,7 +39,7 @@ class Chapter(models.Model):
     tutorial = models.ForeignKey(Tutorial, on_delete=models.CASCADE, related_name='chapters')
     title = models.CharField(max_length=255)
     order = models.PositiveIntegerField()
-    description = models.TextField(default='')
+    description = models.TextField(null=True, blank=True)
     lessons = models.PositiveIntegerField(default=0)
     practices = models.PositiveIntegerField(default=0)
     difficulty = models.CharField(max_length=20, choices=DIFFICULTY_CHOICES, default=BEGINNER)
@@ -54,7 +54,7 @@ class Section(models.Model):
     """
     chapter = models.ForeignKey(Chapter, on_delete=models.CASCADE, related_name='sections', default=1)
     slug = models.SlugField(unique=True)
-    order = models.IntegerField(default=0)
+    order = models.IntegerField(null=True, blank=True)
     title = models.CharField(max_length=255)
     description = models.TextField(blank=True, null=True)
     content = models.TextField()
