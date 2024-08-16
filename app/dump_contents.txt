@@ -1,0 +1,75 @@
+;
+; Archive created at 2024-08-15 08:34:17 UTC
+;     dbname: simpleprepdb
+;     TOC Entries: 64
+;     Compression: -1
+;     Dump Version: 1.14-0
+;     Format: CUSTOM
+;     Integer: 4 bytes
+;     Offset: 8 bytes
+;     Dumped from database version: 13.16
+;     Dumped by pg_dump version: 13.16
+;
+;
+; Selected TOC Entries:
+;
+3441; 0 23707 TABLE DATA public auth_group alijonadmin
+3478; 0 23853 TABLE DATA public django_content_type alijonadmin
+3445; 0 23717 TABLE DATA public auth_permission alijonadmin
+3443; 0 23712 TABLE DATA public auth_group_permissions alijonadmin
+3495; 0 23913 TABLE DATA public user_user alijonadmin
+3447; 0 23722 TABLE DATA public authtoken_token alijonadmin
+3454; 0 23759 TABLE DATA public core2_tutorial alijonadmin
+3448; 0 23725 TABLE DATA public core2_chapter alijonadmin
+3450; 0 23738 TABLE DATA public core2_practicequestion alijonadmin
+3452; 0 23751 TABLE DATA public core2_section alijonadmin
+3456; 0 23764 TABLE DATA public core2_userprogress alijonadmin
+3466; 0 23811 TABLE DATA public core_test alijonadmin
+3468; 0 23816 TABLE DATA public core_testmodel alijonadmin
+3458; 0 23772 TABLE DATA public core_comment alijonadmin
+3460; 0 23780 TABLE DATA public core_post alijonadmin
+3462; 0 23792 TABLE DATA public core_question alijonadmin
+3464; 0 23801 TABLE DATA public core_reply alijonadmin
+3472; 0 23834 TABLE DATA public core_testresult alijonadmin
+3470; 0 23824 TABLE DATA public core_testreport alijonadmin
+3474; 0 23839 TABLE DATA public core_useranswer alijonadmin
+3476; 0 23844 TABLE DATA public django_admin_log alijonadmin
+3480; 0 23858 TABLE DATA public django_migrations alijonadmin
+3482; 0 23866 TABLE DATA public django_session alijonadmin
+3483; 0 23872 TABLE DATA public otp_static_staticdevice alijonadmin
+3485; 0 23878 TABLE DATA public otp_static_statictoken alijonadmin
+3487; 0 23883 TABLE DATA public otp_totp_totpdevice alijonadmin
+3491; 0 23897 TABLE DATA public token_blacklist_outstandingtoken alijonadmin
+3489; 0 23892 TABLE DATA public token_blacklist_blacklistedtoken alijonadmin
+3493; 0 23905 TABLE DATA public user_tempuser alijonadmin
+3496; 0 23921 TABLE DATA public user_user_groups alijonadmin
+3499; 0 23928 TABLE DATA public user_user_user_permissions alijonadmin
+3507; 0 0 SEQUENCE SET public auth_group_id_seq alijonadmin
+3508; 0 0 SEQUENCE SET public auth_group_permissions_id_seq alijonadmin
+3509; 0 0 SEQUENCE SET public auth_permission_id_seq alijonadmin
+3510; 0 0 SEQUENCE SET public core2_chapter_id_seq alijonadmin
+3511; 0 0 SEQUENCE SET public core2_practicequestion_id_seq alijonadmin
+3512; 0 0 SEQUENCE SET public core2_section_id_seq alijonadmin
+3513; 0 0 SEQUENCE SET public core2_tutorial_id_seq alijonadmin
+3514; 0 0 SEQUENCE SET public core2_userprogress_id_seq alijonadmin
+3515; 0 0 SEQUENCE SET public core_comment_id_seq alijonadmin
+3516; 0 0 SEQUENCE SET public core_post_id_seq alijonadmin
+3517; 0 0 SEQUENCE SET public core_question_id_seq alijonadmin
+3518; 0 0 SEQUENCE SET public core_reply_id_seq alijonadmin
+3519; 0 0 SEQUENCE SET public core_test_id_seq alijonadmin
+3520; 0 0 SEQUENCE SET public core_testmodel_id_seq alijonadmin
+3521; 0 0 SEQUENCE SET public core_testreport_id_seq alijonadmin
+3522; 0 0 SEQUENCE SET public core_testresult_id_seq alijonadmin
+3523; 0 0 SEQUENCE SET public core_useranswer_id_seq alijonadmin
+3524; 0 0 SEQUENCE SET public django_admin_log_id_seq alijonadmin
+3525; 0 0 SEQUENCE SET public django_content_type_id_seq alijonadmin
+3526; 0 0 SEQUENCE SET public django_migrations_id_seq alijonadmin
+3527; 0 0 SEQUENCE SET public otp_static_staticdevice_id_seq alijonadmin
+3528; 0 0 SEQUENCE SET public otp_static_statictoken_id_seq alijonadmin
+3529; 0 0 SEQUENCE SET public otp_totp_totpdevice_id_seq alijonadmin
+3530; 0 0 SEQUENCE SET public token_blacklist_blacklistedtoken_id_seq alijonadmin
+3531; 0 0 SEQUENCE SET public token_blacklist_outstandingtoken_id_seq alijonadmin
+3532; 0 0 SEQUENCE SET public user_tempuser_id_seq alijonadmin
+3533; 0 0 SEQUENCE SET public user_user_groups_id_seq alijonadmin
+3534; 0 0 SEQUENCE SET public user_user_id_seq alijonadmin
+3535; 0 0 SEQUENCE SET public user_user_user_permissions_id_seq alijonadmin
