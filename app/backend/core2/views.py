@@ -180,22 +180,91 @@ class TutorialProgressView(APIView):
     def get(self, request, *args, **kwargs):
         user = request.user
         tutorial_id = kwargs.get('tutorial_id')
-        progress_data = UserProgress.objects.filter(user=user, section__chapter__tutorial_id=tutorial_id)
-        serializer = UserProgressSerializer(progress_data, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        
+        # Fetch the tutorial object
+        try:
+            tutorial = Tutorial.objects.get(id=tutorial_id)
+        except Tutorial.DoesNotExist:
+            return Response({'error': 'Tutorial not found.'}, status=status.HTTP_404_NOT_FOUND)
 
+        chapters = Chapter.objects.filter(tutorial=tutorial)
+
+        progress_data = []
+
+        for chapter in chapters:
+            sections = chapter.sections.all()
+            total_sections = sections.count()
+            completed_sections = UserProgress.objects.filter(user=user, section__in=sections, completed=True).count()
+            
+            chapter_progress = {
+                'chapterId': chapter.id,
+                'title': chapter.title,
+                'sections': [],
+                'progress': (completed_sections / total_sections) * 100 if total_sections > 0 else 0
+            }
+            
+            for section in sections:
+                is_completed = UserProgress.objects.filter(user=user, section=section, completed=True).exists()
+                chapter_progress['sections'].append({
+                    'sectionId': section.id,
+                    'slug': section.slug,
+                    'title': section.title,
+                    'completed': is_completed
+                })
+
+            progress_data.append(chapter_progress)
+
+        response_data = {
+            'tutorialId': tutorial.id,
+            'userId': user.id,
+            'chapters': progress_data
+        }
+
+        return Response(response_data, status=status.HTTP_200_OK)
+    
     def put(self, request, *args, **kwargs):
         user = request.user
         tutorial_id = kwargs.get('tutorial_id')
         section_id = request.data.get('section_id')
-        is_completed = request.data.get('is_completed', False)
+        is_completed = request.data.get('completed', False)
 
         try:
-            progress_instance = UserProgress.objects.get(user=user, section__id=section_id)
-        except UserProgress.DoesNotExist:
-            return Response({'error': 'Progress entry not found.'}, status=status.HTTP_404_NOT_FOUND)
+            section = Section.objects.get(id=section_id, chapter__tutorial_id=tutorial_id)
+        except Section.DoesNotExist:
+            return Response({'error': 'Section not found.'}, status=status.HTTP_404_NOT_FOUND)
 
-        progress_instance.is_completed = is_completed
+        progress_instance, created = UserProgress.objects.get_or_create(user=user, section=section)
+
+        # Update progress
+        progress_instance.completed = is_completed
         progress_instance.save()
 
-        return Response({'message': 'Progress updated successfully.'}, status=status.HTTP_200_OK)
+        # Calculate the new progress for the chapter
+        total_sections = Section.objects.filter(chapter=section.chapter).count()
+        completed_sections = UserProgress.objects.filter(user=user, section__chapter=section.chapter, completed=True).count()
+
+        chapter_progress = {
+            'chapterId': section.chapter.id,
+            'title': section.chapter.title,
+            'sections': [],
+            'progress': (completed_sections / total_sections) * 100 if total_sections > 0 else 0
+        }
+
+        sections = Section.objects.filter(chapter=section.chapter)
+        for section in sections:
+            is_completed = UserProgress.objects.filter(user=user, section=section, completed=True).exists()
+            chapter_progress['sections'].append({
+                'sectionId': section.id,
+                'slug': section.slug,
+                'title': section.title,
+                'completed': is_completed
+            })
+
+        # Add tutorialId and userId to the response
+        response_data = {
+            'tutorialId': tutorial_id,
+            'userId': user.id,
+            'chapters': [chapter_progress]
+        }
+
+        return Response(response_data, status=status.HTTP_200_OK)
