@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from .models import Tutorial, Chapter, Section, PracticeQuestion, UserProgress
 from .serializers import TutorialSerializer, ChapterSerializer, SectionSerializer, PracticeQuestionSerializer, UserProgressSerializer
 from rest_framework.views import APIView
+from math import floor
 
 class TutorialListCreateView(generics.ListCreateAPIView):
     serializer_class = TutorialSerializer
@@ -200,7 +201,7 @@ class TutorialProgressView(APIView):
                 'chapterId': chapter.id,
                 'title': chapter.title,
                 'sections': [],
-                'progress': (completed_sections / total_sections) * 100 if total_sections > 0 else 0
+                'progress': floor((completed_sections / total_sections) * 100) if total_sections > 0 else 0
             }
             
             for section in sections:
