@@ -148,6 +148,7 @@ const TutorialPath: React.FC<{ isDarkMode: boolean; userSubscription: 'Free' | '
                 sections={sections.filter(section => section.chapter === chapter.id)}
                 userCompletedSections={userProgress?.chapters.find(ch => ch.chapterId === chapter.id)?.sections.filter(s => s.completed).map(s => s.sectionId) || []}
                 chapterId={chapter.id}
+                progress={chapterProgress}
               />
               {chapter.id === activeChapterId &&
                 sections
