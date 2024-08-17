@@ -1,8 +1,8 @@
-import React from 'react';
-import LearningSpaceNavbar from './StudySpaceNavbar';
+import React, { useState } from 'react';
 import NovaSpace from './NovaSpace';
-import LearningSpaceBody from './StudySpaceBody';
 import SwitchToLaptopModal from './SwitchToLaptopModal';
+import StudySpaceNavbar from './StudySpaceNavbar';
+import StudySpaceBody from './StudySpaceBody';
 
 interface StudySpaceLayoutProps {
   isDarkMode: boolean;
@@ -16,16 +16,26 @@ const StudySpaceLayout: React.FC<StudySpaceLayoutProps> = ({
   userSubscription
 }) => {
   const darkModeClass = isDarkMode ? 'dark-background transition-colors duration-300' : 'bg-gray-100 transition-colors duration-300';
+  const [currentStep, setCurrentStep] = useState(1);
+
+  const handleProgressChange = (newStep: number) => {
+    setCurrentStep(newStep);
+  };
 
   return (
-    <div className={`w-full h-full ${darkModeClass}  font-montserrat`}>
-      <LearningSpaceNavbar isDarkMode={isDarkMode} toggleDarkMode={toggleDarkMode} />
-      <div className='flex'> {/* Add padding-top equivalent to the navbar height */}
+    <div className={`w-full h-full ${darkModeClass} font-montserrat`}>
+      <StudySpaceNavbar 
+        isDarkMode={isDarkMode} 
+        toggleDarkMode={toggleDarkMode} 
+        currentStep={currentStep} 
+      />
+      <div className='flex'>
         <NovaSpace userSubscription={userSubscription} isDarkMode={isDarkMode} />
-        <LearningSpaceBody isDarkMode={isDarkMode}  />
+        <StudySpaceBody 
+          isDarkMode={isDarkMode} 
+          onProgressChange={handleProgressChange} 
+        />
       </div>
-      
-      {/* Display full-screen modal on mobile */}
       <SwitchToLaptopModal />
     </div>
   );

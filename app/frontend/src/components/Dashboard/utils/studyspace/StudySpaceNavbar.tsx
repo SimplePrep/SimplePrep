@@ -9,25 +9,14 @@ import { RxExit } from "react-icons/rx";
 interface StudySpaceNavbarProps {
   toggleDarkMode: () => void;
   isDarkMode: boolean;
+  currentStep: number; // New prop for the current step
 }
 
-const StudySpaceNavbar: React.FC<StudySpaceNavbarProps> = ({ toggleDarkMode, isDarkMode }): React.ReactElement => {
+const StudySpaceNavbar: React.FC<StudySpaceNavbarProps> = ({ toggleDarkMode, isDarkMode, currentStep }): React.ReactElement => {
   const navigate = useNavigate();
   const { tutorialId } = useParams<{ tutorialId: string }>();  // Get the tutorialId from the URL
-  const [progress, setProgress] = useState(0);
-  const [currentStep, setCurrentStep] = useState(1);
   const totalSteps = 5; // Adjust this based on your actual number of steps
   const darkModeClass = isDarkMode ? 'bg-[#1d263b] text-color-dark transition-colors duration-300 border-slate-600' : 'text-color-light transition-colors duration-300 border-slate-300';
-
-  useEffect(() => {
-    const calculateProgress = () => {
-      const completedSections = currentStep - 1;
-      const calculatedProgress = Math.floor((completedSections / (totalSteps - 1)) * 100);
-      setProgress(calculatedProgress);
-    };
-
-    calculateProgress();
-  }, [currentStep]);
 
   const handleExitClick = () => {
     if (tutorialId) {
