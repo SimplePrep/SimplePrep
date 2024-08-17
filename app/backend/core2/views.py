@@ -234,38 +234,12 @@ class TutorialProgressView(APIView):
         except Section.DoesNotExist:
             return Response({'error': 'Section not found.'}, status=status.HTTP_404_NOT_FOUND)
 
+        # Get or create a UserProgress entry
         progress_instance, created = UserProgress.objects.get_or_create(user=user, section=section)
 
-        # Update progress
+        # Update the completion status
         progress_instance.completed = is_completed
         progress_instance.save()
 
-        # Calculate the new progress for the chapter
-        total_sections = Section.objects.filter(chapter=section.chapter).count()
-        completed_sections = UserProgress.objects.filter(user=user, section__chapter=section.chapter, completed=True).count()
-
-        chapter_progress = {
-            'chapterId': section.chapter.id,
-            'title': section.chapter.title,
-            'sections': [],
-            'progress': (completed_sections / total_sections) * 100 if total_sections > 0 else 0
-        }
-
-        sections = Section.objects.filter(chapter=section.chapter)
-        for section in sections:
-            is_completed = UserProgress.objects.filter(user=user, section=section, completed=True).exists()
-            chapter_progress['sections'].append({
-                'sectionId': section.id,
-                'slug': section.slug,
-                'title': section.title,
-                'completed': is_completed
-            })
-
-        # Add tutorialId and userId to the response
-        response_data = {
-            'tutorialId': tutorial_id,
-            'userId': user.id,
-            'chapters': [chapter_progress]
-        }
-
-        return Response(response_data, status=status.HTTP_200_OK)
+        # Return a simple success response
+        return Response({'success': True}, status=status.HTTP_200_OK)
