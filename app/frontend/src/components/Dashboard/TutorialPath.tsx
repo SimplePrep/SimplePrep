@@ -151,6 +151,7 @@ const TutorialPath: React.FC<{ isDarkMode: boolean; userSubscription: 'Free' | '
               userSubscription={userSubscription} // Pass the user's subscription type
               sections={sections.filter(section => section.chapter === chapter.id)} // Filter sections by chapter
               userCompletedSections={userCompletedSections} // Pass the completed sections for the user
+              chapterId = {chapter.id}
             />
             {chapter.id === activeChapterId &&
               sections

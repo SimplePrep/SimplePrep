@@ -12,6 +12,7 @@ interface ChapterCardProps {
   userSubscription: 'Free' | 'Nova+' | 'Nova Pro';
   sections: Section[]; // Pass the sections associated with this chapter
   userCompletedSections: number[]; // Pass the completed sections' IDs
+  chapterId: number;
 }
 
 const ChapterCard: React.FC<ChapterCardProps> = ({
@@ -22,6 +23,7 @@ const ChapterCard: React.FC<ChapterCardProps> = ({
   userSubscription,
   sections,
   userCompletedSections,
+  chapterId
 }) => {
   const navigate = useNavigate();
   const imagePath = require(`../../../assets/${chapter.img_path}`);
@@ -32,7 +34,7 @@ const ChapterCard: React.FC<ChapterCardProps> = ({
 
   const handleContinueClick = () => {
     if (firstIncompleteSection) {
-      navigate(`/tutorials/study-space/${firstIncompleteSection.slug}`);
+      navigate(`/study-space/${chapterId}/${firstIncompleteSection.slug}`);
     }
   };
 
