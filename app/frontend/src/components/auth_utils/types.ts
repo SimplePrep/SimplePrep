@@ -210,3 +210,23 @@ export interface SupportFormData {
   message: string;
   files?: FileList | null;
 }
+
+interface UserProgressSection {
+  sectionId: number;
+  slug: string;
+  title: string;
+  completed: boolean;
+}
+
+interface UserProgressChapter {
+  chapterId: number;
+  title: string;
+  sections: UserProgressSection[];
+  progress: number;
+}
+
+export interface UserProgress {
+  tutorialId: number;
+  userId: number;
+  chapters: UserProgressChapter[]
+}

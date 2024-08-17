@@ -2,19 +2,15 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 import MixCard from './utils/tutorials/MixCard';
 import CurvedLine from './utils/tutorials/CurvedLine';
-import { Chapter, Section } from '../auth_utils/types';
+import { Chapter, Section, UserProgress } from '../auth_utils/types';
 import ChapterCard from './utils/tutorials/ChapterCard';
-import { getChapters, getSections } from '../auth_utils/axios/axiosServices';
-
-const getUserCompletionData = (userId: number): number[] => {
-  // Replace this with actual logic to determine if the section is complete for the current user.
-  return [1, 3, 5]; // Example: sections that are complete for this user.
-};
+import { getChapters, getSections, getUserProgressTutorial } from '../auth_utils/axios/axiosServices';
 
 const TutorialPath: React.FC<{ isDarkMode: boolean; userSubscription: 'Free' | 'Nova+' | 'Nova Pro'; userId: number }> = ({ isDarkMode, userSubscription, userId }) => {
   const { tutorialId } = useParams<{ tutorialId: string }>();
   const [chapters, setChapters] = useState<Chapter[]>([]);
   const [sections, setSections] = useState<Section[]>([]);
+  const [userProgress, setUserProgress] = useState<UserProgress | null>(null);
   const [activeChapterId, setActiveChapterId] = useState<number | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [cardPositions, setCardPositions] = useState<{ x: number, y: number }[]>([]);
@@ -33,28 +29,26 @@ const TutorialPath: React.FC<{ isDarkMode: boolean; userSubscription: 'Free' | '
           allSections.push(...chapterSections);
         }
         setSections(allSections);
+
+        // Fetch user progress
+        const progressResponse = await getUserProgressTutorial(Number(tutorialId));
+        setUserProgress(progressResponse);
       } catch (error) {
-        console.error('Error fetching tutorial or chapters:', error);
+        console.error('Error fetching data:', error);
       }
     };
 
     fetchChaptersAndSections();
-  }, [tutorialId]);
-
-  const userCompletedSections = getUserCompletionData(userId);
-
-  const calculateChapterCompletion = (chapterId: number): number => {
-    const totalSections = sections.filter(section => section.chapter === chapterId).length;
-    const completedSections = sections.filter(section => section.chapter === chapterId && userCompletedSections.includes(section.id)).length;
-    return (completedSections / totalSections) * 100;
-  };
+  }, [tutorialId, userId]);
 
   useEffect(() => {
-    const firstIncompleteChapter = chapters.find(chapter => calculateChapterCompletion(chapter.id) < 100);
-    if (firstIncompleteChapter) {
-      setActiveChapterId(firstIncompleteChapter.id);
+    if (userProgress) {
+      const firstIncompleteChapter = userProgress.chapters.find(chapter => chapter.progress < 100);
+      if (firstIncompleteChapter) {
+        setActiveChapterId(firstIncompleteChapter.chapterId);
+      }
     }
-  }, [chapters, sections]);
+  }, [userProgress]);
 
   const toggleChapterActive = (chapterId: number) => {
     setActiveChapterId(prevChapterId => (prevChapterId === chapterId ? null : chapterId));
@@ -123,7 +117,7 @@ const TutorialPath: React.FC<{ isDarkMode: boolean; userSubscription: 'Free' | '
                 />
               );
             } else if (index > 0) {
-              const isComplete = userCompletedSections.includes(sections[index].id);
+              const isComplete = userProgress?.chapters.find(chapter => chapter.chapterId === chapters[index].id)?.sections[index].completed;
               return (
                 <CurvedLine
                   key={`line-${index}`}
@@ -141,39 +135,42 @@ const TutorialPath: React.FC<{ isDarkMode: boolean; userSubscription: 'Free' | '
       )}
 
       <div>
-        {chapters.map((chapter) => (
-          <div className='mb-16' key={chapter.id}>
-            <ChapterCard
-              chapter={chapter}
-              isDarkMode={isDarkMode}
-              isActive={chapter.id === activeChapterId}
-              onToggle={() => toggleChapterActive(chapter.id)}
-              userSubscription={userSubscription} // Pass the user's subscription type
-              sections={sections.filter(section => section.chapter === chapter.id)} // Filter sections by chapter
-              userCompletedSections={userCompletedSections} // Pass the completed sections for the user
-              chapterId = {chapter.id}
-            />
-            {chapter.id === activeChapterId &&
-              sections
-                .filter(section => section.chapter === chapter.id)
-                .map((section, index) => {
-                  const isComplete = userCompletedSections.includes(section.id);
-                  const isFirstIncomplete = !isComplete && index === sections.findIndex(sec => sec.chapter === chapter.id && !userCompletedSections.includes(sec.id));
-                  return (
-                    <MixCard
-                      key={section.id}
-                      index={index}
-                      isActive={isFirstIncomplete}
-                      isDarkMode={isDarkMode}
-                      isComplete={isComplete}
-                      section={section}
-                      position={getPosition(index)}
-                      tutorialId={tutorialId!}
-                    />
-                  );
-                })}
-          </div>
-        ))}
+        {chapters.map((chapter) => {
+          const chapterProgress = userProgress?.chapters.find(ch => ch.chapterId === chapter.id)?.progress || 0;
+          return (
+            <div className='mb-16' key={chapter.id}>
+              <ChapterCard
+                chapter={chapter}
+                isDarkMode={isDarkMode}
+                isActive={chapter.id === activeChapterId}
+                onToggle={() => toggleChapterActive(chapter.id)}
+                userSubscription={userSubscription}
+                sections={sections.filter(section => section.chapter === chapter.id)}
+                userCompletedSections={userProgress?.chapters.find(ch => ch.chapterId === chapter.id)?.sections.filter(s => s.completed).map(s => s.sectionId) || []}
+                chapterId={chapter.id}
+              />
+              {chapter.id === activeChapterId &&
+                sections
+                  .filter(section => section.chapter === chapter.id)
+                  .map((section, index) => {
+                    const isComplete = userProgress?.chapters.find(ch => ch.chapterId === chapter.id)?.sections.find(s => s.sectionId === section.id)?.completed;
+                    const isFirstIncomplete = !isComplete && index === sections.findIndex(sec => sec.chapter === chapter.id && !userProgress?.chapters.find(ch => ch.chapterId === chapter.id)?.sections.find(s => s.sectionId === sec.id)?.completed);
+                    return (
+                      <MixCard
+                        key={section.id}
+                        index={index}
+                        isActive={isFirstIncomplete}
+                        isDarkMode={isDarkMode}
+                        isComplete={isComplete || false}
+                        section={section}
+                        position={getPosition(index)}
+                        tutorialId={tutorialId!}
+                      />
+                    );
+                  })}
+            </div>
+          );
+        })}
       </div>
     </div>
   );

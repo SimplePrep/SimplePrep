@@ -1,5 +1,5 @@
 import axiosInstance from './axiosInterceptor';
-import { Chapter, Module, Post, Question, Reply, Section, SupportFormData, TestReport, TestResult, Tutorial, UserAnswer, UserDetails } from '../types';
+import { Chapter, Module, Post, Question, Reply, Section, SupportFormData, TestReport, TestResult, Tutorial, UserAnswer, UserDetails, UserProgress } from '../types';
 
 export const getTests = async () => {
   try {
@@ -291,12 +291,13 @@ export const NovaChatService = async (userInput: string) => {
 }
 };
 
-// export const getUserCompletionData = async (tutorialId: string): Promise<number[]> => {
-//   try {
-//     const response = await axiosInstance.get(`/api/core2/tutorial-progress/${tutorialId}/`);
-//     return response.data.map(progress => progress.section); // Assuming the response contains an array of progress objects
-//   } catch (error) {
-//     console.error('Error fetching user progress data:', error);
-//     return [];
-//   }
-// } 
+
+export const getUserProgressTutorial = async (tutorialId: number): Promise<UserProgress | null> => {
+  try {
+    const response = await axiosInstance.get<UserProgress>(`/api/core2/tutorial-progress/${tutorialId}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error forwarding user query to OpenAI:', error);
+    throw error;
+  }
+}
