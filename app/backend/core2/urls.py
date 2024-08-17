@@ -18,5 +18,5 @@ urlpatterns = [
     path('sections/<slug:slug>/', SectionDetailView.as_view(), name='section-detail'),
     path('chapters/<int:chapter_id>/practice-questions/', PracticeQuestionListCreateView.as_view(), name='practice-question-list-create'),
     path('practice-questions/<int:id>/', PracticeQuestionDetailView.as_view(), name='practice-question-detail'),
-    path('tutorials/<int:tutorial_id>/progress/', TutorialProgressView.as_view(), name='tutorial-progress'),
+    path('tutorial-progress/<int:tutorial_id>/', TutorialProgressView.as_view(), name='tutorial-progress'),
 ]

@@ -290,3 +290,13 @@ export const NovaChatService = async (userInput: string) => {
     throw error;
 }
 };
+
+// export const getUserCompletionData = async (tutorialId: string): Promise<number[]> => {
+//   try {
+//     const response = await axiosInstance.get(`/api/core2/tutorial-progress/${tutorialId}/`);
+//     return response.data.map(progress => progress.section); // Assuming the response contains an array of progress objects
+//   } catch (error) {
+//     console.error('Error fetching user progress data:', error);
+//     return [];
+//   }
+// } 
