@@ -13,6 +13,7 @@ interface ChapterCardProps {
   sections: Section[]; // Pass the sections associated with this chapter
   userCompletedSections: number[]; // Pass the completed sections' IDs
   chapterId: number;
+  progress: number;
 }
 
 const ChapterCard: React.FC<ChapterCardProps> = ({
@@ -23,7 +24,8 @@ const ChapterCard: React.FC<ChapterCardProps> = ({
   userSubscription,
   sections,
   userCompletedSections,
-  chapterId
+  chapterId,
+  progress
 }) => {
   const navigate = useNavigate();
   const imagePath = require(`../../../assets/${chapter.img_path}`);
@@ -128,8 +130,8 @@ const ChapterCard: React.FC<ChapterCardProps> = ({
                 Continue course
               </button>
               <div className="flex flex-row ml-4 items-center gap-3">
-                <AnalyticsChart value={5} maxValue={100} width={48} height={48} textSize='text-sm'/>
-                <p className='text-base font-medium'>Completed</p>
+                <AnalyticsChart value={progress} maxValue={100} width={48} height={48} textSize='text-sm'/>
+              <p className='text-base font-medium'>Completed</p>
               </div>
             </div>
           </div>
