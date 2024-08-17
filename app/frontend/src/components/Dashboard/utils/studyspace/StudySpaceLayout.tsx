@@ -17,7 +17,7 @@ const StudySpaceLayout: React.FC<StudySpaceLayoutProps> = ({
   userSubscription
 }) => {
   const darkModeClass = isDarkMode ? 'dark-background transition-colors duration-300' : 'bg-gray-100 transition-colors duration-300';
-  const [currentStep, setCurrentStep] = useState(1);
+  const [currentStep, setCurrentStep] = useState(0);
 
   const handleProgressChange = (newStep: number) => {
     setCurrentStep(newStep);
