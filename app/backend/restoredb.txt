@@ -20,3 +20,15 @@ psql -U devuser -h db -d devdb < /tmp/backup.sql
 
 
 docker-compose exec db psql -U alijonadmin -d simpleprepdb
+
+
+docker cp db_data_only.dump app-db-1:/tmp/db_data_only.dump
+
+#test 
+docker-compose exec db pg_restore -U alijonadmin -d simpleprepdb /tmp/db_data_only.dump
+
+#below code is to restore files
+for table in auth_group django_content_type auth_permission auth_group_permissions user_user authtoken_token core2_tutorial core2_chapter core2_practicequestion core2_section core2_userprogress core_test core_testmodel core_post core_question core_reply core_testresult core_testreport core_useranswer django_migrations django_session otp_static_staticdevice otp_static_statictoken otp_totp_totpdevice token_blacklist_outstandingtoken token_blacklist_blacklistedtoken user_tempuser user_user_groups user_user_user_permissions
+do
+  docker-compose exec db pg_restore -U alijonadmin -d simpleprepdb --no-owner --role=alijonadmin --data-only --disable-triggers --no-comments --table=$table /tmp/db_data_only.dump
+done
