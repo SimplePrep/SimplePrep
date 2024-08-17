@@ -21,6 +21,7 @@ import TutorialPath from './components/Dashboard/TutorialPath';
 import Layout, { LandingPage } from './pages/LandingPage';
 import StudySpaceBody from './components/Dashboard/utils/studyspace/StudySpaceBody';
 import StudySpaceLayout from './components/Dashboard/utils/studyspace/StudySpaceLayout';
+import StudySpaceBodyWrapper from './components/Dashboard/utils/studyspace/StudySpaceBodyWrapper';
 
 const App = () => {
   const { theme } = useSelector((state: RootState) => state.auth);
@@ -65,7 +66,14 @@ const App = () => {
             </AuthenticatedComponent>
           }
         >
-          <Route path=":sectionSlug" element={<StudySpaceBody isDarkMode={theme === 'dark'} />} />
+          <Route
+            path=":sectionSlug"
+            element={
+              <StudySpaceBodyWrapper
+                isDarkMode={theme === 'dark'} 
+              />
+            }
+          />
         </Route>
         {/* Authentication Routes */}
         <Route path="/login" element={<Login />} />

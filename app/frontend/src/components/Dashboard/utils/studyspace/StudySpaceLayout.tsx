@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Outlet } from 'react-router-dom';
 import NovaSpace from './NovaSpace';
 import SwitchToLaptopModal from './SwitchToLaptopModal';
 import StudySpaceNavbar from './StudySpaceNavbar';
@@ -31,10 +32,7 @@ const StudySpaceLayout: React.FC<StudySpaceLayoutProps> = ({
       />
       <div className='flex'>
         <NovaSpace userSubscription={userSubscription} isDarkMode={isDarkMode} />
-        <StudySpaceBody 
-          isDarkMode={isDarkMode} 
-          onProgressChange={handleProgressChange} 
-        />
+        <Outlet context={{ handleProgressChange }} />
       </div>
       <SwitchToLaptopModal />
     </div>
