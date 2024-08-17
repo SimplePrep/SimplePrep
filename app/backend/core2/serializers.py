@@ -21,9 +21,21 @@ class TutorialSerializer(serializers.ModelSerializer):
         model = Tutorial
         fields = '__all__'
 
+
+class SimplifiedSectionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Section
+        fields = ['id', 'slug', 'title'] 
+
+class SimplifiedChapterSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Chapter
+        fields = ['id', 'title'] 
+
+
 class UserProgressSerializer(serializers.ModelSerializer):
-    section = SectionSerializer()
-    chapter = ChapterSerializer()
+    section = SimplifiedSectionSerializer()
+    chapter = SimplifiedChapterSerializer()
 
     class Meta:
         model = UserProgress
