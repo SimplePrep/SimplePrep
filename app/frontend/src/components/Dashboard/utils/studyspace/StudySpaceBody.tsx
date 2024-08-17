@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate, useParams } from 'react-router-dom';
 import { getSection } from '../../../auth_utils/axios/axiosServices';
 import { Section } from '../../../auth_utils/types';
+import { updateUserProgressSection } from '../../../auth_utils/axios/axiosServices';
 
 
 interface StudySpaceBodyProps {
@@ -53,13 +54,22 @@ const StudySpaceBody: React.FC<StudySpaceBodyProps> = ({ isDarkMode, onProgressC
     setVisibleChunks(prev => Math.min(prev + 1, paragraphs.length));
   };
 
-  const handleFinish = () => {
+  const handleFinish = async () => {
     if (section?.chapter) {
-      navigate(`/demo/tutorials/course-paths/${section.chapter}`);
+        try {
+            await updateUserProgressSection(section.chapter, {
+                sectionId: section.id,
+                completed: true,
+            });
+            console.log('Section marked as complete.');
+            navigate(`/demo/tutorials/course-paths/${section.chapter}`);
+        } catch (error) {
+            console.error('Error updating section progress:', error);
+        }
     } else {
-      navigate('/demo/tutorials');
+        navigate('/demo/tutorials');
     }
-  };
+};
 
   useEffect(() => {
     if (contentEndRef.current && scrollContainerRef.current) {

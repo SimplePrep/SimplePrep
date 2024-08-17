@@ -302,16 +302,12 @@ export const getUserProgressTutorial = async (tutorialId: number): Promise<UserP
   }
 }
 
-interface UpdateProgressPayload {
-  sectionId: number;
-  completed: boolean;
-}
 
-export const updateUserProgressSection = async (tutorialId: number, payload: UpdateProgressPayload): Promise<any> => {
+export const updateUserProgressSection = async (tutorialId: number, data: { sectionId: number, completed:boolean}): Promise<any> => {
   try {
     const response = await axiosInstance.put(
       `/api/core2/tutorial-progress/${tutorialId}/`, 
-      payload
+      data
     );
     return response.data;
   } catch (error) {
