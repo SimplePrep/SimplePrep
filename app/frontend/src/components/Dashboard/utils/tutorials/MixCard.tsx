@@ -4,6 +4,7 @@ import { FaClipboardList, FaGgCircle } from 'react-icons/fa';
 import { BsFillPatchCheckFill } from 'react-icons/bs';
 import { VscDebugRestart } from 'react-icons/vsc';
 import { Section } from '../../../auth_utils/types';
+import { updateUserProgressSection } from '../../../auth_utils/axios/axiosServices';
 
 interface MixCardProps {
     isDarkMode: boolean;
@@ -26,11 +27,22 @@ const MixCard: React.FC<MixCardProps> = ({ isDarkMode, isComplete, isActive, pos
         navigate(`/study-space/${tutorialId}/${section.slug}`);
     };
 
-    // Set the visibility to true to trigger the animation after the component mounts
+    const handleFinish = async () => {
+        try {
+            await updateUserProgressSection(Number(tutorialId), {
+                sectionId: section.id,
+                completed: true,
+            });
+            console.log('Section marked as complete.');
+        } catch (error) {
+            console.error('Error marking section as complete:', error);
+        }
+    };
+
     useEffect(() => {
         setTimeout(() => {
             setIsVisible(true);
-        }, index * 100); // Delay each card based on its index
+        }, index * 100);
     }, [index]);
 
     return (
@@ -81,6 +93,21 @@ const MixCard: React.FC<MixCardProps> = ({ isDarkMode, isComplete, isActive, pos
                             <p>Start</p>
                         )}
                     </button>
+                    {!isComplete && (
+                        <button
+                            onClick={handleFinish}
+                            className={`
+                                mt-2 py-2 px-4 rounded-xl
+                                font-semibold transition-all duration-300
+                                ${isDarkMode
+                                    ? 'bg-green-600 hover:bg-green-700 text-white'
+                                    : 'bg-green-500 hover:bg-green-400 text-white'
+                                }
+                            `}
+                        >
+                            Finish Section
+                        </button>
+                    )}
                 </div>
             </div>
         </div>

@@ -301,3 +301,21 @@ export const getUserProgressTutorial = async (tutorialId: number): Promise<UserP
     throw error;
   }
 }
+
+interface UpdateProgressPayload {
+  sectionId: number;
+  completed: boolean;
+}
+
+export const updateUserProgressSection = async (tutorialId: number, payload: UpdateProgressPayload): Promise<any> => {
+  try {
+    const response = await axiosInstance.put(
+      `/api/core2/tutorial-progress/${tutorialId}/`, 
+      payload
+    );
+    return response.data;
+  } catch (error) {
+    console.error('Error updating user progress:', error);
+    throw error;
+  }
+}
