@@ -302,11 +302,10 @@ export const getUserProgressTutorial = async (tutorialId: number): Promise<UserP
   }
 }
 
-
-export const updateUserProgressSection = async (tutorialId: number, data: { sectionId: number, completed:boolean}): Promise<any> => {
+export const updateUserProgressSection = async (tutorialId: number, data: { sectionId: number, completed: boolean }): Promise<any> => {
   try {
     const response = await axiosInstance.put(
-      `/api/core2/tutorial-progress/${tutorialId}/`, 
+      `/api/core2/tutorial-progress/${tutorialId}/`,
       data
     );
     return response.data;
@@ -314,4 +313,4 @@ export const updateUserProgressSection = async (tutorialId: number, data: { sect
     console.error('Error updating user progress:', error);
     throw error;
   }
-}
+};

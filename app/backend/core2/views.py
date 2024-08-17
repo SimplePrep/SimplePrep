@@ -234,12 +234,13 @@ class TutorialProgressView(APIView):
         except Section.DoesNotExist:
             return Response({'error': 'Section not found.'}, status=status.HTTP_404_NOT_FOUND)
 
-        # Get or create a UserProgress entry
-        progress_instance, created = UserProgress.objects.get_or_create(user=user, section=section)
+        progress_instance, created = UserProgress.objects.get_or_create(
+            user=user, 
+            section=section,
+            defaults={'chapter': section.chapter}
+        )
 
-        # Update the completion status
         progress_instance.completed = is_completed
         progress_instance.save()
 
-        # Return a simple success response
         return Response({'success': True}, status=status.HTTP_200_OK)
