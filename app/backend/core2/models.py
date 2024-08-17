@@ -101,6 +101,6 @@ class UserProgress(models.Model):
         ordering = ['-last_accessed']
 
     def __str__(self):
-        return f"{self.user.username} - {self.section.title} - Completed: {self.completed}"
+        return f"{self.user.get_full_name} - {self.section.title} - Completed: {self.completed}"
 
 
