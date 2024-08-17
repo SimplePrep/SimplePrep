@@ -22,7 +22,6 @@ const TutorialPath: React.FC<{ isDarkMode: boolean; userSubscription: 'Free' | '
         const chaptersResponse = await getChapters(Number(tutorialId));
         setChapters(chaptersResponse);
 
-        // Fetch sections for each chapter
         const allSections: Section[] = [];
         for (const chapter of chaptersResponse) {
           const chapterSections = await getSections(chapter.id);
@@ -30,7 +29,6 @@ const TutorialPath: React.FC<{ isDarkMode: boolean; userSubscription: 'Free' | '
         }
         setSections(allSections);
 
-        // Fetch user progress
         const progressResponse = await getUserProgressTutorial(Number(tutorialId));
         setUserProgress(progressResponse);
       } catch (error) {
@@ -117,7 +115,9 @@ const TutorialPath: React.FC<{ isDarkMode: boolean; userSubscription: 'Free' | '
                 />
               );
             } else if (index > 0) {
-              const isComplete = userProgress?.chapters.find(chapter => chapter.chapterId === chapters[index].id)?.sections[index].completed;
+              const isComplete = userProgress?.chapters
+              .find(chapter => chapter.chapterId === chapters[index].id)?.sections
+              .find(section => section.sectionId === sections[index].id)?.completed;              
               return (
                 <CurvedLine
                   key={`line-${index}`}
@@ -125,7 +125,7 @@ const TutorialPath: React.FC<{ isDarkMode: boolean; userSubscription: 'Free' | '
                   startY={cardPositions[index - 1].y}
                   endX={pos.x}
                   endY={pos.y}
-                  color={isComplete ? 'green' : (isDarkMode ? '#4B5563' : '#4B5563')}
+                  color={isComplete === true ? 'green' : (isDarkMode ? '#4B5563' : '#4B5563')}
                 />
               );
             }
