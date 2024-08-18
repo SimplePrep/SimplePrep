@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { FaClipboardList, FaGgCircle } from 'react-icons/fa';
 import { BsFillPatchCheckFill } from 'react-icons/bs';
 import { VscDebugRestart } from 'react-icons/vsc';
-import { Section } from '../../../auth_utils/types';
+import { UserProgressSection } from '../../../auth_utils/types';
 
 interface MixCardProps {
     isDarkMode: boolean;
@@ -11,7 +11,7 @@ interface MixCardProps {
     isActive: boolean;
     position: 'left' | 'middle' | 'right';
     index: number;
-    section: Section;
+    section: UserProgressSection;
     tutorialId: string;
 }
 
@@ -47,7 +47,7 @@ const MixCard: React.FC<MixCardProps> = ({ isDarkMode, isComplete, isActive, pos
                     <div className={`p-3 flex flex-row justify-between ${isComplete ? (isDarkMode ? 'bg-green-600' : 'bg-green-500') : (isDarkMode ? 'bg-gray-700' : 'bg-gray-200')} rounded-t-xl`}>
                         <div className='flex flex-row gap-1 items-center'>
                             <FaClipboardList color={isDarkMode ? "white" : (isComplete ? "white" : "#4A5568")} size={25} />
-                            <p className={`${isDarkMode ? 'text-white' : (isComplete ? 'text-white' : 'text-gray-800')} font-semibold`}>Lesson {section.id}</p>
+                            <p className={`${isDarkMode ? 'text-white' : (isComplete ? 'text-white' : 'text-gray-800')} font-semibold`}>Lesson {section.order}</p>
                         </div>
                         {isComplete ? <BsFillPatchCheckFill size={25} color={isDarkMode ? "white" : "white"} /> : <FaGgCircle size={25} color={isDarkMode ? "white" : "#4A5568"} />}
                     </div>
