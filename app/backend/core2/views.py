@@ -192,12 +192,12 @@ class TutorialProgressView(APIView):
             return Response({'error': 'Tutorial not found.'}, status=status.HTTP_404_NOT_FOUND)
 
         chapters = Chapter.objects.filter(tutorial=tutorial).prefetch_related(
-            Prefetch('sections', queryset=Section.objects.all())
+            Prefetch('sections', queryset=Section.objects.all().order_by('id'))
         )
 
         progress_data = []
         for chapter in chapters:
-            sections = chapter.sections.all()
+            sections = chapter.sections.all().sort()
             total_sections = sections.count()
             completed_sections = UserProgress.objects.filter(
                 user=user, section__in=sections, completed=True
