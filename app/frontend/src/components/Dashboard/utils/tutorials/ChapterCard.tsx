@@ -2,15 +2,15 @@ import React from 'react';
 import { FaBook, FaClipboardList, FaChevronDown, FaChevronUp, FaLock } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import AnalyticsChart from '../analytics_components/AnalyticsChart';
-import { Chapter, Section } from '../../../auth_utils/types';
+import {  UserProgressChapter, UserProgressSection } from '../../../auth_utils/types';
 
 interface ChapterCardProps {
-  chapter: Chapter;
+  chapter: UserProgressChapter;
   isDarkMode: boolean;
   isActive: boolean;
   onToggle: () => void;
   userSubscription: 'Free' | 'Nova+' | 'Nova Pro';
-  sections: Section[]; // Pass the sections associated with this chapter
+  sections: UserProgressSection[]; // Pass the sections associated with this chapter
   userCompletedSections: number[]; // Pass the completed sections' IDs
   chapterId: number;
   progress: number;
@@ -32,7 +32,7 @@ const ChapterCard: React.FC<ChapterCardProps> = ({
   const hasAccess = userSubscription === 'Nova Pro' || userSubscription === 'Nova+' || chapter.requiredSubscription === 'Free';
 
   // Find the first incomplete section in the chapter
-  const firstIncompleteSection = sections.find(section => !userCompletedSections.includes(section.id));
+  const firstIncompleteSection = sections.find(section => !userCompletedSections.includes(section.sectionId));
 
   const handleContinueClick = () => {
     if (firstIncompleteSection) {

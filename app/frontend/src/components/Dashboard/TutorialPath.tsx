@@ -2,14 +2,12 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 import MixCard from './utils/tutorials/MixCard';
 import CurvedLine from './utils/tutorials/CurvedLine';
-import { Chapter, Section, UserProgress } from '../auth_utils/types';
 import ChapterCard from './utils/tutorials/ChapterCard';
-import { getChapters, getSections, getUserProgressTutorial } from '../auth_utils/axios/axiosServices';
+import { getUserProgressTutorial } from '../auth_utils/axios/axiosServices';
+import { UserProgress } from '../auth_utils/types';
 
 const TutorialPath: React.FC<{ isDarkMode: boolean; userSubscription: 'Free' | 'Nova+' | 'Nova Pro'; userId: number }> = ({ isDarkMode, userSubscription, userId }) => {
   const { tutorialId } = useParams<{ tutorialId: string }>();
-  const [chapters, setChapters] = useState<Chapter[]>([]);
-  const [sections, setSections] = useState<Section[]>([]);
   const [userProgress, setUserProgress] = useState<UserProgress | null>(null);
   const [activeChapterId, setActiveChapterId] = useState<number | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -17,36 +15,23 @@ const TutorialPath: React.FC<{ isDarkMode: boolean; userSubscription: 'Free' | '
   const [chapterCardPosition, setChapterCardPosition] = useState<{ x: number, y: number } | null>(null);
 
   useEffect(() => {
-    const fetchChaptersAndSections = async () => {
+    const fetchUserProgress = async () => {
       try {
-        const chaptersResponse = await getChapters(Number(tutorialId));
-        setChapters(chaptersResponse);
-
-        const allSections: Section[] = [];
-        for (const chapter of chaptersResponse) {
-          const chapterSections = await getSections(chapter.id);
-          allSections.push(...chapterSections);
-        }
-        setSections(allSections);
-
         const progressResponse = await getUserProgressTutorial(Number(tutorialId));
         setUserProgress(progressResponse);
+
+        // Set the first incomplete chapter as active
+        const firstIncompleteChapter = progressResponse!.chapters.find(chapter => chapter.progress < 100);
+        if (firstIncompleteChapter) {
+          setActiveChapterId(firstIncompleteChapter.chapterId);
+        }
       } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error('Error fetching user progress:', error);
       }
     };
 
-    fetchChaptersAndSections();
+    fetchUserProgress();
   }, [tutorialId, userId]);
-
-  useEffect(() => {
-    if (userProgress) {
-      const firstIncompleteChapter = userProgress.chapters.find(chapter => chapter.progress < 100);
-      if (firstIncompleteChapter) {
-        setActiveChapterId(firstIncompleteChapter.chapterId);
-      }
-    }
-  }, [userProgress]);
 
   const toggleChapterActive = (chapterId: number) => {
     setActiveChapterId(prevChapterId => (prevChapterId === chapterId ? null : chapterId));
@@ -80,7 +65,7 @@ const TutorialPath: React.FC<{ isDarkMode: boolean; userSubscription: 'Free' | '
     updatePositions();
     window.addEventListener('resize', updatePositions);
     return () => window.removeEventListener('resize', updatePositions);
-  }, [chapters, sections, activeChapterId, updatePositions]);
+  }, [userProgress, activeChapterId, updatePositions]);
 
   const getPosition = (index: number) => {
     switch (index % 4) {
@@ -114,10 +99,10 @@ const TutorialPath: React.FC<{ isDarkMode: boolean; userSubscription: 'Free' | '
                   color={isDarkMode ? '#4B5563' : '#4B5563'}
                 />
               );
-            } else if (index > 0) {
+            } else {
               const isComplete = userProgress?.chapters
-              .find(chapter => chapter.chapterId === chapters[index].id)?.sections
-              .find(section => section.sectionId === sections[index].id)?.completed;              
+                .find(chapter => chapter.chapterId === activeChapterId)?.sections
+                .find(section => section.sectionId === index + 1)?.completed;
               return (
                 <CurvedLine
                   key={`line-${index}`}
@@ -125,53 +110,46 @@ const TutorialPath: React.FC<{ isDarkMode: boolean; userSubscription: 'Free' | '
                   startY={cardPositions[index - 1].y}
                   endX={pos.x}
                   endY={pos.y}
-                  color={isComplete === true ? 'green' : (isDarkMode ? '#4B5563' : '#4B5563')}
+                  color={isComplete ? 'green' : (isDarkMode ? '#4B5563' : '#4B5563')}
                 />
               );
             }
-            return null;
           })}
         </svg>
       )}
 
       <div>
-        {chapters.map((chapter) => {
-          const chapterProgress = userProgress?.chapters.find(ch => ch.chapterId === chapter.id)?.progress || 0;
-          return (
-            <div className='mb-16' key={chapter.id}>
-              <ChapterCard
-                chapter={chapter}
-                isDarkMode={isDarkMode}
-                isActive={chapter.id === activeChapterId}
-                onToggle={() => toggleChapterActive(chapter.id)}
-                userSubscription={userSubscription}
-                sections={sections.filter(section => section.chapter === chapter.id)}
-                userCompletedSections={userProgress?.chapters.find(ch => ch.chapterId === chapter.id)?.sections.filter(s => s.completed).map(s => s.sectionId) || []}
-                chapterId={chapter.id}
-                progress={chapterProgress}
-              />
-              {chapter.id === activeChapterId &&
-                sections
-                  .filter(section => section.chapter === chapter.id)
-                  .map((section, index) => {
-                    const isComplete = userProgress?.chapters.find(ch => ch.chapterId === chapter.id)?.sections.find(s => s.sectionId === section.id)?.completed;
-                    const isFirstIncomplete = !isComplete && index === sections.findIndex(sec => sec.chapter === chapter.id && !userProgress?.chapters.find(ch => ch.chapterId === chapter.id)?.sections.find(s => s.sectionId === sec.id)?.completed);
-                    return (
-                      <MixCard
-                        key={section.id}
-                        index={index}
-                        isActive={isFirstIncomplete}
-                        isDarkMode={isDarkMode}
-                        isComplete={isComplete || false}
-                        section={section}
-                        position={getPosition(index)}
-                        tutorialId={tutorialId!}
-                      />
-                    );
-                  })}
-            </div>
-          );
-        })}
+        {userProgress?.chapters.map((chapter) => (
+          <div className='mb-16' key={chapter.chapterId}>
+            <ChapterCard
+              chapter={chapter}
+              isDarkMode={isDarkMode}
+              isActive={chapter.chapterId === activeChapterId}
+              onToggle={() => toggleChapterActive(chapter.chapterId)}
+              userSubscription={userSubscription}
+              sections={chapter.sections}
+              userCompletedSections={chapter.sections.filter(section => section.completed).map(s => s.sectionId)}
+              chapterId={chapter.chapterId}
+              progress={chapter.progress}
+            />
+            {chapter.chapterId === activeChapterId &&
+              chapter.sections.map((section, index) => {
+                const isFirstIncomplete = !section.completed && index === chapter.sections.findIndex(sec => !sec.completed);
+                return (
+                  <MixCard
+                    key={section.sectionId}
+                    index={index}
+                    isActive={isFirstIncomplete}
+                    isDarkMode={isDarkMode}
+                    isComplete={section.completed}
+                    section={section}
+                    position={getPosition(index)}
+                    tutorialId={tutorialId!}
+                  />
+                );
+              })}
+          </div>
+        ))}
       </div>
     </div>
   );

@@ -69,7 +69,6 @@ export interface Tutorial {
 }
 
 export interface Chapter {
-  id: number;
   title: string;
   order: number;
   tutorial: number;
@@ -211,16 +210,16 @@ export interface SupportFormData {
   files?: FileList | null;
 }
 
-interface UserProgressSection {
+export interface UserProgressSection {
   sectionId: number;
+  order: number;
   slug: string;
   title: string;
   completed: boolean;
 }
 
-interface UserProgressChapter {
+export interface UserProgressChapter extends Chapter {
   chapterId: number;
-  title: string;
   sections: UserProgressSection[];
   progress: number;
 }
@@ -229,4 +228,5 @@ export interface UserProgress {
   tutorialId: number;
   userId: number;
   chapters: UserProgressChapter[]
+  progress: number;
 }
