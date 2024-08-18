@@ -2,9 +2,10 @@ from rest_framework import generics, status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from .models import Tutorial, Chapter, Section, PracticeQuestion, UserProgress
-from .serializers import TutorialSerializer, ChapterSerializer, SectionSerializer, PracticeQuestionSerializer, UserProgressSerializer
+from .serializers import TutorialSerializer, ChapterSerializer, SectionSerializer, PracticeQuestionSerializer, TutorialProgressSerializer
 from rest_framework.views import APIView
 from math import floor
+from django.db.models import Prefetch
 
 class TutorialListCreateView(generics.ListCreateAPIView):
     serializer_class = TutorialSerializer
@@ -175,41 +176,57 @@ class PracticeQuestionDetailView(generics.RetrieveAPIView):
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
 
+
+
+
 class TutorialProgressView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
         user = request.user
         tutorial_id = kwargs.get('tutorial_id')
-        
-        # Fetch the tutorial object
+
         try:
             tutorial = Tutorial.objects.get(id=tutorial_id)
         except Tutorial.DoesNotExist:
             return Response({'error': 'Tutorial not found.'}, status=status.HTTP_404_NOT_FOUND)
 
-        chapters = Chapter.objects.filter(tutorial=tutorial)
-
+        chapters = Chapter.objects.filter(tutorial=tutorial).prefetch_related(
+            Prefetch('sections', queryset=Section.objects.all())
+        )
         progress_data = []
-
         for chapter in chapters:
             sections = chapter.sections.all()
             total_sections = sections.count()
-            completed_sections = UserProgress.objects.filter(user=user, section__in=sections, completed=True).count()
-            
+            completed_sections = UserProgress.objects.filter(
+                user=user, section__in=sections, completed=True
+            ).count()
+
             chapter_progress = {
                 'chapterId': chapter.id,
                 'title': chapter.title,
+                'tutorialId': chapter.tutorial,
+                'order': chapter.order,
+                'description': chapter.description,
+                'lessons': chapter.lessons,
+                'practices': chapter.practices,
+                'difficulty': chapter.difficulty,
+                'img_path': chapter.img_path,
+                'required_subscription': chapter.required_subscription,
                 'sections': [],
                 'progress': floor((completed_sections / total_sections) * 100) if total_sections > 0 else 0
             }
-            
+
             for section in sections:
                 is_completed = UserProgress.objects.filter(user=user, section=section, completed=True).exists()
                 chapter_progress['sections'].append({
                     'sectionId': section.id,
+                    'chapterId': section.chapter,
                     'slug': section.slug,
+                    'order': section.order,
                     'title': section.title,
+                    'description': section.description,
+                    'content': section.content,
                     'completed': is_completed
                 })
 
@@ -222,7 +239,7 @@ class TutorialProgressView(APIView):
         }
 
         return Response(response_data, status=status.HTTP_200_OK)
-    
+
     def put(self, request, *args, **kwargs):
         user = request.user
         tutorial_id = kwargs.get('tutorial_id')
