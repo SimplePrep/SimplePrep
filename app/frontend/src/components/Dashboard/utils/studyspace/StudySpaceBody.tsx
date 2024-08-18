@@ -1,10 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate, useParams } from 'react-router-dom';
-import { getSection } from '../../../auth_utils/axios/axiosServices';
+import { getSection, updateUserProgressSection } from '../../../auth_utils/axios/axiosServices';
 import { Section } from '../../../auth_utils/types';
-import { updateUserProgressSection } from '../../../auth_utils/axios/axiosServices';
-
 
 interface StudySpaceBodyProps {
   isDarkMode: boolean;
@@ -14,7 +12,7 @@ interface StudySpaceBodyProps {
 const chunkSize = 1;
 
 const StudySpaceBody: React.FC<StudySpaceBodyProps> = ({ isDarkMode, onProgressChange }) => {
-  const { sectionSlug } = useParams<{ sectionSlug: string }>();
+  const { tutorialId, sectionSlug } = useParams<{ tutorialId: string; sectionSlug: string }>();
   const navigate = useNavigate();
   const darkModeClass = isDarkMode ? 'text-slate-300 bg-gray-900' : 'bg-white text-gray-600';
   const [section, setSection] = useState<Section | null>(null);
@@ -55,21 +53,23 @@ const StudySpaceBody: React.FC<StudySpaceBodyProps> = ({ isDarkMode, onProgressC
   };
 
   const handleFinish = async () => {
-    if (section?.chapter) {
-        try {
-            await updateUserProgressSection(section.chapter, {
-                sectionId: section.id,
-                completed: true,
-            });
-            console.log('Section marked as complete.');
-            navigate(`/demo/tutorials/course-paths/${section.chapter}`);
-        } catch (error) {
-            console.error('Error updating section progress:', error);
-        }
+    if (section?.chapter && tutorialId) {
+      try {
+        await updateUserProgressSection(parseInt(tutorialId), {
+          chapterId: section.chapter,
+          sectionId: section.id,
+          completed: true,
+        });
+        console.log('Section marked as complete.');
+        navigate(`/demo/tutorials/course-paths/${section.chapter}`);
+      } catch (error) {
+        console.error('Error updating section progress:', error);
+        setError('Failed to update progress. Please try again.');
+      }
     } else {
-        navigate('/demo/tutorials');
+      navigate('/demo/tutorials');
     }
-};
+  };
 
   useEffect(() => {
     if (contentEndRef.current && scrollContainerRef.current) {
@@ -89,6 +89,18 @@ const StudySpaceBody: React.FC<StudySpaceBodyProps> = ({ isDarkMode, onProgressC
   const currentContent = paragraphs.slice(0, visibleChunks * chunkSize);
 
   const isAllContentVisible = visibleChunks * chunkSize >= paragraphs.length;
+
+  if (loading) {
+    return <div className={`fixed h-screen ml-[30%] w-[70%] ${darkModeClass} flex items-center justify-center`}>Loading...</div>;
+  }
+
+  if (error) {
+    return <div className={`fixed h-screen ml-[30%] w-[70%] ${darkModeClass} flex items-center justify-center`}>{error}</div>;
+  }
+
+  if (!section || paragraphs.length === 0) {
+    return <div className={`fixed h-screen ml-[30%] w-[70%] ${darkModeClass} flex items-center justify-center`}>No content available.</div>;
+  }
 
   return (
     <div className={`fixed h-screen ml-[30%] w-[70%] ${darkModeClass} hidden md:block`}>
@@ -118,7 +130,7 @@ const StudySpaceBody: React.FC<StudySpaceBodyProps> = ({ isDarkMode, onProgressC
         </div>
         <div className="fixed bottom-3 right-5">
           <AnimatePresence>
-            {isAllContentVisible && (
+            {isAllContentVisible ? (
               <motion.button
                 key="finishButton"
                 onClick={handleFinish}
@@ -130,8 +142,7 @@ const StudySpaceBody: React.FC<StudySpaceBodyProps> = ({ isDarkMode, onProgressC
               >
                 Finish
               </motion.button>
-            )}
-            {!isAllContentVisible && (
+            ) : (
               <motion.button
                 key="continueButton"
                 onClick={handleLoadMore}

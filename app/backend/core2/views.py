@@ -241,18 +241,29 @@ class TutorialProgressView(APIView):
     def put(self, request, *args, **kwargs):
         user = request.user
         tutorial_id = kwargs.get('tutorial_id')
+        chapter_id = request.data.get('chapter_id')
         section_id = request.data.get('section_id')
         is_completed = request.data.get('completed', False)
 
         try:
-            section = Section.objects.get(id=section_id, chapter__tutorial_id=tutorial_id)
+            tutorial = Tutorial.objects.get(id=tutorial_id)
+        except Tutorial.DoesNotExist:
+            return Response({'error': 'Tutorial not found.'}, status=status.HTTP_404_NOT_FOUND)
+
+        try:
+            chapter = Chapter.objects.get(id=chapter_id, tutorial=tutorial)
+        except Chapter.DoesNotExist:
+            return Response({'error': 'Chapter not found in the given tutorial.'}, status=status.HTTP_404_NOT_FOUND)
+
+        try:
+            section = Section.objects.get(id=section_id, chapter=chapter)
         except Section.DoesNotExist:
-            return Response({'error': 'Section not found.'}, status=status.HTTP_404_NOT_FOUND)
+            return Response({'error': 'Section not found in the given chapter.'}, status=status.HTTP_404_NOT_FOUND)
 
         progress_instance, created = UserProgress.objects.get_or_create(
             user=user, 
             section=section,
-            defaults={'chapter': section.chapter}
+            defaults={'chapter': chapter}
         )
 
         progress_instance.completed = is_completed
