@@ -222,12 +222,9 @@ class TutorialProgressView(APIView):
                 is_completed = UserProgress.objects.filter(user=user, section=section, completed=True).exists()
                 chapter_progress['sections'].append({
                     'sectionId': section.id,
-                    'chapterId': section.chapter_id, 
                     'slug': section.slug,
                     'order': section.order,
                     'title': section.title,
-                    'description': section.description,
-                    'content': section.content,
                     'completed': is_completed
                 })
 
