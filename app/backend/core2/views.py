@@ -197,7 +197,7 @@ class TutorialProgressView(APIView):
 
         progress_data = []
         for chapter in chapters:
-            sections = chapter.sections.all().sort()
+            sections = chapter.sections.all()
             total_sections = sections.count()
             completed_sections = UserProgress.objects.filter(
                 user=user, section__in=sections, completed=True
