@@ -56,8 +56,8 @@ const StudySpaceBody: React.FC<StudySpaceBodyProps> = ({ isDarkMode, onProgressC
     if (section?.chapter && tutorialId) {
       try {
         await updateUserProgressSection(parseInt(tutorialId), {
-          chapterId: section.chapter,
-          sectionId: section.id,
+          chapter_id: section.chapter,
+          section_id: section.id,
           completed: true,
         });
         console.log('Section marked as complete.');

@@ -305,8 +305,8 @@ export const getUserProgressTutorial = async (tutorialId: number): Promise<UserP
 export const updateUserProgressSection = async (
   tutorialId: number, 
   data: { 
-    chapterId: number, 
-    sectionId: number, 
+    chapter_id: number, 
+    section_id: number, 
     completed: boolean 
   }
 ): Promise<any> => {
