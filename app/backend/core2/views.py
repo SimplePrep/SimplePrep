@@ -194,6 +194,7 @@ class TutorialProgressView(APIView):
         chapters = Chapter.objects.filter(tutorial=tutorial).prefetch_related(
             Prefetch('sections', queryset=Section.objects.all())
         )
+
         progress_data = []
         for chapter in chapters:
             sections = chapter.sections.all()
@@ -205,7 +206,7 @@ class TutorialProgressView(APIView):
             chapter_progress = {
                 'chapterId': chapter.id,
                 'title': chapter.title,
-                'tutorialId': chapter.tutorial,
+                'tutorialId': tutorial.id, 
                 'order': chapter.order,
                 'description': chapter.description,
                 'lessons': chapter.lessons,
@@ -221,7 +222,7 @@ class TutorialProgressView(APIView):
                 is_completed = UserProgress.objects.filter(user=user, section=section, completed=True).exists()
                 chapter_progress['sections'].append({
                     'sectionId': section.id,
-                    'chapterId': section.chapter,
+                    'chapterId': section.chapter_id, 
                     'slug': section.slug,
                     'order': section.order,
                     'title': section.title,
