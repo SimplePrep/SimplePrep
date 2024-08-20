@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { RootState, AppDispatch } from '../store';
 import { checkAuthenticated } from '../auth_utils/actions/Actions';
-import LoaderWrapper from '../Dashboard/utils/tools/LoaderWrapper';
+import LoaderWrapper from '../ILearnComps/utils/tools/LoaderWrapper';
 
 interface AuthenticatedComponentProps {
   children: ReactNode;
