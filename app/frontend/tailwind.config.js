@@ -12,6 +12,7 @@ module.exports = {
         'roboto': ['Roboto', 'sans-serif'],
         'nunito': ['Nunito', 'sans-serif'],
         'space-grotesk': ['"Space Grotesk"', 'sans-serif'],
+        'poppins': ['Poppins', 'sans-serif'],
       },
 
       keyframes: {

@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { Outlet } from 'react-router-dom';
-import NavBarDash from '../components/Dashboard/NavBarDash';
-import LoaderWrapper from '../components/Dashboard/utils/tools/LoaderWrapper';
+import NavBarDash from '../components/ILearnComps/NavBarDash';
+import LoaderWrapper from '../components/ILearnComps/utils/tools/LoaderWrapper';
 
-interface DashboardPageProps {
+interface ILearnPageProps {
   toggleDarkMode: () => void;
   isDarkMode: boolean;
 }
 
-const DashboardPage: React.FC<DashboardPageProps> = ({
+const ILearnPage: React.FC<ILearnPageProps> = ({
   toggleDarkMode,
   isDarkMode,
 }) => {
@@ -16,12 +16,10 @@ const DashboardPage: React.FC<DashboardPageProps> = ({
   const darkModeClass = isDarkMode ? 'dark-background transition-colors duration-300' : 'bg-gray-100 transition-colors duration-300';
 
   useEffect(() => {
-    // Simulate a loading delay (e.g., fetching user data or other async operations)
     const timer = setTimeout(() => {
       setIsLoading(false);
     }, 2000);
 
-    // Cleanup the timer if the component unmounts before the timer completes
     return () => clearTimeout(timer);
   }, []);
 
@@ -49,4 +47,4 @@ const DashboardPage: React.FC<DashboardPageProps> = ({
   );
 };
 
-export default DashboardPage;
+export default ILearnPage;

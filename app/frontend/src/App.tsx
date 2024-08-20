@@ -1,27 +1,26 @@
 import React from 'react';
 import './App.css';
 import { Route, Routes, BrowserRouter as Router, Navigate } from 'react-router-dom';
-import DashboardPage from './pages/DashboardPage';
-
 import Login from './pages/Authentication/Login';
 import BlogPostDetails from './components/Landing/features/BlogPostDetails';
 import Blogs from './components/Landing/Blogs';
-import TestPageUI from './components/Dashboard/utils/test_components/TestPageUI';
+import TestPageUI from './components/ILearnComps/utils/test_components/TestPageUI';
 import ResetPassword from './pages/Authentication/ResetPassword';
-import Contents from './components/Dashboard/Contents';
-import Analytics from './components/Dashboard/Analytics';
+import Contents from './components/ILearnComps/Contents';
+import Analytics from './components/ILearnComps/Analytics';
 import SignUpComponent from './pages/Authentication/SignUp';
-import Tutorials from './components/Dashboard/Tutorials';
+import Tutorials from './components/ILearnComps/Tutorials';
 import NotFoundPage from './pages/404NotFoundPage';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from './components/store';
 import { setTheme } from './components/auth_utils/reducers/authReducer';
 import AuthenticatedComponent from './components/auth_utils/AuthenticatedComponent';
-import TutorialPath from './components/Dashboard/TutorialPath';
+import TutorialPath from './components/ILearnComps/TutorialPath';
 import Layout, { LandingPage } from './pages/LandingPage';
-import StudySpaceBody from './components/Dashboard/utils/studyspace/StudySpaceBody';
-import StudySpaceLayout from './components/Dashboard/utils/studyspace/StudySpaceLayout';
-import StudySpaceBodyWrapper from './components/Dashboard/utils/studyspace/StudySpaceBodyWrapper';
+import StudySpaceLayout from './components/ILearnComps/utils/studyspace/StudySpaceLayout';
+import StudySpaceBodyWrapper from './components/ILearnComps/utils/studyspace/StudySpaceBodyWrapper';
+import ILearnPage from './pages/ILearnPage';
+import Dashboard from './components/ILearnComps/Dashboard';
 
 const App = () => {
   const { theme } = useSelector((state: RootState) => state.auth);
@@ -44,12 +43,12 @@ const App = () => {
           path="demo"
           element={
             <AuthenticatedComponent>
-              <DashboardPage toggleDarkMode={toggleDarkMode} isDarkMode={theme === 'dark'} />
+              <ILearnPage toggleDarkMode={toggleDarkMode} isDarkMode={theme === 'dark'} />
             </AuthenticatedComponent>
         }
         >
           <Route index element={<Navigate to="dashboard" replace />} />
-          <Route path="dashboard" element={<Contents isDarkMode={theme === 'dark'} />} />
+          <Route path="dashboard" element={<Dashboard isDarkMode={theme === 'dark'} />} />
           <Route path="tutorials" element={<Tutorials isDarkMode={theme === 'dark'} />} />
           <Route path="tutorials/course-paths/:tutorialId" element={<TutorialPath isDarkMode={theme === 'dark'} userId={1} userSubscription='Nova Pro'/>}/>
           <Route path="analytics" element={<Analytics isDarkMode={theme === 'dark'} />} />
