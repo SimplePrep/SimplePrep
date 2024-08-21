@@ -14,6 +14,7 @@ const ProgressOverview: React.FC<{ isDarkMode: boolean; subject: string; progres
     const circleProgressColor = isDarkMode ? 'text-indigo-400' : 'text-indigo-600';
     const chapterBgColor = isDarkMode ? 'bg-slate-600' : 'bg-gray-100';
     const borderColor = isDarkMode ? 'border-slate-200' : 'border-slate-300';
+    const numberBgColor = isDarkMode ? 'text-slate-300' : 'text-slate-700';
 
     return (
         <div className={`p-4 ${bgColor} rounded-2xl shadow-lg`}>
@@ -38,10 +39,9 @@ const ProgressOverview: React.FC<{ isDarkMode: boolean; subject: string; progres
                             </div>
                             <div className='flex items-center'>
                                 <div className='relative w-10 h-10'>
-                                    <svg className='absolute inset-0' viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg">
-                                        <circle className={`${circleBgColor}`} strokeWidth="3" fill="none" cx="18" cy="18" r="16" />
-                                        <circle className={`${circleProgressColor}`} strokeWidth="3" strokeDasharray={`${chapter.progress}, 100`} fill="none" cx="18" cy="18" r="16" strokeLinecap="round" />
-                                    </svg>
+                                    <div className={`absolute inset-0 flex items-center justify-center ${numberBgColor}`}>
+                                        <AnalyticsChart width={48} height={48} textSize='text-lg' value={chapter.progress} maxValue={100} />
+                                    </div>
                                 </div>
                             </div>
                         </div>
