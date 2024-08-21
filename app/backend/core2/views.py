@@ -180,7 +180,7 @@ class PracticeQuestionDetailView(generics.RetrieveAPIView):
 
 
 
-class TutorialProgressView(APIView):
+class ChapterSectionProgressView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
@@ -302,3 +302,50 @@ class RecentCompletedSectionsView(APIView):
             })
         
         return Response(data, status=status.HTTP_200_OK)
+
+
+class UserTutorialProgressView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, *args, **kwargs):
+        user = request.user
+
+        tutorials = Tutorial.objects.prefetch_related(
+            Prefetch('chapters', queryset=Chapter.objects.prefetch_related('sections'))
+        ).all()
+
+        tutorial_progress_data = []
+
+        for tutorial in tutorials:
+            tutorial_data = {
+                'tutorialId': tutorial.id,
+                'title': tutorial.title,
+                'chapters': [],
+                'tutorial_progress': 0
+            }
+            chapter_count = 0
+            tutorial_progress_total = 0
+
+            for chapter in tutorial.chapters.all():
+                sections = chapter.sections.all()
+                total_sections = sections.count()
+                completed_sections = UserProgress.objects.filter(
+                    user=user, section__in=sections, completed=True
+                ).count()
+
+                chapter_progress_percentage = (completed_sections / total_sections) * 100 if total_sections > 0 else 0
+                chapter_progress = {
+                    'chapterId': chapter.id,
+                    'title': chapter.title,
+                    'progress': round(chapter_progress_percentage, 2),
+                    'sections': []
+                }
+
+                tutorial_data['chapters'].append(chapter_progress)
+                tutorial_progress_total += chapter_progress_percentage
+                chapter_count += 1
+
+            tutorial_data['tutorial_progress'] = round(tutorial_progress_total / chapter_count, 2) if chapter_count > 0 else 0
+            tutorial_progress_data.append(tutorial_data)
+
+        return Response(tutorial_progress_data, status=200)
