@@ -4,14 +4,12 @@ import { getUserDetails } from '../../../auth_utils/axios/axiosServices';
 import { UserDetails } from '../../../auth_utils/types';
 
 const WelcomeCard = () => {
-    const [userDetails, setUserDetails] = useState<UserDetails>();
     const [displayedName, setDisplayedName] = useState<string>('');
 
     useEffect(() => {
         const fetchUserDetails = async () => {
             try {
                 const userDetailsResponse = await getUserDetails();
-                setUserDetails(userDetailsResponse.user);
                 typeFirstName(userDetailsResponse.user.first_name);
             } catch (error) {
                 console.error('Error fetching user details:', error);
