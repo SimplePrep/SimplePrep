@@ -6,7 +6,7 @@ from .serializers import TutorialSerializer, ChapterSerializer, SectionSerialize
 from rest_framework.views import APIView
 from math import floor
 from django.db.models import Prefetch
-from time import timezone
+from django.utils import timezone
 
 class TutorialListCreateView(generics.ListCreateAPIView):
     serializer_class = TutorialSerializer
