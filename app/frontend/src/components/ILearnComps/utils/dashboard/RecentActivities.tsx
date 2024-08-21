@@ -24,7 +24,6 @@ const RecentActivities: React.FC<RecentActivitiesProps> = ({ isDarkMode }) => {
                 console.error('Error fetching recent sections:', error);
             }
         };
-        console.log('RECENT Activities')
         fetchRecentActivities();
     }, []);
 
