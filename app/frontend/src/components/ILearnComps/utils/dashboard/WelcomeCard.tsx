@@ -5,18 +5,21 @@ import { UserDetails } from '../../../auth_utils/types';
 
 const WelcomeCard = () => {
     const [displayedName, setDisplayedName] = useState<string>('');
+    const [isLoaded, setIsLoaded] = useState<boolean>(false);
 
     useEffect(() => {
         const fetchUserDetails = async () => {
             try {
                 const userDetailsResponse = await getUserDetails();
-                const firstName = userDetailsResponse?.user?.first_name;
+                const firstName = userDetailsResponse.user.first_name;
                 
                 if (firstName) {
                     typeFirstName(firstName);
                 }
             } catch (error) {
                 console.error('Error fetching user details:', error);
+            } finally {
+                setIsLoaded(true); 
             }
         };
         fetchUserDetails();
@@ -35,7 +38,11 @@ const WelcomeCard = () => {
     };
 
     return (
-        <div className='bg-gradient-to-r from-indigo-500 to-purple-600 p-8 rounded-2xl shadow-lg text-white'>
+        <div
+            className={`bg-gradient-to-r from-indigo-500 to-purple-600 p-8 rounded-2xl shadow-lg text-white transition-opacity duration-700 ${
+                isLoaded ? 'opacity-100' : 'opacity-0'
+            }`}
+        >
             <div className='flex justify-between items-center'>
                 <div>
                     <h1 className='text-2xl font-bold mb-4'>
