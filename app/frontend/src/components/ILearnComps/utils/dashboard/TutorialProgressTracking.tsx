@@ -84,6 +84,7 @@ const TutorialProgressTracking: React.FC<TutorialProgressTrackingProps> = ({ isD
                 <h2 className={`text-lg font-bold ${textColor}`}>Tutorial Progress Tracking</h2>
             </div>
             <div className='space-y-4'>
+                
                 {loading ? (
                     <p className={textColor}>Loading...</p>
                 ) : (
