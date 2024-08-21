@@ -10,7 +10,11 @@ const WelcomeCard = () => {
         const fetchUserDetails = async () => {
             try {
                 const userDetailsResponse = await getUserDetails();
-                typeFirstName(userDetailsResponse.user.first_name);
+                const firstName = userDetailsResponse?.user?.first_name;
+                
+                if (firstName) {
+                    typeFirstName(firstName);
+                }
             } catch (error) {
                 console.error('Error fetching user details:', error);
             }
