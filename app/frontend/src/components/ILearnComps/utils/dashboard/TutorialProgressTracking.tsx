@@ -40,7 +40,7 @@ const ProgressOverview: React.FC<{ isDarkMode: boolean; subject: string; progres
                             <div className='flex items-center'>
                                 <div className='relative w-10 h-10'>
                                     <div className={`absolute inset-0 flex items-center justify-center ${numberBgColor}`}>
-                                        <AnalyticsChart width={48} height={48} textSize='text-lg' value={chapter.progress} maxValue={100} />
+                                        <AnalyticsChart width={48} height={48} textSize='text-sm' value={chapter.progress} maxValue={100} />
                                     </div>
                                 </div>
                             </div>
