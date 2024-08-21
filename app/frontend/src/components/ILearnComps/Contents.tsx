@@ -1,6 +1,4 @@
-import React, { useEffect, useState } from 'react'
-import { comingsoon } from '../auth_utils'
-import { getModules, getTests } from '../auth_utils/axios/axiosServices';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 interface Test {
@@ -19,27 +17,27 @@ interface Module {
 }
 
 const SkeletonCard = () => (
-  <div className="p-6 bg-gray-100 rounded-lg border-2 border-gray-200 shadow-lg overflow-hidden relative">
-    <div className="animate-pulse">
-      <div className="flex justify-between items-center mb-6">
-        <div className="h-6 w-8 bg-gray-300 rounded"></div>
-      </div>
-      <div className="h-7 w-3/4 bg-gray-300 rounded mb-2"></div>
-      <div className="h-4 w-full bg-gray-300 rounded mb-4"></div>
-      <div className="flex flex-row gap-5 justify-between items-center">
-        <div className="h-10 w-28 bg-gray-300 rounded"></div>
-        <div className="h-10 w-28 bg-gray-300 rounded"></div>
-      </div>
+    <div className="p-6 bg-gray-100 rounded-lg border-2 border-gray-200 shadow-lg overflow-hidden relative">
+        <div className="animate-pulse">
+            <div className="flex justify-between items-center mb-6">
+                <div className="h-6 w-8 bg-gray-300 rounded"></div>
+            </div>
+            <div className="h-7 w-3/4 bg-gray-300 rounded mb-2"></div>
+            <div className="h-4 w-full bg-gray-300 rounded mb-4"></div>
+            <div className="flex flex-row gap-5 justify-between items-center">
+                <div className="h-10 w-28 bg-gray-300 rounded"></div>
+                <div className="h-10 w-28 bg-gray-300 rounded"></div>
+            </div>
+        </div>
+        <div className="absolute inset-0 -translate-x-full animate-[shimmer_1s_infinite] bg-gradient-to-r from-transparent via-gray-200 to-transparent"></div>
     </div>
-    <div className="absolute inset-0 -translate-x-full animate-[shimmer_1s_infinite] bg-gradient-to-r from-transparent via-gray-200 to-transparent"></div>
-  </div>
 );
 
-  interface ContentsProps {
-    isDarkMode: boolean
-  }
+interface ContentsProps {
+    isDarkMode: boolean;
+}
 
-  const Contents: React.FC<ContentsProps> = ({ isDarkMode }) => {
+const Contents: React.FC<ContentsProps> = ({ isDarkMode }) => {
 
     const [tests, setTests] = useState<Test[]>([]);
     const [modules, setModules] = useState<{ [key: number]: Module[] }>({});
@@ -49,75 +47,181 @@ const SkeletonCard = () => (
     const Mode = isDarkMode ? 'text-white' : 'text-gray-800';
 
     useEffect(() => {
-        const fetchTestsAndModules = async () => {
-            setIsLoading(true);
-            try {
-                const testList = await getTests();
-                setTests(testList);
+        // Use sample data instead of fetching from API
+        const sampleTests: Test[] = [
+            { id: 1, title: 'SAT Reading Test' },
+            { id: 2, title: 'SAT Writing Test' },
+            { id: 3, title: 'SAT Math Test' },
+            { id: 4, title: 'SAT Reading Test' },
+            { id: 5, title: 'SAT Writing Test' },
+            { id: 6, title: 'SAT Math Test' },
+        ];
 
-                const modulesData: { [key: number]: Module[] } = {};
-                for (const test of testList) {
-                    const testModules = await getModules(test.id);
-                    modulesData[test.id] = testModules;
-                }
-                setModules(modulesData);
-            } catch (error) {
-                console.error('Error fetching tests or modules: ', error);
-                setError('Failed to load tests or modules.');
-            } finally {
-                setIsLoading(false);
-            }
+        const sampleModules: { [key: number]: Module[] } = {
+            1: [
+                {
+                    id: 101,
+                    test: 1,
+                    title: 'Reading Comprehension',
+                    description: 'Practice questions for reading comprehension.',
+                    num_questions: 20,
+                    created_at: '2024-01-01',
+                    updated_at: '2024-01-10',
+                },
+                {
+                    id: 102,
+                    test: 1,
+                    title: 'Vocabulary in Context',
+                    description: 'Questions focused on vocabulary usage.',
+                    num_questions: 15,
+                    created_at: '2024-01-01',
+                    updated_at: '2024-01-10',
+                },
+            ],
+            2: [
+                {
+                    id: 201,
+                    test: 2,
+                    title: 'Grammar and Usage',
+                    description: 'Questions on grammar rules and usage.',
+                    num_questions: 25,
+                    created_at: '2024-01-01',
+                    updated_at: '2024-01-10',
+                },
+            ],
+            3: [
+                {
+                    id: 301,
+                    test: 3,
+                    title: 'Algebra Basics',
+                    description: 'Basic algebraic equations and expressions.',
+                    num_questions: 30,
+                    created_at: '2024-01-01',
+                    updated_at: '2024-01-10',
+                },
+                {
+                    id: 302,
+                    test: 3,
+                    title: 'Geometry Concepts',
+                    description: 'Practice geometry problems.',
+                    num_questions: 20,
+                    created_at: '2024-01-01',
+                    updated_at: '2024-01-10',
+                },
+            ],
+            4: [
+                {
+                    id: 301,
+                    test: 3,
+                    title: 'Algebra Basics',
+                    description: 'Basic algebraic equations and expressions.',
+                    num_questions: 30,
+                    created_at: '2024-01-01',
+                    updated_at: '2024-01-10',
+                },
+                {
+                    id: 302,
+                    test: 3,
+                    title: 'Geometry Concepts',
+                    description: 'Practice geometry problems.',
+                    num_questions: 20,
+                    created_at: '2024-01-01',
+                    updated_at: '2024-01-10',
+                },
+            ],
+            5: [
+                {
+                    id: 301,
+                    test: 3,
+                    title: 'Algebra Basics',
+                    description: 'Basic algebraic equations and expressions.',
+                    num_questions: 30,
+                    created_at: '2024-01-01',
+                    updated_at: '2024-01-10',
+                },
+                {
+                    id: 302,
+                    test: 3,
+                    title: 'Geometry Concepts',
+                    description: 'Practice geometry problems.',
+                    num_questions: 20,
+                    created_at: '2024-01-01',
+                    updated_at: '2024-01-10',
+                },
+            ],
+            6: [
+                {
+                    id: 301,
+                    test: 3,
+                    title: 'Algebra Basics',
+                    description: 'Basic algebraic equations and expressions.',
+                    num_questions: 30,
+                    created_at: '2024-01-01',
+                    updated_at: '2024-01-10',
+                },
+                {
+                    id: 302,
+                    test: 3,
+                    title: 'Geometry Concepts',
+                    description: 'Practice geometry problems.',
+                    num_questions: 20,
+                    created_at: '2024-01-01',
+                    updated_at: '2024-01-10',
+                },
+            ],
         };
 
-        fetchTestsAndModules();
+        setTests(sampleTests);
+        setModules(sampleModules);
+        setIsLoading(false);
     }, []);
 
     const renderContent = () => {
         if (isLoading) {
-          return (
-            <div className="my-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-              {[...Array(6)].map((_, index) => (
-                <SkeletonCard key={index} />
-              ))}
-            </div>
-          );
-        }
-    
-        if (error) {
-          return <div className="text-red-500">{error}</div>;
-        }
-    
-        return (
-          <div className="my-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-            {tests.map((test, index) => {
-              const borderColorClass = borderColorClasses[index % borderColorClasses.length];
-              const testModules = modules[test.id] || [];
-              return (
-                <div key={test.id} className={`p-6 bg-black rounded-lg border-2 ${borderColorClass} border-white shadow-lg`}>
-                  <div className="flex justify-between items-center mb-6">
-                    <div className="text-xl text-purple-500">{test.id}</div>
-                  </div>
-                  <h5 className="text-white text-xl leading-tight font-medium mb-2">{test.title}</h5>
-                  <p className="text-gray-400 text-base mb-4">
-                    Test your skills with this practice test.
-                  </p>
-                  <div className='flex flex-row gap-5 flex-wrap justify-between items-center'>
-                    {testModules.map((module, moduleIndex) => (
-                      <button
-                        key={module.id}
-                        onClick={() => handleModuleClick(test.id, module.id)}
-                        className='mt-auto py-2 px-4 bg-blue-500 text-white text-lg rounded hover:bg-blue-600 transition-colors duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-opacity-50'
-                      >
-                        {`Module ${moduleIndex + 1}`}
-                      </button>
+            return (
+                <div className="my-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                    {[...Array(6)].map((_, index) => (
+                        <SkeletonCard key={index} />
                     ))}
-                  </div>
                 </div>
-              );
-            })}
-          </div>
+            );
+        }
+
+        if (error) {
+            return <div className="text-red-500">{error}</div>;
+        }
+
+        return (
+            <div className="my-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                {tests.map((test, index) => {
+                    const borderColorClass = borderColorClasses[index % borderColorClasses.length];
+                    const testModules = modules[test.id] || [];
+                    return (
+                        <div key={test.id} className={`p-6 bg-black rounded-lg border-2 ${borderColorClass} border-white shadow-lg`}>
+                            <div className="flex justify-between items-center mb-6">
+                                <div className="text-xl text-purple-500">{test.id}</div>
+                            </div>
+                            <h5 className="text-white text-xl leading-tight font-medium mb-2">{test.title}</h5>
+                            <p className="text-gray-400 text-base mb-4">
+                                Test your skills with this practice test.
+                            </p>
+                            <div className='flex flex-row gap-5 flex-wrap justify-between items-center'>
+                                {testModules.map((module, moduleIndex) => (
+                                    <button
+                                        key={module.id}
+                                        onClick={() => handleModuleClick(test.id, module.id)}
+                                        className='mt-auto py-2 px-4 bg-blue-500 text-white text-lg rounded hover:bg-blue-600 transition-colors duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-opacity-50'
+                                    >
+                                        {`Module ${moduleIndex + 1}`}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+                    );
+                })}
+            </div>
         );
-      };
+    };
 
     const borderColorClasses = [
         'shadow-red-500',

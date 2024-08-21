@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth import get_user_model
-
+from time import timezone
 User = get_user_model()
 
 class Tutorial(models.Model):
@@ -95,6 +95,7 @@ class UserProgress(models.Model):
     completed = models.BooleanField(default=False)
     progress = models.FloatField(default=0.0)
     last_accessed = models.DateTimeField(auto_now=True)
+    completed_at = models.DateTimeField(null=True, blank=True)
 
     class Meta:
         unique_together = ('user', 'section')
@@ -102,5 +103,12 @@ class UserProgress(models.Model):
 
     def __str__(self):
         return f"{self.user.get_full_name} - {self.section.title} - Completed: {self.completed}"
+    
+    def save(self, *args, **kwargs):
+        if self.completed and not self.completed_at:
+            self.completed_at = timezone.now()
+        elif not self.completed:
+            self.completed_at = None
+        super().save(*args, **kwargs)
 
 

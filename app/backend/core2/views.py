@@ -6,6 +6,7 @@ from .serializers import TutorialSerializer, ChapterSerializer, SectionSerialize
 from rest_framework.views import APIView
 from math import floor
 from django.db.models import Prefetch
+from time import timezone
 
 class TutorialListCreateView(generics.ListCreateAPIView):
     serializer_class = TutorialSerializer
@@ -267,6 +268,37 @@ class TutorialProgressView(APIView):
         )
 
         progress_instance.completed = is_completed
+        if is_completed:
+            progress_instance.completed_at = timezone.now()
+        else:
+            progress_instance.completed_at = None
         progress_instance.save()
 
         return Response({'success': True}, status=status.HTTP_200_OK)
+    
+
+class RecentCompletedSectionsView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, *args, **kwargs):
+        user = request.user
+        
+        try:
+            recent_completions = UserProgress.objects.filter(
+                user=user,
+                completed=True
+            ).select_related('section__chapter__tutorial').order_by('-completed_at')[:3]
+        except UserProgress.DoesNotExist:
+            return Response({'error': 'User Progress not found in the given chapter.'}, status=status.HTTP_404_NOT_FOUND)
+
+        data = []
+
+        for progress in recent_completions:
+            data.append({
+                'tutorial_title': progress.section.chapter.tutorial.title,
+                'chapter_title': progress.section.chapter.title,
+                'section_title': progress.section.title,
+                'completed_at': progress.completed_at.strftime('%b %d, %Y')
+            })
+        
+        return Response(data, status=status.HTTP_200_OK)
