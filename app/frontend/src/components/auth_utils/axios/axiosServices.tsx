@@ -1,5 +1,5 @@
 import axiosInstance from './axiosInterceptor';
-import { Chapter, Module, Post, Question, Reply, Section, SupportFormData, TestReport, TestResult, Tutorial, UserAnswer, UserDetails, UserProgress } from '../types';
+import { Activity, Chapter, Module, Post, Question, Reply, Section, SupportFormData, TestReport, TestResult, Tutorial, UserAnswer, UserDetails, UserProgress } from '../types';
 
 export const getTests = async () => {
   try {
@@ -320,3 +320,13 @@ export const updateUserProgressSection = async (
     throw error;
   }
 };
+
+export const fetchRecentCompletedSections = async () => {
+  try{
+    const response = await axiosInstance.get<Activity[]>('/api/core2/recent-completed-sections/');
+    return response.data
+  } catch (error) {
+    console.error('Error fetching recent completed sections: ', error);
+    throw error;
+  }
+}

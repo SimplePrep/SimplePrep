@@ -2,14 +2,10 @@ import { BsFillClipboard2CheckFill } from 'react-icons/bs'
 import { VscLayersActive } from 'react-icons/vsc'
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { Activity } from '../../../auth_utils/types';
+import { fetchRecentCompletedSections } from '../../../auth_utils/axios/axiosServices';
 
-interface Activity{
-    id: number;
-    tutorial_title: string;
-    chapter_title: string;
-    section_title: string;
-    completed_at:  string;
-}
+
 
 interface RecentActivitiesProps {
     isDarkMode: boolean;
@@ -22,13 +18,17 @@ const RecentActivities:React.FC<RecentActivitiesProps> = ({ isDarkMode }) => {
     const secondaryTextColor = isDarkMode ? 'text-slate-400' : 'text-slate-600';
 
     useEffect(() => {
-        axios.get('/api/recent-completed-sections/')
-            .then(response => {
-                setRecentActivities(response.data);
-            })
-            .catch(error => {
-                console.error("There was an error fetching the recent activities!", error);
-            });
+       const fetchRecentActivities = async () => {
+        try{
+            const activities = await fetchRecentCompletedSections();
+            setRecentActivities(activities);
+        } catch(error) {
+            console.error('Error fetching Recent sections:', error);
+        }
+       }
+
+       fetchRecentActivities();
+       
     }, []);
 
     return (
