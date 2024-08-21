@@ -11,6 +11,7 @@ interface RecentActivitiesProps {
 
 const RecentActivities: React.FC<RecentActivitiesProps> = ({ isDarkMode }) => {
     const [recentActivities, setRecentActivities] = useState<Activity[]>([]);
+    const [loading, setLoading] = useState<boolean>(true);
     const textColor = isDarkMode ? 'text-slate-200' : 'text-slate-800';
     const iconColor = isDarkMode ? 'text-white' : 'text-indigo-600';
     const secondaryTextColor = isDarkMode ? 'text-slate-400' : 'text-slate-600';
@@ -22,6 +23,8 @@ const RecentActivities: React.FC<RecentActivitiesProps> = ({ isDarkMode }) => {
                 setRecentActivities(activities);
             } catch (error) {
                 console.error('Error fetching recent sections:', error);
+            } finally {
+                setLoading(false);
             }
         };
         fetchRecentActivities();
@@ -34,9 +37,19 @@ const RecentActivities: React.FC<RecentActivitiesProps> = ({ isDarkMode }) => {
                 <h2 className={`text-xl font-bold ${textColor}`}>Recent Activity</h2>
             </div>
             <div className='space-y-4'>
-                {recentActivities.length > 0 ? (
+                {loading ? (
+                    <div className="animate-pulse">
+                        <div className='h-6 bg-white/20 rounded-lg w-full mb-4'></div>
+                        <div className='h-6 bg-white/20 rounded-lg w-3/4 mb-4'></div>
+                        <div className='h-6 bg-white/20 rounded-lg w-2/3'></div>
+                    </div>
+                ) : recentActivities.length > 0 ? (
                     recentActivities.map((item, index) => (
-                        <div key={index} className='flex items-start space-x-4'>
+                        <div
+                            key={index}
+                            className={`flex items-start space-x-4 opacity-0 animate-fadeIn`}
+                            style={{ animationDelay: `${index * 0.1}s`, animationFillMode: 'forwards' }}
+                        >
                             <div className={`p-2 ${isDarkMode ? 'bg-indigo-900' : 'bg-indigo-100'} rounded-lg`}>
                                 <BsFillClipboard2CheckFill size={16} className={`${iconColor}`} />
                             </div>

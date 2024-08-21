@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import OverallPerformanceChart from './utils/dashboard/ScoreProgressionChart';
 import WeaknessIdentification from './utils/dashboard/WeaknessIdentification';
 import GoalSetting from './utils/dashboard/GoalSetting';
 import CalendarTest from './utils/dashboard/CalendarTest';
@@ -8,6 +7,7 @@ import SubscriptionPlan from './utils/dashboard/SubscriptionPlan';
 import RecentActivities from './utils/dashboard/RecentActivities';
 import TutorialProgressTracking from './utils/dashboard/TutorialProgressTracking';
 import WelcomeCard from './utils/dashboard/WelcomeCard';
+import OverallPerformanceChart from './utils/dashboard/ScoreProgressionChart';
 
 interface DashboardProps {
     isDarkMode: boolean;
