@@ -10,7 +10,7 @@ const WelcomeCard = () => {
         const fetchUserDetails = async () => {
             try{
                 const UserDetails = await getUserDetails();
-                setUserDetails(UserDetails);
+                setUserDetails(UserDetails.user);
             } catch (error) {
                 console.error('Error fetching user Details:', error);
             }

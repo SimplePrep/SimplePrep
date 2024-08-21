@@ -75,16 +75,12 @@ const AccountSettingsPopup: React.FC<AccountSettingsPopupProps> = ({ isVisible, 
     const user = auth.currentUser;
     if (user) {
       try {
-        // Update display name in Firebase Auth
         await updateProfile(user, { displayName });
 
-        // Update backend database
         const [firstName, lastName] = displayName.split(' ');
         const response = await updateUserDetails({ first_name: firstName, last_name: lastName, updated_at: new Date().toISOString() });
 
-        // Check the response status and show appropriate message
         if (response && response.status === 200) {
-          // Show success popup
           setSuccessMessage('Profile has been updated successfully!');
           setIsProfileUpdateSuccessPopupVisible(true);
         } else {
@@ -107,14 +103,13 @@ const AccountSettingsPopup: React.FC<AccountSettingsPopupProps> = ({ isVisible, 
         console.log('Delete profile response:', response);
         
         if (response && response.status === 200 && response.data.success) {
-          // Show success popup
           setSuccessMessage(response.data.success);
           setIsDeleteSuccessPopupVisible(true);
           setTimeout(() => {
-            dispatch(resetState()); // Clear Redux state
+            dispatch(resetState()); 
             setIsDeleteSuccessPopupVisible(false);
             onClose();
-            navigate('/'); // Navigate to home page
+            navigate('/');
           }, 3000);
         } else {
           throw new Error('Failed to delete user profile');
