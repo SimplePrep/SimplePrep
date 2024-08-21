@@ -230,3 +230,10 @@ export interface UserProgress {
   chapters: UserProgressChapter[]
   progress: number;
 }
+
+export interface Activity{
+  tutorial_title: string;
+  chapter_title: string;
+  section_title: string;
+  completed_at:  string;
+}

@@ -7,7 +7,8 @@ from .views import (
     SectionDetailView, 
     PracticeQuestionListCreateView, 
     PracticeQuestionDetailView,
-    TutorialProgressView
+    TutorialProgressView,
+    RecentCompletedSectionsView
 )
 
 urlpatterns = [
@@ -19,4 +20,5 @@ urlpatterns = [
     path('chapters/<int:chapter_id>/practice-questions/', PracticeQuestionListCreateView.as_view(), name='practice-question-list-create'),
     path('practice-questions/<int:id>/', PracticeQuestionDetailView.as_view(), name='practice-question-detail'),
     path('tutorial-progress/<int:tutorial_id>/', TutorialProgressView.as_view(), name='tutorial-progress'),
+    path('recent-completed-sections/', RecentCompletedSectionsView.as_view(), name='recent-completed-sections'),
 ]
