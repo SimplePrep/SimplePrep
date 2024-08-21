@@ -7,8 +7,9 @@ from .views import (
     SectionDetailView, 
     PracticeQuestionListCreateView, 
     PracticeQuestionDetailView,
-    TutorialProgressView,
-    RecentCompletedSectionsView
+    ChapterSectionProgressView,
+    RecentCompletedSectionsView,
+    UserTutorialProgressView
 )
 
 urlpatterns = [
@@ -19,6 +20,7 @@ urlpatterns = [
     path('sections/<slug:slug>/', SectionDetailView.as_view(), name='section-detail'),
     path('chapters/<int:chapter_id>/practice-questions/', PracticeQuestionListCreateView.as_view(), name='practice-question-list-create'),
     path('practice-questions/<int:id>/', PracticeQuestionDetailView.as_view(), name='practice-question-detail'),
-    path('tutorial-progress/<int:tutorial_id>/', TutorialProgressView.as_view(), name='tutorial-progress'),
+    path('tutorial-progress/<int:tutorial_id>/', ChapterSectionProgressView.as_view(), name='tutorial-progress'),
     path('recent-completed-sections/', RecentCompletedSectionsView.as_view(), name='recent-completed-sections'),
+    path('tutorial-progress/', UserTutorialProgressView.as_view(), name='user-tutorial-progress'),
 ]

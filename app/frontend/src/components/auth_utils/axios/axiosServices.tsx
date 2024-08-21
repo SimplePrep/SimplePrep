@@ -1,5 +1,5 @@
 import axiosInstance from './axiosInterceptor';
-import { Activity, Chapter, Module, Post, Question, Reply, Section, SupportFormData, TestReport, TestResult, Tutorial, UserAnswer, UserDetails, UserProgress } from '../types';
+import { Activity, Chapter, Module, Post, Question, Reply, Section, SupportFormData, TestReport, TestResult, Tutorial, UserAnswer, UserDetails, UserProgress, UserTutorialProgressDashboard } from '../types';
 
 export const getTests = async () => {
   try {
@@ -330,3 +330,13 @@ export const fetchRecentCompletedSections = async () => {
     throw error;
   }
 }
+
+export const fetchUserTutorialProgress = async (): Promise<UserTutorialProgressDashboard[]> => {
+  try {
+      const response = await axiosInstance.get<UserTutorialProgressDashboard[]>('/api/core2/tutorial-progress/');
+      return response.data;
+  } catch (error) {
+      console.error('Error fetching tutorial progress:', error);
+      throw error;
+  }
+};

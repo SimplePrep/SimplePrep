@@ -237,3 +237,16 @@ export interface Activity{
   section_title: string;
   completed_at:  string;
 }
+
+export interface ChapterProgressDashboard {
+  chapterId: number;
+  title: string;
+  progress: number;
+}
+
+export interface UserTutorialProgressDashboard {
+  tutorialId: number;
+  title: string;
+  tutorial_progress: number;
+  chapters: ChapterProgressDashboard[];
+}
