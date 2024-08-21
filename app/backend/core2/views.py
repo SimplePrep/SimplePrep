@@ -333,7 +333,7 @@ class UserTutorialProgressView(APIView):
                     user=user, section__in=sections, completed=True
                 ).count()
 
-                chapter_progress_percentage = floor(completed_sections / total_sections) * 100 if total_sections > 0 else 0
+                chapter_progress_percentage = floor((completed_sections / total_sections) * 100) if total_sections > 0 else 0
                 chapter_progress = {
                     'chapterId': chapter.id,
                     'title': chapter.title,
