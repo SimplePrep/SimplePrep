@@ -17,10 +17,11 @@ import { setTheme } from './components/auth_utils/reducers/authReducer';
 import AuthenticatedComponent from './components/auth_utils/AuthenticatedComponent';
 import TutorialPath from './components/ILearnComps/TutorialPath';
 import Layout, { LandingPage } from './pages/LandingPage';
-import StudySpaceLayout from './components/ILearnComps/utils/studyspace/StudySpaceLayout';
-import StudySpaceBodyWrapper from './components/ILearnComps/utils/studyspace/StudySpaceBodyWrapper';
+import StudySpaceLayout from './components/ILearnComps/utils/study_space/StudySpaceLayout';
+import StudySpaceBodyWrapper from './components/ILearnComps/utils/study_space/StudySpaceBodyWrapper';
 import ILearnPage from './pages/ILearnPage';
 import Dashboard from './components/ILearnComps/Dashboard';
+import ReviewSpaceLayout from './components/ILearnComps/utils/review_space/ReviewSpaceLayout';
 
 const App = () => {
   const { theme } = useSelector((state: RootState) => state.auth);
@@ -74,6 +75,20 @@ const App = () => {
               />
             }
           />
+        </Route>
+
+        <Route
+          path="review-space/:chapterId"
+          element={
+            <AuthenticatedComponent>
+              <ReviewSpaceLayout
+                isDarkMode={theme === 'dark'} 
+                toggleDarkMode={toggleDarkMode} 
+                userSubscription='Nova Pro'
+              />
+            </AuthenticatedComponent>
+          }
+        >
         </Route>
         {/* Authentication Routes */}
         <Route path="/login" element={<Login />} />

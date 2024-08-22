@@ -214,7 +214,7 @@ const OverallPerformanceChart: React.FC<OverallPerformanceChartProps> = ({ isDar
 
   const activeButtonStyle = {
     ...buttonStyle,
-    backgroundColor: isDarkMode ? 'rgb(59, 130, 246)' : 'rgb(30, 41, 59)',
+    backgroundColor: isDarkMode ? 'rgb(67 56 202)' : 'rgb(67 56 202)',
     color: 'white',
   };
 

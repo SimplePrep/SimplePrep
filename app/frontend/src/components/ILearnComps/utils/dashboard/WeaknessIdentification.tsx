@@ -1,20 +1,177 @@
 import React, { useEffect, useState } from 'react';
 import { BsFillExclamationTriangleFill, BsArrowRight, BsLightningChargeFill } from 'react-icons/bs';
-import { FaBookOpen } from 'react-icons/fa';
+import { FaBookOpen, FaUsers, FaLightbulb } from 'react-icons/fa';
+import { motion, AnimatePresence } from 'framer-motion';
+import { IconType } from 'react-icons';
+import { useNavigate, useParams } from 'react-router-dom';
+
+interface SkillCardProps {
+    icon: IconType;
+    title: string;
+    color: string;
+    isDarkMode: boolean;
+}
+
+const SkillCard: React.FC<SkillCardProps> = ({ icon: Icon, title, color, isDarkMode }) => (
+    <motion.div
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
+        className={`w-full sm:w-48 h-60 ${color} rounded-2xl shadow-xl flex flex-col items-center justify-center cursor-pointer transition-transform duration-150 ease-in-out relative z-10 ${
+            isDarkMode ? 'bg-opacity-90' : 'bg-opacity-100'
+        }`}
+    >
+        <Icon className="text-white drop-shadow-lg" size={60} />
+        <span className="mt-4 text-white font-semibold text-lg text-center px-2 drop-shadow-lg">
+            {title}
+        </span>
+    </motion.div>
+);
+
+interface ModalProps {
+    isOpen: boolean;
+    onClose: () => void;
+    ChapterTitle: string;
+    isDarkMode: boolean;
+}
+
+const Modal: React.FC<ModalProps> = ({ isOpen, onClose, ChapterTitle, isDarkMode }) => {
+    const navigate = useNavigate();
+
+    if (!isOpen) return null;
+    const bgGradient = isDarkMode
+        ? 'from-slate-800 via-slate-850 to-slate-900'
+        : 'from-white via-gray-100 to-gray-200';
+    const textColor = isDarkMode ? 'text-white' : 'text-gray-800';
+    const closeButtonBgColor = isDarkMode ? 'bg-white text-slate-800' : 'bg-indigo-600 text-white';
+    const getStartedButtonBgColor = isDarkMode ? 'bg-indigo-600 text-white' : 'bg-slate-800 text-white';
+
+    const handleNavigateToReview = () => {
+        if (ChapterTitle) {
+            navigate(`/review-space/${ChapterTitle}`);
+          } 
+    }
+
+    return (
+        <AnimatePresence>
+            <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
+            >
+                <motion.div
+                    initial={{ scale: 0.9, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    exit={{ scale: 0.9, opacity: 0 }}
+                    className={`flex flex-col bg-gradient-to-br ${bgGradient} p-8 rounded-3xl max-w-4xl w-full shadow-2xl backdrop-blur-lg`}
+                >
+                    <h2 className={`text-3xl font-extrabold ${textColor} mb-8 text-center tracking-wide`}>
+                        Elevate Your Skills: {ChapterTitle}
+                    </h2>
+                    <motion.div
+                        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-16 relative z-10"
+                        initial="hidden"
+                        animate="visible"
+                        variants={{
+                            hidden: { opacity: 0, scale: 0.8 },
+                            visible: {
+                                opacity: 1,
+                                scale: 1,
+                                transition: {
+                                    delayChildren: 0.2,
+                                    staggerChildren: 0.15,
+                                },
+                            },
+                        }}
+                    >
+                        <SkillCard
+                            icon={FaBookOpen}
+                            title="Review Material"
+                            color="bg-gradient-to-r from-indigo-500 to-indigo-700 hover:bg-indigo-700"
+                            isDarkMode={isDarkMode}
+                        />
+                        <SkillCard
+                            icon={BsLightningChargeFill}
+                            title="Practice Exercises"
+                            color="bg-gradient-to-r from-yellow-500 to-yellow-600 hover:bg-yellow-600"
+                            isDarkMode={isDarkMode}
+                        />
+                        <SkillCard
+                            icon={FaUsers}
+                            title="Peer Insight"
+                            color="bg-gradient-to-r from-teal-500 to-teal-600 hover:bg-teal-600"
+                            isDarkMode={isDarkMode}
+                        />
+                        <SkillCard
+                            icon={FaLightbulb}
+                            title="Test Your Approach"
+                            color="bg-gradient-to-r from-green-500 to-green-600 hover:bg-green-600"
+                            isDarkMode={isDarkMode}
+                        />
+
+                        {/* Adjusted SVG Curved Lines */}
+                        <svg
+                            className="absolute w-full h-full pointer-events-none z-0"
+                            style={{
+                                top: '20%',
+                                left: '-10%',
+                                width: '120%',
+                                height: '60%',
+                            }}
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 100 100"
+                            preserveAspectRatio="none"
+                        >
+                            <path
+                                d="M 10,50 Q 30,10 50,50 T 90,50"
+                                fill="transparent"
+                                stroke={isDarkMode ? 'white' : 'black'}
+                                strokeWidth="2"
+                                strokeLinecap="round"
+                                strokeDasharray="4"
+                            />
+                        </svg>
+                    </motion.div>
+                    <div className="flex justify-center space-x-4 ">
+                        <motion.button
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                            onClick={handleNavigateToReview}
+                            className={`py-2 px-6 justify-center rounded-xl hover:bg-opacity-90 transition-colors duration-300 text-lg font-semibold shadow-lg ${getStartedButtonBgColor}`}
+                        >
+                            Get Started
+                        </motion.button>
+                        <motion.button
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                            onClick={onClose}
+                            className={`py-2 px-6 rounded-xl hover:bg-opacity-90 transition-colors duration-300 text-lg font-semibold shadow-lg ${closeButtonBgColor}`}
+                        >
+                            Close
+                        </motion.button>
+                    </div>
+                </motion.div>
+            </motion.div>
+        </AnimatePresence>
+    );
+};
+  
 
 interface WeaknessIdentificationProps {
     isDarkMode: boolean;
     performanceData: {
         subject: string;
-        chapters: Array<{ title: string, score: number }>;
+        chapters: Array<{ title: string; score: number }>;
     }[];
 }
 
 const WeaknessIdentification: React.FC<WeaknessIdentificationProps> = ({ isDarkMode, performanceData }) => {
-    const [weakAreas, setWeakAreas] = useState<Array<{ subject: string, chapter: string, score: number, severity: 'mild' | 'moderate' | 'severe' }>>([]);
+    const [weakAreas, setWeakAreas] = useState<Array<{ subject: string; chapter: string; score: number; severity: 'mild' | 'moderate' | 'severe' }>>([]);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [selectedChapter, setSelectedChapter] = useState<string | null>(null);
 
     useEffect(() => {
-        const identifiedWeakAreas: Array<{ subject: string, chapter: string, score: number, severity: 'mild' | 'moderate' | 'severe' }> = performanceData.flatMap(subjectData => 
+        const identifiedWeakAreas: Array<{ subject: string; chapter: string; score: number; severity: 'mild' | 'moderate' | 'severe' }> = performanceData.flatMap(subjectData => 
             subjectData.chapters
                 .filter(chapter => chapter.score < 60)
                 .map(chapter => ({
@@ -27,6 +184,11 @@ const WeaknessIdentification: React.FC<WeaknessIdentificationProps> = ({ isDarkM
     
         setWeakAreas(identifiedWeakAreas);
     }, [performanceData]);
+
+    const handleImproveClick = (chapter: string) => {
+        setSelectedChapter(chapter);
+        setIsModalOpen(true);
+    };
 
     const textColor = isDarkMode ? 'text-slate-200' : 'text-slate-800';
     const secondaryTextColor = isDarkMode ? 'text-slate-400' : 'text-slate-600';
@@ -73,7 +235,10 @@ const WeaknessIdentification: React.FC<WeaknessIdentificationProps> = ({ isDarkM
                                     <BsLightningChargeFill size={25} className='text-yellow-500' />
                                     <span className={`text-xs ${secondaryTextColor}`}>Practice Exercises</span>
                                 </div>
-                                <button className='text-sm font-medium text-indigo-600 hover:underline flex items-center'>
+                                <button
+                                    className='text-sm font-medium text-indigo-600 hover:underline flex items-center'
+                                    onClick={() => handleImproveClick(area.chapter)}
+                                >
                                     Improve Now <BsArrowRight className='ml-2' />
                                 </button>
                             </div>
@@ -89,6 +254,7 @@ const WeaknessIdentification: React.FC<WeaknessIdentificationProps> = ({ isDarkM
                     <p className={`${secondaryTextColor} text-center mt-2`}>No weak areas identified. Keep up the good work!</p>
                 </div>
             )}
+            <Modal  isDarkMode={isDarkMode} isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} ChapterTitle={selectedChapter || ''} />
         </div>
     );
 };
