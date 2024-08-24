@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Outlet } from 'react-router-dom';
-import ReviewSpaceNavbar from './ReviewSpaceNavbar';
+import ReviewSpaceNavbar from './RsNavbar';
 import SwitchToLaptopModal from '../study_space/SwitchToLaptopModal';
 
 interface ReviewSpaceLayoutProps {
@@ -24,6 +24,7 @@ const ReviewSpaceLayout: React.FC<ReviewSpaceLayoutProps> = ({
         toggleDarkMode={toggleDarkMode} 
       />
       <SwitchToLaptopModal />
+      <Outlet/>
     </div>
   );
 };

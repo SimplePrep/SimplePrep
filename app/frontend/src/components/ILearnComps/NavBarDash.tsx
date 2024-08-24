@@ -17,10 +17,10 @@ import AccountSettingsPopup from './utils/tools/sidebar/AccountSettings';
 import { SlUser } from "react-icons/sl";
 import { LuLogOut } from "react-icons/lu";
 import ProfileDropdownItem from './utils/tools/sidebar/ProfileDropDown';
-import AiStar from '../assets/ai_star2.png';
-import { RiSparkling2Fill, RiSparklingFill } from 'react-icons/ri';
+import { RiSparkling2Fill } from 'react-icons/ri';
 import UpgradePlanProps from './utils/tools/sidebar/UpgradePlans';
 import SupportForm from './utils/tools/sidebar/SupportForm';
+
 type Notification = {
   id: string;
   type: 'info' | 'warning' | 'error';
