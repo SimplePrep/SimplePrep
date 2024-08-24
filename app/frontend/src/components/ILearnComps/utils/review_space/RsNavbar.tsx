@@ -1,9 +1,32 @@
 import React from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { NavLink, useNavigate, useParams } from 'react-router-dom';
 import { BsLightningChargeFill, BsMoon, BsSun } from 'react-icons/bs';
 import { FaBookOpen, FaLightbulb, FaUsers } from 'react-icons/fa';
 import { RxExit } from "react-icons/rx";
 import Logo from '../../../assets/logo-icon.png';
+
+const ReviewBarLinks = [
+    {
+        title: 'Review Material',
+        path: 'review-material',
+        icon: <FaBookOpen size={25} className='text-indigo-600 hover:text-indigo-700' />
+    },
+    {
+        title: 'Practice Exercises',
+        path: 'practice-exercises',
+        icon:  <BsLightningChargeFill size={25} className={'text-yellow-500 hover:text-yellow-600'} />
+    },
+    {
+        title: 'Peer Insight',
+        path: 'peer-insight',
+        icon: <FaUsers size={25} className='text-teal-500 hover:text-teal-600' />
+    },
+    {
+        title: 'Test your approach',
+        path: 'test-approach',
+        icon: <FaLightbulb size={25} className='text-green-500 hover:text-green-600' />
+    }
+]
 
 interface ReviewSpaceNavbarProps {
     toggleDarkMode: () => void;
@@ -27,7 +50,6 @@ const ReviewSpaceNavbar: React.FC<ReviewSpaceNavbarProps> = ({ toggleDarkMode, i
         : 'bg-gradient-to-br from-white via-gray-100 to-gray-200 text-gray-800';
 
     const iconColor = isDarkMode ? 'text-indigo-500' : 'text-indigo-600';
-    const navItemHover = isDarkMode ? 'hover:bg-slate-700' : 'hover:bg-gray-200';
 
     return (
         <div className={`fixed left-0 w-full z-40 ${bgGradient} shadow-lg font-space-grotesk`}>
@@ -37,40 +59,45 @@ const ReviewSpaceNavbar: React.FC<ReviewSpaceNavbarProps> = ({ toggleDarkMode, i
                     <img src={Logo} alt="SimplePrep Logo" className='w-12 h-12 rounded-full' />
                     <p className="text-2xl font-extrabold">Review Space</p>
                 </div>
-
                 <div className='flex items-center gap-8'>
-                    <div className={`flex items-center gap-2 p-2 rounded-xl transition ${navItemHover}`}>
-                        <FaBookOpen size={28} className='text-indigo-600' />
-                        <span className="font-semibold">Review Material</span>
-                    </div>
-                    <div className={`flex items-center gap-2 p-2 rounded-xl transition ${navItemHover}`}>
-                        <BsLightningChargeFill size={28} className={'text-yellow-500'} />
-                        <span className="font-semibold">Practice Exercises</span>
-                    </div>
-                    <div className={`flex items-center gap-2 p-2 rounded-xl transition ${navItemHover}`}>
-                        <FaUsers size={28} className='text-teal-500' />
-                        <span className="font-semibold">Peer Insight</span>
-                    </div>
-                    <div className={`flex items-center gap-2 p-2 rounded-xl transition ${navItemHover}`}>
-                        <FaLightbulb size={28} className='text-green-500' />
-                        <span className="font-semibold">Test Your Approach</span>
+                    <div className={`flex items-center gap-2 rounded-xl transition`}>
+                        {ReviewBarLinks.map((link) => (
+                            <NavLink
+                                    to={link.path}
+                                    key={link.title}
+                                    className={({ isActive }) => {
+                                        const activeClass = isActive
+                                        ? `text-lg font-bold leading-tight border-b-[2.5px] border-blue-600 px-4 py-2 cursor-pointer ${isDarkMode ? 'text-white' : 'text-[#001a72]'}`
+                                        : `text-lg font-bold leading-tight border-b-[2.5px] border-transparent px-4 py-2 cursor-pointer ${isDarkMode ? 'text-slate-300 hover:text-white' : 'text-slate-600 hover:text-[#001a72]'}`
+                                        return activeClass;
+                                    }}
+                                    >
+                                    {({ isActive }) => (
+                                        <div className='flex flex-row justify-center items-center gap-2'>
+                                        <span style={{ color: isDarkMode ? (isActive ? 'white' : '#cbd5e1') : (isActive ? '#001a72' : '#1161fb') }}>
+                                            {link.icon}
+                                        </span>
+                                        {link.title}
+                                        </div>
+                                    )}
+                            </NavLink>
+                        ))}
                     </div>
                 </div>
-
                 <div className='flex items-center gap-4'>
                     <button 
                         onClick={toggleDarkMode} 
                         className="text-lg p-2 rounded-full transition-colors duration-200 ease-in-out"
                         aria-label={isDarkMode ? "Switch to light mode" : "Switch to dark mode"}
                     >
-                        {isDarkMode ? <BsSun size={26} className={iconColor} /> : <BsMoon size={24} className={iconColor} />}
+                        {isDarkMode ? <BsSun size={26} className='text-slate-200 hover:text-indigo-700' /> : <BsMoon size={24} className='hover:text-slate-400' />}
                     </button>
                     <button 
                         onClick={handleExitClick} 
                         className="text-lg p-2 rounded-full transition-colors duration-200 ease-in-out"
                         aria-label="Exit to course path"
                     >
-                        <RxExit size={26} className={iconColor} />
+                        <RxExit size={26} className={`${isDarkMode ? 'text-slate-200' : ''} hover:text-indigo-700`} />
                     </button>
                 </div>
             </div>
@@ -92,19 +119,19 @@ const ReviewSpaceNavbar: React.FC<ReviewSpaceNavbarProps> = ({ toggleDarkMode, i
                     </div>
                 </div>
                 <div className='flex justify-around w-full mt-4'>
-                    <div className={`flex flex-col items-center gap-1 p-2 rounded-xl transition ${navItemHover}`}>
+                    <div className={`flex flex-col items-center gap-1 p-2 rounded-xl transition`}>
                         <FaBookOpen size={22} className={iconColor} />
                         <span className="text-sm font-semibold">Review</span>
                     </div>
-                    <div className={`flex flex-col items-center gap-1 p-2 rounded-xl transition ${navItemHover}`}>
+                    <div className={`flex flex-col items-center gap-1 p-2 rounded-xl transition`}>
                         <BsLightningChargeFill size={22} className={iconColor} />
                         <span className="text-sm font-semibold">Practice</span>
                     </div>
-                    <div className={`flex flex-col items-center gap-1 p-2 rounded-xl transition ${navItemHover}`}>
+                    <div className={`flex flex-col items-center gap-1 p-2 rounded-xl transition`}>
                         <FaUsers size={22} className={iconColor} />
                         <span className="text-sm font-semibold">Insight</span>
                     </div>
-                    <div className={`flex flex-col items-center gap-1 p-2 rounded-xl transition ${navItemHover}`}>
+                    <div className={`flex flex-col items-center gap-1 p-2 rounded-xl transition`}>
                         <FaLightbulb size={22} className={iconColor} />
                         <span className="text-sm font-semibold">Test</span>
                     </div>
