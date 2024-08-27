@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { FaLightbulb, FaChartLine, FaChevronDown, FaChevronUp, FaTools, FaBookOpen } from 'react-icons/fa';
+import { FaLightbulb, FaChartLine, FaChevronDown, FaChevronUp, FaTools } from 'react-icons/fa';
 import { MdLibraryBooks } from 'react-icons/md';
 
 interface ReviewSpacePeerInsightProps {
@@ -18,18 +18,20 @@ const ReviewSpacePeerInsight: React.FC<ReviewSpacePeerInsightProps> = ({ isDarkM
         bg: isDarkMode ? 'bg-gray-900' : 'bg-gray-100',
         text: isDarkMode ? 'text-gray-200' : 'text-gray-800',
         card: isDarkMode ? 'bg-gray-800' : 'bg-white',
-        highlight: isDarkMode ? 'bg-gray-600' : 'bg-blue-100',
+        highlight: isDarkMode ? 'bg-gray-700' : 'bg-blue-100',
         border: isDarkMode ? 'border-gray-700' : 'border-gray-200',
         button: isDarkMode ? 'bg-blue-600 hover:bg-blue-700' : 'bg-blue-500 hover:bg-blue-600',
         icon: isDarkMode ? 'text-yellow-500' : 'text-yellow-600',
     };
 
     const topic = "Algorithm Optimization in Large Datasets";
+    
     const peerApproaches = [
         { name: "Alice", approach: "I implemented a hybrid approach combining QuickSort for smaller partitions and MergeSort for larger ones. This balanced speed and memory efficiency." },
         { name: "Bob", approach: "My solution focused on an in-place HeapSort algorithm. I optimized the heapify process to reduce the number of comparisons." },
         { name: "Charlie", approach: "I used an external merge sort algorithm, which allowed me to handle datasets larger than the available memory by using disk storage efficiently." }
     ];
+
     const keyInsights = [
         "Consider hybrid approaches that combine strengths of different algorithms.",
         "In-place sorting algorithms can significantly reduce memory usage.",
