@@ -153,24 +153,48 @@ code {
 }
 
 .login-button:hover {
-  background-position: right center; /* Change the direction of the gradient */
-  color: #fff; /* Change the text color */
-}
-
-@media (min-width: 640px) {
-  .desktop-only {
-    display: block;
-  }
-  .mobile-only {
-    display: none;
-  }
+  background-position: right center;
+  color: #fff; 
 }
 
 @media (max-width: 639px) {
-  .desktop-only {
+  .desktop-only, .laptop-only, .monitor-only {
     display: none;
   }
   .mobile-only {
+    display: block;
+  }
+}
+
+/* Tablet and Small Laptop */
+@media (min-width: 640px) and (max-width: 1023px) {
+  .mobile-only, .monitor-only {
+    display: none;
+  }
+  .desktop-only, .laptop-only {
+    display: block;
+  }
+}
+
+/* Laptop */
+@media (min-width: 1024px) and (max-width: 1439px) {
+  .mobile-only, .monitor-only {
+    display: none;
+  }
+  .laptop-only {
+    display: block;
+  }
+  .desktop-only {
+    display: block;
+  }
+}
+
+/* Monitor */
+@media (min-width: 1440px) {
+  .mobile-only, .laptop-only {
+    display: none;
+  }
+  .desktop-only, .monitor-only {
     display: block;
   }
 }
@@ -246,3 +270,5 @@ code {
 .animate-fadeIn {
     animation: fadeIn 0.5s ease-in-out;
 }
+
+

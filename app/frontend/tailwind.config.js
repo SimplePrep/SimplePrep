@@ -5,6 +5,14 @@ module.exports = {
   ],
   theme: {
     extend: {
+      screens: {
+        'laptop': '1024px',  // New custom breakpoint for laptops
+        'monitor': '1440px',  // New custom breakpoint for monitors
+      },
+      maxWidth: {
+        'laptop': '900px',   // Custom max-width for laptops
+        'monitor': '1200px', // Custom max-width for monitors
+      },
       fontFamily:{
         'ubuntu': ['Ubuntu', 'sans-serif'],
         'montserrat': ["Montserrat", 'sans-serif'],

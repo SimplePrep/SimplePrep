@@ -1,10 +1,10 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '../components/store';
-import Navbar from "../components/Landing/navbar";
+import Navbar from "../components/Landing/navbar2";
 import { Outlet } from "react-router-dom";
-import About from '../components/Landing/About';
-import Hero from '../components/Landing/Hero';
+import About from '../components/Landing/About2';
+import Hero from '../components/Landing/Hero2';
 import Testimonials from '../components/Landing/Testimonials';
 import Notification from '../components/Landing/Newsletter';
 import FAQ from '../components/Landing/FAQ';

@@ -123,7 +123,7 @@ const PracticeExercises: React.FC<PracticeExercisesProps> = ({ isDarkMode }) => 
             <div className={`relative top-20 max-w-[1400px] mx-auto p-5 ${bgColor} shadow-2xl rounded-3xl transition-all duration-300 border`}>
                 <div className='flex p-3 justify-between items-center'>
                     <div className='mx-5 flex gap-10 items-center'>
-                        <h1 className={`font-bold text-2xl ${isDarkMode ? 'text-indigo-400' : 'text-indigo-600'}`}>Practice Exercises</h1>
+                        <h1 className={`font-bold text-2xl ${isDarkMode ? 'text-white' : 'text-indigo-400'}`}>Practice Exercises</h1>
                     </div>
                     {!showIntroduction && (
                         <div className={`text-md font-semibold ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
@@ -135,8 +135,8 @@ const PracticeExercises: React.FC<PracticeExercisesProps> = ({ isDarkMode }) => 
 
                 {showIntroduction ? (
                     <div className="p-14 text-center">
-                        <h2 className={`text-3xl font-semibold mb-6 ${isDarkMode ? 'text-indigo-400' : 'text-indigo-600'}`}>Welcome to the Practice Exercises</h2>
-                        <p className="text-xl leading-relaxed max-w-2xl mx-auto">
+                        <h2 className={`text-3xl font-semibold mb-6 ${isDarkMode ? 'text-white' : 'text-indigo-600'}`}>Welcome to the Practice Exercises</h2>
+                        <p className={`text-xl leading-relaxed max-w-2xl mx-auto ${isDarkMode ? 'text-slate-300' : 'text-slate-700'}`}>
                             These exercises will help you improve your understanding and application of key concepts.
                             Take your time to answer each question carefully. After completing a question, you can
                             view an explanation to understand the reasoning behind the correct answer.

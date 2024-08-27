@@ -197,7 +197,7 @@ const Contents: React.FC<ContentsProps> = ({ isDarkMode }) => {
                     const borderColorClass = borderColorClasses[index % borderColorClasses.length];
                     const testModules = modules[test.id] || [];
                     return (
-                        <div key={test.id} className={`p-6 bg-black rounded-lg border-2 ${borderColorClass} border-white shadow-lg`}>
+                        <div key={test.id} className={`p-6 bg-black rounded-3xl border-2 ${borderColorClass} border-white shadow-lg`}>
                             <div className="flex justify-between items-center mb-6">
                                 <div className="text-xl text-purple-500">{test.id}</div>
                             </div>
@@ -210,7 +210,7 @@ const Contents: React.FC<ContentsProps> = ({ isDarkMode }) => {
                                     <button
                                         key={module.id}
                                         onClick={() => handleModuleClick(test.id, module.id)}
-                                        className='mt-auto py-2 px-4 bg-blue-500 text-white text-lg rounded hover:bg-blue-600 transition-colors duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-opacity-50'
+                                        className='mt-auto py-2 px-4 bg-blue-600 text-white text-lg rounded-3xl hover:bg-blue-600 hover:scale-105 transition-colors duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-opacity-50'
                                     >
                                         {`Module ${moduleIndex + 1}`}
                                     </button>
