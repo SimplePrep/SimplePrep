@@ -86,7 +86,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, ChapterTitle, isDarkMode
                     >
                         <SkillCard
                             icon={FaBookOpen}
-                            title="Review Material"
+                            title="CheatSheet"
                             color="bg-gradient-to-r from-indigo-500 to-indigo-700 hover:bg-indigo-700"
                             isDarkMode={isDarkMode}
                         />
