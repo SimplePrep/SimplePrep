@@ -213,7 +213,7 @@ const AccountSettingsPopup: React.FC<AccountSettingsPopupProps> = ({ isVisible, 
                   <p className="text-sm font-medium mb-2">Subscription plan</p>
                   <div className={`w-full flex flex-row gap-3 items-center p-2 border ${isDarkMode ? 'border-gray-700 bg-gray-900 text-white' : 'border-gray-300 bg-gray-100 text-gray-800'} rounded-lg`}>
                     {subscriptionPlan && getSubscriptionIcon(subscriptionPlan)}
-                    {subscriptionPlan}
+                    {subscriptionPlan} Plan
                   </div>
                 </div>
               </div>

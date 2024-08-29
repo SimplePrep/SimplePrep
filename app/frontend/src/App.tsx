@@ -93,7 +93,7 @@ const App = () => {
             </AuthenticatedComponent>
           }
         >
-          <Route  index element={<Navigate to='review-material' replace />}/>
+          <Route  index element={<Navigate to='cheatsheet' replace />}/>
           <Route path="cheatsheet" element={<ReviewSpaceCheatSheet  isDarkMode={theme === 'dark'}/>}/>
           <Route path="practice-exercises" element={<ReviewSpacePracticeExercises isDarkMode={theme ==='dark'} />}/>
           <Route path="peer-insight" element={<ReviewSpacePeerInsight isDarkMode={theme==='dark'} />} />
