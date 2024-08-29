@@ -1,11 +1,11 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 
-interface ReviewSpaceReviewMaterialProps {
+interface ReviewSpaceCheatSheetProps {
   isDarkMode: boolean;
 }
 
-const ReviewSpaceReviewMaterial: React.FC<ReviewSpaceReviewMaterialProps> = ({ isDarkMode }) => {
+const ReviewSpaceCheatSheet: React.FC<ReviewSpaceCheatSheetProps> = ({ isDarkMode }) => {
   const topic = "Introduction to React Hooks";
   const content = [
     {
@@ -54,4 +54,4 @@ const ReviewSpaceReviewMaterial: React.FC<ReviewSpaceReviewMaterialProps> = ({ i
   );
 };
 
-export default ReviewSpaceReviewMaterial;
+export default ReviewSpaceCheatSheet;

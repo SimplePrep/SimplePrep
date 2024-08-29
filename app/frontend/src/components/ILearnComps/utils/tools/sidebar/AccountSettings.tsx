@@ -15,6 +15,8 @@ import { resetState } from '../../../../auth_utils/reducers/authReducer';
 import successLoader from '../../../../assets/successLoader.json';
 import Lottie from 'lottie-react';
 import trashLoader from '../../../../assets/trashLoader.json';
+import { BsFillLightningChargeFill, BsTrophy } from 'react-icons/bs';
+import { LuCrown } from 'react-icons/lu';
 interface AccountSettingsPopupProps {
   isVisible: boolean;
   onClose: () => void;
@@ -130,11 +132,11 @@ const AccountSettingsPopup: React.FC<AccountSettingsPopupProps> = ({ isVisible, 
   const getSubscriptionIcon = (plan: string) => {
     switch (plan.toLowerCase()) {
       case 'free':
-        return Silver;
+        return <BsFillLightningChargeFill size={22} color={'#00c088'} />;
       case 'nova+':
-        return Gold;
+        return <BsTrophy size={22} color={'#FFD700'}  />;
       case 'nova pro':
-        return Platinum;
+        return <LuCrown  size={25} color={'#fe5112'}  />;
       default:
         return null;
     }
@@ -210,13 +212,7 @@ const AccountSettingsPopup: React.FC<AccountSettingsPopupProps> = ({ isVisible, 
                 <div className="flex flex-col">
                   <p className="text-sm font-medium mb-2">Subscription plan</p>
                   <div className={`w-full flex flex-row gap-3 items-center p-2 border ${isDarkMode ? 'border-gray-700 bg-gray-900 text-white' : 'border-gray-300 bg-gray-100 text-gray-800'} rounded-lg`}>
-                    {subscriptionPlan && (
-                      <img
-                        src={getSubscriptionIcon(subscriptionPlan)}
-                        alt={`${subscriptionPlan} icon`}
-                        className="w-8 h-8 ml-2"
-                      />
-                    )}
+                    {subscriptionPlan && getSubscriptionIcon(subscriptionPlan)}
                     {subscriptionPlan}
                   </div>
                 </div>

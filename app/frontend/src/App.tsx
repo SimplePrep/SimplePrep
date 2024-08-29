@@ -23,9 +23,9 @@ import ILearnPage from './pages/ILearnPage';
 import Dashboard from './components/ILearnComps/Dashboard';
 import ReviewSpaceLayout from './components/ILearnComps/utils/review_space/RsLayout';
 import ReviewSpacePracticeExercises from './components/ILearnComps/utils/review_space/RsPracticeExercises';
-import ReviewSpaceReviewMaterial from './components/ILearnComps/utils/review_space/RsReviewMaterial';
 import ReviewSpacePeerInsight from './components/ILearnComps/utils/review_space/RsPeerInsight';
 import ReviewSpaceTestApproach from './components/ILearnComps/utils/review_space/RsTestApproach';
+import ReviewSpaceCheatSheet from './components/ILearnComps/utils/review_space/RsCheatSheet';
 
 const App = () => {
   const { theme } = useSelector((state: RootState) => state.auth);
@@ -94,7 +94,7 @@ const App = () => {
           }
         >
           <Route  index element={<Navigate to='review-material' replace />}/>
-          <Route path="review-material" element={<ReviewSpaceReviewMaterial  isDarkMode={theme === 'dark'}/>}/>
+          <Route path="cheatsheet" element={<ReviewSpaceCheatSheet  isDarkMode={theme === 'dark'}/>}/>
           <Route path="practice-exercises" element={<ReviewSpacePracticeExercises isDarkMode={theme ==='dark'} />}/>
           <Route path="peer-insight" element={<ReviewSpacePeerInsight isDarkMode={theme==='dark'} />} />
           <Route path="test-approach" element={<ReviewSpaceTestApproach isDarkMode={theme==='dark'} />} />

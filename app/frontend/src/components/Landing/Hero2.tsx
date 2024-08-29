@@ -10,6 +10,7 @@ import blogIcon from '../assets/blogicon.png';
 import studentImg from '../assets/student_discussion.jpg';
 import { Link } from 'react-router-dom';
 import DashboardImg from '../assets/dashboardView.png';
+import SeamlessConnection from './SeamlessConnection';
 
 const Hero = () => {
   const divStyle = {
@@ -105,45 +106,11 @@ const Hero = () => {
             SimplePrep empowers your learning journey with personalized insights, progress tracking, and motivational tools to help you achieve your educational goals.
           </p>
         </div>
-        <motion.div
-            className="w-full max-w-[1250px] flex flex-col lg:flex-row h-[300px] sm:h-[400px] md:h-[500px] lg:h-[700px] mx-auto rounded-2xl shadow-2xl shadow-teal-100 border-8 border-[#d3d6fe] bg-gradient-to-r from-indigo-300 via-purple-300 to-blue-400 opacity-90"
-            variants={imageVariants}
-            ref={ref1}
-            initial="hidden"
-            animate={controls1}
-            >
-            <motion.div className="flex-1 p-4 sm:p-6 md:p-8 lg:p-10 flex flex-col gap-3 md:gap-5 justify-center rounded-2xl m-4" variants={itemVariants}>
-            <img 
-                src={DashboardImg} 
-                alt="Dashboard" 
-                className="rounded-2xl w-full h-full object-cover sm:object-contain sm:w-auto sm:h-auto"
-            />
-            </motion.div>
-        </motion.div>
-        <div className="max-w-[1250px] mt-10 flex flex-col lg:flex-row gap-6 md:gap-10 mx-auto">
-          <motion.div
-            style={bg_purple}
-            className="p-6 md:p-10 lg:p-14 flex-1 flex-col rounded-2xl items-center shadow-2xl shadow-teal-100 border-2 border-white"
-            variants={itemVariants}
-            ref={ref2}
-            initial="hidden"
-            animate={controls2}
-          >
-            <p className="text-center font-semibold text-lg md:text-xl lg:text-2xl text-blue-600">The Platform you can trust</p>
-            <p className="text-center text-sm md:text-base lg:text-lg mt-2">Our proven test-taking strategies and customizable study plans provide the key to exam confidence.</p>
-          </motion.div>
-          <motion.div
-            style={bg_green}
-            className="p-6 md:p-10 lg:p-14 flex-1 flex-col rounded-2xl items-center shadow-2xl shadow-teal-100 border-2 border-white"
-            variants={itemVariants}
-            ref={ref3}
-            initial="hidden"
-            animate={controls3}
-          >
-            <p className="text-center font-semibold text-lg md:text-xl lg:text-2xl text-blue-600">Level up your SAT game</p>
-            <p className="text-center text-sm md:text-base lg:text-lg mt-2">Our adaptive drills sharpen skills in context for realistic practice while expert instructors guide you every step of the way.</p>
-          </motion.div>
-        </div>
+        <SeamlessConnection 
+          DashboardImg={DashboardImg} 
+          bg_purple={bg_purple} 
+          bg_green={bg_green} 
+        />
         <div className="max-w-[1800px] mx-auto my-16 md:my-24 flex flex-col lg:flex-row gap-6 md:gap-10 lg:gap-0">
           <motion.img
             className="w-full lg:w-[60%] h-auto lg:h-[50%] object-contain"
