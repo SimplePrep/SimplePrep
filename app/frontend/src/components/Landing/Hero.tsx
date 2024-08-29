@@ -9,6 +9,8 @@ import blogImg from '../assets/blogbackground.png';
 import blogIcon from '../assets/blogicon.png';
 import studentImg from '../assets/student_discussion.jpg';
 import { Link } from 'react-router-dom';
+import DashboardImg from '../assets/dashboardView.png';
+import SeamlessConnection from './SeamlessConnection';
 
 const Hero = () => {
   const divStyle = {
@@ -98,44 +100,17 @@ const Hero = () => {
     <motion.div id='our-vision' className="w-full block py-10 md:py-20 mx-auto overflow-x-hidden">
       <WaveSVG className="w-full" />
       <div className="bg-slate-100 rounded-b-[3rem] font-ubuntu px-4 md:px-6 lg:px-10">
-        <motion.div
-          style={divStyle}
-          className="w-full max-w-[1400px] flex flex-col lg:flex-row flex-1 h-[400px] md:h-[500px] mx-auto rounded-2xl shadow-2xl shadow-teal-100 border-2 border-white"
-          variants={imageVariants}
-          ref={ref1}
-          initial="hidden"
-          animate={controls1}
-        >
-          <motion.div className="p-6 md:p-10 lg:ml-20 flex flex-col gap-3 md:gap-5 justify-center  rounded-2xl m-4" variants={itemVariants}>
-            <h1 className="text-xl md:text-2xl lg:text-3xl font-bold text-blue-600">Personal online learning</h1>
-            <p className="text-base md:text-lg font-medium text-slate-700">Learn online - from anywhere.</p>
-            <p className="text-base md:text-lg font-medium text-slate-700">The right match for you is never limited by location or schedule.</p>
-          </motion.div>
-        </motion.div>
-        <div className="max-w-[1400px] mt-10 flex flex-col lg:flex-row gap-6 md:gap-10 mx-auto">
-          <motion.div
-            style={bg_purple}
-            className="p-6 md:p-10 lg:p-14 flex-1 flex-col rounded-2xl items-center shadow-2xl shadow-teal-100 border-2 border-white"
-            variants={itemVariants}
-            ref={ref2}
-            initial="hidden"
-            animate={controls2}
-          >
-            <p className="text-center font-semibold text-lg md:text-xl lg:text-2xl text-blue-600">The Platform you can trust</p>
-            <p className="text-center text-sm md:text-base lg:text-lg mt-2">Our proven test-taking strategies and customizable study plans provide the key to exam confidence.</p>
-          </motion.div>
-          <motion.div
-            style={bg_green}
-            className="p-6 md:p-10 lg:p-14 flex-1 flex-col rounded-2xl items-center shadow-2xl shadow-teal-100 border-2 border-white"
-            variants={itemVariants}
-            ref={ref3}
-            initial="hidden"
-            animate={controls3}
-          >
-            <p className="text-center font-semibold text-lg md:text-xl lg:text-2xl text-blue-600">Level up your SAT game</p>
-            <p className="text-center text-sm md:text-base lg:text-lg mt-2">Our adaptive drills sharpen skills in context for realistic practice while expert instructors guide you every step of the way.</p>
-          </motion.div>
+      <div className="max-w-[900px] mx-auto pb-10 bg-slate-100 text-center">
+          <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-indigo-900">Welcome to SimplePrep</h1>
+          <p className="text-lg md:text-xl text-gray-700 mt-4">
+            SimplePrep empowers your learning journey with personalized insights, progress tracking, and motivational tools to help you achieve your educational goals.
+          </p>
         </div>
+        <SeamlessConnection 
+          DashboardImg={DashboardImg} 
+          bg_purple={bg_purple} 
+          bg_green={bg_green} 
+        />
         <div className="max-w-[1800px] mx-auto my-16 md:my-24 flex flex-col lg:flex-row gap-6 md:gap-10 lg:gap-0">
           <motion.img
             className="w-full lg:w-[60%] h-auto lg:h-[50%] object-contain"

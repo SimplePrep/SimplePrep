@@ -5,7 +5,7 @@ import NotFound from '../components/assets/404.png';
 
 const NotFoundPage: React.FC = () => {
   return (
-    <div className="flex flex-col items-center py-20 h-screen bg-gray-200 font-roboto">
+    <div className="flex flex-col items-center py-28 h-screen bg-gray-200 font-roboto">
         <motion.img 
             src={NotFound} 
             alt="404 Not Found" 
@@ -20,12 +20,12 @@ const NotFoundPage: React.FC = () => {
             We're sorry, the page you requested could not be found!
         </p>
         <p className="text-lg text-gray-500">
-            please go back to the dashboard.
+            please go back to the home page.
         </p>
         <div className='mt-5'>
             <motion.div whileHover={{ scale: 1.1 }}>
                 <Link to="/" className="mt-6 px-4 py-2 bg-purple-600 text-white rounded">
-                Dashboard
+                Home
                 </Link>
             </motion.div>
         </div>
