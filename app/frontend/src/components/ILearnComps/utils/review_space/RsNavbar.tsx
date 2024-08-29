@@ -7,8 +7,8 @@ import Logo from '../../../assets/logo-icon.png';
 
 const ReviewBarLinks = [
     {
-        title: 'Review Material',
-        path: 'review-material',
+        title: 'CheatSheet',
+        path: 'cheatsheet',
         icon: <FaBookOpen size={25} className='text-indigo-600 hover:text-indigo-700' />
     },
     {
