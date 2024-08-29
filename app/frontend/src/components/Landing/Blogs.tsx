@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { motion, useAnimation, useInView } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import Banket from "../assets/guy-lesson.jpg";
-
+import AnimatedSVG from '../assets/blogsAnimation.svg'
 interface BlogPost {
   id: number;
   title: string;
@@ -71,7 +71,7 @@ const Blogs = () => {
   }, [controls1, inView1]);
 
   return (
-    <div className="h-[90vp] relative isolate px-6 pt-14 lg:px-8">
+    <div className="max-h-screen my-auto relative isolate px-6  lg:px-8">
       <div
         className="absolute inset-x-0 -top-40 -z-10 transform-gpu blur-3xl sm:-top-80 overflow-hidden"
         aria-hidden="true"
@@ -115,9 +115,24 @@ const Blogs = () => {
             ))}
           </div>
         ) : (
-          <div className='text-center py-20'>
-            <h2 className='text-3xl font-bold text-gray-800'>Blogs Coming Soon, Stay Tuned!</h2>
-            <p className='text-xl text-gray-600'>We are working on some exciting content. Check back later!</p>
+          <div className="flex flex-col text-center items-center">
+            <motion.img
+              src={AnimatedSVG}
+              alt="Animated SVG"
+              className="h-96 w-96"
+              initial={{ opacity: 0, y: 50 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1 }}
+            />
+            <motion.div
+              className="flex flex-col mt-6"
+              initial={{ opacity: 0, y: 50 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1, delay: 0.5 }}
+            >
+              <h2 className="text-3xl font-bold text-gray-800">Blogs Coming Soon, Stay Tuned!</h2>
+              <p className="text-xl text-gray-600">We are working on some exciting content. Check back later!</p>
+            </motion.div>
           </div>
         )}
       </motion.div>

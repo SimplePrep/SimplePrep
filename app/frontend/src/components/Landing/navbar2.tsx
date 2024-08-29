@@ -57,7 +57,15 @@ const Navbar: React.FC<NavbarProps> = ({ isAuthenticated }) => {
     if (path.startsWith('/')) {
       navigate(path);
     } else {
-      scrollToSection(path);
+      const section = document.getElementById(path);
+      if (section) {
+        scrollToSection(path);
+      } else {
+        navigate('/'); // Redirect to home page
+        setTimeout(() => {
+          scrollToSection(path); // Scroll to the section after navigating to the home page
+        }, 300); // Adjust this timeout to match the page load time
+      }
     }
     setNav(false); // Close the mobile menu after navigation
   };
