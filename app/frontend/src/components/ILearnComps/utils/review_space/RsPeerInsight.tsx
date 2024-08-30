@@ -44,60 +44,60 @@ const ReviewSpacePeerInsight: React.FC<ReviewSpacePeerInsightProps> = ({ isDarkM
     };
 
     return (
-        <div className={`min-h-screen ${theme.bg} ${theme.text} py-28 px-4 sm:px-6 lg:px-8 ${fadeIn ? 'animate-fadeIn' : 'opacity-0'}`}>
-            <div className="max-w-4xl mx-auto">
-                <h1 className="text-4xl font-bold mb-8 text-center">Peer Insight</h1>
+        <div className={`min-h-screen ${theme.bg} ${theme.text} py-24 sm:py-20 px-4 sm:px-6 lg:px-8 ${fadeIn ? 'animate-fadeIn' : 'opacity-0'}`}>
+            <div className="max-w-3xl mx-auto">
+                <h1 className="text-3xl sm:text-4xl font-bold mb-6 sm:mb-8 text-center">Peer Insight</h1>
 
-                <div className={`rounded-lg shadow-md p-6 mb-8 ${theme.card}`}>
-                    <h2 className="text-2xl font-semibold mb-4 flex items-center">
-                    <MdLibraryBooks className="mr-2 text-indigo-500" />
+                <div className={`rounded-lg shadow-md p-4 sm:p-6 mb-6 sm:mb-8 ${theme.card}`}>
+                    <h2 className="text-xl sm:text-2xl font-semibold mb-3 sm:mb-4 flex items-center">
+                        <MdLibraryBooks className="mr-2 text-indigo-500" />
                         Introduction to the Topic
                     </h2>
-                    <p className="text-md mb-4">
+                    <p className="text-sm sm:text-md mb-3 sm:mb-4">
                         {topic} is a crucial aspect of computer science, particularly when working with large datasets. This peer insight will explore how top peers approached the challenge of optimizing sorting algorithms for large datasets while minimizing memory usage.
                     </p>
                 </div>
 
-                <div className={`rounded-lg shadow-md p-6 mb-8 ${theme.card}`}>
-                    <h2 className="text-2xl font-semibold mb-4 flex items-center">
+                <div className={`rounded-lg shadow-md p-4 sm:p-6 mb-6 sm:mb-8 ${theme.card}`}>
+                    <h2 className="text-xl sm:text-2xl font-semibold mb-3 sm:mb-4 flex items-center">
                         <FaLightbulb className={`mr-2 ${theme.icon}`} />
                         Top Peer Approaches
                     </h2>
                     {peerApproaches.map((peer, index) => (
                         <div
                             key={index}
-                            className={`rounded-lg p-4 mb-4 ${theme.highlight} cursor-pointer transition-all duration-300 ease-in-out`}
+                            className={`rounded-lg p-3 sm:p-4 mb-3 sm:mb-4 ${theme.highlight} cursor-pointer transition-all duration-300 ease-in-out`}
                             onClick={() => toggleApproach(index)}
                         >
                             <div className="flex justify-between items-center">
-                                <h3 className="text-xl font-semibold">{peer.name}'s Approach</h3>
+                                <h3 className="text-lg sm:text-xl font-semibold">{peer.name}'s Approach</h3>
                                 {expandedApproach === index ? <FaChevronUp /> : <FaChevronDown />}
                             </div>
-                            <p className={`text-md mt-2 ${expandedApproach === index ? 'block' : 'hidden'}`}>
+                            <p className={`text-sm sm:text-md mt-2 ${expandedApproach === index ? 'block' : 'hidden'}`}>
                                 {peer.approach}
                             </p>
                         </div>
                     ))}
                 </div>
 
-                <div className={`rounded-lg shadow-md p-6 mb-8 ${theme.card}`}>
-                    <h2 className="text-2xl font-semibold mb-4 flex items-center">
+                <div className={`rounded-lg shadow-md p-4 sm:p-6 mb-6 sm:mb-8 ${theme.card}`}>
+                    <h2 className="text-xl sm:text-2xl font-semibold mb-3 sm:mb-4 flex items-center">
                         <FaChartLine className="mr-2 text-green-500" />
                         Key Insights
                     </h2>
-                    <ul className="list-disc list-inside space-y-2">
+                    <ul className="list-disc list-inside space-y-2 text-sm sm:text-md">
                         {keyInsights.map((insight, index) => (
                             <li key={index}>{insight}</li>
                         ))}
                     </ul>
                 </div>
 
-                <div className={`rounded-lg shadow-md p-6 ${theme.card}`}>
-                    <h2 className="text-2xl font-semibold mb-4 flex items-center">
+                <div className={`rounded-lg shadow-md p-4 sm:p-6 ${theme.card}`}>
+                    <h2 className="text-xl sm:text-2xl font-semibold mb-3 sm:mb-4 flex items-center">
                         <FaTools className="mr-2 text-red-500" />
                         Applying These Insights
                     </h2>
-                    <ol className="list-decimal list-inside space-y-4 text-md leading-relaxed">
+                    <ol className="list-decimal list-inside space-y-3 sm:space-y-4 text-sm sm:text-md leading-relaxed">
                         <li>Analyze the trade-offs between time complexity and space complexity in your current algorithm.</li>
                         <li>Experiment with hybrid approaches, combining strengths of different sorting methods.</li>
                         <li>Profile your code to identify bottlenecks and optimize comparison operations.</li>

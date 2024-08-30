@@ -27,23 +27,24 @@ const ReviewSpaceCheatSheet: React.FC<ReviewSpaceCheatSheetProps> = ({ isDarkMod
   ];
 
   return (
-    <div className={`min-h-screen ${isDarkMode ? 'bg-gray-900 text-gray-100' : 'bg-white text-gray-800'} py-16 px-4`}>
-      <div className="max-w-4xl mx-auto p-8 sm:p-12">
-        <h1 className={`text-4xl font-semibold mb-8 text-center ${isDarkMode ? 'text-gray-200' : 'text-indigo-700'}`}>
+    <div className={`min-h-screen ${isDarkMode ? 'bg-gray-900 text-gray-100' : 'bg-white text-gray-800'} py-20 px-4 sm:py-12 sm:px-6`}>
+      <div className="max-w-3xl mx-auto p-4 sm:p-8 md:p-10 lg:p-12">
+        <h1 className={`text-xl sm:text-4xl font-semibold mb-6 sm:mb-8 text-center ${isDarkMode ? 'text-gray-200' : 'text-indigo-700'}`}>
           {topic}
         </h1>
-        <div className="space-y-10">
+        <div className="space-y-6 sm:space-y-8 md:space-y-10">
           {content.map((section, index) => (
             <motion.section
               key={index}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: index * 0.2 }}
+              className={`bg-opacity-50 p-4 sm:p-6 rounded-lg shadow-md ${isDarkMode ? 'bg-gray-800' : 'bg-gray-100'}`}
             >
-              <h2 className={`text-2xl font-semibold mb-4 ${isDarkMode ? 'text-indigo-300' : 'text-indigo-700'} transition-colors duration-200`}>
+              <h2 className={`text-xl sm:text-2xl font-semibold mb-2 sm:mb-4 ${isDarkMode ? 'text-indigo-300' : 'text-indigo-700'} transition-colors duration-200`}>
                 {section.subtitle}
               </h2>
-              <p className="text-lg leading-relaxed">
+              <p className="text-base sm:text-lg leading-relaxed">
                 {section.text}
               </p>
             </motion.section>
