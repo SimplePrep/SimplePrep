@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import NovaSpace from './NovaSpace';
-import SwitchToLaptopModal from './SwitchToLaptopModal';
 import StudySpaceNavbar from './StudySpaceNavbar';
 
 interface StudySpaceLayoutProps {
@@ -15,7 +14,9 @@ const StudySpaceLayout: React.FC<StudySpaceLayoutProps> = ({
   toggleDarkMode,
   userSubscription
 }) => {
-  const darkModeClass = isDarkMode ? 'dark-background transition-colors duration-300' : 'bg-gray-100 transition-colors duration-300';
+  const darkModeClass = isDarkMode
+    ? 'dark-background transition-colors duration-300'
+    : 'bg-gray-100 transition-colors duration-300';
   const [currentStep, setCurrentStep] = useState(0);
 
   const handleProgressChange = (newStep: number) => {
@@ -30,10 +31,13 @@ const StudySpaceLayout: React.FC<StudySpaceLayoutProps> = ({
         currentStep={currentStep} 
       />
       <div className='flex'>
-        <NovaSpace userSubscription={userSubscription} isDarkMode={isDarkMode} />
-        <Outlet context={{ handleProgressChange }} />
+        <div className="hidden lg:block">
+          <NovaSpace userSubscription={userSubscription} isDarkMode={isDarkMode} />
+        </div>
+        <div className="flex-grow">
+          <Outlet context={{ handleProgressChange }} />
+        </div>
       </div>
-      <SwitchToLaptopModal />
     </div>
   );
 };

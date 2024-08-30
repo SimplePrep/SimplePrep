@@ -23,7 +23,6 @@ const ReviewSpaceLayout: React.FC<ReviewSpaceLayoutProps> = ({
         isDarkMode={isDarkMode} 
         toggleDarkMode={toggleDarkMode} 
       />
-      <SwitchToLaptopModal />
       <Outlet/>
     </div>
   );

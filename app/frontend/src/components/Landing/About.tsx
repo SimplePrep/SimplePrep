@@ -167,24 +167,42 @@ const About = () => {
             </motion.div>
           </div>
           <div className="space-y-4 w-full max-w-xs mt-2">
-            {[
-              { icon: "M13 16h-1v-4H8l4-8v8h3l-4 8z", title: "Personalized Learning Paths", color: "blue" },
-              { icon: "M5 13l4 4L19 7", title: "Expert Insights & Feedback", color: "purple" },
-              { icon: "M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a7.962 7.962 0 00-2-5.255V4a4 4 0 00-8 0v1.745A7.962 7.962 0 006 11v3.159c0 .538-.214 1.055-.595 1.438L4 17h5m6 0v2a2 2 0 11-4 0v-2m4 0H9", title: "Progress Tracking & Analytics", color: "yellow" }
-            ].map((item, index) => (
-              <div key={index} className="flex items-center justify-between bg-white p-3 sm:p-4 rounded-lg shadow hover:bg-gray-50 transition-colors cursor-pointer">
+            <div className="flex items-center justify-between bg-white p-4 rounded-lg shadow hover:bg-gray-50 transition-colors cursor-pointer">
                 <div className="flex items-center space-x-3">
-                  <div className={`w-8 h-8 rounded-full bg-${item.color}-500 flex items-center justify-center text-white`}>
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d={item.icon} />
-                    </svg>
-                  </div>
-                  <span className="font-medium text-sm sm:text-base">{item.title}</span>
+                    <div className="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4H8l4-8v8h3l-4 8z" />
+                        </svg>
+                    </div>
+                    <span className="font-medium">Personalized Learning Paths</span>
                 </div>
                 <span className="text-[#00df9a]">&gt;</span>
-              </div>
-            ))}
-          </div>
+            </div>
+
+            <div className="flex items-center justify-between bg-white p-4 rounded-lg shadow hover:bg-gray-50 transition-colors cursor-pointer">
+                <div className="flex items-center space-x-3">
+                    <div className="w-8 h-8 rounded-full bg-purple-500 flex items-center justify-center text-white">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
+                        </svg>
+                    </div>
+                    <span className="font-medium">Expert Insights & Feedback</span>
+                </div>
+                <span className="text-[#00df9a]">&gt;</span>
+            </div>
+
+            <div className="flex items-center justify-between bg-white p-4 rounded-lg shadow hover:bg-gray-50 transition-colors cursor-pointer">
+                <div className="flex items-center space-x-3">
+                    <div className="w-8 h-8 rounded-full bg-yellow-500 flex items-center justify-center text-white">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a7.962 7.962 0 00-2-5.255V4a4 4 0 00-8 0v1.745A7.962 7.962 0 006 11v3.159c0 .538-.214 1.055-.595 1.438L4 17h5m6 0v2a2 2 0 11-4 0v-2m4 0H9" />
+                        </svg>
+                    </div>
+                    <span className="font-medium">Progress Tracking & Analytics</span>
+                </div>
+                <span className="text-[#00df9a]">&gt;</span>
+            </div>
+        </div>
         </motion.div>
       </motion.div>
       <div

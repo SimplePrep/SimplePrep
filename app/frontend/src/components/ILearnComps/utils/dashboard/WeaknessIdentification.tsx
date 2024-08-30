@@ -16,16 +16,17 @@ const SkillCard: React.FC<SkillCardProps> = ({ icon: Icon, title, color, isDarkM
     <motion.div
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
-        className={`w-full sm:w-48 h-60 ${color} rounded-2xl shadow-xl flex flex-col items-center justify-center cursor-pointer transition-transform duration-150 ease-in-out relative z-10 ${
+        className={`w-32 h-40 sm:w-48 sm:h-60 ${color} rounded-xl sm:rounded-2xl shadow-xl flex flex-col items-center justify-center cursor-pointer transition-transform duration-150 ease-in-out relative z-10 ${
             isDarkMode ? 'bg-opacity-90' : 'bg-opacity-100'
         }`}
     >
-        <Icon className="text-white drop-shadow-lg" size={60} />
-        <span className="mt-4 text-white font-semibold text-lg text-center px-2 drop-shadow-lg">
+        <Icon className="text-white drop-shadow-lg" size={40} />
+        <span className="mt-4 text-white font-semibold text-sm sm:text-lg text-center px-2 drop-shadow-lg">
             {title}
         </span>
     </motion.div>
 );
+
 
 interface ModalProps {
     isOpen: boolean;
@@ -38,18 +39,19 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, ChapterTitle, isDarkMode
     const navigate = useNavigate();
 
     if (!isOpen) return null;
+
     const bgGradient = isDarkMode
         ? 'from-slate-800 via-slate-850 to-slate-900'
         : 'from-white via-gray-100 to-gray-200';
     const textColor = isDarkMode ? 'text-white' : 'text-gray-800';
-    const closeButtonBgColor = isDarkMode ? 'bg-white text-slate-800' : 'bg-indigo-600 text-white';
-    const getStartedButtonBgColor = isDarkMode ? 'bg-indigo-600 text-white' : 'bg-slate-800 text-white';
+    const closeButtonBgColor = isDarkMode ? 'bg-red-500 text-white' : 'bg-red-500 text-white';
+    const getStartedButtonBgColor = isDarkMode ? 'bg-indigo-600 text-white' : 'bg-indigo-600 text-white';
 
     const handleNavigateToReview = () => {
         if (ChapterTitle) {
             navigate(`/review-space/${ChapterTitle}`);
-          } 
-    }
+        }
+    };
 
     return (
         <AnimatePresence>
@@ -63,13 +65,13 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, ChapterTitle, isDarkMode
                     initial={{ scale: 0.9, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
                     exit={{ scale: 0.9, opacity: 0 }}
-                    className={`flex flex-col bg-gradient-to-br ${bgGradient} p-8 rounded-3xl max-w-4xl w-full shadow-2xl backdrop-blur-lg`}
+                    className={`flex flex-col bg-gradient-to-br ${bgGradient} p-6 sm:p-8 rounded-2xl max-w-md sm:max-w-4xl w-full shadow-2xl backdrop-blur-lg`}
                 >
-                    <h2 className={`text-3xl font-extrabold ${textColor} mb-8 text-center tracking-wide`}>
+                    <h2 className={`text-2xl sm:text-3xl font-extrabold ${textColor} mb-6 sm:mb-8 text-center tracking-wide`}>
                         Elevate Your Skills: {ChapterTitle}
                     </h2>
                     <motion.div
-                        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-16 relative z-10"
+                        className="grid grid-cols-2 gap-4 sm:grid-cols-2 lg:grid-cols-4 sm:gap-6 mb-12 sm:mb-16 relative z-10"
                         initial="hidden"
                         animate="visible"
                         variants={{
@@ -109,7 +111,6 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, ChapterTitle, isDarkMode
                             isDarkMode={isDarkMode}
                         />
 
-                        {/* Adjusted SVG Curved Lines */}
                         <svg
                             className="absolute w-full h-full pointer-events-none z-0"
                             style={{
@@ -132,12 +133,12 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, ChapterTitle, isDarkMode
                             />
                         </svg>
                     </motion.div>
-                    <div className="flex justify-center space-x-4 ">
+                    <div className="flex flex-row items-center gap-5 justify-center">
                         <motion.button
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
                             onClick={handleNavigateToReview}
-                            className={`py-2 px-6 justify-center rounded-xl hover:bg-opacity-90 transition-colors duration-300 text-lg font-semibold shadow-lg ${getStartedButtonBgColor}`}
+                            className={`py-2 px-4 sm:px-6 rounded-lg sm:rounded-xl hover:bg-opacity-90 transition-colors duration-300 text-base sm:text-lg font-semibold shadow-lg  ${getStartedButtonBgColor}`}
                         >
                             Get Started
                         </motion.button>
@@ -145,7 +146,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, ChapterTitle, isDarkMode
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
                             onClick={onClose}
-                            className={`py-2 px-6 rounded-xl hover:bg-opacity-90 transition-colors duration-300 text-lg font-semibold shadow-lg ${closeButtonBgColor}`}
+                            className={`py-2 px-4 sm:px-6 rounded-lg sm:rounded-xl hover:bg-opacity-90 transition-colors duration-300 text-base sm:text-lg font-semibold shadow-lg ${closeButtonBgColor}`}
                         >
                             Close
                         </motion.button>
@@ -155,7 +156,6 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, ChapterTitle, isDarkMode
         </AnimatePresence>
     );
 };
-  
 
 interface WeaknessIdentificationProps {
     isDarkMode: boolean;
