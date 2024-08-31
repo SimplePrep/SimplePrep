@@ -91,21 +91,21 @@ const StudySpaceBody: React.FC<StudySpaceBodyProps> = ({ isDarkMode, onProgressC
   const isAllContentVisible = visibleChunks * chunkSize >= paragraphs.length;
 
   if (loading) {
-    return <div className={`fixed inset-0 ${darkModeClass} flex items-center justify-center`}>Loading...</div>;
+    return <div className={`fixed h-screen ml-[30%] w-[70%] ${darkModeClass} flex items-center justify-center`}>Loading...</div>;
   }
 
   if (error) {
-    return <div className={`fixed inset-0 ${darkModeClass} flex items-center justify-center`}>{error}</div>;
+    return <div className={`fixed h-screen ml-[30%] w-[70%] ${darkModeClass} flex items-center justify-center`}>{error}</div>;
   }
 
   if (!section || paragraphs.length === 0) {
-    return <div className={`fixed inset-0 ${darkModeClass} flex items-center justify-center`}>No content available.</div>;
+    return <div className={`fixed h-screen ml-[30%] w-[70%] ${darkModeClass} flex items-center justify-center`}>No content available.</div>;
   }
 
   return (
-    <div className={`fixed inset-0 w-full sm:w-[70%] h-full ${darkModeClass}`}>
+    <div className={`fixed h-screen  w-full md:w-[70%] ${darkModeClass}`}>
       <div className='flex flex-col h-full'>
-        <div ref={scrollContainerRef} className='flex-grow overflow-y-auto space-y-4 px-4 sm:px-8 py-8 sm:py-16'>
+        <div ref={scrollContainerRef} className='flex-grow overflow-y-auto space-y-4 mb-16 mt-10 px-6 sm:px-12 lg:px-20 py-10 sm:py-16'>
           <AnimatePresence>
             {currentContent.map((paragraph, index) => (
               <motion.div
@@ -115,11 +115,11 @@ const StudySpaceBody: React.FC<StudySpaceBodyProps> = ({ isDarkMode, onProgressC
                 exit={{ opacity: 0, y: 10 }}
                 transition={{ duration: 0.5 }}
               >
-                <p className="mb-6 text-base sm:text-lg leading-relaxed font-medium">
+                <p className="mb-6 text-base sm:text-lg font-semibold leading-relaxed">
                   {paragraph}
                 </p>
                 {index < currentContent.length - 1 && (
-                  <div className="flex justify-center items-center my-8">
+                  <div className="flex justify-center items-center my-10 sm:my-14">
                     <SmallWavyDivider isDarkMode={isDarkMode} />
                   </div>
                 )}
@@ -128,13 +128,13 @@ const StudySpaceBody: React.FC<StudySpaceBodyProps> = ({ isDarkMode, onProgressC
           </AnimatePresence>
           <div ref={contentEndRef} />
         </div>
-        <div className="fixed bottom-4 right-4 sm:bottom-8 sm:right-8">
+        <div className="fixed bottom-3 right-3 sm:right-5">
           <AnimatePresence>
             {isAllContentVisible ? (
               <motion.button
                 key="finishButton"
                 onClick={handleFinish}
-                className={`bg-blue-600 w-auto py-2 px-4 sm:px-6 border-[1px] rounded-xl font-semibold text-sm sm:text-base ${isDarkMode ? 'hover:bg-blue-800' : 'hover:bg-blue-800 text-white'}`}
+                className={`bg-blue-600 w-auto p-2 sm:px-6 border-[1px] rounded-xl font-semibold text-sm sm:text-base ${isDarkMode ? 'hover:bg-blue-800' : 'hover:bg-blue-800 text-white'}`}
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.8 }}
@@ -146,7 +146,7 @@ const StudySpaceBody: React.FC<StudySpaceBodyProps> = ({ isDarkMode, onProgressC
               <motion.button
                 key="continueButton"
                 onClick={handleLoadMore}
-                className={`bg-blue-600 w-auto py-2 px-4 sm:px-6 border-[1px] rounded-xl font-semibold text-sm sm:text-base ${isDarkMode ? 'hover:bg-blue-800' : 'hover:bg-blue-800 text-white'}`}
+                className={`bg-blue-600 w-auto p-2 sm:px-6 border-[1px] rounded-xl font-semibold text-sm sm:text-base ${isDarkMode ? 'hover:bg-blue-800' : 'hover:bg-blue-800 text-white'}`}
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.8 }}
@@ -164,10 +164,10 @@ const StudySpaceBody: React.FC<StudySpaceBodyProps> = ({ isDarkMode, onProgressC
 
 const SmallWavyDivider: React.FC<{ isDarkMode: boolean }> = ({ isDarkMode }) => {
   return (
-    <div className='flex flex-row items-center justify-center gap-2 sm:gap-4'>
-      <div className='py-[1px] sm:py-[1.5px] px-3 sm:px-4 bg-blue-600 rounded-full'/>
-      <div className='py-[1px] sm:py-[1.5px] px-3 sm:px-4 bg-yellow-500 rounded-full'/>
-      <div className='py-[1px] sm:py-[1.5px] px-3 sm:px-4 bg-cyan-300 rounded-full'/>
+    <div className='flex flex-row items-center justify-center gap-4'>
+      <div className='py-[1.5px] px-4 bg-blue-600 rounded-2xl'/>
+      <div className='py-[1.5px] px-4 bg-yellow-500 rounded-2xl'/>
+      <div className='py-[1.5px] px-4 bg-cyan-300 rounded-2xl'/>
     </div>
   );
 };
