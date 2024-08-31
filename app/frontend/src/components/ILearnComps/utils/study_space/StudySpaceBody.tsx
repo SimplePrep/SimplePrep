@@ -103,7 +103,7 @@ const StudySpaceBody: React.FC<StudySpaceBodyProps> = ({ isDarkMode, onProgressC
   }
 
   return (
-    <div className={`fixed inset-0 w-full h-full ${darkModeClass}`}>
+    <div className={`fixed inset-0 w-full sm:w-[70%] h-full ${darkModeClass}`}>
       <div className='flex flex-col h-full'>
         <div ref={scrollContainerRef} className='flex-grow overflow-y-auto space-y-4 px-4 sm:px-8 py-8 sm:py-16'>
           <AnimatePresence>
