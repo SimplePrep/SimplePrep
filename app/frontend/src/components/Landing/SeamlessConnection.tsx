@@ -173,11 +173,11 @@ const SeamlessConnection: React.FC<Props> = ({ DashboardImg, bg_purple, bg_green
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1 }}
         >
-          <div className="flex-1 p-4 sm:p-6 md:p-8 lg:p-10 flex flex-col gap-3 md:gap-5 justify-center rounded-2xl m-4">
-            <img 
-              src={DashboardImg} 
-              alt="Dashboard" 
-              className="rounded-2xl w-full h-full object-cover sm:object-contain"
+          <div className="flex-1 p-2 sm:p-4 md:p-6 lg:p-8 flex items-center justify-center rounded-2xl m-2 sm:m-4 overflow-hidden">
+            <img
+              src={DashboardImg}
+              alt="Dashboard"
+              className="rounded-md sm:rounded-xl w-full h-auto max-w-full max-h-full object-contain"
             />
           </div>
         </motion.div>
