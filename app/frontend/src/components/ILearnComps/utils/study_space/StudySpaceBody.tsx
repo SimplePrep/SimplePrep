@@ -103,9 +103,9 @@ const StudySpaceBody: React.FC<StudySpaceBodyProps> = ({ isDarkMode, onProgressC
   }
 
   return (
-    <div className={`fixed h-screen  w-full md:w-[70%] ${darkModeClass}`}>
+    <div className={`fixed h-screen  w-full md:w-[70%] lg:w-[70%] ${darkModeClass}`}>
       <div className='flex flex-col h-full'>
-        <div ref={scrollContainerRef} className='flex-grow overflow-y-auto space-y-4 mb-16 mt-10 px-6 sm:px-12 lg:px-20 py-10 sm:py-16'>
+        <div ref={scrollContainerRef} className='flex-grow overflow-y-auto space-y-4 mb-16 mt-10 px-20 py-20'>
           <AnimatePresence>
             {currentContent.map((paragraph, index) => (
               <motion.div
@@ -115,11 +115,11 @@ const StudySpaceBody: React.FC<StudySpaceBodyProps> = ({ isDarkMode, onProgressC
                 exit={{ opacity: 0, y: 10 }}
                 transition={{ duration: 0.5 }}
               >
-                <p className="mb-6 text-base sm:text-lg font-semibold leading-relaxed">
+                <p className="mb-6 text-lg font-semibold leading-relaxed">
                   {paragraph}
                 </p>
                 {index < currentContent.length - 1 && (
-                  <div className="flex justify-center items-center my-10 sm:my-14">
+                  <div className="flex justify-center items-center my-14">
                     <SmallWavyDivider isDarkMode={isDarkMode} />
                   </div>
                 )}
@@ -128,13 +128,13 @@ const StudySpaceBody: React.FC<StudySpaceBodyProps> = ({ isDarkMode, onProgressC
           </AnimatePresence>
           <div ref={contentEndRef} />
         </div>
-        <div className="fixed bottom-3 right-3 sm:right-5">
+        <div className="fixed bottom-3 right-5">
           <AnimatePresence>
             {isAllContentVisible ? (
               <motion.button
                 key="finishButton"
                 onClick={handleFinish}
-                className={`bg-blue-600 w-auto p-2 sm:px-6 border-[1px] rounded-xl font-semibold text-sm sm:text-base ${isDarkMode ? 'hover:bg-blue-800' : 'hover:bg-blue-800 text-white'}`}
+                className={`bg-blue-600 w-auto p-2 sm:px-6 border-[1px] rounded-xl font-semibold text-base ${isDarkMode ? 'hover:bg-blue-800' : 'hover:bg-blue-800 text-white'}`}
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.8 }}
@@ -146,7 +146,7 @@ const StudySpaceBody: React.FC<StudySpaceBodyProps> = ({ isDarkMode, onProgressC
               <motion.button
                 key="continueButton"
                 onClick={handleLoadMore}
-                className={`bg-blue-600 w-auto p-2 sm:px-6 border-[1px] rounded-xl font-semibold text-sm sm:text-base ${isDarkMode ? 'hover:bg-blue-800' : 'hover:bg-blue-800 text-white'}`}
+                className={`bg-blue-600 w-auto p-2 sm:px-6 border-[1px] rounded-xl font-semibold text-base ${isDarkMode ? 'hover:bg-blue-800' : 'hover:bg-blue-800 text-white'}`}
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.8 }}
