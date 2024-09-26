@@ -44,7 +44,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, ChapterTitle, isDarkMode
         ? 'from-slate-800 via-slate-850 to-slate-900'
         : 'from-white via-gray-100 to-gray-200';
     const textColor = isDarkMode ? 'text-white' : 'text-gray-800';
-    const closeButtonBgColor = isDarkMode ? 'bg-red-500 text-white' : 'bg-red-500 text-white';
+    const closeButtonBgColor = isDarkMode ? 'bg-slate-100 text-black' : 'bg-slate-100 text-black';
     const getStartedButtonBgColor = isDarkMode ? 'bg-indigo-600 text-white' : 'bg-indigo-600 text-white';
 
     const handleNavigateToReview = () => {

@@ -106,7 +106,7 @@ const Navbar: React.FC<NavbarProps> = ({ isAuthenticated }) => {
 
   return (
     <motion.div
-      className="fixed w-full top-5  font-ubuntu z-20 px-6 md:px-10"
+      className="fixed w-full top-5  z-20 px-6 md:px-10 font-opensans"
       variants={navVariants}
       initial="hidden"
       animate="visible"
