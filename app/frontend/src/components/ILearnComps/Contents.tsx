@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { getModules, getTests } from '../auth_utils/axios/axiosServices';
 
 interface Test {
     id: number;
@@ -38,142 +39,36 @@ interface ContentsProps {
 }
 
 const Contents: React.FC<ContentsProps> = ({ isDarkMode }) => {
-
     const [tests, setTests] = useState<Test[]>([]);
     const [modules, setModules] = useState<{ [key: number]: Module[] }>({});
-    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [isLoading, setIsLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
     const navigate = useNavigate();
     const Mode = isDarkMode ? 'text-white' : 'text-gray-800';
 
     useEffect(() => {
-        // Use sample data instead of fetching from API
-        const sampleTests: Test[] = [
-            { id: 1, title: 'SAT Reading Test' },
-            { id: 2, title: 'SAT Writing Test' },
-            { id: 3, title: 'SAT Math Test' },
-            { id: 4, title: 'SAT Reading Test' },
-            { id: 5, title: 'SAT Writing Test' },
-            { id: 6, title: 'SAT Math Test' },
-        ];
-
-        const sampleModules: { [key: number]: Module[] } = {
-            1: [
-                {
-                    id: 101,
-                    test: 1,
-                    title: 'Reading Comprehension',
-                    description: 'Practice questions for reading comprehension.',
-                    num_questions: 20,
-                    created_at: '2024-01-01',
-                    updated_at: '2024-01-10',
-                },
-                {
-                    id: 102,
-                    test: 1,
-                    title: 'Vocabulary in Context',
-                    description: 'Questions focused on vocabulary usage.',
-                    num_questions: 15,
-                    created_at: '2024-01-01',
-                    updated_at: '2024-01-10',
-                },
-            ],
-            2: [
-                {
-                    id: 201,
-                    test: 2,
-                    title: 'Grammar and Usage',
-                    description: 'Questions on grammar rules and usage.',
-                    num_questions: 25,
-                    created_at: '2024-01-01',
-                    updated_at: '2024-01-10',
-                },
-            ],
-            3: [
-                {
-                    id: 301,
-                    test: 3,
-                    title: 'Algebra Basics',
-                    description: 'Basic algebraic equations and expressions.',
-                    num_questions: 30,
-                    created_at: '2024-01-01',
-                    updated_at: '2024-01-10',
-                },
-                {
-                    id: 302,
-                    test: 3,
-                    title: 'Geometry Concepts',
-                    description: 'Practice geometry problems.',
-                    num_questions: 20,
-                    created_at: '2024-01-01',
-                    updated_at: '2024-01-10',
-                },
-            ],
-            4: [
-                {
-                    id: 301,
-                    test: 3,
-                    title: 'Algebra Basics',
-                    description: 'Basic algebraic equations and expressions.',
-                    num_questions: 30,
-                    created_at: '2024-01-01',
-                    updated_at: '2024-01-10',
-                },
-                {
-                    id: 302,
-                    test: 3,
-                    title: 'Geometry Concepts',
-                    description: 'Practice geometry problems.',
-                    num_questions: 20,
-                    created_at: '2024-01-01',
-                    updated_at: '2024-01-10',
-                },
-            ],
-            5: [
-                {
-                    id: 301,
-                    test: 3,
-                    title: 'Algebra Basics',
-                    description: 'Basic algebraic equations and expressions.',
-                    num_questions: 30,
-                    created_at: '2024-01-01',
-                    updated_at: '2024-01-10',
-                },
-                {
-                    id: 302,
-                    test: 3,
-                    title: 'Geometry Concepts',
-                    description: 'Practice geometry problems.',
-                    num_questions: 20,
-                    created_at: '2024-01-01',
-                    updated_at: '2024-01-10',
-                },
-            ],
-            6: [
-                {
-                    id: 301,
-                    test: 3,
-                    title: 'Algebra Basics',
-                    description: 'Basic algebraic equations and expressions.',
-                    num_questions: 30,
-                    created_at: '2024-01-01',
-                    updated_at: '2024-01-10',
-                },
-                {
-                    id: 302,
-                    test: 3,
-                    title: 'Geometry Concepts',
-                    description: 'Practice geometry problems.',
-                    num_questions: 20,
-                    created_at: '2024-01-01',
-                    updated_at: '2024-01-10',
-                },
-            ],
+        // Fetch tests and modules data from the API
+        const fetchData = async () => {
+            try {
+                setIsLoading(true);
+                const testData = await getTests();
+                setTests(testData);
+                
+                // Fetch modules for each test
+                const modulesData: { [key: number]: Module[] } = {};
+                for (const test of testData) {
+                    const moduleData = await getModules(test.id);
+                    modulesData[test.id] = moduleData;
+                }
+                setModules(modulesData);
+            } catch (error) {
+                setError('Failed to fetch data.');
+            } finally {
+                setIsLoading(false);
+            }
         };
 
-        setTests(sampleTests);
-        setModules(sampleModules);
-        setIsLoading(false);
+        fetchData();
     }, []);
 
     const renderContent = () => {
@@ -254,6 +149,6 @@ const Contents: React.FC<ContentsProps> = ({ isDarkMode }) => {
             </div>
         </div>
     );
-}
+};
 
 export default Contents;
