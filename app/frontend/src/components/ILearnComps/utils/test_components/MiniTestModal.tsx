@@ -22,7 +22,7 @@ const MiniTestModal: React.FC<MiniTestProps> = ({ isOpen, onClose, questions, us
     const [isDarkMode, setIsDarkMode] = useState(false);
     const [showExplanation, setShowExplanation] = useState(false);
 
-    const darkModeClass = isDarkMode ? 'dark bg-gray-800 text-white' : 'bg-white text-black';
+    const darkModeClass = isDarkMode ? 'bg-gray-900 text-white' : 'bg-neutral-100 text-black';
     const animationClass = fadeIn ? 'animate-fadeIn' : 'opacity-0';
 
     const toggleDarkMode = () => {
