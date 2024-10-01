@@ -21,6 +21,7 @@ module.exports = {
         'nunito': ['Nunito', 'sans-serif'],
         'space-grotesk': ['"Space Grotesk"', 'sans-serif'],
         'poppins': ['Poppins', 'sans-serif'],
+        'inter': ['Inter', 'sans-serif'],
       },
 
       keyframes: {
