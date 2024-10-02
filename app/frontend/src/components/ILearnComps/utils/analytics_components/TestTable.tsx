@@ -111,7 +111,7 @@ const TestTable: React.FC<TestTableProps> = ({
                   <button
                     onClick={() => onPreviewClick(index)}
                     className={`flex items-center space-x-1 px-3 py-2 rounded-md transition-colors ${
-                      isDarkMode ? 'text-blue-400 hover:bg-blue-900 hover:text-blue-300' : 'text-blue-500 hover:bg-blue-50 hover:text-blue-700'
+                      isDarkMode ? 'text-blue-400 hover:bg-blue-900 hover:text-blue-300' : 'text-blue-500 hover:bg-blue-700 hover:text-blue-100'
                     }`}
                   >
                     <AiOutlineEye size={23} />
@@ -120,7 +120,7 @@ const TestTable: React.FC<TestTableProps> = ({
                   <button
                     onClick={() => onAnalyticsClick(index)}
                     className={`flex items-center space-x-1 px-3 py-2 rounded-md transition-colors ${
-                      isDarkMode ? 'text-green-400 hover:bg-green-900 hover:text-green-300' : 'text-green-500 hover:bg-green-50 hover:text-green-700'
+                      isDarkMode ? 'text-green-400 hover:bg-green-900 hover:text-green-300' : 'text-green-500 hover:bg-green-700 hover:text-green-100'
                     }`}
                   >
                     <AiOutlineBarChart size={25} />
@@ -129,7 +129,7 @@ const TestTable: React.FC<TestTableProps> = ({
                   <button
                     onClick={() => onDiscussionClick(index)}
                     className={`flex items-center space-x-1 px-3 py-2 rounded-md transition-colors ${
-                      isDarkMode ? 'text-purple-400 hover:bg-purple-900 hover:text-purple-300' : 'text-purple-500 hover:bg-purple-50 hover:text-purple-700'
+                      isDarkMode ? 'text-purple-400 hover:bg-purple-900 hover:text-purple-300' : 'text-purple-500 hover:bg-purple-700 hover:text-purple-50'
                     }`}
                   >
                     <AiOutlineComment size={25} />
