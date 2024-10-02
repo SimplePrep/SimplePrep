@@ -1,7 +1,7 @@
 import React from 'react';
 import { FaBook, FaClipboardList, FaChevronDown, FaChevronUp, FaLock } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
-import AnalyticsChart from '../analytics_components/AnalyticsChart';
+import AnalyticsChart from '../analytics_components/Analysis tools/AnalyticsChart';
 import {  UserProgressChapter, UserProgressSection } from '../../../auth_utils/types';
 
 interface ChapterCardProps {

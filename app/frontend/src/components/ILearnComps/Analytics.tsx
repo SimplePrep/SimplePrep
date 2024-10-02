@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Chart from 'chart.js/auto';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
-import Analysis from './utils/analytics_components/Analysis';
+import Analysis from './utils/analytics_components/Analysis tools/Analysis';
 import TestCard from './utils/analytics_components/TestCardAnalysis';
 import MiniTestModal from './utils/test_components/MiniTestModal';
 import Discussion from './utils/Discussion';
@@ -18,7 +18,7 @@ interface AnalyticsProps {
   isDarkMode: boolean;
 }
 
-// Dummy data for local testing
+// Updated dummy data for local testing
 const dummyTestData: TestResult[] = [
   {
     id: 1,
@@ -40,36 +40,14 @@ const dummyTestData: TestResult[] = [
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString(),
     test_model: { id: 103, title: 'Writing Practice Test 3' }
-  },
-  {
-    id: 4,
-    score: 35,
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-    test_model: { id: 101, title: 'Math Practice Test 1' }
-  },
-  {
-    id: 5,
-    score: 60,
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-    test_model: { id: 102, title: 'Reading Practice Test 2' }
-  },
-  {
-    id: 6,
-    score: 100,
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-    test_model: { id: 103, title: 'Writing Practice Test 3' }
   }
 ];
-
 const dummyDetailedTestResult: DetailedTestResult = {
   id: 1,
   score: 85,
   created_at: new Date().toISOString(),
   updated_at: new Date().toISOString(),
-  test_model: { id: 101, title: 'Math Practice Test 1' },
+  test_model: { id: 101, title: 'Practice Test 1' },
   questions: [
     {
       id: 1,
@@ -77,14 +55,14 @@ const dummyDetailedTestResult: DetailedTestResult = {
       model: 'Reading',
       section: 'Inferences',
       title: 'Question 1',
-      context: 'The role of fire in shaping ecosystems has been a subject of study for many years. Natural fires, often caused by lightning, have historically contributed to the maintenance of various ecosystems by clearing dead vegetation, promoting new growth, and maintaining the balance of species. Recent studies have shown that certain plant species have evolved to be fire-resistant or even fire-dependent, requiring fire to germinate their seeds. However, the increased frequency and intensity of wildfires due to climate change pose a significant threat to these ecosystems. Therefore, researchers argue that ______.',
+      context: 'The role of fire in shaping ecosystems has been a subject of study...',
       query: 'Which choice most logically completes the text?',
       graph_img: '',
-      option_A: 'the evolutionary adaptations of fire-resistant plants are insufficient to cope with the current frequency and intensity of wildfires.',
-      option_B: 'fire management practices need to be revised to prevent any kind of fire from occurring in vulnerable ecosystems.',
-      option_C: 'the balance between fire-dependent and fire-resistant species is likely to shift, favoring those that can withstand more extreme fire conditions.',
-      option_D: 'the natural role of fire in ecosystems should be completely eliminated to protect all plant and animal species.',
-      explanation: 'The correct answer is A) the evolutionary adaptations of fire-resistant plants are insufficient to cope with the current frequency and intensity of wildfires. Explanation: The text explains the historical role of natural fires in maintaining ecosystems and the evolution of fire-resistant or fire-dependent plant species. However, it also highlights that the increased frequency and intensity of wildfires due to climate change pose a significant threat to these ecosystems. The logical conclusion is that the current evolutionary adaptations of fire-resistant plants are no longer sufficient to deal with the heightened wildfire conditions. Analysis of Each Option: A) the evolutionary adaptations of fire-resistant plants are insufficient to cope with the current frequency and intensity of wildfires. Evaluation: This option directly addresses the problem posed by the increased frequency and intensity of wildfires, making it the most logical conclusion. B) fire management practices need to be revised to prevent any kind of fire from occurring in vulnerable ecosystems. Evaluation: This option is not logical because it ignores the beneficial role of natural fires in maintaining ecosystems and does not address the evolutionary aspect discussed in the text. C) the balance between fire-dependent and fire-resistant species is likely to shift, favoring those that can withstand more extreme fire conditions. Evaluation: While this option is related to the topic, it does not directly address the problem of the current adaptations being insufficient. It focuses more on the potential shift in species balance. D) the natural role of fire in ecosystems should be completely eliminated to protect all plant and animal species. Evaluation: This option is impractical and contradicts the earlier part of the text that discusses the beneficial role of natural fires in ecosystems. Conclusion: A) the evolutionary adaptations of fire-resistant plants are insufficient to cope with the current frequency and intensity of wildfires most logically completes the text by addressing the insufficiency of current evolutionary adaptations in the face of more extreme wildfire conditions.',
+      option_A: 'The evolutionary adaptations of fire-resistant plants...',
+      option_B: 'Fire management practices need to be revised...',
+      option_C: 'The balance between fire-dependent and fire-resistant species...',
+      option_D: 'The natural role of fire in ecosystems should be eliminated...',
+      explanation: 'The correct answer is A...',
       correct_answer: 'A',
       likes: 10,
       dislikes: 2,
@@ -99,28 +77,56 @@ const dummyDetailedTestResult: DetailedTestResult = {
     test_result: 1,
     report_data: {
       modules: {
-        'Math Module': {
+        'Reading': {
           sections: {
-            'Section 1': {
-              total_questions: 10,
-              correct_answers: 8,
+            'Inferences': {
+              total_questions: 5,
+              correct_answers: 5,
               incorrect_answers: 2
+            },
+            'Words in Context': {
+              total_questions: 5,
+              correct_answers: 5,
+              incorrect_answers: 2
+            },
+            'Purpose': {
+              total_questions: 5,
+              correct_answers: 1,
+              incorrect_answers: 2
+            },
+            'Main Idea': {
+              total_questions: 5,
+              correct_answers: 2,
+              incorrect_answers: 2
+            },
+          },
+          total_questions: 5,
+          correct_answers: 5,
+          incorrect_answers: 2
+        },
+        'Writing': {
+          sections: {
+            'Grammar': {
+              total_questions: 5,
+              correct_answers: 4,
+              incorrect_answers: 1
             }
           },
-          total_questions: 10,
-          correct_answers: 8,
-          incorrect_answers: 2
+          total_questions: 5,
+          correct_answers: 4,
+          incorrect_answers: 1
         }
       },
-      suggestions: ['Review basic arithmetic.'],
-      correct_answers: 8,
+      suggestions: ['Review Inferences in the Reading module', 'Review Grammar in the Writing module'],
+      correct_answers: 7,
       total_questions: 10,
-      incorrect_answers: 2
+      incorrect_answers: 3
     },
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString()
   }
 };
+
 
 const Analytics: React.FC<AnalyticsProps> = ({ isDarkMode }) => {
   const { isAuthenticated } = useSelector((state: RootState) => state.auth);
