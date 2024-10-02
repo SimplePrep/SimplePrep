@@ -167,7 +167,7 @@ const MiniTestModal: React.FC<MiniTestProps> = ({ isOpen, onClose, questions, us
     return (
         <div className={`fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50 font-inter`}>
             <div className={`relative top-20 max-w-[1400px] mx-auto border shadow-lg rounded-xl ${darkModeClass}`}>
-                <div className='relative flex justify-between items-center py-3 px-5'>
+                <div className='relative flex justify-between items-center py-4 px-5'>
                     <div className='mx-2 flex gap-10 items-center'>
                         <p className='font-bold text-2xl'>Test Preview</p>
                         <button onClick={toggleDarkMode} className="text-lg p-3 border-2 rounded-2xl hover:bg-blue-500 hover:border-blue-600">
@@ -191,13 +191,13 @@ const MiniTestModal: React.FC<MiniTestProps> = ({ isOpen, onClose, questions, us
                 </div>
                 <hr className="border-gray-300 border-[1px]" />
                 <div className={`h-full flex flex-grow border-b-2 ${isDarkMode ? 'border-gray-200' : 'border-gray-300'}`}>
-                    <div className={`w-[50%] border-r-2 p-5 ${isDarkMode ? 'bg-gray-700 border-' : 'bg-gray-200 border-white'}`}>
-                        <div className={`h-full p-5 rounded-2xl ${isDarkMode ? 'bg-gray-900' : 'bg-white'}`}>
+                    <div className={`w-[50%] border-r-2 p-5 ${isDarkMode ? 'bg-gray-700' : 'bg-gray-200 border-white'}`}>
+                        <div className={`h-full p-5 border-2 rounded-2xl ${isDarkMode ? 'bg-gray-900 border-gray-500' : 'bg-white border-gray-300'}`}>
                             <p className='font-medium text-lg'>{currentQuestion.context}</p>
                         </div>
                     </div>
                     <div className={`w-[50%] p-5 ${isDarkMode ? 'bg-gray-700' : 'bg-gray-200'}`}>
-                        <div className= {`h-full p-5 rounded-2xl ${isDarkMode ? 'bg-gray-900' : 'bg-white'}`}>
+                        <div className= {`h-full p-5 border-2 rounded-2xl ${isDarkMode ? 'bg-gray-900 border-gray-500' : 'bg-white border-gray-300'}`}>
                             <div className={`rounded-xl  ${isDarkMode ? 'bg-gray-900' : ''}`}>
                                 <p className='font-bold text-lg'>Question {currentQuestionIndex + 1}</p>
                             </div>

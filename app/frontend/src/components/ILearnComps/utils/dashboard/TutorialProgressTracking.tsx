@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { GiProgression } from 'react-icons/gi';
-import AnalyticsChart from '../analytics_components/AnalyticsChart';
+import AnalyticsChart from '../analytics_components/Analysis tools/AnalyticsChart';
 import { BsChevronDown, BsChevronUp } from 'react-icons/bs';
 import { UserTutorialProgressDashboard } from '../../../auth_utils/types';
 import { fetchUserTutorialProgress } from '../../../auth_utils/axios/axiosServices';
