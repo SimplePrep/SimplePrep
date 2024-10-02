@@ -74,25 +74,25 @@ const dummyDetailedTestResult: DetailedTestResult = {
     {
       id: 1,
       test: 101,
-      model: 'multiple_choice',
-      section: 'Math Section 1',
+      model: 'Reading',
+      section: 'Inferences',
       title: 'Question 1',
-      context: 'What is 2 + 2?',
-      query: 'Choose the correct answer.',
+      context: 'The role of fire in shaping ecosystems has been a subject of study for many years. Natural fires, often caused by lightning, have historically contributed to the maintenance of various ecosystems by clearing dead vegetation, promoting new growth, and maintaining the balance of species. Recent studies have shown that certain plant species have evolved to be fire-resistant or even fire-dependent, requiring fire to germinate their seeds. However, the increased frequency and intensity of wildfires due to climate change pose a significant threat to these ecosystems. Therefore, researchers argue that ______.',
+      query: 'Which choice most logically completes the text?',
       graph_img: '',
-      option_A: '3',
-      option_B: '4',
-      option_C: '5',
-      option_D: '6',
-      explanation: 'The correct answer is 4.',
-      correct_answer: 'B',
+      option_A: 'the evolutionary adaptations of fire-resistant plants are insufficient to cope with the current frequency and intensity of wildfires.',
+      option_B: 'fire management practices need to be revised to prevent any kind of fire from occurring in vulnerable ecosystems.',
+      option_C: 'the balance between fire-dependent and fire-resistant species is likely to shift, favoring those that can withstand more extreme fire conditions.',
+      option_D: 'the natural role of fire in ecosystems should be completely eliminated to protect all plant and animal species.',
+      explanation: 'The correct answer is A) the evolutionary adaptations of fire-resistant plants are insufficient to cope with the current frequency and intensity of wildfires. Explanation: The text explains the historical role of natural fires in maintaining ecosystems and the evolution of fire-resistant or fire-dependent plant species. However, it also highlights that the increased frequency and intensity of wildfires due to climate change pose a significant threat to these ecosystems. The logical conclusion is that the current evolutionary adaptations of fire-resistant plants are no longer sufficient to deal with the heightened wildfire conditions. Analysis of Each Option: A) the evolutionary adaptations of fire-resistant plants are insufficient to cope with the current frequency and intensity of wildfires. Evaluation: This option directly addresses the problem posed by the increased frequency and intensity of wildfires, making it the most logical conclusion. B) fire management practices need to be revised to prevent any kind of fire from occurring in vulnerable ecosystems. Evaluation: This option is not logical because it ignores the beneficial role of natural fires in maintaining ecosystems and does not address the evolutionary aspect discussed in the text. C) the balance between fire-dependent and fire-resistant species is likely to shift, favoring those that can withstand more extreme fire conditions. Evaluation: While this option is related to the topic, it does not directly address the problem of the current adaptations being insufficient. It focuses more on the potential shift in species balance. D) the natural role of fire in ecosystems should be completely eliminated to protect all plant and animal species. Evaluation: This option is impractical and contradicts the earlier part of the text that discusses the beneficial role of natural fires in ecosystems. Conclusion: A) the evolutionary adaptations of fire-resistant plants are insufficient to cope with the current frequency and intensity of wildfires most logically completes the text by addressing the insufficiency of current evolutionary adaptations in the face of more extreme wildfire conditions.',
+      correct_answer: 'A',
       likes: 10,
       dislikes: 2,
       created_at: new Date().toISOString()
     }
   ],
   user_answers: [
-    { id: 1, test_result: 1, question: 1, selected_option: 'B' }
+    { id: 1, test_result: 1, question: 1, selected_option: 'D' }
   ],
   report: {
     id: 1,
