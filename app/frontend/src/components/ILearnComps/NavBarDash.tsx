@@ -591,9 +591,9 @@ const SideBar: React.FC<SideBarProps> = ({ toggleDarkMode, isDarkMode }): React.
         isDarkMode={isDarkMode}
       />
       <SupportForm 
-        isVisible={isSupportFormVisible}
+        isOpen={isSupportFormVisible}  // Changed 'isVisible' to 'isOpen'
         onClose={toggleSupportForm}
-        isDarkMode={isDarkMode}
+        theme={isDarkMode ? 'dark' : 'light'}  // Changed 'isDarkMode' to 'theme'
       />
       <UpgradePlanProps 
         isVisible={isUpgradePlanVisible}

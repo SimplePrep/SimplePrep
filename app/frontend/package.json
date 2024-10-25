@@ -44,6 +44,7 @@
     "react-responsive": "^10.0.0",
     "react-router-dom": "^6.21.1",
     "react-router-hash-link": "^2.4.3",
+    "recharts": "^2.13.0",
     "redux-persist": "^6.0.0",
     "sass": "^1.77.6",
     "styled-components": "^6.1.11",
