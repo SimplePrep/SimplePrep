@@ -123,7 +123,7 @@ const Navbar: React.FC<NavbarProps> = ({ isAuthenticated }) => {
         <motion.div className='hidden md:flex gap-5 items-center' variants={linkVariants}>
           {NavLinks.map((link, index) => (
             <div className='group transition' key={index}>
-              <button onClick={() => handleScroll(link.path)} className='p-1 md:p- text-lg md:text-xl font-medium hover:text-blue-600 text-black'>
+              <button onClick={() => handleScroll(link.path)} className='p-1 md:p- text-lg md:text-xl font-semibold hover:text-blue-600 text-black'>
                 {link.title}
               </button>
               <span className="block h-1 rounded bg-blue-800 transform translate-y-3 max-w-0 group-hover:max-w-full transition-all duration-300"></span>
@@ -175,7 +175,7 @@ const Navbar: React.FC<NavbarProps> = ({ isAuthenticated }) => {
         <ul className='flex flex-col items-center py-10 h-full gap-8 text-xl'>
           {NavLinks.map((link, index) => (
             <li key={index} onClick={() => handleScroll(link.path)} className="flex flex-row items-center justify-between w-3/4">
-              <span>{link.title}</span>
+              <span className=''>{link.title}</span>
               <MdKeyboardArrowRight size={30}/>
             </li>
           ))}

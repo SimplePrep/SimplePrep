@@ -1,27 +1,14 @@
-import React, { useEffect, useState } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faFacebook, faTwitter, faInstagram, faLinkedin } from '@fortawesome/free-brands-svg-icons';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Book, GraduationCap, Users, Mail } from 'lucide-react';
+import SupportForm from '../ILearnComps/utils/tools/sidebar/SupportForm';
 
-const Footer: React.FC = () => {
-  const navigate = useNavigate();
+const Footer = () => {
   const [isSticky, setIsSticky] = useState(false);
-
-  const handleScroll = (path: string) => {
-    if (path.startsWith('/')) {
-      navigate(path);
-    } else {
-      // Add your smoothScroll function or logic here
-    }
-  };
+  const [isSupportFormVisible, setIsSupportFormVisible] = useState(false); // Add state to control SupportForm visibility
 
   useEffect(() => {
     const handleFooterPosition = () => {
-      if (document.body.scrollHeight <= window.innerHeight) {
-        setIsSticky(true);
-      } else {
-        setIsSticky(false);
-      }
+      setIsSticky(document.body.scrollHeight <= window.innerHeight);
     };
 
     handleFooterPosition();
@@ -29,81 +16,133 @@ const Footer: React.FC = () => {
     return () => window.removeEventListener('resize', handleFooterPosition);
   }, []);
 
+  const handleDiscord = () => {
+    window.open('https://discord.gg/HgKAgAhZZq', '_blank');
+  };
+
+  const toggleSupportForm = () => {
+    setIsSupportFormVisible((prev) => !prev); // Toggle the visibility of SupportForm
+  };
+
   return (
-    <footer className={`bg-gray-800 text-white py-8 ${isSticky ? 'fixed bottom-0 left-0 w-full' : 'relative'}`}>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div>
-            <h3 className="text-lg font-semibold mb-4">Company</h3>
-            <p className="text-gray-400">Email: alijon@beta-simpleprep.com</p>
-          </div>
-          <div>
-            <h3 className="text-lg font-semibold mb-4">Useful Links</h3>
-            <ul className="text-gray-400">
-              <li className="mb-2">
-                <button onClick={() => handleScroll('/product')} className="hover:underline">
-                  Product
-                </button>
-              </li>
-              <li className="mb-2">
-                <button onClick={() => handleScroll('/our-vision')} className="hover:underline">
-                  Our Vision
-                </button>
-              </li>
-              <li className="mb-2">
-                <button onClick={() => handleScroll('/testimonials')} className="hover:underline">
-                  Customers
-                </button>
-              </li>
-              <li className="mb-2">
-                <button onClick={() => handleScroll('/blogs')} className="hover:underline">
-                  Blog
-                </button>
-              </li>
-              <li className="mb-2">
-                <button onClick={() => handleScroll('/demo')} className="hover:underline">
-                  Demo
-                </button>
-              </li>
-            </ul>
-          </div>
-          <div>
-            <h3 className="text-lg font-semibold mb-4">Follow Us</h3>
-            <div className="flex space-x-4 mb-4">
-              <a href="#" className="text-gray-400 hover:text-white">
-                <FontAwesomeIcon icon={faFacebook} size="lg" />
-              </a>
-              <a href="#" className="text-gray-400 hover:text-white">
-                <FontAwesomeIcon icon={faTwitter} size="lg" />
-              </a>
-              <a href="#" className="text-gray-400 hover:text-white">
-                <FontAwesomeIcon icon={faInstagram} size="lg" />
-              </a>
-              <a href="#" className="text-gray-400 hover:text-white">
-                <FontAwesomeIcon icon={faLinkedin} size="lg" />
-              </a>
+    <>
+      <footer className={`bg-indigo-900 text-white py-8 ${isSticky ? 'fixed bottom-0 left-0 w-full' : 'relative'}`}>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+            {/* Study Resources Section */}
+            <div>
+              <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+                <GraduationCap className="h-5 w-5" />
+                Study Resources
+              </h3>
+              <ul className="space-y-2 text-indigo-200">
+                <li>
+                  <a href="/demo/practice" className="hover:text-white transition-colors">
+                    Practice Tests
+                  </a>
+                </li>
+                <li>
+                  <a href="/demo/tutorials" className="hover:text-white transition-colors">
+                    Study Materials
+                  </a>
+                </li>
+                <li>
+                  <a href="/demo" className="hover:text-white transition-colors">
+                    Question Bank
+                  </a>
+                </li>
+              </ul>
             </div>
-            <h3 className="text-lg font-semibold mb-4">Subscribe to our newsletter</h3>
-            <form className="flex flex-col sm:flex-row">
-              <input
-                type="email"
-                placeholder="Enter your email"
-                className="p-2 rounded-md text-black mb-2 sm:mb-0 sm:mr-2"
-              />
-              <button
-                type="submit"
-                className="p-2 bg-[#00df9a] text-black rounded-md hover:bg-[#00bfa5]"
-              >
-                Subscribe
-              </button>
-            </form>
+
+            {/* Student Support Section */}
+            <div>
+              <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+                <Users className="h-5 w-5" />
+                Student Support
+              </h3>
+              <ul className="space-y-2 text-indigo-200">
+                <li>
+                  <a href="/demo/tutorials" className="hover:text-white transition-colors">
+                    1-on-1 Tutoring
+                  </a>
+                </li>
+                <li>
+                  <button onClick={handleDiscord} className="hover:text-white transition-colors">
+                    Study Groups
+                  </button>
+                </li>
+                <li>
+                  <button onClick={toggleSupportForm} className="hover:text-white transition-colors">
+                    Contact Support
+                  </button>
+                </li>
+              </ul>
+            </div>
+
+            {/* Resources Section */}
+            <div>
+              <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+                <Book className="h-5 w-5" />
+                Resources
+              </h3>
+              <ul className="space-y-2 text-indigo-200">
+                <li>
+                  <a href="/blogs" className="hover:text-white transition-colors">
+                    SAT Prep Blog
+                  </a>
+                </li>
+              </ul>
+            </div>
+
+            {/* Stay Updated Section */}
+            <div>
+              <h3 className="text-lg font-semibold mb-4">Stay Updated</h3>
+              <p className="text-indigo-200 mb-4">
+                Get the latest Digital SAT tips and updates delivered to your inbox.
+              </p>
+              <form className="space-y-2">
+                <input
+                  type="email"
+                  placeholder="Enter your email"
+                  className="w-full p-2 rounded-md text-gray-900 bg-white/90 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                />
+                <button
+                  type="submit"
+                  className="w-full p-2 bg-indigo-500 text-white rounded-md hover:bg-indigo-600 transition-colors"
+                >
+                  Subscribe
+                </button>
+              </form>
+              <div className="mt-4">
+                <a 
+                  href="tel:1234567890" 
+                  className="flex items-center gap-2 text-indigo-200 hover:text-white transition-colors"
+                >
+                  <Mail className="h-4 w-4" />
+                  <span>alijon@beta-simpleprep.com</span>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          {/* Footer Bottom Section */}
+          <div className="mt-8 pt-8 border-t border-indigo-800">
+            <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+              <div className="text-indigo-200">
+                &copy; {new Date().getFullYear()} Simple Prep Digital SAT. All rights reserved.
+              </div>
+            </div>
           </div>
         </div>
-        <div className="mt-8 text-center text-gray-400">
-          &copy; {new Date().getFullYear()} Simple Prep. All rights reserved.
-        </div>
-      </div>
-    </footer>
+      </footer>
+
+      {/* SupportForm Modal */}
+      <SupportForm 
+        isVisible={isSupportFormVisible} 
+        onClose={toggleSupportForm} 
+        isDarkMode={false} 
+      />
+    </>
   );
 };
 

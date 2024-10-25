@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { faCircleXmark, faCircleCheck } from '@fortawesome/free-regular-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { ChevronDown, ChevronUp } from 'lucide-react';
 
 interface QuestionItemProps {
   question: string;
@@ -14,33 +13,47 @@ interface QuestionListProps {
 const QuestionItem: React.FC<QuestionItemProps> = ({ question, answer }) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
-  const toggleAnswer = () => {
-    setIsExpanded(!isExpanded);
-  };
-
   return (
-    <li>
-      <div className="mt-10 flex items-center justify-between">
-        <button onClick={toggleAnswer}>
-          <p className='text-lg font-bold'>{question}</p>
+    <div className="w-full bg-white hover:bg-slate-50 transition-colors duration-200 rounded-lg">
+      <div className="p-4">
+        <button
+          onClick={() => setIsExpanded(!isExpanded)}
+          className="w-full"
+        >
+          <div className="flex items-center justify-between w-full">
+            <h3 className="text-lg font-semibold text-left text-slate-800">
+              {question}
+            </h3>
+            <div className="ml-4">
+              {isExpanded ? (
+                <ChevronUp className="h-5 w-5 text-blue-600" />
+              ) : (
+                <ChevronDown className="h-5 w-5 text-slate-400" />
+              )}
+            </div>
+          </div>
         </button>
-        <button onClick={toggleAnswer}>
-          {isExpanded ? <span><FontAwesomeIcon icon={faCircleXmark} size='2x'/></span> : <span><FontAwesomeIcon icon={faCircleCheck} size='2x' /></span>}
-        </button>
+        {isExpanded && (
+          <div className="mt-4 text-slate-600 leading-relaxed">
+            {answer}
+          </div>
+        )}
       </div>
-      {isExpanded && <p className="mt-5 text-lg text-slate-500">{answer}</p>}
-      <hr/>
-    </li>
+    </div>
   );
 };
 
 const QuestionList: React.FC<QuestionListProps> = ({ questions }) => {
   return (
-    <ul className="space-y-4">
+    <div className="space-y-2 divide-y divide-slate-100">
       {questions.map((question, index) => (
-        <QuestionItem key={index} question={question.question} answer={question.answer} />
+        <QuestionItem 
+          key={index} 
+          question={question.question} 
+          answer={question.answer} 
+        />
       ))}
-    </ul>
+    </div>
   );
 };
 
@@ -48,49 +61,47 @@ const FAQ = () => {
   const questions = [
     {
       question: "How can your platform help me prepare for the SAT?",
-      answer: "Our platform offers SAT preparation resources such as study materials, practice tests, and personalized feedback to help students prepare for the SAT online exam."
+      answer: "Our platform provides comprehensive SAT preparation resources including study materials, practice tests, and personalized feedback - all completely free of charge. We believe quality education should be accessible to everyone."
     },
     {
-      question: "Is there a free trial?",
-      answer: "Yes, we offer a free trial for new users to explore our platform and see how it can help them prepare for the SAT. Sign up to get started with your free trial."
+      question: "Do I need to pay for any features?",
+      answer: "No! Our entire platform is completely free. We're committed to making quality SAT preparation accessible to all students, so you'll never have to pay for any of our features or resources."
     },
     {
       question: "How often are the study materials updated?",
-      answer: "Our study materials are updated regularly to reflect the latest changes in the SAT exam format and content. We ensure that our resources are always current and effective."
+      answer: "Our study materials are regularly updated to reflect the latest changes in the SAT exam format and content. We ensure our resources stay current and effective to give you the best preparation experience."
     },
     {
-      question: "What is your cancellation policy?",
-      answer: "You can cancel your subscription at any time. If you cancel before the end of your billing cycle, you will still have access to the platform until the billing period ends."
-    },
-    {
-      question: "How do I sign up for an account?",
-      answer: "Signing up is easy! Simply click on the 'Login' button on top right, fill in your details, and follow the prompts to create your account."
-    },
-    {
-      question: "What payment methods do you accept?",
-      answer: "We accept various payment methods including credit/debit cards, PayPal, and other secure online payment options."
+      question: "How do I get started?",
+      answer: "Getting started is simple! Just click the 'Sign Up' button and create your free account. Once registered, you'll have immediate access to all our study materials and practice tests."
     },
     {
       question: "Can I access the platform from my mobile device?",
-      answer: "Yes, our platform is mobile-friendly and can be accessed from any device with an internet connection, including smartphones and tablets."
+      answer: "Yes! Our platform is fully responsive and can be accessed from any device with an internet connection, including smartphones and tablets. Study wherever and whenever works best for you."
     },
     {
-      question: "Can I track my progress and see my scores?",
-      answer: "Absolutely! Our platform includes tools to track your progress, review your scores, and identify areas for improvement, helping you stay on track with your SAT prep."
+      question: "How can I track my progress?",
+      answer: "Our platform includes comprehensive progress tracking tools that help you monitor your improvement, identify areas that need more focus, and visualize your journey toward your target SAT score."
     },
+    {
+      question: "Is there a limit to how many practice tests I can take?",
+      answer: "Not at all! You can take as many practice tests as you'd like. We encourage regular practice to build confidence and familiarity with the exam format."
+    }
   ];
 
   return (
-    <div className='max-w-[1240px] mx-auto w-full my-24  items-center'>
-      <div className='flex flex-col gap-5'>
-        <h1 className='text-6xl font-bold lg:4xl md:3xl text-center'>Frequently Asked Questions</h1>
-        <p className='text-center font-medium text-2xl'>Have questions? We are here to help.</p>
+    <div id="faq-section" className="max-w-4xl mx-auto px-4 py-16">
+      <div className="text-center mb-12">
+        <h1 className="text-4xl font-bold text-slate-900 mb-4">
+          Frequently Asked Questions
+        </h1>
+        <p className="text-lg text-slate-600">
+          Have questions? We're here to help you make the most of our free SAT preparation platform.
+        </p>
       </div>
-      <div className='mt-20 w-[90%] mx-auto items-center justify-center'>
-        <QuestionList questions={questions} />
-      </div>
+      <QuestionList questions={questions} />
     </div>
   );
-}
+};
 
 export default FAQ;
