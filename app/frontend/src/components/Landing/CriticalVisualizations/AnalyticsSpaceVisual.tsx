@@ -90,7 +90,7 @@ const fadeIn = {
     }
   };
   
-  const FeatureShowcase = () => {
+  const AnalyticsSpaceVisual = () => {
     const [activeFeature, setActiveFeature] = useState(0);
     const [isHovering, setIsHovering] = useState(false);
   
@@ -291,4 +291,4 @@ const fadeIn = {
     );
   };
 
-export default FeatureShowcase;
+export default AnalyticsSpaceVisual;
