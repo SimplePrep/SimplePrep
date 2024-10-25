@@ -9,18 +9,14 @@ import Testimonials from '../components/Landing/Testimonials';
 import Notification from '../components/Landing/Newsletter';
 import FAQ from '../components/Landing/FAQ';
 import Footer from '../components/Landing/Footer';
-import StudySpaceVisuals from '../components/Landing/CriticalVisualizations/StudySpaceVisual';
-import ReviewSpaceVisuals from '../components/Landing/CriticalVisualizations/ReviewSpaceVisual';
-import PerformanceAnalytics from '../components/Landing/CriticalVisualizations/AnalyticsSpaceVisual';
+import Hero2 from '../components/Landing/CriticalVisualizations/Hero2';
 
 export const LandingPage = () => {
   return(
       <>
           <About/>
           <Hero/>
-          <StudySpaceVisuals/>
-          <ReviewSpaceVisuals/>
-          <PerformanceAnalytics/>
+          <Hero2 /> 
           <Notification/>
           <Testimonials/>
           <FAQ/>
