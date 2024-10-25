@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { User, Quote } from 'lucide-react';
 
 const Testimonials = () => {
@@ -20,6 +20,36 @@ const Testimonials = () => {
     }
   ];
 
+  const [visibleCards, setVisibleCards] = useState<number[]>([]);
+  const testimonialRefs = useRef<(HTMLDivElement | null)[]>([]); // Allow null values
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const index = testimonialRefs.current.indexOf(entry.target as HTMLDivElement);
+            setVisibleCards((prev) => [...prev, index]);
+            observer.unobserve(entry.target); // Unobserve once it's visible
+          }
+        });
+      },
+      { threshold: 0.2 } // Trigger animation when 20% of the card is visible
+    );
+
+    testimonialRefs.current.forEach((ref) => {
+      if (ref) {
+        observer.observe(ref);
+      }
+    });
+
+    return () => {
+      testimonialRefs.current.forEach((ref) => {
+        if (ref) observer.unobserve(ref);
+      });
+    };
+  }, []);
+
   return (
     <div id="testimonials" className="bg-gradient-to-b from-slate-50 to-slate-100 py-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -36,19 +66,22 @@ const Testimonials = () => {
           {testimonials.map((testimonial, index) => (
             <div
               key={index}
-              className="relative bg-white rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300 overflow-hidden"
+              ref={(el) => (testimonialRefs.current[index] = el)} // Allow ref to be null
+              className={`relative bg-white rounded-2xl shadow-lg overflow-hidden transform transition-all duration-700 
+                ${visibleCards.includes(index) ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}
+              `}
             >
               <div className="absolute top-4 right-4 text-indigo-500">
                 <Quote size={24} />
               </div>
-              
+
               <div className="p-8">
                 <div className="h-40">
                   <p className="text-slate-700 text-lg leading-relaxed">
                     "{testimonial.text}"
                   </p>
                 </div>
-                
+
                 <div className="mt-8 flex items-center">
                   <div className="h-10 w-10 rounded-full bg-indigo-100 flex items-center justify-center">
                     <User className="h-6 w-6 text-indigo-600" />

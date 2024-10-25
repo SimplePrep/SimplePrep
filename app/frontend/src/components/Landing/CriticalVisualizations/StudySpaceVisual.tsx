@@ -38,7 +38,7 @@ const features: Feature[] = [
   {
     icon: PenTool,
     title: "Exclusive Writing Tutorials",
-    description: "Build on your reading skills with advanced writing tutorials. Learn through visual examples, practice exercises, and immediate feedback systems that reinforce your understanding of key concepts.",
+    description: "Build on your writing skills with advanced writing tutorials. Learn through visual examples, practice exercises, and immediate feedback systems that reinforce your understanding of key concepts.",
     gradientFrom: "from-[#F857A6]",
     gradientTo: "to-[#FF5858]",
     lightBg: "bg-pink-50",

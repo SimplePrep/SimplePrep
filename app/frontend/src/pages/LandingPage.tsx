@@ -11,6 +11,7 @@ import FAQ from '../components/Landing/FAQ';
 import Footer from '../components/Landing/Footer';
 import StudySpaceVisuals from '../components/Landing/CriticalVisualizations/StudySpaceVisual';
 import ReviewSpaceVisuals from '../components/Landing/CriticalVisualizations/ReviewSpaceVisual';
+import PerformanceAnalytics from '../components/Landing/CriticalVisualizations/AnalyticsSpaceVisual';
 
 export const LandingPage = () => {
   return(
@@ -19,6 +20,7 @@ export const LandingPage = () => {
           <Hero/>
           <StudySpaceVisuals/>
           <ReviewSpaceVisuals/>
+          <PerformanceAnalytics/>
           <Notification/>
           <Testimonials/>
           <FAQ/>

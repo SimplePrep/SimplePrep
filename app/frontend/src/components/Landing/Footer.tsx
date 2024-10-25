@@ -138,9 +138,9 @@ const Footer = () => {
 
       {/* SupportForm Modal */}
       <SupportForm 
-        isVisible={isSupportFormVisible} 
-        onClose={toggleSupportForm} 
-        isDarkMode={false} 
+          isOpen={isSupportFormVisible}  // Changed 'isVisible' to 'isOpen'
+          onClose={toggleSupportForm}
+          theme={'light'}  // Changed 'isDarkMode' to 'theme'
       />
     </>
   );
