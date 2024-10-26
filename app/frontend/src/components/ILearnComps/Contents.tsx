@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { BookOpen, Sparkles } from 'lucide-react';
 import { getModules, getTests } from '../auth_utils/axios/axiosServices';
 
 interface Test {
@@ -17,44 +18,123 @@ interface Module {
     updated_at: string;
 }
 
-const SkeletonCard = () => (
-    <div className="p-6 bg-gray-100 rounded-lg border-2 border-gray-200 shadow-lg overflow-hidden relative">
-        <div className="animate-pulse">
-            <div className="flex justify-between items-center mb-6">
-                <div className="h-6 w-8 bg-gray-300 rounded"></div>
-            </div>
-            <div className="h-7 w-3/4 bg-gray-300 rounded mb-2"></div>
-            <div className="h-4 w-full bg-gray-300 rounded mb-4"></div>
-            <div className="flex flex-row gap-5 justify-between items-center">
-                <div className="h-10 w-28 bg-gray-300 rounded"></div>
-                <div className="h-10 w-28 bg-gray-300 rounded"></div>
+const SkeletonTestCard: React.FC<{ isDarkMode: boolean; index: number }> = ({ isDarkMode, index }) => {
+    const animationDelay = `${index * 150}ms`;
+
+    return (
+        <div
+            style={{ animationDelay }}
+            className={`
+                relative overflow-hidden rounded-lg
+                transition-all duration-500 ease-out
+                animate-fadeSlideIn
+                ${isDarkMode ? 'bg-gray-800/40' : 'bg-white/80'}
+                shadow-md
+            `}
+        >
+            <div className="p-4 animate-pulse">
+                <div className="flex items-center space-x-3 mb-4">
+                    <div className={`
+                        p-2 rounded-lg
+                        ${isDarkMode ? 'bg-gray-700/50' : 'bg-gray-200'}
+                        w-9 h-9
+                    `} />
+                    <div className={`
+                        h-6 w-32 rounded
+                        ${isDarkMode ? 'bg-gray-700/50' : 'bg-gray-200'}
+                    `} />
+                </div>
+                <div className="space-y-2">
+                    {[1, 2].map((_, i) => (
+                        <div
+                            key={i}
+                            className={`
+                                w-full p-3 rounded-lg
+                                ${isDarkMode ? 'bg-gray-700/30' : 'bg-gray-100'}
+                            `}
+                        >
+                            <div className="flex items-center justify-between">
+                                <div className="space-y-2 flex-1">
+                                    <div className={`
+                                        h-5 w-1/3 rounded
+                                        ${isDarkMode ? 'bg-gray-600' : 'bg-gray-200'}
+                                    `} />
+                                    <div className={`
+                                        h-4 w-2/3 rounded
+                                        ${isDarkMode ? 'bg-gray-600' : 'bg-gray-200'}
+                                    `} />
+                                </div>
+                                <div className="flex items-center space-x-4">
+                                    {[1, 2].map((_, j) => (
+                                        <div
+                                            key={j}
+                                            className={`
+                                                h-4 w-8 rounded
+                                                ${isDarkMode ? 'bg-gray-600' : 'bg-gray-200'}
+                                            `}
+                                        />
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+                </div>
             </div>
         </div>
-        <div className="absolute inset-0 -translate-x-full animate-[shimmer_1s_infinite] bg-gradient-to-r from-transparent via-gray-200 to-transparent"></div>
-    </div>
-);
+    );
+};
 
-interface ContentsProps {
+const TestCard: React.FC<{
+    test: Test;
+    modules: Module[];
     isDarkMode: boolean;
-}
+    onModuleSelect: (testId: number, moduleId: number) => void;
+    index: number;
+}> = ({ test, modules, isDarkMode, onModuleSelect, index }) => {
+    return (
+        <div className={`
+            relative overflow-hidden rounded-lg p-6
+            ${isDarkMode ? 'bg-gray-800' : 'bg-white'}
+            shadow-md transition-transform duration-500 hover:scale-105
+        `}>
+            <div className="flex items-center space-x-3 mb-4">
+                <BookOpen className={`w-6 h-6 ${isDarkMode ? 'text-blue-400' : 'text-blue-600'}`} />
+                <h3 className={`text-xl font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                    {test.title}
+                </h3>
+            </div>
+            <div className="space-y-4">
+                {modules.map((module, i) => (
+                    <button
+                        key={module.id}
+                        onClick={() => onModuleSelect(test.id, module.id)}
+                        className={`
+                            py-2 px-4 rounded-full bg-blue-500 text-white text-sm
+                            hover:bg-blue-600 transition-colors duration-300
+                        `}
+                    >
+                        {module.title}
+                    </button>
+                ))}
+            </div>
+        </div>
+    );
+};
 
-const Contents: React.FC<ContentsProps> = ({ isDarkMode }) => {
+const Contents: React.FC<{ isDarkMode: boolean }> = ({ isDarkMode }) => {
     const [tests, setTests] = useState<Test[]>([]);
     const [modules, setModules] = useState<{ [key: number]: Module[] }>({});
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
     const navigate = useNavigate();
-    const Mode = isDarkMode ? 'text-white' : 'text-gray-800';
 
     useEffect(() => {
-        // Fetch tests and modules data from the API
         const fetchData = async () => {
             try {
                 setIsLoading(true);
                 const testData = await getTests();
                 setTests(testData);
                 
-                // Fetch modules for each test
                 const modulesData: { [key: number]: Module[] } = {};
                 for (const test of testData) {
                     const moduleData = await getModules(test.id);
@@ -63,6 +143,7 @@ const Contents: React.FC<ContentsProps> = ({ isDarkMode }) => {
                 setModules(modulesData);
             } catch (error) {
                 setError('Failed to fetch data.');
+                console.error('Failed to fetch data:', error);
             } finally {
                 setIsLoading(false);
             }
@@ -71,80 +152,71 @@ const Contents: React.FC<ContentsProps> = ({ isDarkMode }) => {
         fetchData();
     }, []);
 
-    const renderContent = () => {
-        if (isLoading) {
-            return (
-                <div className="my-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-                    {[...Array(6)].map((_, index) => (
-                        <SkeletonCard key={index} />
-                    ))}
-                </div>
-            );
-        }
-
-        if (error) {
-            return <div className="text-red-500">{error}</div>;
-        }
-
-        return (
-            <div className="my-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-                {tests.map((test, index) => {
-                    const borderColorClass = borderColorClasses[index % borderColorClasses.length];
-                    const testModules = modules[test.id] || [];
-                    return (
-                        <div key={test.id} className={`p-6 bg-black rounded-3xl border-2 ${borderColorClass} border-white shadow-lg`}>
-                            <div className="flex justify-between items-center mb-6">
-                                <div className="text-xl text-purple-500">{test.id}</div>
-                            </div>
-                            <h5 className="text-white text-xl leading-tight font-medium mb-2">{test.title}</h5>
-                            <p className="text-gray-400 text-base mb-4">
-                                Test your skills with this practice test.
-                            </p>
-                            <div className='flex flex-row gap-5 flex-wrap justify-between items-center'>
-                                {testModules.map((module, moduleIndex) => (
-                                    <button
-                                        key={module.id}
-                                        onClick={() => handleModuleClick(test.id, module.id)}
-                                        className='mt-auto py-2 px-4 bg-blue-600 text-white text-lg rounded-3xl hover:bg-blue-600 hover:scale-105 transition-colors duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-opacity-50'
-                                    >
-                                        {`Module ${moduleIndex + 1}`}
-                                    </button>
-                                ))}
-                            </div>
-                        </div>
-                    );
-                })}
-            </div>
-        );
-    };
-
-    const borderColorClasses = [
-        'shadow-red-500',
-        'shadow-green-500',
-        'shadow-blue-500',
-        'shadow-yellow-500',
-        'shadow-pink-500',
-        'shadow-purple-500',
-        'shadow-indigo-500',
-        'shadow-orange-500',
-        'shadow-teal-500',
-        'shadow-gray-500',
-        'shadow-cyan-500',
-        'shadow-lime-500',
-    ];
-
-    const handleModuleClick = (testId: number, moduleId: number) => {
-        navigate(`/test/${testId}/module/${moduleId}`);
-    };
-
     return (
-        <div className='max-w-[1200px] h-full mx-auto'>
-            <div className='py-40 rounded-2xl'>
-                <p className={`p-10 font-medium text-xl ${Mode}`}>Freemium English and Writing Practice tests</p>
-                <div className='max-w-[1000px] mx-auto'>
-                    <div className="flex flex-col md:flex-row justify-center items-center space-y-4 md:space-y-0 md:space-x-4">
-                        {renderContent()}
+        <div className={`
+            min-h-screen transition-all duration-500
+            ${isDarkMode ? 'bg-gray-900' : 'bg-gradient-to-br from-gray-50 to-gray-100'}
+            py-28
+        `}>
+            <style>
+                {`
+                    @keyframes fadeSlideIn {
+                        0% {
+                            opacity: 0;
+                            transform: translateY(20px);
+                        }
+                        100% {
+                            opacity: 1;
+                            transform: translateY(0);
+                        }
+                    }
+                    .animate-fadeSlideIn {
+                        animation: fadeSlideIn 0.8s ease-out forwards;
+                        opacity: 0;
+                    }
+                `}
+            </style>
+
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="relative space-y-2 mb-12 animate-fadeSlideIn">
+                    <div className="flex items-center space-x-3 mb-2">
+                        <Sparkles className={`w-6 h-6 ${isDarkMode ? 'text-blue-400' : 'text-blue-600'}`} />
+                        <h1 className={`
+                            text-3xl font-bold tracking-tight
+                            ${isDarkMode ? 'text-white' : 'text-gray-900'}
+                        `}>
+                            Digital SAT Practice
+                        </h1>
                     </div>
+                    <p className={`
+                        text-lg max-w-2xl
+                        ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}
+                    `}>
+                        Master the digital SAT format with our adaptive practice tests. Each test includes two modules tailored to your skill level.
+                    </p>
+                </div>
+
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    {isLoading ? (
+                        Array(4).fill(0).map((_, idx) => (
+                            <SkeletonTestCard 
+                                key={idx} 
+                                isDarkMode={isDarkMode} 
+                                index={idx} 
+                            />
+                        ))
+                    ) : (
+                        tests.map((test, index) => (
+                            <TestCard
+                                key={test.id}
+                                test={test}
+                                modules={modules[test.id] || []}
+                                isDarkMode={isDarkMode}
+                                onModuleSelect={(testId, moduleId) => navigate(`/test/${testId}/module/${moduleId}`)}
+                                index={index}
+                            />
+                        ))
+                    )}
                 </div>
             </div>
         </div>
