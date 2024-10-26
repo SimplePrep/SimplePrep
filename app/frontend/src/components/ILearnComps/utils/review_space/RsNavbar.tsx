@@ -6,7 +6,7 @@ import { RxExit } from "react-icons/rx";
 import { FiMenu } from "react-icons/fi";
 import { motion, AnimatePresence } from 'framer-motion';
 import Logo from '../../../assets/logo-icon.png';
-
+import { Lightbulb } from 'lucide-react';
 const ReviewBarLinks = [
     {
         title: 'CheatSheet',
@@ -26,7 +26,7 @@ const ReviewBarLinks = [
     {
         title: 'Test your approach',
         path: 'test-approach',
-        icon: <FaLightbulb size={20} className='text-green-500' />
+        icon: <Lightbulb size={20} className='text-green-500' />
     }
 ];
 

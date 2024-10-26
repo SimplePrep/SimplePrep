@@ -40,7 +40,7 @@ const features = [
     lightBg: "bg-blue-50",
     iconColor: "text-blue-600",
     stats: [
-      { value: "500+", label: "Top Scorers" },
+      { value: "1550+", label: "Top Scorers" },
       { value: "4.9", label: "Strategy Rating" },
       { value: "92%", label: "Success Rate" }
     ]
