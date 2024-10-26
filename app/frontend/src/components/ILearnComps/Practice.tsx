@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { BookOpen, Sparkles } from 'lucide-react';
+import { BookOpen, ChevronRight, Timer, Target, Sparkles } from 'lucide-react';
 import { getModules, getTests } from '../auth_utils/axios/axiosServices';
 
 interface Test {
@@ -13,7 +13,6 @@ interface Module {
     test: number;
     title: string;
     description: string;
-    num_questions: number;
     created_at: string;
     updated_at: string;
 }
@@ -28,56 +27,21 @@ const SkeletonTestCard: React.FC<{ isDarkMode: boolean; index: number }> = ({ is
                 relative overflow-hidden rounded-lg
                 transition-all duration-500 ease-out
                 animate-fadeSlideIn
-                ${isDarkMode ? 'bg-gray-800/40' : 'bg-white/80'}
-                shadow-md
+                ${isDarkMode ? 'bg-gray-800/50' : 'bg-white'}
+                shadow-md p-6 animate-pulse
             `}
         >
-            <div className="p-4 animate-pulse">
-                <div className="flex items-center space-x-3 mb-4">
-                    <div className={`
-                        p-2 rounded-lg
-                        ${isDarkMode ? 'bg-gray-700/50' : 'bg-gray-200'}
-                        w-9 h-9
-                    `} />
-                    <div className={`
-                        h-6 w-32 rounded
-                        ${isDarkMode ? 'bg-gray-700/50' : 'bg-gray-200'}
-                    `} />
+            <div className="space-y-4">
+                <div className="flex items-center space-x-3">
+                    <div className="w-12 h-12 rounded-xl bg-gray-200/10" />
+                    <div>
+                        <div className="h-6 w-32 rounded bg-gray-200/10" />
+                        <div className="h-4 w-24 rounded bg-gray-200/10 mt-2" />
+                    </div>
                 </div>
-                <div className="space-y-2">
-                    {[1, 2].map((_, i) => (
-                        <div
-                            key={i}
-                            className={`
-                                w-full p-3 rounded-lg
-                                ${isDarkMode ? 'bg-gray-700/30' : 'bg-gray-100'}
-                            `}
-                        >
-                            <div className="flex items-center justify-between">
-                                <div className="space-y-2 flex-1">
-                                    <div className={`
-                                        h-5 w-1/3 rounded
-                                        ${isDarkMode ? 'bg-gray-600' : 'bg-gray-200'}
-                                    `} />
-                                    <div className={`
-                                        h-4 w-2/3 rounded
-                                        ${isDarkMode ? 'bg-gray-600' : 'bg-gray-200'}
-                                    `} />
-                                </div>
-                                <div className="flex items-center space-x-4">
-                                    {[1, 2].map((_, j) => (
-                                        <div
-                                            key={j}
-                                            className={`
-                                                h-4 w-8 rounded
-                                                ${isDarkMode ? 'bg-gray-600' : 'bg-gray-200'}
-                                            `}
-                                        />
-                                    ))}
-                                </div>
-                            </div>
-                        </div>
-                    ))}
+                <div className="space-y-3">
+                    <div className="h-16 rounded-xl bg-gray-200/10" />
+                    <div className="h-16 rounded-xl bg-gray-200/10" />
                 </div>
             </div>
         </div>
@@ -91,42 +55,102 @@ const TestCard: React.FC<{
     onModuleSelect: (testId: number, moduleId: number) => void;
     index: number;
 }> = ({ test, modules, isDarkMode, onModuleSelect, index }) => {
+    const [isHovered, setIsHovered] = useState(false);
+    const [activeModule, setActiveModule] = useState<number | null>(null);
+    const animationDelay = `${index * 150}ms`;
+
     return (
-        <div className={`
-            relative overflow-hidden rounded-lg p-6
-            ${isDarkMode ? 'bg-gray-800' : 'bg-white'}
-            shadow-md transition-transform duration-500 hover:scale-105
-        `}>
-            <div className="flex items-center space-x-3 mb-4">
-                <BookOpen className={`w-6 h-6 ${isDarkMode ? 'text-blue-400' : 'text-blue-600'}`} />
-                <h3 className={`text-xl font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                    {test.title}
-                </h3>
-            </div>
-            <div className="space-y-4">
-                {modules.map((module, i) => (
-                    <button
-                        key={module.id}
-                        onClick={() => onModuleSelect(test.id, module.id)}
-                        className={`
-                            py-2 px-4 rounded-full bg-blue-500 text-white text-sm
-                            hover:bg-blue-600 transition-colors duration-300
-                        `}
-                    >
-                        {module.title}
-                    </button>
-                ))}
+        <div
+            style={{ animationDelay }}
+            className={`
+                relative overflow-hidden
+                rounded-lg backdrop-blur-sm
+                transition-all duration-500 ease-out
+                animate-fadeSlideIn
+                ${isDarkMode 
+                    ? 'bg-gray-800/40 hover:bg-gray-800/60' 
+                    : 'bg-white/80 hover:bg-white'}
+                transform hover:scale-[1.01]
+                group cursor-pointer
+                border border-transparent
+                ${isDarkMode ? 'hover:border-gray-700' : 'hover:border-gray-200'}
+                shadow-md
+            `}
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
+        >
+            <div className="relative p-4">
+                <div className="flex items-center space-x-3 mb-4">
+                    <div className={`
+                        p-2 rounded-lg
+                        transition-all duration-300
+                        ${isDarkMode ? 'bg-blue-500/20' : 'bg-blue-100/80'}
+                        group-hover:scale-105
+                    `}>
+                        <BookOpen className={`
+                            w-5 h-5
+                            ${isDarkMode ? 'text-blue-400' : 'text-blue-600'}
+                        `} />
+                    </div>
+                    <h3 className={`
+                        text-lg font-semibold
+                        ${isDarkMode ? 'text-white' : 'text-gray-900'}
+                    `}>
+                        {test.title}
+                    </h3>
+                </div>
+                <div className="space-y-2">
+                    {modules.map((module) => (
+                        <button
+                            key={module.id}
+                            onClick={() => onModuleSelect(test.id, module.id)}
+                            onMouseEnter={() => setActiveModule(module.id)}
+                            onMouseLeave={() => setActiveModule(null)}
+                            className={`
+                                w-full text-left p-3 rounded-lg
+                                transition-all duration-300 ease-out
+                                group/module relative
+                                ${isDarkMode 
+                                    ? 'hover:bg-blue-500/10 bg-gray-700/30' 
+                                    : 'hover:bg-blue-50/50 bg-gray-50/50'}
+                                ${activeModule === module.id ? 'scale-[1.01]' : ''}
+                            `}
+                        >
+                            <div className="flex items-center justify-between">
+                                <div className="space-y-1">
+                                    <span className={`
+                                        font-medium text-base
+                                        ${isDarkMode ? 'text-white' : 'text-gray-900'}
+                                    `}>
+                                        {module.title}
+                                    </span>
+                                    <div className={`
+                                        text-sm
+                                        ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}
+                                    `}>
+                                        {module.description}
+                                    </div>
+                                </div>
+                                <ChevronRight className={`
+                                    w-4 h-4 transition-all duration-300
+                                    text-gray-400 group-hover/module:text-blue-500
+                                    transform group-hover/module:translate-x-1
+                                `} />
+                            </div>
+                        </button>
+                    ))}
+                </div>
             </div>
         </div>
     );
 };
 
-const Contents: React.FC<{ isDarkMode: boolean }> = ({ isDarkMode }) => {
+const Practice: React.FC<{ isDarkMode: boolean }> = ({ isDarkMode }) => {
     const [tests, setTests] = useState<Test[]>([]);
     const [modules, setModules] = useState<{ [key: number]: Module[] }>({});
     const [isLoading, setIsLoading] = useState<boolean>(true);
-    const [error, setError] = useState<string | null>(null);
     const navigate = useNavigate();
+    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -196,6 +220,7 @@ const Contents: React.FC<{ isDarkMode: boolean }> = ({ isDarkMode }) => {
                     </p>
                 </div>
 
+                {/* Test Grid */}
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                     {isLoading ? (
                         Array(4).fill(0).map((_, idx) => (
@@ -223,4 +248,4 @@ const Contents: React.FC<{ isDarkMode: boolean }> = ({ isDarkMode }) => {
     );
 };
 
-export default Contents;
+export default Practice;
