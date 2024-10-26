@@ -6,7 +6,7 @@ import BlogPostDetails from './components/Landing/features/BlogPostDetails';
 import Blogs from './components/Landing/Blogs';
 import TestPageUI from './components/ILearnComps/utils/test_components/TestPageUI';
 import ResetPassword from './pages/Authentication/ResetPassword';
-import Contents from './components/ILearnComps/Contents';
+import Contents from './components/ILearnComps/Practice';
 import Analytics from './components/ILearnComps/Analytics';
 import SignUpComponent from './pages/Authentication/SignUp';
 import Tutorials from './components/ILearnComps/Tutorials';
