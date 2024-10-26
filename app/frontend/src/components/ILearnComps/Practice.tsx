@@ -79,7 +79,18 @@ const TestCard: React.FC<{
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
         >
+            {/* Gradient overlay */}
+            <div className={`
+                absolute inset-0 transition-opacity duration-500
+                bg-gradient-to-br 
+                ${isDarkMode 
+                    ? 'from-blue-500/10 to-purple-500/10' 
+                    : 'from-blue-50/50 to-purple-50/50'}
+                ${isHovered ? 'opacity-100' : 'opacity-0'}
+            `} />
+
             <div className="relative p-4">
+                {/* Header */}
                 <div className="flex items-center space-x-3 mb-4">
                     <div className={`
                         p-2 rounded-lg
@@ -99,6 +110,8 @@ const TestCard: React.FC<{
                         {test.title}
                     </h3>
                 </div>
+
+                {/* Modules */}
                 <div className="space-y-2">
                     {modules.map((module) => (
                         <button
@@ -118,12 +131,14 @@ const TestCard: React.FC<{
                         >
                             <div className="flex items-center justify-between">
                                 <div className="space-y-1">
-                                    <span className={`
-                                        font-medium text-base
-                                        ${isDarkMode ? 'text-white' : 'text-gray-900'}
-                                    `}>
-                                        {module.title}
-                                    </span>
+                                    <div className="flex items-center space-x-2">
+                                        <span className={`
+                                            font-medium text-base
+                                            ${isDarkMode ? 'text-white' : 'text-gray-900'}
+                                        `}>
+                                            {module.title}
+                                        </span>
+                                    </div>
                                     <div className={`
                                         text-sm
                                         ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}
@@ -131,11 +146,16 @@ const TestCard: React.FC<{
                                         {module.description}
                                     </div>
                                 </div>
-                                <ChevronRight className={`
-                                    w-4 h-4 transition-all duration-300
-                                    text-gray-400 group-hover/module:text-blue-500
-                                    transform group-hover/module:translate-x-1
-                                `} />
+
+                                {/* Module stats */}
+                                <div className="flex items-center space-x-4">
+                                    <Timer className="w-4 h-4 text-gray-400" />
+                                    <ChevronRight className={`
+                                        w-4 h-4 transition-all duration-300
+                                        text-gray-400 group-hover/module:text-blue-500
+                                        transform group-hover/module:translate-x-1
+                                    `} />
+                                </div>
                             </div>
                         </button>
                     ))}
@@ -148,27 +168,40 @@ const TestCard: React.FC<{
 const Practice: React.FC<{ isDarkMode: boolean }> = ({ isDarkMode }) => {
     const [tests, setTests] = useState<Test[]>([]);
     const [modules, setModules] = useState<{ [key: number]: Module[] }>({});
-    const [isLoading, setIsLoading] = useState<boolean>(true);
-    const navigate = useNavigate();
+    const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const navigate = useNavigate();
+
+    const fetchDataWithTimeout = async (timeout: number) => {
+        return Promise.race([
+            (async () => {
+                const testData: Test[] = await getTests();
+                const modulesData: { [key: number]: Module[] } = {};
+
+                for (const test of testData) {
+                    const moduleData: Module[] = await getModules(test.id);
+                    modulesData[test.id] = moduleData;
+                }
+
+                setTests(testData);
+                setModules(modulesData);
+                setIsLoading(false);
+            })(),
+            new Promise((_, reject) =>
+                setTimeout(() => reject(new Error('Request timed out')), timeout)
+            )
+        ]);
+    };
 
     useEffect(() => {
         const fetchData = async () => {
             try {
                 setIsLoading(true);
-                const testData = await getTests();
-                setTests(testData);
-                
-                const modulesData: { [key: number]: Module[] } = {};
-                for (const test of testData) {
-                    const moduleData = await getModules(test.id);
-                    modulesData[test.id] = moduleData;
-                }
-                setModules(modulesData);
+                setError(null);
+                await fetchDataWithTimeout(5000); // 5 seconds timeout
             } catch (error) {
-                setError('Failed to fetch data.');
                 console.error('Failed to fetch data:', error);
-            } finally {
+                setError('Failed to fetch data.');
                 setIsLoading(false);
             }
         };
@@ -202,6 +235,7 @@ const Practice: React.FC<{ isDarkMode: boolean }> = ({ isDarkMode }) => {
             </style>
 
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                {/* Header */}
                 <div className="relative space-y-2 mb-12 animate-fadeSlideIn">
                     <div className="flex items-center space-x-3 mb-2">
                         <Sparkles className={`w-6 h-6 ${isDarkMode ? 'text-blue-400' : 'text-blue-600'}`} />
@@ -219,6 +253,13 @@ const Practice: React.FC<{ isDarkMode: boolean }> = ({ isDarkMode }) => {
                         Master the digital SAT format with our adaptive practice tests. Each test includes two modules tailored to your skill level.
                     </p>
                 </div>
+
+                {/* Display Error Message */}
+                {error && (
+                    <div className="text-center mb-6">
+                        <p className="text-red-600 text-lg font-semibold">{error}</p>
+                    </div>
+                )}
 
                 {/* Test Grid */}
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
