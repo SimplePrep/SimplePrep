@@ -27,27 +27,64 @@ const SkeletonTestCard: React.FC<{ isDarkMode: boolean; index: number }> = ({ is
                 relative overflow-hidden rounded-lg
                 transition-all duration-500 ease-out
                 animate-fadeSlideIn
-                ${isDarkMode ? 'bg-gray-800/50' : 'bg-white'}
-                shadow-md p-6 animate-pulse
+                ${isDarkMode ? 'bg-gray-800/40' : 'bg-white/80'}
+                shadow-md
             `}
         >
-            <div className="space-y-4">
-                <div className="flex items-center space-x-3">
-                    <div className="w-12 h-12 rounded-xl bg-gray-200/10" />
-                    <div>
-                        <div className="h-6 w-32 rounded bg-gray-200/10" />
-                        <div className="h-4 w-24 rounded bg-gray-200/10 mt-2" />
-                    </div>
+            <div className="p-4 animate-pulse">
+                {/* Header Skeleton */}
+                <div className="flex items-center space-x-3 mb-4">
+                    <div className={`
+                        p-2 rounded-lg
+                        ${isDarkMode ? 'bg-gray-700/50' : 'bg-gray-200'}
+                        w-9 h-9
+                    `} />
+                    <div className={`
+                        h-6 w-32 rounded
+                        ${isDarkMode ? 'bg-gray-700/50' : 'bg-gray-200'}
+                    `} />
                 </div>
-                <div className="space-y-3">
-                    <div className="h-16 rounded-xl bg-gray-200/10" />
-                    <div className="h-16 rounded-xl bg-gray-200/10" />
+
+                {/* Modules Skeleton */}
+                <div className="space-y-2">
+                    {[1, 2].map((_, i) => (
+                        <div
+                            key={i}
+                            className={`
+                                w-full p-3 rounded-lg
+                                ${isDarkMode ? 'bg-gray-700/30' : 'bg-gray-100'}
+                            `}
+                        >
+                            <div className="flex items-center justify-between">
+                                <div className="space-y-2 flex-1">
+                                    <div className={`
+                                        h-5 w-1/3 rounded
+                                        ${isDarkMode ? 'bg-gray-600' : 'bg-gray-200'}
+                                    `} />
+                                    <div className={`
+                                        h-4 w-2/3 rounded
+                                        ${isDarkMode ? 'bg-gray-600' : 'bg-gray-200'}
+                                    `} />
+                                </div>
+                                <div className="flex items-center space-x-4">
+                                    {[1, 2].map((_, j) => (
+                                        <div
+                                            key={j}
+                                            className={`
+                                                h-4 w-8 rounded
+                                                ${isDarkMode ? 'bg-gray-600' : 'bg-gray-200'}
+                                            `}
+                                        />
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+                    ))}
                 </div>
             </div>
         </div>
     );
 };
-
 const TestCard: React.FC<{
     test: Test;
     modules: Module[];
@@ -125,7 +162,7 @@ const TestCard: React.FC<{
                                 group/module relative
                                 ${isDarkMode 
                                     ? 'hover:bg-blue-500/10 bg-gray-700/30' 
-                                    : 'hover:bg-blue-50/50 bg-gray-50/50'}
+                                    : 'hover:bg-blue-100/100 bg-gray-100'}
                                 ${activeModule === module.id ? 'scale-[1.01]' : ''}
                             `}
                         >
@@ -149,7 +186,24 @@ const TestCard: React.FC<{
 
                                 {/* Module stats */}
                                 <div className="flex items-center space-x-4">
-                                    <Timer className="w-4 h-4 text-gray-400" />
+                                    <div className="flex items-center space-x-1">
+                                        <Timer className="w-4 h-4 text-gray-400" />
+                                        <span className={`
+                                            text-xs
+                                            ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}
+                                        `}>
+                                            35m
+                                        </span>
+                                    </div>
+                                    <div className="flex items-center space-x-1">
+                                        <Target className="w-4 h-4 text-gray-400" />
+                                        <span className={`
+                                            text-xs
+                                            ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}
+                                        `}>
+                                            27
+                                        </span>
+                                    </div>
                                     <ChevronRight className={`
                                         w-4 h-4 transition-all duration-300
                                         text-gray-400 group-hover/module:text-blue-500
@@ -157,6 +211,14 @@ const TestCard: React.FC<{
                                     `} />
                                 </div>
                             </div>
+
+                            {/* Progress bar */}
+                            <div className={`
+                                absolute bottom-0 left-0 h-0.5
+                                bg-gradient-to-r from-blue-500 to-purple-500
+                                transition-all duration-500 transform origin-left
+                                ${activeModule === module.id ? 'w-full scale-x-100' : 'w-0 scale-x-0'}
+                            `} />
                         </button>
                     ))}
                 </div>
@@ -164,7 +226,6 @@ const TestCard: React.FC<{
         </div>
     );
 };
-
 const Practice: React.FC<{ isDarkMode: boolean }> = ({ isDarkMode }) => {
     const [tests, setTests] = useState<Test[]>([]);
     const [modules, setModules] = useState<{ [key: number]: Module[] }>({});
