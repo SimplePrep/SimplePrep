@@ -5,11 +5,11 @@ import StudySpaceVisuals from './StudySpaceVisual';
 
 const Hero2 = () => {
   return (
-    <>
+    <div id='our-vision'>
         <StudySpaceVisuals />
         <ReviewSpaceVisuals />
         <AnalyticsSpaceVisual />
-    </>
+    </div>
   )
 }
 
