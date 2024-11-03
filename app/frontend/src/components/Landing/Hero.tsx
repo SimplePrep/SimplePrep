@@ -284,7 +284,7 @@ const Hero: React.FC = () => {
     };
   }, []);
   return (
-    <div className="w-full bg-gradient-to-b from-indigo-100 via-white to-indigo-100 overflow-hidden">
+    <div id='product' className="w-full bg-gradient-to-b from-indigo-100 via-white to-indigo-100 overflow-hidden">
       <div className="absolute inset-0 bg-grid-slate-100 [mask-image:linear-gradient(0deg,white,rgba(255,255,255,0.6))] bg-fixed" />
       
       <motion.div 

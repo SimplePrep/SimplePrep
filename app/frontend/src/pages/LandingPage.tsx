@@ -1,7 +1,7 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '../components/store';
-import Navbar from "../components/Landing/navbar2";
+import Navbar from "../components/Landing/navbar";
 import { Outlet } from "react-router-dom";
 import About from '../components/Landing/About';
 import Hero from '../components/Landing/Hero';
