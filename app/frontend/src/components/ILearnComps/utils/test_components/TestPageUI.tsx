@@ -14,6 +14,8 @@ import { checkAuthenticated, loadUser } from '../../../auth_utils/actions/Action
 import { auth } from '../../../auth_utils/firebaseConfig';
 import { setTheme } from '../../../auth_utils/reducers/authReducer';
 
+
+
 const TestPageUI = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { questions, modules, userAnswers } = useSelector((state: RootState) => state.data);
@@ -32,6 +34,7 @@ const TestPageUI = () => {
   const navigate = useNavigate();
   const [isVisible, setIsVisible] = useState(false); // Modified: default is false (modal hidden)
   const [remarkedQuestions, setRemarkedQuestions] = useState<number[]>([]);
+  const [forceRefresh, setForceRefresh] = useState(false);
 
   useEffect(() => {
     const checkAuthStatus = async () => {
@@ -51,17 +54,20 @@ const TestPageUI = () => {
     }
   }, [loading, isAuthenticated, isLoading, navigate]);
 
+  
   useEffect(() => {
     const fetchQuestions = async () => {
       if (!moduleId) return;
       try {
         const fetchedQuestions = await getQuestionsByModuleId(Number(moduleId));
+        console.log('Fetched questions:', fetchedQuestions); // Debugging
         dispatch(setQuestions({ moduleId, questions: fetchedQuestions }));
         setLocalQuestions(fetchedQuestions);
       } catch (error) {
         console.error('Error fetching questions:', error);
       }
     };
+
     const fetchModule = async () => {
       if (!testId) return;
       try {
@@ -75,18 +81,27 @@ const TestPageUI = () => {
     };
 
     if (moduleId && testId) {
-      if (!questions[moduleId]) {
+      if (forceRefresh || !questions[moduleId]) {
         fetchQuestions();
+        setForceRefresh(false);
       } else {
         setLocalQuestions(questions[moduleId]);
       }
+
       if (!modules[testId]) {
         fetchModule();
       } else {
         setCurrentModule(modules[testId].find((mod) => mod.id === Number(moduleId)) || null);
       }
     }
-  }, [moduleId, testId, questions, modules, dispatch]);
+  }, [moduleId, testId, questions, modules, forceRefresh, dispatch]);
+
+  // Clear session storage on module change
+  useEffect(() => {
+    if (moduleId) {
+      sessionStorage.removeItem(`userAnswers-${moduleId}`);
+    }
+  }, [moduleId]);
 
   useEffect(() => {
     if (moduleId) {
