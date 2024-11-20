@@ -32,6 +32,7 @@ const TestPageUI = () => {
   const navigate = useNavigate();
   const [isVisible, setIsVisible] = useState(false); // Modified: default is false (modal hidden)
   const [remarkedQuestions, setRemarkedQuestions] = useState<number[]>([]);
+  const BASE_URL = "https://beta-simpleprep.com";
 
   useEffect(() => {
     const checkAuthStatus = async () => {
@@ -384,6 +385,18 @@ const TestPageUI = () => {
         <div className="w-full lg:w-[50%] lg:border-r-2 order-1 lg:order-none">
           <div className={`h-full p-3 sm:p-5 ${theme === 'dark' ? 'bg-gray-700' : 'bg-gray-200'}`}>
             <div className={`h-full p-3 sm:p-10 rounded-2xl overflow-auto ${theme === 'dark' ? 'bg-gray-900' : 'bg-white'}`}>
+              {/* Display question image if it exists */}
+              {currentQuestion.graph_img && (
+                <div className="mb-4">
+                  <img
+                    src={`${BASE_URL}${currentQuestion.graph_img}`} // Combine BASE_URL with relative path
+                    alt="Question context"
+                    className="w-full max-h-[300px] object-contain border-2 rounded-lg"
+                    onError={(e) => (e.currentTarget.src = '/fallback-image.png')} // Optional fallback image
+                  />
+                </div>
+              )}
+              {/* Display question context */}
               <p className="font-medium text-sm sm:text-lg">
                 {handleParagraphSplit(currentQuestion.context)}
               </p>
