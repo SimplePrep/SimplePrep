@@ -29,6 +29,12 @@ axiosInstance.interceptors.request.use(
       }
     }
 
+    // Add cache-busting query parameter
+    config.params = {
+      ...config.params,
+      timestamp: Date.now(), // Ensure each request has a unique timestamp
+    };
+
     return config;
   },
   (error) => {
