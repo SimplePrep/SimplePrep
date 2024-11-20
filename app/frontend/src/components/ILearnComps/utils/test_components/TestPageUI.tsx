@@ -325,35 +325,48 @@ const TestPageUI = () => {
       
       {/* Header Section - Consistent across mobile and desktop */}
       <div className="relative flex p-2 sm:p-3 justify-between items-center">
-        <div className="mx-2 sm:mx-5 flex gap-2 sm:gap-3 items-center">
-          <p className="text-bold font-ubuntu text-base sm:text-2xl">{currentModule?.title}</p>
-          <button 
-            onClick={toggleDarkMode} 
-            className="text-sm sm:text-lg p-2 sm:p-3 border-2 rounded-full hover:bg-[#00df9a] hover:text-white hover:border-blue-800"
-          >
-            {theme === 'dark' ? <BsSun /> : <BsMoon />}
-          </button>
-        </div>
-        
-        <div className="absolute left-1/2 transform -translate-x-1/2 flex flex-col items-center">
-          <button 
-            onClick={handleTogglePreview} 
-            className='flex flex-row items-center gap-1 sm:gap-2 py-1 px-3 sm:py-2 sm:px-6 border-2 rounded-full hover:bg-[#00df9a] hover:text-white font-semibold text-sm sm:text-lg hover:border-blue-800'
-          >
-            <p>Preview</p>
-            {isVisible ? <BsChevronUp /> : <BsChevronDown />}
-          </button>
-        </div>
-        
-        <div className="mx-2 sm:mx-5 flex justify-end items-center gap-2 sm:gap-5">
-          <button 
-            onClick={handleExit} 
-            className="py-1 px-3 sm:py-2 sm:px-6 border-2 rounded-full hover:bg-[#00df9a] hover:text-white font-semibold text-sm sm:text-lg hover:border-blue-800"
-          >
-            Exit
-          </button>
-        </div>
+      {/* Left section - Module Title and Theme Toggle */}
+      <div className="mx-2 sm:mx-5 flex gap-2 sm:gap-3 items-center">
+        <p className="text-bold font-ubuntu text-base sm:text-2xl">Test 1 Module 1</p>
+        <button
+          onClick={toggleDarkMode}
+          className="text-sm sm:text-lg p-2 sm:p-3 border-2 rounded-full hover:bg-[#00df9a] hover:text-white hover:border-blue-800 
+          max-sm:hidden" // Hide on mobile screens
+        >
+          {theme === 'dark' ? <BsSun /> : <BsMoon />}
+        </button>
       </div>
+
+      {/* Center section - Preview Button */}
+      <div className="absolute left-1/2 ml-3 sm:ml-0 transform -translate-x-1/2 flex flex-col items-center">
+        <button
+          onClick={handleTogglePreview}
+          className='flex flex-row items-center gap-1 sm:gap-2 py-1 px-3 sm:py-2 sm:px-6 border-2 rounded-full 
+          hover:bg-[#00df9a] hover:text-white font-semibold text-sm sm:text-lg hover:border-blue-800'
+        >
+          <p>Preview</p>
+          {isVisible ? <BsChevronUp /> : <BsChevronDown />}
+        </button>
+      </div>
+
+      {/* Right section - Exit Button */}
+      <div className="mx-2 sm:mx-5 flex justify-end items-center gap-2 sm:gap-5">
+        {/* Mobile Theme Toggle - Only visible on mobile */}
+        <button
+          onClick={toggleDarkMode}
+          className="sm:hidden text-sm p-2 border-2 rounded-full hover:bg-[#00df9a] hover:text-white hover:border-blue-800"
+        >
+          {theme === 'dark' ? <BsSun /> : <BsMoon />}
+        </button>
+        
+        <button
+          onClick={handleExit}
+          className="py-1 px-3 sm:py-2 sm:px-6 border-2 rounded-full hover:bg-[#00df9a] hover:text-white font-semibold text-sm sm:text-lg hover:border-blue-800"
+        >
+          Exit
+        </button>
+      </div>
+    </div>
       
       <hr className={`border-[1.5px] ${theme === 'dark' ? 'border-white' : 'border-gray-300'}`} />
       
@@ -397,7 +410,7 @@ const TestPageUI = () => {
                 {answerChoices.map((choice, index) => (
                   <button
                     key={index}
-                    className={`py-2 px-3 sm:py-3 sm:px-4 border-2 rounded-lg font-semibold text-xs sm:text-md w-full text-left 
+                    className={`py-2 px-3 sm:py-3 sm:px-4 border-2 rounded-lg font-semibold text-sm sm:text-lg w-full text-left 
                       ${selectedChoice === choice.label ? 'border-[#00df9a]' : 'hover:border-blue-500'} 
                       dark:hover:border-blue-600`}
                     onClick={() => handleAnswerSelection(choice.label)}
