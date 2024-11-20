@@ -32,7 +32,7 @@ const QuestionListModal: React.FC<QuestionListModalProps> = ({
           </button>
         </div>
         
-        <div className="grid grid-cols-4 sm:grid-cols-5 gap-2">
+        <div className="grid grid-cols-6 sm:grid-cols-8 gap-1 sm:gap-2">
           {questions.map((_, index) => {
             const questionNumber = index + 1;
             let bgColor = 'bg-white';
@@ -46,7 +46,7 @@ const QuestionListModal: React.FC<QuestionListModalProps> = ({
             return (
               <button
                 key={index}
-                className={`w-full aspect-square ${bgColor} text-gray-900 flex items-center justify-center rounded-md border-2 hover:border-red-800 text-sm sm:text-base`}
+                className={`w-full aspect-square ${bgColor} text-gray-900 flex items-center justify-center rounded-md border-2 hover:border-red-800 text-xs sm:text-sm p-0.5`}
                 onClick={() => onSelectQuestion(index)}
               >
                 {questionNumber}
@@ -63,7 +63,7 @@ const QuestionListModal: React.FC<QuestionListModalProps> = ({
             { color: 'bg-white border dark:bg-gray-700', label: 'Unanswered' }
           ].map(({ color, label }) => (
             <span key={label} className="flex items-center gap-2">
-              <div className={`w-4 h-4 ${color} rounded-md`}></div>
+              <div className={`w-3 h-3 sm:w-4 sm:h-4 ${color} rounded-md`}></div>
               <p className="dark:text-white text-xs sm:text-base">{label}</p>
             </span>
           ))}
