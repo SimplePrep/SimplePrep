@@ -20,8 +20,6 @@ const dataSlice = createSlice({
   initialState,
   reducers: {
     setQuestions: (state, action: PayloadAction<{ moduleId: string; questions: Question[] }>) => {
-      console.log(`Updating questions in Redux for moduleId: ${action.payload.moduleId}`);
-      console.log('Questions Data:', action.payload.questions);
       state.questions[action.payload.moduleId] = action.payload.questions;
     },
     setModules: (state, action: PayloadAction<{ testId: string; modules: Module[] }>) => {
