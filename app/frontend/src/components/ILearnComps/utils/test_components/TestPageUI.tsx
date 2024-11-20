@@ -54,37 +54,45 @@ const TestPageUI = () => {
   useEffect(() => {
     const fetchQuestions = async () => {
       if (!moduleId) return;
+  
       try {
         const fetchedQuestions = await getQuestionsByModuleId(Number(moduleId));
-        dispatch(setQuestions({ moduleId, questions: fetchedQuestions }));
-        setLocalQuestions(fetchedQuestions);
+        if (fetchedQuestions && fetchedQuestions.length > 0) {
+          dispatch(setQuestions({ moduleId, questions: fetchedQuestions }));
+          setLocalQuestions(fetchedQuestions);
+        } else {
+          console.warn(`No questions found for moduleId: ${moduleId}`);
+        }
       } catch (error) {
-        console.error('Error fetching questions:', error);
+        console.error("Error fetching questions:", error);
       }
     };
   
-    const fetchModule = async () => {
+    const fetchModules = async () => {
       if (!testId) return;
+  
       try {
         const fetchedModules = await getModules(Number(testId));
-        const module = fetchedModules.find((mod) => mod.id === Number(moduleId));
-        dispatch(setModules({ testId, modules: fetchedModules }));
-        setCurrentModule(module || null);
+        const current = fetchedModules.find((mod) => mod.id === Number(moduleId));
+        if (fetchedModules && current) {
+          dispatch(setModules({ testId, modules: fetchedModules }));
+          setCurrentModule(current);
+        } else {
+          console.warn(`No modules found for testId: ${testId}`);
+        }
       } catch (error) {
-        console.error('Error fetching module:', error);
+        console.error("Error fetching modules:", error);
       }
     };
   
     if (moduleId && testId) {
-      dispatch(clearQuestions(moduleId)); // Clear outdated state
       fetchQuestions();
-      if (!modules[testId]) {
-        fetchModule();
-      } else {
-        setCurrentModule(modules[testId].find((mod) => mod.id === Number(moduleId)) || null);
-      }
+      fetchModules();
+    } else {
+      console.error("Missing testId or moduleId for fetching data.");
     }
   }, [moduleId, testId, dispatch]);
+  
   
     useEffect(() => {
       if (moduleId && questions[moduleId]) { // Check if moduleId is defined
