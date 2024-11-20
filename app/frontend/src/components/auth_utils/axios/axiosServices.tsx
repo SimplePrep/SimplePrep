@@ -31,6 +31,7 @@ interface TestModuleDetails {
   export const getQuestionsByModuleId = async (testModuleId: number): Promise<Question[]> => {
     try {
       const response = await axiosInstance.get(`api/core/questions/${testModuleId}/`);
+      console.log('API Response (Questions):', response.data); // Debugging
       return response.data;
     } catch (error) {
       console.error('Error fetching questions:', error);

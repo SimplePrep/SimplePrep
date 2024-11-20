@@ -14,8 +14,6 @@ import { checkAuthenticated, loadUser } from '../../../auth_utils/actions/Action
 import { auth } from '../../../auth_utils/firebaseConfig';
 import { setTheme } from '../../../auth_utils/reducers/authReducer';
 
-
-
 const TestPageUI = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { questions, modules, userAnswers } = useSelector((state: RootState) => state.data);
@@ -34,7 +32,6 @@ const TestPageUI = () => {
   const navigate = useNavigate();
   const [isVisible, setIsVisible] = useState(false); // Modified: default is false (modal hidden)
   const [remarkedQuestions, setRemarkedQuestions] = useState<number[]>([]);
-  const [forceRefresh, setForceRefresh] = useState(false);
 
   useEffect(() => {
     const checkAuthStatus = async () => {
@@ -59,14 +56,8 @@ const TestPageUI = () => {
       if (!moduleId) return;
       try {
         const fetchedQuestions = await getQuestionsByModuleId(Number(moduleId));
-        
-        // Dispatch with new structure
-        dispatch(setQuestions({ 
-          moduleId: moduleId.toString(), 
-          questions: fetchedQuestions 
-        }));
-        
-        // Set local questions from fetched data
+        console.log('Fetched Questions:', fetchedQuestions); // Debugging
+        dispatch(setQuestions({ moduleId, questions: fetchedQuestions }));
         setLocalQuestions(fetchedQuestions);
       } catch (error) {
         console.error('Error fetching questions:', error);
@@ -77,58 +68,48 @@ const TestPageUI = () => {
       if (!testId) return;
       try {
         const fetchedModules = await getModules(Number(testId));
-        
-        // Dispatch with new structure
-        dispatch(setModules({ 
-          testId: testId.toString(), 
-          modules: fetchedModules 
-        }));
-        
-        // Set current module
-        setCurrentModule(fetchedModules.find((mod) => mod.id === Number(moduleId)) || null);
+        const module = fetchedModules.find((mod) => mod.id === Number(moduleId));
+        dispatch(setModules({ testId, modules: fetchedModules }));
+        setCurrentModule(module || null);
       } catch (error) {
         console.error('Error fetching module:', error);
       }
     };
   
-    // Refresh logic with version and timestamp checks
-    const shouldRefresh = (stateData: { timestamp?: number; version?: number }) => {
-      if (!stateData) return true;
-  
-      const currentTime = Date.now();
-      const timeSinceLastFetch = (currentTime - (stateData.timestamp || 0)) / (1000 * 60 * 60);
-      
-      // Refresh if:
-      // 1. No timestamp exists
-      // 2. More than 1 hour has passed since last fetch
-      // 3. Version is 0 or undefined
-      return !stateData.timestamp || 
-             timeSinceLastFetch > 1 || 
-             (stateData.version === undefined || stateData.version === 0);
-    };
-  
     if (moduleId && testId) {
-      // Check if we need to refresh questions
-      const questionsState = questions[moduleId.toString()];
-      const modulesState = modules[testId.toString()];
-  
-      if (shouldRefresh(questionsState) || shouldRefresh(modulesState)) {
-        fetchQuestions();
+      dispatch(clearQuestions(moduleId)); // Clear outdated state
+      fetchQuestions();
+      if (!modules[testId]) {
         fetchModule();
       } else {
-        // Fallback to existing data
-        if (questionsState?.data) {
-          setLocalQuestions(questionsState.data);
-        }
-        
-        if (modulesState?.data) {
-          setCurrentModule(
-            modulesState.data.find((mod) => mod.id === Number(moduleId)) || null
-          );
+        setCurrentModule(modules[testId].find((mod) => mod.id === Number(moduleId)) || null);
+      }
+    }
+  }, [moduleId, testId, dispatch]);
+  
+    useEffect(() => {
+      if (moduleId && questions[moduleId]) { // Check if moduleId is defined
+        console.log('Redux Questions Updated:', questions[moduleId]); // Debugging
+        setLocalQuestions(questions[moduleId]);
+      }
+    }, [questions, moduleId]);
+  
+  
+  useEffect(() => {
+    if (moduleId) {
+      if (userAnswers[moduleId]) {
+        setLocalUserAnswers(userAnswers[moduleId]);
+      } else {
+        const savedAnswers = sessionStorage.getItem(`userAnswers-${moduleId}`);
+        if (savedAnswers) {
+          const parsedAnswers = JSON.parse(savedAnswers);
+          setLocalUserAnswers(parsedAnswers);
+          dispatch(saveUserAnswers({ moduleId, answers: parsedAnswers }));
         }
       }
     }
-  }, [moduleId, testId, questions, modules, dispatch]);
+  }, [moduleId, userAnswers, dispatch]);
+  
 
   useEffect(() => {
     if (moduleId) {
