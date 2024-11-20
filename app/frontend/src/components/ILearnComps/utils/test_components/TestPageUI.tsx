@@ -54,54 +54,81 @@ const TestPageUI = () => {
     }
   }, [loading, isAuthenticated, isLoading, navigate]);
 
-  
   useEffect(() => {
     const fetchQuestions = async () => {
       if (!moduleId) return;
       try {
         const fetchedQuestions = await getQuestionsByModuleId(Number(moduleId));
-        console.log('Fetched questions:', fetchedQuestions); // Debugging
-        dispatch(setQuestions({ moduleId, questions: fetchedQuestions }));
+        
+        // Dispatch with new structure
+        dispatch(setQuestions({ 
+          moduleId: moduleId.toString(), 
+          questions: fetchedQuestions 
+        }));
+        
+        // Set local questions from fetched data
         setLocalQuestions(fetchedQuestions);
       } catch (error) {
         console.error('Error fetching questions:', error);
       }
     };
-
+  
     const fetchModule = async () => {
       if (!testId) return;
       try {
         const fetchedModules = await getModules(Number(testId));
-        const module = fetchedModules.find((mod) => mod.id === Number(moduleId));
-        dispatch(setModules({ testId, modules: fetchedModules }));
-        setCurrentModule(module || null);
+        
+        // Dispatch with new structure
+        dispatch(setModules({ 
+          testId: testId.toString(), 
+          modules: fetchedModules 
+        }));
+        
+        // Set current module
+        setCurrentModule(fetchedModules.find((mod) => mod.id === Number(moduleId)) || null);
       } catch (error) {
         console.error('Error fetching module:', error);
       }
     };
-
+  
+    // Refresh logic with version and timestamp checks
+    const shouldRefresh = (stateData: { timestamp?: number; version?: number }) => {
+      if (!stateData) return true;
+  
+      const currentTime = Date.now();
+      const timeSinceLastFetch = (currentTime - (stateData.timestamp || 0)) / (1000 * 60 * 60);
+      
+      // Refresh if:
+      // 1. No timestamp exists
+      // 2. More than 1 hour has passed since last fetch
+      // 3. Version is 0 or undefined
+      return !stateData.timestamp || 
+             timeSinceLastFetch > 1 || 
+             (stateData.version === undefined || stateData.version === 0);
+    };
+  
     if (moduleId && testId) {
-      if (forceRefresh || !questions[moduleId]) {
+      // Check if we need to refresh questions
+      const questionsState = questions[moduleId.toString()];
+      const modulesState = modules[testId.toString()];
+  
+      if (shouldRefresh(questionsState) || shouldRefresh(modulesState)) {
         fetchQuestions();
-        setForceRefresh(false);
-      } else {
-        setLocalQuestions(questions[moduleId]);
-      }
-
-      if (!modules[testId]) {
         fetchModule();
       } else {
-        setCurrentModule(modules[testId].find((mod) => mod.id === Number(moduleId)) || null);
+        // Fallback to existing data
+        if (questionsState?.data) {
+          setLocalQuestions(questionsState.data);
+        }
+        
+        if (modulesState?.data) {
+          setCurrentModule(
+            modulesState.data.find((mod) => mod.id === Number(moduleId)) || null
+          );
+        }
       }
     }
-  }, [moduleId, testId, questions, modules, forceRefresh, dispatch]);
-
-  // Clear session storage on module change
-  useEffect(() => {
-    if (moduleId) {
-      sessionStorage.removeItem(`userAnswers-${moduleId}`);
-    }
-  }, [moduleId]);
+  }, [moduleId, testId, questions, modules, dispatch]);
 
   useEffect(() => {
     if (moduleId) {
