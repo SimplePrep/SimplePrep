@@ -183,5 +183,5 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 AUTH_USER_MODEL = 'user.User'
 
 CORS_ALLOWED_ORIGINS = [
-    "https://try.beta-simpleprep.com",
+    "https://beta-simpleprep.com",
 ]
