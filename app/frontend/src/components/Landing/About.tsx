@@ -148,7 +148,7 @@ const About = () => {
   return (
     <div className="px-4 sm:px-6 lg:px-8 mt-20 md:mt-10">
       <div className="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80" aria-hidden="true">
-        <div className="relative left-[calc(50%-11rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr from-indigo-600 to-purple-600 opacity-20 sm:left-[calc(50%-30rem)] sm:w-[72.1875rem]" />
+        <div className="relative left-[calc(50%-11rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr from-purple-600 to-purple-700 opacity-20 sm:left-[calc(50%-30rem)] sm:w-[72.1875rem]" />
       </div>
 
       <motion.div
