@@ -19,7 +19,7 @@ interface NavbarProps {
 }
 
 const Navbar: React.FC<NavbarProps> = ({ isAuthenticated }) => {
-  const [nav, setNav] = useState(false);
+  const [navOpen, setNavOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
   const navigate = useNavigate();
 
@@ -27,23 +27,18 @@ const Navbar: React.FC<NavbarProps> = ({ isAuthenticated }) => {
     const handleResize = () => {
       setIsMobile(window.innerWidth <= 768);
     };
-
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
   useEffect(() => {
-    if (nav) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'auto';
-    }
+    document.body.style.overflow = navOpen ? 'hidden' : 'auto';
     return () => {
       document.body.style.overflow = 'auto';
     };
-  }, [nav]);
+  }, [navOpen]);
 
-  const handleNav = () => setNav(!nav);
+  const handleNavToggle = () => setNavOpen(!navOpen);
 
   const handleLoginClick = () => {
     if (isAuthenticated) {
@@ -61,13 +56,13 @@ const Navbar: React.FC<NavbarProps> = ({ isAuthenticated }) => {
       if (section) {
         scrollToSection(path);
       } else {
-        navigate('/'); // Redirect to home page
+        navigate('/');
         setTimeout(() => {
-          scrollToSection(path); // Scroll to the section after navigating to the home page
-        }, 300); // Adjust this timeout to match the page load time
+          scrollToSection(path);
+        }, 300);
       }
     }
-    setNav(false); // Close the mobile menu after navigation
+    setNavOpen(false);
   };
 
   const navVariants = {
@@ -75,10 +70,7 @@ const Navbar: React.FC<NavbarProps> = ({ isAuthenticated }) => {
     visible: {
       opacity: 1,
       y: 0,
-      transition: {
-        delay: 0.2,
-        duration: 0.6,
-      },
+      transition: { delay: 0.2, duration: 0.6 },
     },
   };
 
@@ -87,10 +79,7 @@ const Navbar: React.FC<NavbarProps> = ({ isAuthenticated }) => {
     visible: {
       opacity: 1,
       x: 0,
-      transition: {
-        delay: 0.5,
-        duration: 0.6,
-      },
+      transition: { delay: 0.5, duration: 0.6 },
     },
   };
 
@@ -98,96 +87,118 @@ const Navbar: React.FC<NavbarProps> = ({ isAuthenticated }) => {
     hidden: { x: "-100%" },
     visible: {
       x: 0,
-      transition: {
-        duration: 0.3,
-      },
+      transition: { duration: 0.3 },
     },
   };
 
   return (
-    <motion.div
-      className="fixed w-full top-5  z-20 px-6 md:px-10 font-opensans"
+    <motion.nav
+      className="fixed w-full top-5 z-20 px-6 md:px-10 font-sans" 
       variants={navVariants}
       initial="hidden"
       animate="visible"
     >
-      <div className='flex xl:max-w-[1000px] mx-auto justify-between items-center p-3 rounded-full border  bg-white'>
+      <div className="flex xl:max-w-[1000px] mx-auto justify-between items-center p-3 rounded-full border bg-white shadow-sm">
         <motion.div
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.5 }}
         >
-          <Link to="/"><img className='w-[160px] md:w-[200px]' src={Logo} alt="Simple Prep Logo" /></Link>
+          <Link to="/">
+            <img className="w-[160px] md:w-[200px]" src={Logo} alt="Simple Prep Logo" />
+          </Link>
         </motion.div>
 
-        <motion.div className='hidden md:flex gap-5 items-center' variants={linkVariants}>
-          {NavLinks.map((link, index) => (
-            <div className='group transition' key={index}>
-              <button onClick={() => handleScroll(link.path)} className='p-1 md:p- text-lg md:text-xl font-semibold hover:text-blue-600 text-black'>
+        {/* Desktop Links */}
+        {!isMobile && (
+          <motion.div className="hidden md:flex gap-6 items-center" variants={linkVariants}>
+            {NavLinks.map((link, index) => (
+              <button
+                key={index}
+                onClick={() => handleScroll(link.path)}
+                className="relative p-1 text-lg md:text-xl font-semibold text-gray-900 hover:text-blue-600 transition-colors"
+              >
                 {link.title}
+                <span className="absolute left-0 bottom-[-2px] block h-1 bg-blue-600 scale-x-0 origin-left group-hover:scale-x-100 transition-transform"></span>
               </button>
-              <span className="block h-1 rounded bg-blue-800 transform translate-y-3 max-w-0 group-hover:max-w-full transition-all duration-300"></span>
-            </div>
-          ))}
-        </motion.div>
+            ))}
+          </motion.div>
+        )}
 
-        <motion.button
-          initial={{ "--x": "100%", scale: 1 } as any}
-          animate={{ "--x": "-100%", } as any}
-          whileTap={{ scale: 0.97 }}
-          transition={{
-            repeat: Infinity,
-            repeatType: "loop",
-            repeatDelay: 1,
-            type: "spring",
-            stiffness: 20,
-            damping: 15,
-            mass: 2,
-            scale: {
+        {/* Desktop Login Button */}
+        {!isMobile && (
+          <motion.button
+            initial={{ "--x": "100%", scale: 1 } as any}
+            animate={{ "--x": "-100%", } as any}
+            whileTap={{ scale: 0.97 }}
+            transition={{
+              repeat: Infinity,
+              repeatType: "loop",
+              repeatDelay: 1,
               type: "spring",
-              stiffness: 10,
-              damping: 5,
-              mass: 0.1,
-            },
-          }}
-          className="hidden md:block text-white px-4 py-2 md:px-6 md:py-3 relative bg-blue-600 hover:bg-blue-700 rounded-3xl "
-          onClick={handleLoginClick}
-        >
-          <span className="block absolute inset-0 rounded-3xl hover:bg-blue-900 border-blue-900  p-px linear-overlay" />
-          <span className='text-lg md:text-xl font-medium tracking-wide h-full w-full block relative linear-mask'>
-            Login →
-          </span>
-        </motion.button>
+              stiffness: 20,
+              damping: 15,
+              mass: 2,
+              scale: {
+                type: "spring",
+                stiffness: 10,
+                damping: 5,
+                mass: 0.1,
+              },
+            }}
+            className="hidden md:block relative text-white px-4 py-2 md:px-6 md:py-3 rounded-3xl bg-indigo-600 hover:bg-indigo-800 transition-colors"
+            onClick={handleLoginClick}
+          >
+            <span className='text-lg md:text-xl font-medium tracking-wide block relative'>
+              {isAuthenticated ? 'Dashboard →' : 'Login →'}
+            </span>
+          </motion.button>
+        )}
 
-        {/* Mobile Menu Icon */}
-        <div onClick={handleNav} className='block md:hidden'>
-          {nav ? <RxCross1 size={25}/> : <RiMenuFoldFill size={25} />}
-        </div>
+        {/* Mobile Menu Toggle */}
+        {isMobile && (
+          <button
+            onClick={handleNavToggle}
+            aria-label={navOpen ? 'Close menu' : 'Open menu'}
+            className="block md:hidden text-gray-700 hover:text-gray-900"
+          >
+            {navOpen ? <RxCross1 size={25} /> : <RiMenuFoldFill size={25} />}
+          </button>
+        )}
       </div>
 
       {/* Mobile Menu */}
-      <motion.div
-        className={`fixed top-18 left-0 w-full h-full bg-white md:hidden z-10 transition-transform duration-300 ${nav ? 'translate-x-0' : '-translate-x-full'}`}
-        variants={mobileMenuVariants}
-        initial="hidden"
-        animate={nav ? "visible" : "hidden"}
-      >
-        <ul className='flex flex-col items-center py-10 h-full gap-8 text-xl'>
-          {NavLinks.map((link, index) => (
-            <li key={index} onClick={() => handleScroll(link.path)} className="flex flex-row items-center justify-between w-3/4">
-              <span className=''>{link.title}</span>
-              <MdKeyboardArrowRight size={30}/>
+      {isMobile && (
+        <motion.div
+          className={`fixed top-18 left-0 w-full h-full bg-white md:hidden z-10 ${navOpen ? 'translate-x-0' : '-translate-x-full'} shadow-lg`}
+          variants={mobileMenuVariants}
+          initial="hidden"
+          animate={navOpen ? "visible" : "hidden"}
+        >
+          <ul className="flex flex-col items-center py-10 h-full gap-8 text-xl font-medium text-gray-800">
+            {NavLinks.map((link, index) => (
+              <li
+                key={index}
+                onClick={() => handleScroll(link.path)}
+                className="flex flex-row items-center justify-between w-3/4 hover:text-blue-600 transition-colors"
+              >
+                <span>{link.title}</span>
+                <MdKeyboardArrowRight size={30} />
+              </li>
+            ))}
+            <li>
+              <button
+                onClick={() => { handleLoginClick(); setNavOpen(false); }}
+                className="p-3 bg-blue-600 text-white text-xl rounded-md hover:bg-blue-700 transition-colors"
+              >
+                {isAuthenticated ? 'Go to Demo' : 'Login'}
+              </button>
             </li>
-          ))}
-          <li>
-            <button onClick={() => { handleLoginClick(); setNav(false); }} className='p-3 bg-blue-600 text-xl text-white rounded-md '>
-              {isAuthenticated ? 'Go to Demo' : 'Login'}
-            </button>
-          </li>
-        </ul>
-      </motion.div>
-    </motion.div>
+          </ul>
+        </motion.div>
+      )}
+    </motion.nav>
   );
-}
+};
 
 export default Navbar;
