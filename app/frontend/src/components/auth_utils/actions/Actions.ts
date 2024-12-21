@@ -1,4 +1,5 @@
 import { Dispatch } from 'redux';
+import { FirebaseError } from 'firebase/app';
 import { auth } from '../firebaseConfig';
 import {
   signInWithEmailAndPassword,
@@ -9,33 +10,177 @@ import {
   onAuthStateChanged,
   sendEmailVerification,
   getIdToken,
+  AuthError,
+  User,
 } from 'firebase/auth';
 import { signOut as firebaseSignOut } from 'firebase/auth';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import { AppThunk, LoginFormValues, UserFormValues } from '../types';
-import { authLoading, authSuccess, authError, signOut as signOutAction, clearError } from '../reducers/authReducer';
+import { 
+  authLoading, 
+  authSuccess, 
+  authError, 
+  signOut as signOutAction, 
+  clearError 
+} from '../reducers/authReducer';
 
-// Error mapping function
-const getErrorMessage = (errorCode: string): string => {
-  switch (errorCode) {
-    case 'auth/invalid-email':
-      return 'The email address is not valid.';
-    case 'auth/user-disabled':
-      return 'The user account has been disabled.';
-    case 'auth/user-not-found':
-      return 'There is no user corresponding to this email.';
-    case 'auth/wrong-password':
-      return 'The password is invalid.';
-    case 'auth/email-already-in-use':
-      return 'The email address is already in use by another account.';
-    case 'auth/weak-password':
-      return 'The password is too weak.';
-    case 'auth/too-many-requests':
-      return 'Too many requests. Please try again later.';
-    case 'auth/network-request-failed':
-      return 'A network error has occurred. Please try again.';
-    default:
-      return 'An unexpected error occurred. Please try again.';
+
+// Define specific error types
+type NetworkError = {
+  type: 'network';
+  message: string;
+};
+
+type ValidationError = {
+  type: 'validation';
+  field: string;
+  message: string;
+};
+
+type AuthenticationError = {
+  type: 'authentication';
+  code: string;
+  message: string;
+};
+
+type ServerError = {
+  type: 'server';
+  status: number;
+  message: string;
+};
+
+type AppError = NetworkError | ValidationError | AuthenticationError | ServerError;
+
+// Comprehensive error mapping
+const getErrorMessage = (error: unknown): AppError => {
+  // Handle Firebase Authentication Errors
+  if (error instanceof FirebaseError) {
+    switch (error.code) {
+      // Authentication errors
+      case 'auth/invalid-email':
+        return {
+          type: 'validation',
+          field: 'email',
+          message: 'Please enter a valid email address.',
+        };
+      case 'auth/user-disabled':
+        return {
+          type: 'authentication',
+          code: error.code,
+          message: 'This account has been disabled. Please contact support.',
+        };
+      case 'auth/user-not-found':
+        return {
+          type: 'authentication',
+          code: error.code,
+          message: 'No account found with this email. Please check your email or sign up.',
+        };
+      case 'auth/wrong-password':
+        return {
+          type: 'validation',
+          field: 'password',
+          message: 'Incorrect password. Please try again or reset your password.',
+        };
+      case 'auth/email-already-in-use':
+        return {
+          type: 'validation',
+          field: 'email',
+          message: 'An account already exists with this email. Please sign in instead.',
+        };
+      case 'auth/weak-password':
+        return {
+          type: 'validation',
+          field: 'password',
+          message: 'Password must be at least 6 characters long and contain a mix of letters and numbers.',
+        };
+      case 'auth/too-many-requests':
+        return {
+          type: 'authentication',
+          code: error.code,
+          message: 'Too many failed attempts. Please try again later or reset your password.',
+        };
+      case 'auth/popup-closed-by-user':
+        return {
+          type: 'authentication',
+          code: error.code,
+          message: 'Sign-in popup was closed. Please try again.',
+        };
+      case 'auth/operation-not-allowed':
+        return {
+          type: 'authentication',
+          code: error.code,
+          message: 'This sign-in method is not enabled. Please contact support.',
+        };
+      case 'auth/network-request-failed':
+        return {
+          type: 'network',
+          message: 'Unable to connect to authentication service. Please check your internet connection.',
+        };
+      case 'auth/invalid-verification-code':
+        return {
+          type: 'validation',
+          field: 'verificationCode',
+          message: 'The verification code is invalid. Please try again.',
+        };
+      case 'auth/invalid-verification-id':
+        return {
+          type: 'validation',
+          field: 'verificationId',
+          message: 'The verification session has expired. Please request a new code.',
+        };
+      default:
+        return {
+          type: 'authentication',
+          code: error.code,
+          message: `Authentication error: ${error.message}`,
+        };
+    }
+  }
+
+  // Handle Axios/Network Errors
+  if (axios.isAxiosError(error)) {
+    const axiosError = error as AxiosError<NetworkError>;
+    if (!axiosError.response) {
+      return {
+        type: 'network',
+        message: 'Unable to connect to the server. Please check your internet connection.',
+      };
+    }
+    return {
+      type: 'server',
+      status: axiosError.response.status,
+      message: axiosError.response.data?.message || 'Server error occurred. Please try again.',
+    };
+  }
+
+  // Handle unexpected errors
+  return {
+    type: 'server',
+    status: 500,
+    message: 'An unexpected error occurred. Please try again or contact support.',
+  };
+};
+
+// Helper function to validate user state
+const validateUserState = (user: User | null): void => {
+  if (!user) {
+    throw new Error('User state is null after authentication');
+  }
+  if (!user.email) {
+    throw new Error('User email is missing after authentication');
+  }
+};
+
+// Helper function for API calls
+const handleApiCall = async (
+  apiCall: () => Promise<any>,
+  errorContext: string
+): Promise<any> => {
+  try {
+    return await apiCall();
+  } catch (error) {
+    console.error(`API Error (${errorContext}):`, error);
+    throw error;
   }
 };
 
@@ -43,73 +188,72 @@ export const SignIn = (creds: LoginFormValues, onSuccess: () => void) => async (
   dispatch(authLoading());
 
   try {
-    const userCredential = await signInWithEmailAndPassword(auth, creds.email, creds.password);
-    const user = userCredential.user;
+    const userCredential = await signInWithEmailAndPassword(
+      auth,
+      creds.email,
+      creds.password
+    );
+    
+    validateUserState(userCredential.user);
 
-    if (user && !user.emailVerified) {
-      throw new Error('Please verify your email address before logging in.');
+    if (!userCredential.user.emailVerified) {
+      await sendEmailVerification(userCredential.user);
+      throw new Error('Please verify your email address. A new verification email has been sent.');
     }
 
-    if (user) {
-      dispatch(authSuccess());
-      onSuccess();
-    }
+    dispatch(authSuccess());
+    onSuccess();
   } catch (error) {
-    if (error instanceof Error) {
-      const errorMessage = getErrorMessage(error.message);
-      dispatch(authError(errorMessage));
-    } else {
-      dispatch(authError('An unexpected error occurred.'));
-    }
+    const appError = getErrorMessage(error);
+    dispatch(authError(appError.message));
   }
 };
 
 export const GoogleSignIn = () => async (dispatch: Dispatch) => {
   dispatch(authLoading());
 
-  const provider = new GoogleAuthProvider();
-
   try {
+    const provider = new GoogleAuthProvider();
+    provider.setCustomParameters({ prompt: 'select_account' });
+
     const result = await signInWithPopup(auth, provider);
-    const user = result.user;
+    validateUserState(result.user);
 
-    if (user) {
-      const token = await getIdToken(user);
-      console.log('Firebase Token:', token);
-      const response = await axios.post('https://beta-simpleprep.com/auth/user/check-user', {
-        firebase_uid: user.uid,
-        email: user.email,
-      });
+    const token = await getIdToken(result.user);
 
-      if (response.data.exists) {
-        await axios.put('https://beta-simpleprep.com/auth/user/update-user', {
-          firebase_uid: user.uid,
-          email: user.email,
-          first_name: user.displayName?.split(' ')[0] || 'Default',
-          last_name: user.displayName?.split(' ')[1] || 'User',
-        });
-      } else {
-        await axios.post('https://beta-simpleprep.com/auth/user/signup', {
-          firebase_uid: user.uid,
-          email: user.email,
-          first_name: user.displayName?.split(' ')[0] || 'Default',
-          last_name: user.displayName?.split(' ')[1] || 'User',
-        });
-      }
+    // Check if user exists in our backend
+    const userCheck = await handleApiCall(
+      () => axios.post('https://beta-simpleprep.com/auth/user/check-user', {
+        firebase_uid: result.user.uid,
+        email: result.user.email,
+      }),
+      'user-check'
+    );
 
-      if (user.emailVerified) {
-        dispatch(authSuccess());
-      } else {
-        dispatch(authError('Please verify your email before logging in.'));
-      }
-    }
-  } catch (error) {
-    if (error instanceof Error) {
-      const errorMessage = getErrorMessage(error.message);
-      dispatch(authError(errorMessage));
+    const userData = {
+      firebase_uid: result.user.uid,
+      email: result.user.email,
+      first_name: result.user.displayName?.split(' ')[0] || 'Default',
+      last_name: result.user.displayName?.split(' ')[1] || 'User',
+    };
+
+    // Update or create user in backend
+    if (userCheck.data.exists) {
+      await handleApiCall(
+        () => axios.put('https://beta-simpleprep.com/auth/user/update-user', userData),
+        'update-user'
+      );
     } else {
-      dispatch(authError('An unexpected error occurred.'));
+      await handleApiCall(
+        () => axios.post('https://beta-simpleprep.com/auth/user/signup', userData),
+        'create-user'
+      );
     }
+
+    dispatch(authSuccess());
+  } catch (error) {
+    const appError = getErrorMessage(error);
+    dispatch(authError(appError.message));
   }
 };
 
@@ -117,31 +261,43 @@ export const SignUp = (creds: UserFormValues) => async (dispatch: Dispatch) => {
   dispatch(authLoading());
 
   try {
-    const userCredential = await createUserWithEmailAndPassword(auth, creds.email, creds.password);
-    const user = userCredential.user;
-
-    if (user) {
-      await sendEmailVerification(user, { url: "https://beta-simpleprep.com" });
-
-      const userData = {
-        firebase_uid: user.uid,
-        email: user.email,
-        first_name: creds.firstName,
-        last_name: creds.lastName,
-        subscription_type: "free",
-      };
-
-      await axios.post('https://beta-simpleprep.com/auth/user/signup', userData);
-
-      dispatch(authSuccess());
+    // Validate password strength
+    if (creds.password.length < 8) {
+      throw new Error('Password must be at least 8 characters long');
     }
+
+    const userCredential = await createUserWithEmailAndPassword(
+      auth, 
+      creds.email, 
+      creds.password
+    );
+    
+    validateUserState(userCredential.user);
+
+    // Send verification email
+    await sendEmailVerification(userCredential.user, { 
+      url: "https://beta-simpleprep.com/email-verified"
+    });
+
+    const userData = {
+      firebase_uid: userCredential.user.uid,
+      email: userCredential.user.email,
+      first_name: creds.firstName,
+      last_name: creds.lastName,
+      subscription_type: "free",
+    };
+
+    // Create user in backend
+    await handleApiCall(
+      () => axios.post('https://beta-simpleprep.com/auth/user/signup', userData),
+      'create-user'
+    );
+
+    dispatch(authSuccess());
+    dispatch(authError('Please check your email to verify your account before signing in.'));
   } catch (error) {
-    if (error instanceof Error) {
-      const errorMessage = getErrorMessage(error.message);
-      dispatch(authError(errorMessage));
-    } else {
-      dispatch(authError('An unexpected error occurred.'));
-    }
+    const appError = getErrorMessage(error);
+    dispatch(authError(appError.message));
   }
 };
 
@@ -150,14 +306,18 @@ export const SignOut = () => async (dispatch: Dispatch) => {
 
   try {
     await firebaseSignOut(auth);
+    
+    // Clear any local storage or session data
+    localStorage.removeItem('user-preferences');
+    sessionStorage.clear();
+    
     dispatch(signOutAction());
   } catch (error) {
-    if (error instanceof Error) {
-      const errorMessage = getErrorMessage(error.message);
-      dispatch(authError(errorMessage));
-    } else {
-      dispatch(authError('An unexpected error occurred.'));
-    }
+    const appError = getErrorMessage(error);
+    dispatch(authError(appError.message));
+    
+    // Even if there's an error, we should still clear the local state
+    dispatch(signOutAction());
   }
 };
 
@@ -165,15 +325,22 @@ export const SendResetPasswordEmail = (email: string) => async (dispatch: Dispat
   dispatch(authLoading());
 
   try {
-    await sendPasswordResetEmail(auth, email);
-    dispatch(authSuccess());
-  } catch (error) {
-    if (error instanceof Error) {
-      const errorMessage = getErrorMessage(error.message);
-      dispatch(authError(errorMessage));
-    } else {
-      dispatch(authError('An unexpected error occurred.'));
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      throw new Error('Please enter a valid email address');
     }
+
+    await sendPasswordResetEmail(auth, email, {
+      url: 'https://beta-simpleprep.com/login',
+      handleCodeInApp: true,
+    });
+    
+    dispatch(authSuccess());
+    dispatch(authError('Password reset email sent. Please check your inbox.'));
+  } catch (error) {
+    const appError = getErrorMessage(error);
+    dispatch(authError(appError.message));
   }
 };
 
@@ -181,28 +348,84 @@ export const checkAuthenticated = () => async (dispatch: Dispatch) => {
   dispatch(authLoading());
 
   try {
-    onAuthStateChanged(auth, (user) => {
-      if (user && user.emailVerified) {
-        dispatch(authSuccess());
+    let unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        if (!user.emailVerified) {
+          dispatch(signOutAction());
+          dispatch(authError('Please verify your email address before signing in.'));
+          return;
+        }
+
+        try {
+          // Verify user exists in backend
+          await handleApiCall(
+            () => axios.post('https://beta-simpleprep.com/auth/user/check-user', {
+              firebase_uid: user.uid,
+              email: user.email,
+            }),
+            'verify-user'
+          );
+
+          dispatch(authSuccess());
+        } catch (error) {
+          const appError = getErrorMessage(error);
+          dispatch(authError(appError.message));
+          dispatch(signOutAction());
+        }
       } else {
         dispatch(signOutAction());
       }
     });
+
+    // Clean up subscription on unmount
+    return () => unsubscribe();
   } catch (error) {
-    dispatch(authError('Failed to check authentication status.'));
+    const appError = getErrorMessage(error);
+    dispatch(authError(appError.message));
+    dispatch(signOutAction());
   }
 };
 
 export const loadUser = () => (dispatch: Dispatch) => {
   dispatch(authLoading());
 
-  onAuthStateChanged(auth, user => {
-    if (user && user.emailVerified) {
-      dispatch(authSuccess());
-    } else {
-      dispatch(signOutAction());
-    }
-  });
+  try {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        if (!user.emailVerified) {
+          dispatch(signOutAction());
+          dispatch(authError('Please verify your email address before signing in.'));
+          return;
+        }
+
+        // Get fresh ID token
+        const token = await getIdToken(user, true);
+        
+        try {
+          // Verify token with backend
+          await handleApiCall(
+            () => axios.post('https://beta-simpleprep.com/auth/verify-token', { token }),
+            'verify-token'
+          );
+          
+          dispatch(authSuccess());
+        } catch (error) {
+          const appError = getErrorMessage(error);
+          dispatch(authError(appError.message));
+          dispatch(signOutAction());
+        }
+      } else {
+        dispatch(signOutAction());
+      }
+    });
+
+    // Clean up subscription
+    return () => unsubscribe();
+  } catch (error) {
+    const appError = getErrorMessage(error);
+    dispatch(authError(appError.message));
+    dispatch(signOutAction());
+  }
 };
 
 export const clearAuthError = () => (dispatch: Dispatch) => {

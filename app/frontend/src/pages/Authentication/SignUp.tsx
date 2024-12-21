@@ -8,6 +8,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../components/store';
 import { SignUp, GoogleSignIn, clearAuthError } from '../../components/auth_utils/actions/Actions';
 import Logo from '../../components/assets/logo-icon.png';
+import StylisticBackground from './StylisticBackground';
+import SimplePrepLogo from '../../components/assets/logo-original.png';
 
 const SignUpComponent = (): React.ReactElement => {
   const dispatch = useDispatch<AppDispatch>();
@@ -85,17 +87,17 @@ const SignUpComponent = (): React.ReactElement => {
   }, [error]);
 
   return (
-    <div className="h-screen bg-gradient-to-br from-blue-100 to-indigo-200 flex items-center justify-center px-4 py-12">
-      {accountCreated && showModal && <Modal message={modalMessage} />}
-      <div className="max-w-md w-full space-y-8 bg-white p-6 md:p-10 rounded-xl shadow-2xl">
+    <StylisticBackground>
+    {accountCreated && showModal && <Modal message={modalMessage} />}
+      <div className="space-y-8">
         <div className="text-center">
-          <div className="mx-auto h-12 md:h-16 w-12 md:w-16 text-indigo-600">
-            <img src={Logo} alt="Logo Icon" />
+          <div className="inline-flex items-center justify-center w-40 h-10 rounded-xl mb-4">
+            <img src={SimplePrepLogo} alt="SimplePrep Logo" className="w-full h-full object-contain" />
           </div>
           <h2 className="mt-4 text-3xl md:text-4xl font-extrabold text-gray-900">Create your account</h2>
           <p className="mt-2 text-sm text-gray-600">
             Already have an account?{' '}
-            <Link to="/login" className="font-medium text-indigo-600 hover:text-indigo-500">
+            <Link to="/login" className="font-medium text-green-500 hover:text-green-700">
               Login
             </Link>
           </p>
@@ -116,7 +118,7 @@ const SignUpComponent = (): React.ReactElement => {
           <div>
             <button
               type="submit"
-              className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
             >
               {loading ? 'Registering...' : 'Register'}
             </button>
@@ -144,7 +146,7 @@ const SignUpComponent = (): React.ReactElement => {
           </div>
         </form>
       </div>
-    </div>
+    </StylisticBackground>
   );
 };
 
