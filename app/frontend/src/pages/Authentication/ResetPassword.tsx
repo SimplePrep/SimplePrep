@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../components/store';
 import { SendResetPasswordEmail, clearAuthError } from '../../components/auth_utils/actions/Actions';
 import Logo from '../../components/assets/logo-icon.png';
+import StylisticBackground from './StylisticBackground';
 
 const ResetPassword = (): React.ReactElement => {
   const dispatch = useDispatch<AppDispatch>();
@@ -39,9 +40,9 @@ const ResetPassword = (): React.ReactElement => {
   }, [error]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-100 to-indigo-200 flex items-center justify-center px-4 py-12">
+      <StylisticBackground>
       {showModal && <Loader message="If your email is registered with us, you will receive a password reset link to your email shortly." />}
-      <div className="max-w-md w-full space-y-8 bg-white p-6 md:p-10 rounded-xl shadow-2xl">
+      <div className="space-y-8 ">
         <div className="text-center">
           <div className="mx-auto h-12 md:h-16 w-12 md:w-16 text-indigo-600">
             <img src={Logo} alt="Logo Icon" />
@@ -49,7 +50,7 @@ const ResetPassword = (): React.ReactElement => {
           <h2 className="mt-4 text-3xl md:text-4xl font-extrabold text-gray-900">Request Password Reset</h2>
           <p className="mt-2 text-sm text-gray-600">
             Don't have an account?{' '}
-            <a href="/signup" className="font-medium text-indigo-600 hover:text-indigo-500">
+            <a href="/signup" className="font-medium text-green-600 hover:text-green-500">
               Sign up
             </a>
           </p>
@@ -70,14 +71,14 @@ const ResetPassword = (): React.ReactElement => {
           <div>
             <button
               type="submit"
-              className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
             >
               {loading ? 'Sending...' : 'Reset Password'}
             </button>
           </div>
         </form>
       </div>
-    </div>
+    </StylisticBackground>
   );
 };
 
