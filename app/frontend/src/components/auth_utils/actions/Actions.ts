@@ -1,6 +1,6 @@
 import { Dispatch } from 'redux';
-import { FirebaseError } from 'firebase/app';
 import { auth } from '../firebaseConfig';
+import { FirebaseError } from 'firebase/app';
 import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
@@ -10,22 +10,16 @@ import {
   onAuthStateChanged,
   sendEmailVerification,
   getIdToken,
-  AuthError,
-  User,
 } from 'firebase/auth';
 import { signOut as firebaseSignOut } from 'firebase/auth';
-import axios, { AxiosError } from 'axios';
+import axios, {AxiosError} from 'axios';
 import { AppThunk, LoginFormValues, UserFormValues } from '../types';
-import { 
-  authLoading, 
-  authSuccess, 
-  authError, 
-  signOut as signOutAction, 
-  clearError 
-} from '../reducers/authReducer';
+import { authLoading, authSuccess, authError, signOut as signOutAction, clearError } from '../reducers/authReducer';
 
+interface ServerErrorResponse {
+  message: string;
+}
 
-// Define specific error types
 type NetworkError = {
   type: 'network';
   message: string;
@@ -51,7 +45,8 @@ type ServerError = {
 
 type AppError = NetworkError | ValidationError | AuthenticationError | ServerError;
 
-// Comprehensive error mapping
+
+// Error mapping function
 const getErrorMessage = (error: unknown): AppError => {
   // Handle Firebase Authentication Errors
   if (error instanceof FirebaseError) {
@@ -137,9 +132,9 @@ const getErrorMessage = (error: unknown): AppError => {
     }
   }
 
-  // Handle Axios/Network Errors
+  // Handle other error types (e.g., Axios/Network Errors)
   if (axios.isAxiosError(error)) {
-    const axiosError = error as AxiosError<NetworkError>;
+    const axiosError = error as AxiosError<ServerErrorResponse>;
     if (!axiosError.response) {
       return {
         type: 'network',
@@ -153,7 +148,7 @@ const getErrorMessage = (error: unknown): AppError => {
     };
   }
 
-  // Handle unexpected errors
+  // Default case: Unexpected errors
   return {
     type: 'server',
     status: 500,
@@ -161,99 +156,81 @@ const getErrorMessage = (error: unknown): AppError => {
   };
 };
 
-// Helper function to validate user state
-const validateUserState = (user: User | null): void => {
-  if (!user) {
-    throw new Error('User state is null after authentication');
-  }
-  if (!user.email) {
-    throw new Error('User email is missing after authentication');
-  }
-};
-
-// Helper function for API calls
-const handleApiCall = async (
-  apiCall: () => Promise<any>,
-  errorContext: string
-): Promise<any> => {
-  try {
-    return await apiCall();
-  } catch (error) {
-    console.error(`API Error (${errorContext}):`, error);
-    throw error;
-  }
-};
 
 export const SignIn = (creds: LoginFormValues, onSuccess: () => void) => async (dispatch: Dispatch) => {
   dispatch(authLoading());
 
   try {
-    const userCredential = await signInWithEmailAndPassword(
-      auth,
-      creds.email,
-      creds.password
-    );
-    
-    validateUserState(userCredential.user);
+    const userCredential = await signInWithEmailAndPassword(auth, creds.email, creds.password);
+    const user = userCredential.user;
 
-    if (!userCredential.user.emailVerified) {
-      await sendEmailVerification(userCredential.user);
-      throw new Error('Please verify your email address. A new verification email has been sent.');
+    if (user && !user.emailVerified) {
+      throw new Error('Please verify your email address before logging in.');
     }
 
-    dispatch(authSuccess());
-    onSuccess();
+    if (user) {
+      const token = await user.getIdToken();
+      localStorage.setItem('authToken', token); // Save token for future API calls
+      dispatch(authSuccess());
+      onSuccess();
+    }
   } catch (error) {
-    const appError = getErrorMessage(error);
-    dispatch(authError(appError.message));
+    const appError = getErrorMessage(error); // Returns AppError
+    const errorMessage = appError.message; // Extract the error message string
+    dispatch(authError(errorMessage)); // Pass the message string to authError
   }
 };
+
 
 export const GoogleSignIn = () => async (dispatch: Dispatch) => {
   dispatch(authLoading());
 
+  const provider = new GoogleAuthProvider();
+  provider.setCustomParameters({ prompt: 'select_account' }); // Ensures Google prompts account selection.
+
   try {
-    const provider = new GoogleAuthProvider();
-    provider.setCustomParameters({ prompt: 'select_account' });
-
     const result = await signInWithPopup(auth, provider);
-    validateUserState(result.user);
+    const user = result.user;
 
-    const token = await getIdToken(result.user);
-
-    // Check if user exists in our backend
-    const userCheck = await handleApiCall(
-      () => axios.post('https://beta-simpleprep.com/auth/user/check-user', {
-        firebase_uid: result.user.uid,
-        email: result.user.email,
-      }),
-      'user-check'
-    );
-
-    const userData = {
-      firebase_uid: result.user.uid,
-      email: result.user.email,
-      first_name: result.user.displayName?.split(' ')[0] || 'Default',
-      last_name: result.user.displayName?.split(' ')[1] || 'User',
-    };
-
-    // Update or create user in backend
-    if (userCheck.data.exists) {
-      await handleApiCall(
-        () => axios.put('https://beta-simpleprep.com/auth/user/update-user', userData),
-        'update-user'
-      );
-    } else {
-      await handleApiCall(
-        () => axios.post('https://beta-simpleprep.com/auth/user/signup', userData),
-        'create-user'
-      );
+    if (!user) {
+      throw new Error('Google sign-in failed. No user information received.');
     }
 
-    dispatch(authSuccess());
+    const token = await getIdToken(user); // Fetch Firebase ID token
+    console.log('Firebase Token:', token);
+
+    // Check if the user exists in your backend
+    const response = await axios.post('https://beta-simpleprep.com/auth/user/check-user', {
+      firebase_uid: user.uid,
+      email: user.email,
+    });
+
+    const userData = {
+      firebase_uid: user.uid,
+      email: user.email,
+      first_name: user.displayName?.split(' ')[0] || 'Default',
+      last_name: user.displayName?.split(' ')[1] || 'User',
+    };
+
+    // Update or create user based on backend response
+    if (response.data.exists) {
+      await axios.put('https://beta-simpleprep.com/auth/user/update-user', userData);
+    } else {
+      await axios.post('https://beta-simpleprep.com/auth/user/signup', {
+        ...userData,
+        subscription_type: 'free', // Default subscription type for new users
+      });
+    }
+
+    // Check if the user's email is verified
+    if (user.emailVerified) {
+      dispatch(authSuccess()); // Pass token if needed in your reducer
+    } else {
+      dispatch(authError('Please verify your email before logging in.'));
+    }
   } catch (error) {
-    const appError = getErrorMessage(error);
-    dispatch(authError(appError.message));
+    const appError = getErrorMessage(error); // Process the error into AppError
+    dispatch(authError(appError.message)); // Pass only the message string to authError
   }
 };
 
@@ -261,63 +238,46 @@ export const SignUp = (creds: UserFormValues) => async (dispatch: Dispatch) => {
   dispatch(authLoading());
 
   try {
-    // Validate password strength
-    if (creds.password.length < 8) {
-      throw new Error('Password must be at least 8 characters long');
+    const userCredential = await createUserWithEmailAndPassword(auth, creds.email, creds.password);
+    const user = userCredential.user;
+
+    if (user) {
+      // Send email verification
+      await sendEmailVerification(user, { url: 'https://beta-simpleprep.com' });
+
+      // Prepare user data for backend
+      const userData = {
+        firebase_uid: user.uid,
+        email: user.email,
+        first_name: creds.firstName,
+        last_name: creds.lastName,
+        subscription_type: 'free', // Default subscription type
+      };
+
+      // Create user in backend
+      await axios.post('https://beta-simpleprep.com/auth/user/signup', userData);
+
+      dispatch(authSuccess());
     }
-
-    const userCredential = await createUserWithEmailAndPassword(
-      auth, 
-      creds.email, 
-      creds.password
-    );
-    
-    validateUserState(userCredential.user);
-
-    // Send verification email
-    await sendEmailVerification(userCredential.user, { 
-      url: "https://beta-simpleprep.com/email-verified"
-    });
-
-    const userData = {
-      firebase_uid: userCredential.user.uid,
-      email: userCredential.user.email,
-      first_name: creds.firstName,
-      last_name: creds.lastName,
-      subscription_type: "free",
-    };
-
-    // Create user in backend
-    await handleApiCall(
-      () => axios.post('https://beta-simpleprep.com/auth/user/signup', userData),
-      'create-user'
-    );
-
-    dispatch(authSuccess());
-    dispatch(authError('Please check your email to verify your account before signing in.'));
   } catch (error) {
-    const appError = getErrorMessage(error);
-    dispatch(authError(appError.message));
+    // Process error into AppError object
+    const appError = getErrorMessage(error); 
+    const errorMessage = appError.message; // Extract the message string
+    dispatch(authError(errorMessage)); // Pass only the message string to authError
   }
 };
+
 
 export const SignOut = () => async (dispatch: Dispatch) => {
   dispatch(authLoading());
 
   try {
     await firebaseSignOut(auth);
-    
-    // Clear any local storage or session data
-    localStorage.removeItem('user-preferences');
-    sessionStorage.clear();
-    
     dispatch(signOutAction());
   } catch (error) {
-    const appError = getErrorMessage(error);
-    dispatch(authError(appError.message));
-    
-    // Even if there's an error, we should still clear the local state
-    dispatch(signOutAction());
+    const appError = getErrorMessage(error); // Process the error
+    const errorMessage = appError.message; // Extract the message string
+    dispatch(authError(errorMessage)); // Pass the message string to authError
   }
 };
 
@@ -325,108 +285,61 @@ export const SendResetPasswordEmail = (email: string) => async (dispatch: Dispat
   dispatch(authLoading());
 
   try {
-    // Validate email format
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      throw new Error('Please enter a valid email address');
-    }
-
-    await sendPasswordResetEmail(auth, email, {
-      url: 'https://beta-simpleprep.com/login',
-      handleCodeInApp: true,
-    });
-    
+    await sendPasswordResetEmail(auth, email);
     dispatch(authSuccess());
-    dispatch(authError('Password reset email sent. Please check your inbox.'));
   } catch (error) {
-    const appError = getErrorMessage(error);
-    dispatch(authError(appError.message));
+    const appError = getErrorMessage(error); // Process the error
+    const errorMessage = appError.message; // Extract the message string
+    dispatch(authError(errorMessage)); // Pass the message string to authError
   }
 };
+
 
 export const checkAuthenticated = () => async (dispatch: Dispatch) => {
   dispatch(authLoading());
 
   try {
-    let unsubscribe = onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        if (!user.emailVerified) {
-          dispatch(signOutAction());
-          dispatch(authError('Please verify your email address before signing in.'));
-          return;
-        }
-
-        try {
-          // Verify user exists in backend
-          await handleApiCall(
-            () => axios.post('https://beta-simpleprep.com/auth/user/check-user', {
-              firebase_uid: user.uid,
-              email: user.email,
-            }),
-            'verify-user'
-          );
-
-          dispatch(authSuccess());
-        } catch (error) {
-          const appError = getErrorMessage(error);
-          dispatch(authError(appError.message));
-          dispatch(signOutAction());
-        }
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user && user.emailVerified) {
+        dispatch(authSuccess());
       } else {
         dispatch(signOutAction());
       }
     });
 
-    // Clean up subscription on unmount
+    // Ensure the listener is unsubscribed when no longer needed
     return () => unsubscribe();
   } catch (error) {
-    const appError = getErrorMessage(error);
-    dispatch(authError(appError.message));
-    dispatch(signOutAction());
+    const appError = getErrorMessage(error); // Optional: Process the error
+    dispatch(authError(appError.message || 'Failed to check authentication status.'));
   }
 };
+
 
 export const loadUser = () => (dispatch: Dispatch) => {
   dispatch(authLoading());
 
   try {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        if (!user.emailVerified) {
-          dispatch(signOutAction());
-          dispatch(authError('Please verify your email address before signing in.'));
-          return;
-        }
+      if (user && user.emailVerified) {
+        // Optional: Get Firebase token or user data if needed
+        const token = await user.getIdToken(true); // Force token refresh
+        localStorage.setItem('authToken', token);
 
-        // Get fresh ID token
-        const token = await getIdToken(user, true);
-        
-        try {
-          // Verify token with backend
-          await handleApiCall(
-            () => axios.post('https://beta-simpleprep.com/auth/verify-token', { token }),
-            'verify-token'
-          );
-          
-          dispatch(authSuccess());
-        } catch (error) {
-          const appError = getErrorMessage(error);
-          dispatch(authError(appError.message));
-          dispatch(signOutAction());
-        }
+        dispatch(authSuccess());
       } else {
         dispatch(signOutAction());
       }
     });
 
-    // Clean up subscription
+    // Cleanup listener
     return () => unsubscribe();
   } catch (error) {
-    const appError = getErrorMessage(error);
-    dispatch(authError(appError.message));
-    dispatch(signOutAction());
+    const appError = getErrorMessage(error); // Optional: Process the error
+    dispatch(authError(appError.message || 'Failed to load user.'));
   }
 };
+
 
 export const clearAuthError = () => (dispatch: Dispatch) => {
   dispatch(clearError());
