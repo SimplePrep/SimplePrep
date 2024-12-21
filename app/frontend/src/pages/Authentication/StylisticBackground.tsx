@@ -28,13 +28,15 @@ const StylisticBackground: React.FC<StylisticBackgroundProps> = ({ children }) =
       </div>
 
       {/* Glass-like container */}
-      <div className="relative z-10 w-full max-w-md font-inter">
+      <div className="relative z-10 w-full max-w-sm font-inter">
         <div className="
-          backdrop-blur-md 
+          backdrop-blur-md
+          border-4 
+          border-blue-500
           bg-white
           rounded-xl 
           shadow-md 
-          p-8
+          p-6
         ">
           {children}
         </div>

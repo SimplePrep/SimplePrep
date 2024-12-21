@@ -97,7 +97,7 @@ const SignUpComponent = (): React.ReactElement => {
           <h2 className="mt-4 text-3xl md:text-4xl font-extrabold text-gray-900">Create your account</h2>
           <p className="mt-2 text-sm text-gray-600">
             Already have an account?{' '}
-            <Link to="/login" className="font-medium text-green-500 hover:text-green-700">
+            <Link to="/login" className="font-medium text-green-500 hover:text-green-700 p-2 hover:bg-slate-200 rounded-full">
               Login
             </Link>
           </p>
