@@ -50,7 +50,7 @@ const ResetPassword = (): React.ReactElement => {
           <h2 className="mt-4 text-3xl md:text-4xl font-extrabold text-gray-900">Request Password Reset</h2>
           <p className="mt-2 text-sm text-gray-600">
             Don't have an account?{' '}
-            <a href="/signup" className="font-medium text-green-600 hover:text-green-500">
+            <a href="/signup" className="font-medium text-green-600 hover:text-green-500 p-2 hover:bg-slate-200 rounded-full">
               Sign up
             </a>
           </p>

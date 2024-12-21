@@ -117,7 +117,7 @@ const Login: React.FC = () => {
           <div className="flex items-center justify-between">
             <Link
               to="/reset-password"
-              className="text-sm text-green-600 hover:text-green-500 transition-colors"
+              className="text-sm text-green-600 hover:text-green-700 transition-colors p-2 hover:bg-slate-200 rounded-full"
             >
               Forgot password?
             </Link>
@@ -197,7 +197,7 @@ const Login: React.FC = () => {
 
         <p className="text-center text-sm text-gray-500">
           Don't have an account?{' '}
-          <Link to="/signup" className="font-medium text-green-700 hover:text-green-600 transition-colors">
+          <Link to="/signup" className="font-medium text-green-700 hover:text-green-600 transition-colors p-2 hover:bg-slate-200 rounded-full">
             Sign up
           </Link>
         </p>
