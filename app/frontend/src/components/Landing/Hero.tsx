@@ -130,7 +130,7 @@ const featureCardVariants = {
 
 // Static Data
 const stats: StatItem[] = [
-  { icon: BiGroup, label: 'Active Students', value: '100+' },
+  { icon: BiGroup, label: 'Active Students', value: '4000+' },
   { icon: BiTargetLock, label: 'Exam Confidence', value: '99%' },
   { icon: BiBook, label: 'Practice Questions', value: '1,000+' },
   { icon: BiBrain, label: 'Expert Tutors', value: '10+' }
