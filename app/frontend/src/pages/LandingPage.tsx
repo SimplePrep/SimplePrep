@@ -10,6 +10,7 @@ import Notification from '../components/Landing/Newsletter';
 import FAQ from '../components/Landing/FAQ';
 import Footer from '../components/Landing/Footer';
 import Hero2 from '../components/Landing/CriticalVisualizations/Hero2';
+import Contributors from '../components/Landing/Contributors';
 
 export const LandingPage = () => {
   return(
@@ -19,6 +20,7 @@ export const LandingPage = () => {
           <Hero2 /> 
           <Notification/>
           <Testimonials/>
+          <Contributors/>
           <FAQ/>
       </>
   )
